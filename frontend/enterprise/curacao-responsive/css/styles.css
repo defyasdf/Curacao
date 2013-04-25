@@ -1946,6 +1946,7 @@ a.button.related strong { color: #fff; text-shadow:0 -1px #666666;}
 	.tab-content li.tab table th, td {
 		padding: 5px 15px;
 		text-align: left;
+		padding-top: 10px !important
 	}
 	
 	.tab-content li.tab table th.odd, td.odd {
