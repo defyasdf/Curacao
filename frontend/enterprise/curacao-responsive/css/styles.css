@@ -1750,8 +1750,8 @@ a.button.related strong { color: #fff; text-shadow:0 -1px #666666;}
 	}
 	.box-related .box-content li.item {
 		background: none repeat scroll 0 0 #FFFFFF;
-		-webkit-box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
-		box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+		/* -webkit-box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3); */
+		/* box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3); */
 		list-style-type: none;
 		margin: 0 10px 10px;
 		overflow: hidden;
@@ -1775,7 +1775,7 @@ a.button.related strong { color: #fff; text-shadow:0 -1px #666666;}
 	}
 	.box-related .box-content li.item .item-info .product-details .product-name a { color: #444; font-weight: bold; }
 	.box-related .box-content li.item .item-info .product-details .price-box { clear: none; }
-	.box-related .box-content li.item .item-info .product-details .price-box .regular-price .price { font-size: 24px; color: #d5172f; font-weight: bold; line-height: 24px; }
+	.box-related .box-content li.item .item-info .product-details .price-box .regular-price .price { font-size: 24px; color: #d5172f; font-weight: bold; line-height: 30px; }
 	.product-view .price-box .regular-price .price {
 		font-size: 22px;
 		font-family: Arial, Tahoma, sans-serif;
