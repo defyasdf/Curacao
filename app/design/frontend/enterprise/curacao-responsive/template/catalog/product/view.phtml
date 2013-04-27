@@ -424,7 +424,9 @@
         <?php $i++; endif;  ?>
         	<!--<li class="tab specs"></li>-->
 	       	
-        	<li class="tab <?php if($i==0) echo('active') ?>"><?php echo $this->getReviewsSummaryHtml($_product, false, true)?></li>
+        	<li class="tab <?php if($i==0) echo('active') ?>">
+        		<?php echo $this->getReviewsSummaryHtml($_product, false, true)?>
+        	</li>
         </ul>    
     </div>
     
@@ -445,7 +447,7 @@
 
 <div class="clear"></div>
 <!-- Extra information part -->
-<div class="twenty columns alpha omega reviews">
+<div class="sixteen columns alpha omega reviews">
         <?php echo $this->getChildHtml('product_additional_data') ?>
 </div>
 <div class="clear"></div>
