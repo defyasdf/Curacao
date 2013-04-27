@@ -3,9 +3,7 @@
 <file name="checkout.phtml" server="198.101.163.120//var/www/html/" local="130114948213427803" remote="130114948370000000" Dst="2" />
 <file name="payment_method.phtml" server="198.101.163.120//var/www/html/" local="130114949475539992" remote="130114951830000000" Dst="2" />
 <file name="gift_message.phtml" server="198.101.163.120//var/www/html/" local="130108943520000000" remote="130108943520000000" Dst="2" />
-<file name="summary.orig.phtml" server="198.101.163.120//var/www/html/" local="130108943520000000" remote="130108943520000000" Dst="2" />
 <file name="set_methods_separate.phtml" server="198.101.163.120//var/www/html/" local="130108943520000000" remote="130108943520000000" Dst="2" />
-<file name="checkout.orig.phtml" server="198.101.163.120//var/www/html/" local="130108943520000000" remote="130108943520000000" Dst="2" />
 <file name="billing_fields.phtml" server="198.101.163.120//var/www/html/" local="130108943520000000" remote="130108943520000000" Dst="2" />
 <file name="agreements.phtml" server="198.101.163.120//var/www/html/" local="130108943520000000" remote="130108943520000000" Dst="2" />
 <file name="summary.phtml" server="198.101.163.120//var/www/html/" local="130114951345236933" remote="130114951790000000" Dst="2" />
