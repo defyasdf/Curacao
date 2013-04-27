@@ -8,7 +8,7 @@ $helper = Mage::helper('onestepcheckout/checkout');
 	$_storeId = Mage::app()->getStore()->getId();
 	if($_storeId == 1){
 		$due = 'Amount Due Today';
-		$downpaymentneeded = 'To process your order, an initial payment of $'.$Data.' is required. <br> Please ';
+		$downpaymentneeded = 'To process your order, an initial payment of  <strong>$'.number_format((float)$Data, 2, '.', '').'</strong> is required. ';
 		$billingaddress = "Billing And Shipping Information";
 		$billing = "Billing Address";
 		$shippingaddress = "Shipping Address";

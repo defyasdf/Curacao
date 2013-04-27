@@ -48,10 +48,14 @@ $Data = Mage::getSingleton('core/session')->getCuracacaodp();
 $_storeId = Mage::app()->getStore()->getId();
 	if($_storeId == 1){
 		$required = 'Required Fields';
-		$remove = 'Remove this payment option';
+		$remove = 'Undo';
+		$available = 'available credit is <strong>$</strong>';
+		$charge = ' will be charged to this account ';
 	}else{
 		$required = "Campos Requeridos";
-		$remove = "Remover esta forma de pago";
+		$remove = "	cancelar";
+		$available = 'crédito disponible : <strong>$</strong>';
+		$charge = ' se agregará a su cuenta ';
 	}
 ?>
 
@@ -102,11 +106,34 @@ $_storeId = Mage::app()->getStore()->getId();
                 <?php if($_code=='pay'){?>
 					<img src="/images/apache_pb2.png" /> 
                     
-                    <?php if($Data != ''){?>
-                    	<a href="#" onclick="return remove_curacao()"><?php echo $remove;?></a>
+                    <?php 
+						if ($this->helper('customer')->isLoggedIn() ) {
+							$session = Mage::getSingleton('customer/session', array('name'=>'frontend')); 
+							$customer_data = Mage::getModel('customer/customer')->load($session->id);
+							if($customer_data->isauthenticate){
+								if(Mage::getSingleton('core/session')->getCustbalance()){
+									$balance = Mage::getSingleton('core/session')->getCustbalance();	
+								}else{
+									$balance = file_get_contents('http://www.icuracao.com/credit/getbalance.php?custnum='.$customer_data->curacaocustid);
+									Mage::getSingleton('core/session')->setCustbalance($balance);
+								}
+								 if($Data == ''){
+									echo '<div id="available_payment-curacao">('.$available.'<strong>'.$balance.'</strong>)</div>';
+								 }
+							}
+						}
+					?>
+                    <?php if($Data != ''){
+						$charge_amt = (float)Mage::getModel('checkout/cart')->getQuote()->getGrandTotal()-$Data;
+						?>
+                    	<?php echo '<div id="available_payment-curacao"><span><strong>$'.number_format((float)$charge_amt, 2, '.', '').'</strong>'.$charge ?></span> | <a href="#" onclick="return remove_curacao()"><?php echo $remove;?></a></div>
                     <?php }?>
 				<?php }elseif($_code=='verisign'){?>
 					<img src="/images/credit_card.png" />
+                    <?php if($Data != ''){
+						?>
+                    	<?php echo '<div id="available_payment"><span><strong>$'.number_format((float)$Data, 2, '.', '').'</strong>'.$charge.'</span></div>'?>
+                    <?php }?>
 				<?php }?>
                 </div>
                 
