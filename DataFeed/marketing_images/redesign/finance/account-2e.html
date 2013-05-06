@@ -1,0 +1,284 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<link rel="stylesheet" href="finance.css" />
+</head>
+<body>
+    <header>
+        <div id="topHeader">
+            <div class="wrapper">
+                <ul>
+                    <li class="first"><a href="#">Apply Now</a></li>
+                    <li><a href="#">Register</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">En Espa&ntilde;ol</a></li>
+                </ul>
+                <div id="loggedin">
+                     Welcome <span class="name">Jonathan</span>! Your available credit balance is <span class="limit">$39.22</span>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="homepage.html">Logout</a>
+                </div>
+                <div class="clear"></div>
+                <div id="logo">
+                    <a href="homepage.html"><img src="images/logo_cfinance.jpg" /></a>
+                </div>
+                <div id="csHeader"></div>
+            </div>
+        </div>
+    	<div class="clear25"></div>
+   		<nav class="primary">
+        	<div class="wrapper">
+    			<ul>
+            		<li><a href="agp-1.html">ADIR Global Protection</a></li>
+            		<li><a href="services-1.html">Financial Services</a></li>
+            		<li><a href="education-1.html" class="last">Financial Education</a></li>
+        		</ul>
+        	</div>
+    	</nav>
+    </header>
+   	<div id="content">
+        <div class="wrapper">
+        	<div id="breadcrumb">HOME / MY ACCOUNT / MAKE A PAYMENT</div>
+            <div class="clear20"></div>
+            <div id="accountMenu">
+                <div class="menuTitle">My Account</div>
+                <ul>
+					<li class="first"><a href="account-1.html">Account Activity</a></li>
+                    <li class="active">Make a Payment</li>
+                    <li><a href="account-3.html">Online Statements</a></li>
+                    <li><a href="account-4.html">My Profile</a></li>
+                    <li><a href="account-5.html">Services</a></li>
+                    <li><a href="account-6.html">Online Learning Videos</a></li>
+                </ul>
+                <div class="menuTitle" style="margin-top: 30px;">Account Summary</div>
+                <table class="summary">
+                	<tbody>
+                        <tr>
+                            <td class="left">Current Balance:</td>
+                            <td class="right">$561.78</td>
+                        </tr>
+                        <tr>
+                            <td class="left">Available Credit:</td>
+                            <td class="right">$39.22</td>
+                        </tr>
+                        <tr>
+                            <td class="left">Credit Limit:</td>
+                            <td class="right">$600.00</td>
+                        </tr>
+                        <tr>
+                            <td class="left">Payment Due Date:</td>
+                            <td class="right">03/25/2013</td>
+                        </tr>
+                        <tr>
+                            <td class="left">Current Payment Due:</td>
+                            <td class="right">$0.00</td>
+                        </tr>
+                        <tr>
+                            <td class="left">Past Due Amount:</td>
+                            <td class="right">$0.00</td>
+                        </tr>
+                        <tr>
+                            <td class="right" colspan="2"><a href="account-2.html"><button class="smallPrim">Pay My Bill</button></a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="accountDetails">
+                <div class="right"><a href="account-2d.html">&laquo; Go Back</a></div>
+            	<h1>Make a Payment</h1>
+                <div id="paymentSteps">
+                	<div class="stepFirstOff">Select an Account</div>
+                    <div class="stepOff">Select Amount</div>
+                    <div class="stepOn">Payment Info</div>
+                    <div class="stepOff">Payment Review</div>
+                    <div class="stepLastOff">Confirmation</div>
+                </div>
+                <div class="clear25"></div>
+                <div id="paymentAmount">
+                	<p><strong>You have selected to pay the following amount for each account:</strong></p><br />
+                    <div class="left">Sub Account 00:</div>
+                    <div class="right">$20.00</div>
+                    <div class="clear15"></div>
+                    <div class="left">Sub Account 04:</div>
+                    <div class="right">$10.00</div>
+                    <div class="clear15"></div>
+                    <div class="left">Sub Account 05:</div>
+                    <div class="right">$115.81</div>
+                    <div class="clear15"></div>
+                    <div class="left">Subtotal:</div>
+                    <div class="right">$115.81</div>
+                    <div class="clear15"></div>
+                    <div class="left">Transaction Fee:<em>*</em></div>
+                    <div class="right">$0.95</div>
+                    <div class="clear15"></div>
+                    <div class="left"><span class="total">Total Due:</span></div>
+                    <div class="right"><span class="total">$146.76</span></div>
+                    <div class="clear15"></div>
+                    <p>* To avoid the transaction fee, enroll in online billing.</p>
+                </div>
+                <div id="paymentMethod">
+                	<div id="ccLogos"></div>
+                    <p><strong>Please choose a payment method:</strong></p>
+                    <div class="clear20"></div>
+                    <form class="billingInfo" name="payment_card" action="account-2f.html">
+                        <label>Card Type: <em>*</em></label>
+                        <select id="payment_type" name="payment_type" />
+                        <option selected="selected">-- Select Card Type --</option>
+                        <option>Visa</option>
+                        <option>Mastercard</option>
+                        <option>Discover</option>
+                        </select>
+                        <div class="clear10"></div>
+                        <label>Name on Card: <em>*</em></label><input type="text" id="payment_name" name="payment_name" class="info" />
+                        <div class="clear10"></div>
+                        <label>Card Number: <em>*</em></label><input type="text" id="payment_number" name="payment_number" class="info" />
+                        <div class="clear10"></div>
+                        <label>Expiration Date: <em>*</em></label>
+                        <select id="payment_month" name="payment_month" />
+                        <option selected="selected">Month</option>
+                        <option>January</option>
+                        <option>February</option>
+                        <option>March</option>
+                        <option>April</option>
+                        <option>May</option>
+                        <option>June</option>
+                        <option>July</option>
+                        <option>August</option>
+                        <option>September</option>
+                        <option>October</option>
+                        <option>November</option>
+                        <option>December</option>
+                        </select>
+                        <select id="payment_year" name="payment_year" />
+                        <option selected="selected">Year</option>
+                        <option>2013</option>
+                        <option>2014</option>
+                        <option>2015</option>
+                        <option>2016</option>
+                        <option>2017</option>
+                        <option>2018</option>
+                        </select>
+                        <div class="clear10"></div>
+                        <label>Security Code: <em>*</em></label><input type="text" id="payment_code" name="payment_code" class="small" />
+                        <div class="clear10"></div>
+                        <div class="right"><button class="bigPrim">Continue</button></div>
+                        <div class="clear10"></div>
+                        <div class="left"><span class="required"><em>*</em> Required Fields</span></div>
+                    </form>
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div id="affiliates">
+    	<div class="wrapper">
+    		<span>Affiliated Curacao Services:</span>
+            <ul>
+            	<li><a href="#"><img src="images/aff_pasito.png" /></a></li>
+            	<li><a href="#"><img src="images/aff_curatel.png" /></a></li>
+            	<li><a href="#"><img src="images/aff_export.png" /></a></li>
+            	<li><a href="#"><img src="images/aff_travel.png" /></a></li>
+            	<li><a href="#"><img src="images/aff_financial.png" /></a></li>
+            	<li class="last"><a href="#"><img src="images/aff_finance.png" /></a></li>
+            </ul>
+        </div>
+    </div>
+    <div id="subFooter">
+    	<div class="wrapper">
+        	<div id="ribbon"></div>
+        	<div id="cardBadge"></div>
+        	<div id="ccMessage">Proudly serving over 2 million customers in the Southwest for 30 years</div>
+        	<div id="csFooter"></div>
+            <div id="connect">
+            	<span>Join our newsletter for exclusive deals and promotions:</span><br />
+                <div id="news">
+                <form class="newsform" name="news_form">
+                    <div id="news_email" class="newsfield">
+                        <input id="news_email" type="text" name="news_email">
+                    </div>
+                <button class="newsSignUp"></button>
+               	</form>
+                </div>
+                <div id="social">
+                    <ul>
+                        <li class="nopad"><a href="#"><img src="images/icn_fb.png" /></a></li>
+                        <li><a href="#"><img src="images/icn_tw.png" /></a></li>
+                        <li><a href="#"><img src="images/icn_gp.png" /></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clear25"></div>
+    <footer>
+    	<div class="wrapper">
+        	<div class="links">
+            	<span class="titles cgreen">ICURACAO.COM</span>
+                <ul>
+                	<li><a href="#">Store Locator</a></li>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Our Mission</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Use</a></li>
+                </ul>
+            </div>
+        	<div class="links">
+            	<span class="titles cred">CUSTOMER SERVICE</span>
+                <ul>
+                	<li><a href="#">Our Guarantee</a></li>
+                	<li><a href="#">Returns & Exchanges</a></li>
+                	<li><a href="#">Shipping Information</a></li>
+                	<li><a href="#">Live Chat</a></li>
+                	<li><a href="#">FAQs</a></li>
+                </ul>
+            </div>
+        	<div class="links">
+            	<span class="titles corange">CURACAO CREDIT</span>
+                <ul>
+                	<li><a href="#">My Account</a></li>
+                	<li><a href="#">Pay My Bill</a></li>
+                	<li><a href="#">Apply For Credit</a></li>
+                	<li><a href="#">Financial Services</a></li>
+                	<li><a href="#">Terms & Conditions</a></li>
+                </ul>
+            </div>
+        	<div class="links">
+            	<span class="titles cyellow">CORPORATE</span>
+                <ul>
+                	<li><a href="#">About Curacao</a></li>
+                	<li><a href="#">Corporate</a></li>
+                	<li><a href="#">Community</a></li>
+                	<li><a href="#">Careers</a></li>
+                	<li><a href="#">Press</a></li>
+                </ul>
+            </div>
+           <!-- <div class="secureLogos">
+            	 <script type="text/javascript" language="javascript">
+                     var ANS_customer_id = "89050664-6c11-4b7f-91b9-8c7db1fd036f";
+                 </script> 
+                 <script type="text/javascript" language="javascript" src="//verify.authorize.net/anetseal/seal.js" ></script>
+            </div>  -->
+            <div class="secureLogos">
+            	 <img src="images/secure_authorizenet.jpg" />
+            </div>
+            <div class="secureLogos">
+            	 <img src="images/secure_credit.jpg" />
+            </div> 
+            <div class="secureLogos">
+            	 <img src="images/secure_verisign.jpg" />
+            </div>
+            <!-- <div class="secureLogos">
+            	<script type="text/javascript" src="https://seal.verisign.com/getseal?host_name=www.icuracao.com&amp;size=L&amp;use_flash=YES&amp;use_transparent=YES&amp;lang=en"></script>
+            </div> -->
+            <div class="clear10"></div>
+            <div id="copyright">COPYRIGHT &copy; 2012 -2013 CURACAO.  ALL RIGHTS RESERVED. 1605 W. OLYMPIC BLVD, LOS ANGELES, CA 90015</div>
+            <div id="lang">
+            	<ul>
+                	<li class="first"><a href="#"><img src="images/lang_us.png" />&nbsp;&nbsp;<a href="#">English</a></li>
+                	<li><a href="#"><img src="images/lang_es.png" />&nbsp;&nbsp;Spanish</a></li>
+                </ul>
+            </div>
+            <div class="clear10"></div>
+        </div>
+    </footer>
+</body>
+</html>

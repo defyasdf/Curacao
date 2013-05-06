@@ -1,0 +1,106 @@
+<?php
+/**
+ * Template for Mage_Page_Block_Html
+ */
+?>
+<?php 
+	$_storeId = Mage::app()->getStore()->getId();
+	if($_storeId == 1){
+		$header = "<h1>Register for a chance to Win!</h1>";
+		$dis = '<p>This month we&acute;re giving away 4 computers Asus - TAICHI<br>
+To participate please fill out the following form with your information:</p>';
+		$fname = "First Name";
+		$lname = "Last Name";
+		$email = "Email";
+		$tel = "Telephone";
+		$state = "State";
+		$note1 = "<p>To find out who are the winners, don't miss the following TV segments:</p>
+<p>In California: Marcador Final on Telemundo 52 - Sundays at 6PM</p>
+<p>In Arizona: Acción Deportiva Extra on Univision Channel 33 - Saturdays and Sundays at 10:15 PM</p>";
+		$note = "No purchase necessary. Equip your home promotion is open to residents of Southern California and Arizona only, must be 18 years or older. Odds of winning depend on the number of entries received. A purchase or payment of any kind will not increase your chances of winning. For more details see <a href='http://www.icuracao.com/Equipa_Rules.pdf' target='_blank'>Official Rules</a>";
+		$greetings = "<h2>Thank you for register!</h2>";
+		$select = "Please Select";
+		$error = "Required fields";
+	}else{
+		$header = "<h1>Regístrese para poder Ganar!</h1>";
+		$dis = '<p>Este mes regalaremos 4 computadoras Asus - TAICHI <br>Para participar llene la siguiente información con sus datos:</p>
+						';
+		$fname = "Nombre";
+		$lname = "Apellido";
+		$email = "Correo Electr&oacute;nico";
+		$tel = "Tel&eacute;fono";
+		$state = "Estado";
+		$note1 = "<p>Para saber quienes son los ganadores, no se pierda:</p><p>En California: Marcador Total en Telemundo 52 los domingos a las 6PM</p><p>En Arizona: Acción Deportiva Extra en Univision Arizona Canal 33 Sábados y Domingos a las 10:15PM</p>";
+		$note = "No compra necesaria. El sorteo de equipa tu casa esta abierto para residentes del Sur de California y Arizona únicamente, debe tener 18 años o más. Las probabilidades de ganar dependen del número de participaciones recibidas. Una compra o pago de cualquier tipo no aumentará sus probabilidades de ganar. Para m&aacute;s informaci&oacute;n Ver  <a href='http://www.icuracao.com/Equipa_Rules.pdf' target='_blank'>Reglas Oficiales</a>";
+		$greetings = "<h2>Gracias por Registrarse!</h2>";
+		$select = "Seleccione";
+		$error = "Campos requeridos";
+	}
+?>
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
+<head>
+	<?php echo $this->getChildHtml('head') ?>
+  
+    <?php
+		
+		if($_storeId != 1){
+		?>
+		<style type="text/css">
+        	#elcapo_banner {
+                background: url("./images/main_banner_es.jpg") no-repeat scroll 0 0 transparent;
+                
+            }
+		</style>
+        <?php
+		}
+	?>
+    <style type="text/css">
+    	p{
+			line-height:10px;
+			text-transform:none;
+			margin-bottom: 15px;
+		}
+		p.winner {
+			font-size: 12px;
+		}
+    </style>
+</head>
+
+<body<?php echo $this->getBodyClass()?' class="'.$this->getBodyClass().'"':'' ?>>
+
+	<?php //echo $this->getChildHtml('after_body_start') ?>
+	
+	
+	<div class="container" style="width:98%">
+	
+
+		<div class="twenty columns breadcrumbs alpha" style="width:100%">
+			<div class="wrapper">
+                <div id="elcapo_content">
+                    <div id="elcapo_banner"></div>
+                    <div class="copy">
+	                    <iframe src="http://m-06.com/257" height="586px" width="100%"></iframe>
+                        <div align="center" style="color:#000; text-transform:none;">
+                        	<p class="winner">Para saber quienes son los ganadores, no se pierda:</p>
+                            <p><strong>En California:</strong> Marcador Total en Telemundo 52 los domingos a las 6PM<br />
+                            <strong>En Arizona:</strong> Acción Deportiva Extra en Univision Arizona  Sábados y Domingos a las 10:15PM</p>
+                            <p>No compra necesaria. El sorteo de equipa tu casa esta abierto para residentes del Sur de California y Arizona únicamente, debe tener 18 años o más. Las probabilidades de ganar dependen del número de participaciones recibidas. Una compra o pago de cualquier tipo no aumentará sus probabilidades de ganar. Para m&aacute;s informaci&oacute;n ver <a href='http://www.icuracao.com/Equipa_Rules.pdf' target='_blank' style="color:#008ECF">Reglas Oficiales</a></p>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                    <div></div>
+                </div>
+            </div>
+		</div>
+	
+     
+	</div>        
+
+		
+
+</body>
+</html>

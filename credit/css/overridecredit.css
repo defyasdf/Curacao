@@ -1,0 +1,8 @@
+@charset "utf-8";
+/* CSS Document */
+
+input[type="text"], input[type="password"], input[type="email"], textarea, select { padding:4px; margin: 0 0 4px;}
+.container .ten.columns{height:525px;}
+
+.button, button, input[type="submit"], input[type="reset"], input[type="button"] { float:right}
+

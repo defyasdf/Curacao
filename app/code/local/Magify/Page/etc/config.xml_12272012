@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Magify_Page>
+      <version>0.1.0</version>
+    </Magify_Page>
+  </modules>
+  <global>
+    <page>
+      <layouts>
+        <homepage translate="label">
+          <label>Home Page - 1 column</label>
+          <template>page/homepage.phtml</template>
+          <layout_handle>homepage</layout_handle>
+        </homepage>
+
+        <credit translate="label">
+          <label>Credit Application - 2 column</label>
+          <template>page/creditapplication.phtml</template>
+          <layout_handle>credit</layout_handle>
+        </credit>
+
+        <!-- add more layouts here -->
+        
+      </layouts>
+    </page>
+  </global>
+  <!--frontend>
+	  <events>
+		  <controller_action_predispatch>
+			  <observers>
+				  <creditcache>
+					  <class>YOURMODULE/observer</class>
+					  <method>processPreDispatch</method>
+				  </YOUR_UNIQUE_IDENTIFIER>
+			  </observers>
+		  </controller_action_predispatch>
+	  </events>
+  </frontend-->
+</config>

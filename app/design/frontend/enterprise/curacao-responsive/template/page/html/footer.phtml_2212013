@@ -1,0 +1,206 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php
+	$_storeId = Mage::app()->getStore()->getId();
+?>
+	<div class="credit-ssl-badge twenty columns">
+	    <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId("credit-ssl-badge")->toHtml();?>
+	</div>
+</div><!--Container-->
+
+	
+	<footer class="twenty columns">
+		<div class="container">
+			<div class="mini-logo twelve columns alpha">
+	            <h3 class="inline"><?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('customer_service_tel')->toHtml() ?></h3>
+	        </div>
+	        <div class="eight columns omega">
+				<?php echo $this->getChildHtml('footer.newsletter') ?>
+	        </div>
+	        
+	        <div class="clearfix columns twenty"></div>
+	        
+	        <?php // echo $this->getChildHtml() ?>
+
+			<div class="four columns about alpha">
+				<h3 class="column-title"><?php echo Mage::getModel('cms/block')->setStoreId($_storeId)->load('footer_about')->getTitle() ?></h3>
+				<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('footer_about')->toHtml() ?> 
+			</div><!--about-->
+
+			<div class="four columns secondary">
+				<?php //echo $this->getLayout()->createBlock('cms/block')->setBlockId('footer_service')->toHtml();
+				
+				//$_storeId = Mage::app()->getStore()->getId();
+				if($_storeId == 1): ?>
+				<h3 class="column-title">Customer Service</h3>	
+				<ul>
+					<li><a title="FAQ" href="/faq">FAQ's</a></li>
+					<li><a title="RETURNS" href="/return-policy">Returns</a></li>
+					<!--<li><a title="Warranty" href="{{store direct_url="warranty"}}">Warranty</a></li>-->
+					<li><a title="Contact Us" href="/contacts">Contact Us</a></li>
+				</ul>							
+				<?php else: ?>
+				<h3 class="column-title">Servicio al Cliente</h3>
+				<ul>
+					<li><a title="FAQ" href="/faq">Preguntas Frecuentes</a></li>
+					<li><a title="RETURNS" href="/return-policy">Devoluciones</a></li>
+					<!--<li><a title="Warranty" href="{{store direct_url="warranty"}}">Warranty</a></li>-->
+					<li><a title="Contact Us" href="/contacts">Cont&aacute;ctenos</a></li>
+				</ul>								
+				<?php endif; ?> 
+				
+				<ul class="social-icons" style="padding:0">
+					<li class="social-icon facebook" style="margin:0"><a href="https://www.facebook.com/CuracaoUSA" target="_blank" title="Curacao (La Curacao) - Follow us on Facebook"><img src="/skin/frontend/enterprise/curacao-responsive/images/social_images/facebook_white.png" alt="Curacao (La Curacao) - Follow us on Facebook" /></a></li>
+					<li class="social-icon twitter" style="margin-right:2px"><a href="https://twitter.com/lacuracao" target="_blank" title="Curacao (La Curacao) - Follow us on Twitter"><img src="/skin/frontend/enterprise/curacao-responsive/images/social_images/twitter_white.png" alt="Curacao (La Curacao) - Follow us on Twitter" /></a></li>
+					<li class="social-icon gplus" style="margin-left:2px"><a href="https://plus.google.com/107858241391949634093/posts" target="_blank" title="Curacao (La Curacao) - Follow us on Google +"><img src="/skin/frontend/enterprise/curacao-responsive/images/social_images/google_plus_white.png" alt="Curacao (La Curacao) - Follow us on Google +" /></a></li>
+				</ul> 				
+			</div><!--secondary-->
+							        		
+			<div class="four columns store">
+				<h3 class="column-title"><?php echo Mage::getModel('cms/block')->setStoreId($_storeId)->load('footer_credit')->getTitle() ?></h3>
+				<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('footer_credit')->toHtml() ?> 
+			</div><!--store-->
+
+			<div class="eight columns corporate omega">
+				<h3 class="column-title"><?php echo Mage::getModel('cms/block')->setStoreId($_storeId)->load('footer_corporate')->getTitle() ?></h3>
+				<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('footer_corporate')->toHtml() ?> 
+			</div><!--corporate newsletter-->
+			<div class="twenty columns alpha clearfix">
+		        <address><?php echo $this->getCopyright() ?> <a href="http://www.infofaq.com/merchants/curacao.html" title="InfoFAQ"><img src="/skin/frontend/enterprise/curacao-responsive/images/Curacao-InfoFAQ-Icon.png" alt="InfoFAQ" style="width:10px;height:9px;" /></a></address>
+			</div>
+		</div>
+	</footer>
+    <script type="text/javascript">
+    //<![CDATA[
+    jQuery(document).ready(function() {
+    	
+    
+        jQuery('header a').each(function(i,z){
+				
+			if( jQuery(this).attr('href').indexOf('credit.php') > 0 ){
+				jQuery(this).click(function(){
+					//add modalbox;
+					Modalbox.setOptions({
+				        title:'Credit Application',
+					    width: 814,
+					    overlay: true,
+					    overlayClose: true
+				    });
+				
+				    Modalbox.show(jQuery(this).attr('href'));
+				    return false;
+				});
+			}	
+        });
+
+        jQuery('footer a').each(function(i,z){
+			if( jQuery(this).attr('href').indexOf('credit.php') > 0 ){
+				jQuery(this).click(function(){
+					//add modalbox;
+					Modalbox.setOptions({
+				        title:'Credit Application',
+					    width: 814,
+					    overlay: true,
+					    overlayClose: true
+				    });
+				
+				    Modalbox.show(jQuery(this).attr('href'));
+				    return false;
+				});
+			}	
+        });
+        
+        jQuery('.curacao-credit-ad a').each(function(i,z){
+			if( jQuery(this).attr('href').indexOf('credit.php') > 0 ){
+				jQuery(this).click(function(){
+					//add modalbox;
+					Modalbox.setOptions({
+				        title:'Credit Application',
+					    width: 814,
+					    overlay: true,
+					    overlayClose: true
+				    });
+				
+				    Modalbox.show(jQuery(this).attr('href'));
+				    return false;
+				});
+			}	
+        });
+
+        
+        
+        
+        jQuery('.tab.specs table').css({'width':'auto'});
+    });
+    //]]>
+    </script>
+	
+   <script type="text/javascript">
+
+var v24JsProtocol = (("https:" == document.location.protocol) ? "https://" : "http://");
+
+document.write(unescape("%3Cscript src='" + v24JsProtocol + "static.vee24.com/v24/veedesk/v24Embedded.js' type='text/javascript'%3E%3C/script%3E"));
+
+</script> 
+    
+ <?php 
+	$page = Mage::helper('core/url')->getCurrentUrl() ;
+	$base = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB);
+	
+	$current_page = str_replace($base,'',$page);
+	$successpage=0;
+	$getPage = explode('/',$current_page);
+//	print_r($getPage);
+	if(sizeof($getPage)>2){
+		if($getPage[2]=='success'){
+			$successpage = 1;
+		}
+	}
+		
+	if($successpage!=1){
+		//echo 'I am in success page';
+	//}	
+		
+?>
+<?php /*
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33516995-1']);
+  _gaq.push(['_setDomainName', 'icuracao.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'stats.g.doubleclick.net/dc.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+*/ ?>
+<?php }?>

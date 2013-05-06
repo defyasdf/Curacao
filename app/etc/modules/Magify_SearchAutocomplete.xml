@@ -1,0 +1,8 @@
+<config>
+    <modules>
+        <Magify_SearchAutocomplete>
+            <active>true</active>
+            <codePool>local</codePool>
+        </Magify_SearchAutocomplete>
+    </modules>
+</config>

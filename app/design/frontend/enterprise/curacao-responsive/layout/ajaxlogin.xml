@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+	<default>
+		<reference name="head">
+			<action method="addJs" ifconfig="ajaxlogin/login/enabled"><script>jquery/jquery.fancybox.js</script></action>
+			<!--action method="addCss" ifconfig="ajaxlogin/login/enabled"><script>css/colorbox.css</script></action -->
+		</reference>
+		<reference name="content">
+			<block type="core/template" name="ajaxlogin" template="ajaxlogin/popup.phtml"/>
+		</reference>
+	</default>
+</layout>

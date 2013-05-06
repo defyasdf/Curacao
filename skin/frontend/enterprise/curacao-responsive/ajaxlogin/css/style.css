@@ -1,0 +1,12 @@
+.ajaxlogin-loginbox { position:fixed; padding:6px; width:320px; left:40%; top:30%; background-color:white; border:1px solid grey; text-align:center; z-index:10000; }
+.ajaxlogin-createbox { position:fixed; padding:6px; width:320px; left:40%; top:20%; background-color:white; border:1px solid grey; text-align:center; z-index:10000; }
+.ajaxlogin-forgotbox { position:fixed; padding:6px; width:320px; left:40%; top:30%; background-color:white; border:1px solid grey; text-align:center; z-index:10000; }
+.ajaxlogin-loadbox { position:fixed; padding:6px; width:320px; left:40%; top:30%; background-color:white; border:1px solid grey; text-align:center; z-index:10000; }
+.ajaxlogin-messagebox { position:fixed; width:320px; left:40%; top:30%; background-color:white; border:1px solid grey; text-align:center; z-index:10000; }
+.ajaxlogin-loginbox-erreur { }
+.ajaxlogin-createbox-erreur { }
+.ajaxlogin-forgotbox-erreur { }
+.ajaxlogin-fieldset { border:1px solid orange; margin-top:6px; }
+.ajaxlogin-legend { padding-left:8px; color:white; background-color:rgb(241,130,0); border:rgb(222,84,0); text-align:left; }
+.ajaxlogin-quit-buttun { background-image:url(../images/quit.png); background-repeat:no-repeat; border:none; height:13px; width:13px; }
+.ajaxlogin-quit-buttun:hover { background-image:url(../images/quithover.png); background-repeat:no-repeat; border:none; height:13px; width:13px; }

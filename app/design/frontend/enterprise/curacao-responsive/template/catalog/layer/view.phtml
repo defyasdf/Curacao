@@ -1,0 +1,129 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php
+/**
+ * Category layered navigation
+ *
+ * @see Mage_Catalog_Block_Layer_View
+ */
+?>
+<?php
+	$_storeId = Mage::app()->getStore()->getId();
+
+	if($_storeId == 1){
+		$_sortTxt = 'Sort by';
+	} else {
+		$_sortTxt = 'Filtrar por';
+	}
+	
+
+	$_category   = Mage::registry('current_category');
+	if( isset($_category)){
+		$_collection = Mage::getModel('catalog/category')->getCategories($_category->entity_id);
+	}
+    $_helper     = Mage::helper('catalog/category');
+    
+
+    if( isset($_category)):
+    
+	    $_categoryName = $_category->getName();
+        
+    
+		$_count = is_array($_collection)?count($_collection):$_collection->count();
+		
+		if(!$_count):
+			$_parent = Mage::getModel('catalog/category')->load($_category->getParentCategory()->getId());
+			
+			$_categoryName = $_parent->getName();
+			
+			$_collection = Mage::getModel('catalog/category')->getCategories($_parent->getId());
+		endif;
+		
+		
+?>
+<h2 class="category-title"><?php echo $_categoryName ?></h2>
+<div class="block block-category-nav">
+	<ul class="category-nav">
+    <?php foreach ($_collection as $_cat):?>
+            <li>
+                <a href="<?php echo $_helper->getCategoryUrl($_cat);?>"><span><?php echo $_cat->getName();?></span></a>
+                <?php /* $_childLevel2Category = Mage::getModel('catalog/category')->getCategories($_cat->entity_id); ?>
+                <ul class="secondary">
+                    <?php foreach ($_childLevel2Category as $_catLevel2) { ?>
+                        <li>
+                            <a href="<?php echo $_helper->getCategoryUrl($_catLevel2);?>">
+                                <cite><?php echo $_catLevel2->getName();?></cite>
+                            </a>
+                        </li>
+                    <?php } ?>
+                </ul>
+                */ ?>
+            </li>
+	<?php endforeach;?>
+	</ul>
+</div>
+<?php
+	else:
+?>
+
+<?php
+	endif;
+?>
+
+<?php 
+
+$arr = array(8,9,10,11,12);
+if($_category){
+if(!in_array($_category->getId(),$arr)){?>
+<?php if($this->canShowBlock()): ?>
+<div class="block block-layered-nav">
+    <?php echo $this->getStateHtml() ?>
+    
+    <?php if ($this->getLayer()->getState()->getFilters()): ?>
+	        <div class="actions"><a href="<?php echo $this->getClearUrl() ?>"><?php echo $this->__('Clear All') ?></a></div>
+        </div><!--currently-->
+    <?php endif; ?>
+    
+    <?php if($this->canShowOptions()): ?>
+        <dl id="narrow-by-list clearfix">
+            <?php $_filters = $this->getFilters() ?>
+            <?php foreach ($_filters as $_filter): ?>
+        	    <?php if($_filter->getName() != 'Category'): ?>
+	        	    <?php if($_filter->getItemsCount()): ?>
+                <dt><?php echo($_sortTxt)?> <?php echo $this->__($_filter->getName()) ?></dt>
+                <dd><?php echo $_filter->getHtml() ?></dd>
+	    	        <?php endif; ?>
+		        <?php endif; ?>
+            <?php endforeach; ?>
+        </dl>
+        <script type="text/javascript">decorateDataList('narrow-by-list')</script>
+    <?php endif; ?>
+</div>
+
+<?php else: ?>
+<?php endif; ?>
+<?php }}?>

@@ -1,0 +1,100 @@
+<?php 
+	$u = '';
+	if(sizeof($_GET)>0){
+	
+		foreach($_GET as $k=>$v){
+			$u .= $k.'='.$v.'&';
+		}
+	}
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Sign up</title>
+<link href="css/apply_style.css" rel="stylesheet" />
+<script type="text/javascript">
+	function formSubmit(){
+		document.getElementById("credit-landing").submit();
+	}
+</script>
+</head>
+<body>
+<div class="wrapper">
+	<div id="header">
+		<div id="logo"><img src="images/logo.gif"></div>
+		<div id="social">
+			<span class="follow">Find us on:</span>
+			<ul class="social-icons">
+				<li class="gplus"><a href="https://plus.google.com/107858241391949634093/posts" target="_blank"><span>Google +</span></a></li>
+				<li class="twitter"><a href="https://twitter.com/lacuracao" target="_blank"><span>Twitter</span></a></li>
+				<li class="facebook"><a href="https://www.facebook.com/CuracaoUSA" target="_blank"><span>Facebook</span></a></li>
+			</ul>
+		</div>
+	</div>
+	<div id="top">
+		<div id="signup">
+			<h1>Get Started</h1>
+			<form action="https://www.icuracao.com/credit-application?<?php echo $u;?>" method="post" id="credit-landing">
+				<div class="fields">
+					<label>First Name:</label>
+					<input type="text" class="textbox" value="" id="fname" name="fname" />
+					<div class="clearfix"></div>
+				</div>
+				<div class="fields">
+					<label>Last Name:</label>
+					<input type="text" class="textbox" value="" id="lname" name="lname" />
+					<div class="clearfix"></div>
+				</div>
+				<div class="fields">
+					<label>Email:</label>
+					<input type="text" class="textbox" value="" id="email" name="email" />
+					<div class="clearfix"></div>
+				</div>
+				<div class="fields">
+					<label>Password:</label>
+					<input type="password" class="textbox" value="" id="password" name="password" />
+					<div class="clearfix"></div>
+				</div>
+				<div class="fields">
+					<label>Confirm Password:</label>
+					<input type="password" class="textbox" value="" id="confirmpass" name="confirmpass" />
+					<div class="clearfix"></div>
+				</div>
+				<button id="apply_submit" type="button" value="Apply Now" onclick="formSubmit();"><img src="images/btn_applyform.png" border="0" /></button>
+			</form>
+		</div>
+	</div>
+	<div id="bottom">
+		<h2>About Us</h2>
+		<p>Curacao is best known as a growing chain of large department stores. The population we serve is a vibrant community, and we value the unique relationship we have with our customers, whose loyalty and support have placed Curacao among the top 50 electronics and appliance retailers in the U.S. Curacao is your one-stop online shop for the finest in electronics, home furnishings, entertainment, gifts, services and much more. Shopping from the convenience of your home has never been more safe and easy; we offer a variety of flexible payment options and our secure web pages and servers ensure that your personal information is always protected and safe.</p>
+		<p>&copy; 2012, Curacao. All Rights Reserved.</p>
+		<div class="logos">
+			<table width="100%">
+				<tbody>
+					<tr>
+						<td valign="top">
+							<p><img src="http://www.icuracao.com/media/wysiwyg/Assets/logo_credit.png" alt="" width="122"></p>
+						</td>
+						<td valign="top">
+							<table style="width: 135px;" title="Click to Verify - This site chose Symantec SSL for secure e-commerce and confidential communications." border="0" cellspacing="0" cellpadding="2">
+								<tbody>
+									<tr>
+										<td align="center" valign="top" width="135">
+										<script type="text/javascript" src="https://seal.verisign.com/getseal?host_name=www.icuracao.com&amp;size=L&amp;use_flash=YES&amp;use_transparent=YES&amp;lang=en"></script>
+										<br> 
+										<a style="color: #000000; text-decoration: none; font: bold 7px verdana,sans-serif; letter-spacing: .5px; text-align: center; margin: 0px; padding: 0px;" href="http://www.symantec.com/ssl-certificates" target="_blank">ABOUT SSL CERTIFICATES</a></td>
+									</tr>
+								</tbody>
+							</table>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="clearfix"></div>
+	</div>
+	<div id="footer"></div>
+</div>
+</body>
+</html>

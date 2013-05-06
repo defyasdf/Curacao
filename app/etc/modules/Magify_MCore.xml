@@ -1,0 +1,8 @@
+<config>
+    <modules>
+        <Magify_MCore>
+            <active>true</active>
+            <codePool>local</codePool>
+        </Magify_MCore>
+    </modules>
+</config>

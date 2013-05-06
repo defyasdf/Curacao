@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Magify Commerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magify.com so we can send you a copy immediately.
+ *
+ * @category    Magify
+ * @package     Magify_Base
+ * @copyright   Copyright (c) 2012 Magify Commerce (http://www.magify.com)
+ * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+-->
+<layout>
+    <default>
+        <reference name="head">
+        	<action method="addCss"><stylesheet>magify/bannermanager/css/nivo.css</stylesheet></action>
+        </reference>
+        <!-- reference name="header">
+        	<block type="magify_bannermanager/factory" name="magify.bannermanager.factory.header" before="-">
+                <action method="setPosition">
+                    <position>header</position>
+                </action>
+            </block>
+        </reference-->
+        <reference name="header">
+        	<block type="magify_bannermanager/factory" name="magify.bannermanager.factory.header" before="-">
+                <action method="setPosition">
+                    <position>above_header</position>
+                </action>
+            </block>
+        </reference>
+        <reference name="left">
+        	<block type="magify_bannermanager/factory" name="magify.bannermanager.factory.left" before="-">
+                <action method="setPosition">
+                    <position>left</position>
+                </action>
+            </block>
+        </reference>
+        <reference name="content">
+        	<block type="magify_bannermanager/factory" name="magify.bannermanager.factory.content" before="-">
+                <action method="setPosition">
+                    <position>content</position>
+                </action>
+            </block>
+        </reference>
+        
+        <reference name="content">
+        	<block type="magify_bannermanager/factory" name="magify.bannermanager.factory.carousel" after="magify.bannermanager.factory.content">
+                <action method="setPosition">
+                    <position>carousel</position>
+                </action>
+            </block>
+        </reference>
+        
+        <reference name="content">
+        	<block type="magify_bannermanager/factory" name="magify.bannermanager.factory.secondary" before="-">
+                <action method="setPosition">
+                    <position>secondary</position>
+                </action>
+            </block>
+        </reference>
+        
+        <reference name="right">
+        	<block type="magify_bannermanager/factory" name="magify.bannermanager.factory.right" before="-">
+                <action method="setPosition">
+                    <position>right</position>
+                </action>
+            </block>
+        </reference>
+        <reference name="footer">
+        	<block type="magify_bannermanager/factory" name="magify.bannermanager.factory.footer" before="-">
+                <action method="setPosition">
+                    <position>footer</position>
+                </action>
+            </block>
+        </reference>
+    </default>
+</layout>

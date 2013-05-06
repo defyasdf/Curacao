@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <modules>
+        <Magify_Conf>
+            <version>3.5.4</version>
+        </Magify_Conf>
+    </modules>
+    
+    <frontend>
+        <translate>
+            <modules>
+                <Magify_Conf>
+                    <files>
+                        <default>Magify_Conf.csv</default>
+                    </files>
+                </Magify_Conf>
+            </modules>
+        </translate>
+        
+        <layout>
+            <updates>
+                <mconf>
+                    <file>mconf.xml</file>
+                </mconf>
+            </updates>
+        </layout>
+        
+        <routers>
+            <mconf>
+                <use>standard</use>
+                <args>
+                    <module>Magify_Conf</module>
+                    <frontName>mconf</frontName>
+                </args>
+            </mconf>
+        </routers>
+    </frontend>
+    <adminhtml>
+        <layout>
+            <updates>
+                <mconf>
+                    <file>mconf.xml</file>
+                </mconf>
+            </updates>
+        </layout>
+        <acl>
+            <resources>
+                <all>
+                    <title>Allow Everything</title>
+                </all>
+                <admin>
+                    <children>
+                        <system>
+                            <children>
+                                <config>
+                                    <children>
+                                        <mconf translate="title" module="mconf">
+                                            <title>Image-Based Dynamic Configurable Products</title>
+                                        </mconf>
+                                    </children>
+                                </config>
+                            </children>
+                        </system> 
+                     </children>
+                </admin> 
+            </resources>
+        </acl>
+        <translate>
+            <modules>
+                <Magify_Conf>
+                    <files>
+                        <default>Magify_Conf.csv</default>
+                    </files>
+                </Magify_Conf>
+            </modules>
+        </translate>
+    </adminhtml>
+    
+    <global>
+    
+        <models>
+            <mconf>
+                <class>Magify_Conf_Model</class>
+                <resourceModel>mconf_mysql4</resourceModel>
+            </mconf>
+            
+            <mconf_mysql4>
+                <class>Magify_Conf_Model_Mysql4</class>
+                <entities>
+                    <attribute>
+                        <table>magify_mconf_attribute</table>
+                    </attribute>
+                    <product_attribute>
+                        <table>magify_mconf_product_attribute</table>
+                    </product_attribute>
+                </entities>
+            </mconf_mysql4>
+
+        </models>
+        
+		<resources>
+             <mconf_setup>
+                <setup>
+                    <module>Magify_Conf</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </mconf_setup>
+		    <mconf_write>
+		        <connection><use>core_write</use></connection>
+		    </mconf_write>
+		    <mconf_read>
+		        <connection><use>core_read</use></connection>
+		    </mconf_read>
+		</resources>
+		  
+        <blocks>
+            <mconf>
+                <class>Magify_Conf_Block</class>
+            </mconf>
+            
+            <adminhtml>
+                <rewrite>
+                    <catalog_product_attribute_edit_tabs>Magify_Conf_Block_Adminhtml_Catalog_Product_Attribute_Edit_Tabs</catalog_product_attribute_edit_tabs>
+                </rewrite>
+            </adminhtml>
+            
+            <catalog>
+                <rewrite>
+                    <product_view_type_configurable>Magify_Conf_Block_Catalog_Product_View_Type_Configurable</product_view_type_configurable>
+                </rewrite>
+            </catalog>
+        </blocks>
+        
+        <helpers>
+            <mconf>
+                <class>Magify_Conf_Helper</class>
+            </mconf>
+        </helpers>
+        
+        <events>
+            <core_block_abstract_to_html_after>
+                <observers>
+                    <mconf>
+                        <class>mconf/observer</class>
+                        <method>onListBlockHtmlBefore</method>
+                    </mconf>
+                    <super_product_attributes_configuration>
+                        <class>mconf/observer</class>
+                        <method>onSuperProductAttributesConfigurationAfter</method>
+                    </super_product_attributes_configuration>
+                </observers>
+            </core_block_abstract_to_html_after>
+            <catalog_product_prepare_save>
+                <observers>
+                    <super_product_attributes_prepare_save>
+                        <class>mconf/observer</class>
+                        <method>onSuperProductAttributesPrepareSave</method>
+                    </super_product_attributes_prepare_save>
+                </observers>
+            </catalog_product_prepare_save>
+       </events>
+        
+    </global>
+    
+    <default>
+        <mconf>
+           <general>
+                <hide_dropdowns>0</hide_dropdowns>
+                <reload_images>1</reload_images>
+                <reload_name>1</reload_name>
+                <show_clear>1</show_clear>
+                <oneselect_reload>0</oneselect_reload>
+                <enable_list>0</enable_list>
+                <listimg_size>18</listimg_size>
+				<show_title_view>1</show_title_view>
+                <show_title_list>1</show_title_list>
+				<show_attribute_title>1</show_attribute_title>
+           </general>
+           <size>
+                <thumb>56</thumb>
+                <preview>265</preview>
+           </size>
+           <product_image_size>
+               <thumb>56</thumb>
+           </product_image_size>
+           <zoom>
+                <enable>1</enable>
+                <position>right</position>
+                <viewer_width>265</viewer_width>
+                <viewer_height>265</viewer_height>
+                <viewer_margin>30</viewer_margin>
+                <show_product_name>1</show_product_name>
+                <zoom_activation>mouse</zoom_activation>
+           </zoom>
+           <lightbox>
+                <enable>1</enable>
+                <change_main_img>1</change_main_img>
+           </lightbox>
+        </mconf>
+    </default>
+</config>

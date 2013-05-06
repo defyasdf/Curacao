@@ -1,0 +1,112 @@
+<?php
+/** Instant Cart extension
+ *  @category   design
+ *  @package    default_default
+ *  @author     MageWorx Dev Team <dev@mageworx.com>
+ */
+?>
+<?php
+	//$product = $this->getProduct();
+	
+	$requestUrl=$this->getRequest()->getRequestString();
+	$error = $this->getRequest()->getParam('error');
+	echo $this->getMessagesBlock()->getGroupedHtml();
+	
+	$_cartQty = Mage::helper('checkout/cart')->getSummaryCount();
+	$_storeId = Mage::app()->getStore()->getId();
+
+	if(! $_storeId == 0){
+		$_cartTxt = 'My Shopping Cart';
+		$_contShopping = 'Continue Shopping';
+		$_goToCart = 'Go to Shopping Cart';
+	} else {
+		$_cartTxt = 'Mi Carrito de Compras';
+		$_contShopping = 'Continuar Comprando';
+		$_goToCart = 'Ir al Carro de la Compra';
+	}
+?>
+
+<div style="text-align: center;">
+    <button onclick="iCart.close()" class="button" title="<?php echo $this->escapeHtml($this->__($_contShopping)) ?>" type="button"><span><span><?php echo $this->__($_contShopping) ?></span></span></button>
+    &nbsp;&nbsp;
+    
+    <?php if (strpos($requestUrl, '/addToWishlist/')) { ?>
+        <button onclick="location.href='<?php echo $this->getUrl('wishlist/')?>'" class="button" title="<?php echo $this->escapeHtml($this->__('Go to Wishlist')) ?>" type="button"><span><span><?php echo $this->__('Go to Wishlist') ?></span></span></button>
+    <?php } elseif (strpos($requestUrl, '/addToCompare/')) {?>
+        <?php if ($this->helper('catalog/product_compare')->getItemCount() > 1) { ?>
+            <button type="button" title="<?php echo $this->escapeHtml($this->__('Compare')) ?>" class="button" onclick="popWin('<?php echo $this->helper('catalog/product_compare')->getListUrl() ?>','compare','top:0,left:0,width=820,height=600,resizable=yes,scrollbars=yes')"><span><span><?php echo $this->__('Compare') ?></span></span></button>
+        <?php } ?>    
+    <?php } elseif (strpos($requestUrl, '/add/')) {?>
+        <button onclick="location.href='<?php echo $this->getUrl('checkout/cart')?>'" class="button" title="<?php echo $this->escapeHtml($this->__($_goToCart)) ?>" type="button"><span><span><?php echo $this->__($_goToCart) ?></span></span></button>
+    <?php } ?>
+</div>
+
+<?php if (!strpos($requestUrl, '/edit/') && $this->helper('icart')->getShowProductsBlock()):?>
+    <div class="icart-collaterals">
+
+	<?php
+		//get the product id based upon the url string
+		
+		$_product_id = 0;	//set a default
+		$_url_array = array_reverse(explode('/', $requestUrl));
+
+				
+		foreach($_url_array as $val){
+			if( is_numeric($val) && ($val > 0) ){
+				$_product_id = $val;
+				break;
+			}
+		}
+	?>
+
+    <?php 
+    	if($_product_id > 0 ){
+	    	$_product = Mage::getModel('catalog/product')->load($_product_id);
+	    	
+	    	//print_r($_product);
+			echo $this->getChildHtml('relatedProducts');
+    	}
+
+    ?>
+
+    <?php echo $this->getChildHtml('crosssell') ?>
+    <?php //echo $this->getChildHtml('upsell_products') ?>
+    
+    </div>
+<?php endif ?>
+<script type="text/javascript">    
+//<![CDATA[
+iCart.autoClose(<?php echo (int) Mage::getStoreConfig('mageworx_customers/icart/auto_hide') ?>);
+<?php if (!$error) { ?>
+    <?php if (strpos($requestUrl, '/addToWishlist/')) { ?>    
+        
+        // wishlist
+        iCart.updateBlock($$('a.top-link-wishlist'), <?php echo Zend_Json::encode($this->getTopLinkWishlist())?>);
+        <?php Mage::unregister('wishlist'); Mage::unregister('shared_wishlist'); ?>
+        iCart.placeBlock($$('div.block-wishlist', 'div.mini-wishlist'), <?php echo Zend_Json::encode($this->getChildHtml('wishlist_sidebar'))?>, $$('div.block-cart', 'div.mini-cart'));
+        
+    <?php } elseif (strpos($requestUrl, '/addToCompare/')) { ?>
+        // compare
+        iCart.replaceBlock($$('div.block-compare', 'div.mini-compare'), <?php echo Zend_Json::encode($this->getChildHtml('catalog.compare.sidebar'))?>);
+        
+    <?php } else { ?>
+        
+        // cart
+        iCart.updateBlock($$('a.top-link-cart'), '<div class="block-title"><strong><span><a href="/index.php/checkout/cart/"><?php echo($_cartTxt)?> (<?php echo($_cartQty)?>)</a></span></strong></div>');
+
+        <?php if (preg_match('~/checkout/cart/~', $this->getRequest()->getServer('HTTP_REFERER'))): ?>
+            iCart.updateBlock($$('div.cart', 'div.layout-1column'), <?php echo Zend_Json::encode($this->getChildHtml('checkout.cart'))?>);
+        <?php else: ?>
+            iCart.replaceBlock($$('div.block-cart', 'div.mini-cart'), <?php echo Zend_Json::encode($this->getChildHtml('cart_sidebar'))?>);
+            $$('div.block-cart .block-content .summary .subtotal .price')[0].update('$'+<?php echo(Mage::helper('checkout')->getQuote()->getSubtotal()) ?>);
+        <?php endif ?>    
+        
+        
+    <?php } ?>
+
+    iCart.updateLinks();
+    <?php if (strpos($requestUrl, '/edit/')) { ?>iCart.close();<?php } 
+}
+?>
+//]]>
+</script>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <modules>
+        <Curacao_Unlockcustomer>
+            <version>0.1.0</version>
+        </Curacao_Unlockcustomer>
+    </modules>
+    <global>
+        <models>
+            <unlockcustomer>
+                <class>Curacao_Unlockcustomer_Model</class>
+            </unlockcustomer>
+        </models>
+    </global>
+</config>

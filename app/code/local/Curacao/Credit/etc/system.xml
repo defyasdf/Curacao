@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<config>
+    <sections>
+        <checkout>
+            <groups>
+                <curacao translate="label">
+                    <label>Curacao Credit</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>1</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <fields>
+                        <credit_url translate="label comment">
+                            <label>Curacao Credit URL</label>
+                            <comment>Curacao Credit discount url.</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                        </credit_url>
+                    </fields>
+                </curacao>
+            </groups>
+        </checkout>
+    </sections>
+</config>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<modules>
+		<Curacao_Checkout>
+			<version>0.0.1</version>
+		</Curacao_Checkout>
+	</modules>
+	<frontend>
+		<routers>
+			<checkout><!-- Name of core module to be overridden  -->
+				<args>
+					<modules>
+						<Curacao_Checkout before="Mage_Checkout">Curacao_Checkout</Curacao_Checkout>
+						<!-- Tell Magento to call our custom module before the Mage/Checkout module -->
+					</modules>
+				</args>
+			</checkout>
+		</routers>
+	</frontend>
+</config>

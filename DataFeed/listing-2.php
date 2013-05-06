@@ -1,0 +1,16 @@
+<?php
+    require_once('LanguageTranslator.php');
+ 
+    $yourApiKey = 'AIzaSyAqfTrkUwYqrULHJudzwC5FjE11fT5REUQ';
+ 
+    $sourceData = '&lt;table&gt;&lt;tr&gt;&lt;td&gt;Product Type&lt;/td&gt;&lt;td&gt;Car CD/MP3 Player,Car CD/MP3 Player&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Manufacturer Part Number&lt;/td&gt;&lt;td&gt;KDC-X895&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Manufacturer Website Address&lt;/td&gt;&lt;td&gt;www.kenwoodusa.com&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Signal to Noise Ratio (SNR)&lt;/td&gt;&lt;td&gt;110 dB&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Standard Warranty&lt;/td&gt;&lt;td&gt;2 Year&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Screen Type&lt;/td&gt;&lt;td&gt;FLD,FLD&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Manufacturer&lt;/td&gt;&lt;td&gt;Kenwood USA Corp.&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Product Model&lt;/td&gt;&lt;td&gt;KDC-X895&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Product Name&lt;/td&gt;&lt;td&gt;eXcelon KDC-X895 Car CD/MP3 Player&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Product Line&lt;/td&gt;&lt;td&gt;eXcelon&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Brand Name&lt;/td&gt;&lt;td&gt;Kenwood,Kenwood&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Audio Formats&lt;/td&gt;&lt;td&gt;AAC,CD-DA,MP3,WMA,AAC,CD-DA,MP3,WMA&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Equalizer Modes&lt;/td&gt;&lt;td&gt;Bass,Bass Boost,Fader,Midrange,Tone,Treble&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Number of Discs&lt;/td&gt;&lt;td&gt;1,1&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Tuner&lt;/td&gt;&lt;td&gt;AM,FM&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Height&lt;/td&gt;&lt;td&gt;2.1&quot;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Width&lt;/td&gt;&lt;td&gt;7.2&quot;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Depth&lt;/td&gt;&lt;td&gt;6.3&quot;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Bluetooth&lt;/td&gt;&lt;td&gt;Yes,Yes&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;USB&lt;/td&gt;&lt;td&gt;Yes,Yes&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;iPod/iPhone Compatible&lt;/td&gt;&lt;td&gt;Yes,Yes&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;RMS Output Power&lt;/td&gt;&lt;td&gt;200 W,200 W&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Number of Pre-amplifier Outputs&lt;/td&gt;&lt;td&gt;3,3&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;DIN Size&lt;/td&gt;&lt;td&gt;Single DIN,Single DIN&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Product Family&lt;/td&gt;&lt;td&gt;eXcelon&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Auxiliary Input&lt;/td&gt;&lt;td&gt;Yes,Yes&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Audio Channels&lt;/td&gt;&lt;td&gt;4&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Preamp Output Voltage&lt;/td&gt;&lt;td&gt;4 V&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Equalizer Bands&lt;/td&gt;&lt;td&gt;Parametric&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Number of USB Ports&lt;/td&gt;&lt;td&gt;1&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Media Formats&lt;/td&gt;&lt;td&gt;CD-RW&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;';
+    $source = 'en';
+ 
+    $target = 'es';
+ 
+    $translator = new LanguageTranslator($yourApiKey);
+ 
+    $targetData = $translator->translate($sourceData, $target, $source);
+	echo $targetData;
+ //   file_put_contents($targetData, 'file.txt-' . $target);
+?>

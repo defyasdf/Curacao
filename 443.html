@@ -1,0 +1,9 @@
+NameVirtualHost *:443
+<VirtualHost *:443>
+  ServerName myname.com
+  SSLCertificateFile /etc/ssl/apache2/server.crt
+  SSLCertificateKeyFile /etc/ssl/apache2/server.key
+  SSLEngine on
+  RewriteEngine on
+  RewriteRule ^/(.*)  https://www.mysite.com%{REQUEST_URI}      [L,R]
+</VirtualHost>

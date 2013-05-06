@@ -1,0 +1,90 @@
+<?php
+	$_banners 	= $this->getBannerGroup();
+	$_size 		= $this->getSize();
+	$_params	= $this->getParams();
+	$_resize	= (isset($_params['resize']) ? $_params['resize'] : null);
+	$_id 		= 'magify_banner_' . md5(microtime());
+	$_helper	= Mage::helper('magify_bannermanager');
+	$_static 	= Mage::helper('magify_bannermanager');//->getStatic();
+
+?>
+<?php if($_banners && $_size): ?>
+<?php 	
+$product  = Mage::registry('current_product');
+	if($product){
+		echo 'product page';	
+	}
+?>
+	<div id="magify_banner_wrapper_<?php echo $_id; ?>" class="magify_banner_wrapper" <?php echo $this->getStyles('wrapper'); ?>>
+		<div class="banners" id="v_<?php echo $_id; ?>" <?php echo $this->getStyles(); ?>>
+			<?php foreach($_banners as $_banner): ?>
+			
+<?php 
+
+    $resource 	= Mage::getSingleton('core/resource');			
+	$query 		= 'SELECT * FROM ' . $resource->getTableName('magify_bannermanager_banner') . ' WHERE id='.$_banner->getId();
+	$results 	= $resource->getConnection('core_read')->fetchAll($query);
+?>	
+
+<?php 	//(print_r($results));  ?>
+
+			<?php if($_banner['link']): ?>
+				<a href="<?php echo $_banner['link']; ?>" title="<?php echo $_banner['title']; ?>">
+			<?php endif; ?>
+				<img title="<?php echo $_banner['title']; ?>" src="<?php echo $_banner['resize_file']; ?>" <?php if($_banner['background_color'] && Mage::getStoreConfig('magify_bannermanager/settings/fluid_background')): ?> rel="#<?php echo $_banner['background_color']; ?>"<?php endif; ?>/>
+			<?php if($_banner['link']): ?>
+				</a>
+			<?php endif; ?>
+			<?php endforeach; ?>
+		</div>
+	</div>
+	<div class="clear"></div>
+	<?php if($_size > 1): ?>
+	<script type="text/javascript">
+		<?php if(Mage::getStoreConfig('magify_bannermanager/settings/fluid_background')): ?>
+			function changeBannerColour() {
+				var vars = jQuery('#magify_banner_wrapper_<?php echo $_id; ?> .banners').data('nivo:vars');
+				console.log(jQuery('#magify_banner_wrapper_<?php echo $_id; ?> .banners').data());
+				var slide = vars.currentSlide + 1;
+				if(slide >= vars.totalSlides) {
+					slide = 0;
+				}
+				var element = jQuery('#magify_banner_wrapper_<?php echo $_id; ?> .banners img').get(slide);
+				jQuery('#magify_banner_wrapper_<?php echo $_id; ?>').animate({'background-color' : jQuery(element).attr('rel')}, <?php echo $this->getJsParams('animSpeed') * 3; ?>);
+			}
+		<?php else: ?>
+			function changeBannerColour() {}
+		<?php endif; ?>
+		
+		function bannerSetup() {
+			var nav = jQuery('#magify_banner_wrapper_<?php echo $_id; ?> .nivo-controlNav');
+			jQuery(nav).css('margin-left', - jQuery(nav).outerWidth() / 2);
+		}
+
+		
+		jQuery(window).load(function() {
+			jQuery('#magify_banner_wrapper_<?php echo $_id; ?> .banners').nivoSlider({<?php echo $this->getJsParams(); ?>});
+			
+			jQuery('.nivo-controlNav').css({'left':0, 'margin-left':0})
+			jQuery('.nivo-controlNav').addClass('text');
+			
+			jQuery('.nivo-controlNav a').each(function(z,i){
+				var _titles = jQuery('.nivo-imageLink');
+				jQuery(this).html(jQuery(_titles[z]).attr('title'));
+				var _w = 100 / jQuery('.nivo-controlNav a').length;
+				jQuery(this).css({'width':_w+'%'});
+			});
+			jQuery('.banners.nivoSlider').height(292);
+			jQuery('.nivo-directionNav').hide();			
+		});
+
+		
+		
+	</script>
+	<?php endif; ?>
+
+<?php endif; ?>
+
+<?php if($this->isDebug()):?>
+<?php $this->getDebugData(); ?>
+<?php endif; ?>

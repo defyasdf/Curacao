@@ -1,0 +1,8 @@
+<config>
+    <modules>
+        <Magify_OneStepCheckout>
+            <active>true</active>
+            <codePool>local</codePool>
+        </Magify_OneStepCheckout>
+    </modules>
+</config>

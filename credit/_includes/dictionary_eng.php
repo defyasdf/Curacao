@@ -1,0 +1,42 @@
+<?php 
+	define('FIRSTNAME','First Name');
+	define('LASTNAME','Last Name');
+	define('EMAIL','Email');
+	define('HOMEADDRESS1','Home Address 1');
+	define('HOMEADDRESS2','Home Address 2');
+	define('APT','Apt/Ste');
+	define('CITY','City');
+	define('State','State');
+	define('Zip','Zip');
+	define('TIME_LIVING','Time Living at Current Address');
+	define('HomePhone','Home Phone');
+	define('CellPhone','Cell Phone');
+	define('DOB','Date Of Birth');
+	define('SSN','Social Security Number');
+	define('IDN','ID Number');
+	define('IDT','ID Type');
+	define('IDS','ID State');
+	define('IDE','ID Expiration Date');
+	define('TITLE','Curacao Credit Application');
+	define('SUBTITLE','For verification purposes, please provide the following information:');
+	define('DATAVERIFICATION','Data Verification');
+	define('THANKS','Thank you for your application');
+	define('DECLINE','We are unable to open your account at this time. We will send a letter within <strong>10 days </strong>with additional information regarding your application. However, you may use another method of payment to complite your order. ');
+	define('CUSTSERVICE','If you have any question please contact us at: 555-222-3333.<br />
+	<strong>Monday - Saturday, 6AM - 6PM Pacific Time.</strong> ');
+	define('ACCNO','Account Number:');
+	define('CHOOSE','Choose State');
+	define('CHOOSEIDTYPE','Choose ID Type');
+	define('CALIID','California ID/Licence');
+	define('GREENCARD','Working Permit/Green Card');
+	define('OTHER','Others States ID/Driver License');
+	define('CONGRATES','Congratulations!');
+	define('APPROVE_1','You have been <span id="spendinglimit">APPROVED</span> for Curacao Credit Account with a credit limit of <span id="spendinglimit">$');
+	define('APPROVE_2','</span>. You can start shopping now yousing your account number.');
+	define('TMPNO','Temporary Autherization Number:');
+	define('PENDING','Your account is under review. However you can continue shopping using your temporary autherization number. Your initial spending limit is <span id="spendinglimit">$500</span>. Once we complite the processing of your application we will notify you with our decision. If your account is approved, your order will be shippied and we will notify you with your shipping confirmation. ');
+
+	$LOGIN_TITLE 	= 'Application for Curacao Credit Account';
+	$LOGIN_CALLOUT 	= 'Takes About 1 Minute. Get Your Results Now.';
+	$PASSWORD_LABEL = 'Password';
+	$CONFIRM_PSSWD_LABEL = 'Confirm Password';

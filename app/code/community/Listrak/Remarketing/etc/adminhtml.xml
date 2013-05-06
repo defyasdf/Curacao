@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<!-- 
+	/**
+	* Listrak Remarketing Magento Extension Ver. 1.0.0 - © 2011 Listrak, Inc. 
+	*/
+-->
+<config>
+	<menu>
+		<remarketing module="remarketing">
+			<title>Listrak</title>
+			<sort_order>71</sort_order>
+			<children>
+				<emailcapture module="remarketing">
+					<title>Email Capture</title>
+					<sort_order>0</sort_order>
+					<action>remarketing/adminhtml_emailcapture</action>
+				</emailcapture>
+				<abandonedcartreport module="remarketing">
+					<title>Abandoned Carts</title>
+					<sort_order>0</sort_order>
+					<action>remarketing/adminhtml_abandonedcartreport</action>
+				</abandonedcartreport>
+			</children>
+		</remarketing>
+	</menu>
+    <acl>
+		<resources>
+			<admin>
+				<children>
+					<remarketing translate="title" module="remarketing">
+						<title>Listrak Remarketing</title>
+                        <sort_order>200</sort_order>
+						<children>
+							<emailcapture translate="title">
+								<title>Email Capture</title>
+								<sort_order>200</sort_order>
+							</emailcapture>
+							<abandonedcartreport translate="title">
+								<title>Abandoned Carts</title>
+								<sort_order>200</sort_order>
+							</abandonedcartreport>
+						</children>
+					</remarketing>
+					<system>
+						<children>
+							<config>
+                                <children>
+                                    <remarketing translate="title">
+                                        <title>Listrak Newsletter</title>
+                                        <sort_order>40</sort_order>
+                                    </remarketing>
+                                </children>
+                            </config>
+						</children>
+					</system>
+				</children>
+			</admin>
+		</resources>
+	</acl>
+</config>

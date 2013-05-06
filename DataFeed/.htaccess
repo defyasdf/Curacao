@@ -1,0 +1,7 @@
+AuthUserFile /var/www/html/.dfpasswd
+
+AuthName "Please Log In"
+
+AuthType Basic
+
+require valid-user

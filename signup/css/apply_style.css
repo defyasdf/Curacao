@@ -1,0 +1,35 @@
+@charset "utf-8";
+/* CSS Document */
+
+html, body { margin: 0; padding: 0; font-family: Arial, Tahoma, sans-serif; color: #444444; }
+.wrapper { width: 990px; margin: 0 auto; }
+.button, button, input[type="submit"], input[type="reset"], input[type="button"] { background-color: #92c039; border: 1px solid #6db936; clear: both; float: right; height: 40px; margin-top: 20px; padding: 12px 50px; width: 220px; border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px; cursor:pointer; }
+.clearfix { clear: both; }
+
+/*** Header ***/
+#header { width: 100%; padding-top: 25px; height: 75px; }
+#header #logo { float: left; width: 320px; }
+#header #social { float: right; width: 175px; font-size: 14px; }
+#header #social span.follow { float: left; margin-top: 20px; }
+ul.social-icons li { float: right; margin:0 10px 0 0; list-style: none;}
+ul.social-icons li span { height: 24px; display: block; text-indent: -999em; width: 25px; margin: 3px 0 0 0; }
+ul.social-icons li.facebook span { background: url("../images/social-icons.png") repeat scroll 0 0 transparent; width: 18px; }
+ul.social-icons li.twitter span { background: url("../images/social-icons.png") repeat scroll -32px 0 transparent; }
+ul.social-icons li.gplus span { background: url("../images/social-icons.png") repeat scroll -72px 0 transparent; }
+
+/*** Banner & Signup Form ***/
+#top { width: 990px; height: 445px; background: url(../images/landing_banner.jpg) no-repeat 0 0; clear: both; }
+#signup { width: 340px; height: 325px; float: right; margin: 55px 60px; }
+#signup h1 { font-size: 28px; font-weight: bold; margin: 0 0 0 90px; }
+#signup .fields { width: 100%; margin-top: 15px }
+#signup label { padding-top: 10px; font-size: 12px; float: left; }
+#signup .textbox { height: 20px; width: 210px; border: 1px solid #cccccc; padding: 5px; float: right; }
+
+/*** Bottom & Footer ***/
+#bottom { font-size: 11px; padding: 25px; clear: both; border-left: 1px solid #d7d7d7; border-right: 1px solid #d7d7d7;}
+#bottom h2 { margin: 0; font-weight: bold; font-size: 14px; margin: 0; line-height: 16px; }
+#bottom p { margin-bottom: 1em; line-height: 14px; font-size: 11px; }
+#bottom .disclaimer { float: left; width: 600px; }
+#bottom .disclaimer p { font-size: 10px; }
+#bottom .logos { float: right; width: 300px; text-align: right;}
+#footer { clear: both; background: url(../images/bdr_bottom.jpg) no-repeat 0 100%; height: 14px; }

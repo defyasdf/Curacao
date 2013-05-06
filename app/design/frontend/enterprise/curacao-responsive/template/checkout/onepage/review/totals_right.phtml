@@ -1,0 +1,34 @@
+
+<?php $_items = $this->getItems()?>
+
+<?php if(count($_items)): ?>
+	 <ol id="mini-cart" class="mini-products-list">
+		<?php foreach($_items as $_item): ?>
+                    <?php 
+					echo $_item;
+					echo $this->getItemHtml($_item) ?>
+        <?php endforeach; ?>
+    </ol>
+<?php endif?>
+<div style="clear:both"></div>
+<hr />
+<?php if ($this->getTotals()): ?>
+    
+    <dd>
+        <table class="data-table ">
+        <?php $_colspan = $this->helper('tax')->displayCartBothPrices() ? 5 : 3; ?>
+        <?php echo $this->renderTotals(null, $_colspan); ?>
+        <?php echo $this->renderTotals('footer', $_colspan); ?>
+        <?php if ($this->needDisplayBaseGrandtotal()):?>
+        <tr>
+            <td class="a-right" colspan="<?php echo $_colspan; ?>">
+                <small><?php echo $this->helper('sales')->__('Your credit card will be charged for') ?></small>
+            </td>
+            <td class="a-right">
+                <small><?php echo $this->displayBaseGrandtotal() ?></small>
+            </td>
+        </tr>
+        <?php endif?>
+        </table>
+    </dd>
+<?php endif?>

@@ -1,0 +1,345 @@
+<?php 
+
+class Reports extends CI_Model {
+	
+	function getmineralreport(){
+		$this->db->select('distinct(`campaign`) as campaign');
+		$this->db->from('userActivitytrack');
+		$this->db->where('campaign != ', '');
+		$q = $this->db->get();			
+		$data = array();
+		foreach($q->result_array() as $row){
+			//echo $row['campaign'].'<br>';
+			$data[$row['campaign']]['count']=$this->getlanding_page($row['campaign']);
+			/*$data[$row['campaign']]['firstpage']=$this->getfirst_page($row['campaign']);
+			$data[$row['campaign']]['completefirstpage']=$this->getfirst_page_complete($row['campaign']);
+			$data[$row['campaign']]['authpass']=$this->getauth_pass($row['campaign']);
+			$data[$row['campaign']]['submitapp']=$this->getsubmitapp($row['campaign']);
+			$data[$row['campaign']]['approve']=$this->getApprove($row['campaign']);
+			$data[$row['campaign']]['pending']=$this->getpending($row['campaign']);
+			$data[$row['campaign']]['decline']=$this->getdecline($row['campaign']);
+			$data[$row['campaign']]['shoppingcart']=$this->getshoppingcart($row['campaign']);
+			$data[$row['campaign']]['checkout']=$this->getcheckout($row['campaign']);
+			$data[$row['campaign']]['finishcheckout']=$this->getfinishcheckout($row['campaign']);
+			$data[$row['campaign']]['totalamount']=$this->getTotalAmount($row['campaign']);
+			$data[$row['campaign']]['cartamount']=$this->getCartAmount($row['campaign']);*/
+			
+		}
+		
+		return $data;
+	}
+	
+	function getmineralreportdetail(){
+		
+		$data = array();
+
+		$data[$_GET['campaign']]['count']=$this->getlanding_page($_GET['campaign']);
+		$data[$_GET['campaign']]['firstpage']=$this->getfirst_page($_GET['campaign']);
+		$data[$_GET['campaign']]['completefirstpage']=$this->getfirst_page_complete($_GET['campaign']);
+		$data[$_GET['campaign']]['authpass']=$this->getauth_pass($_GET['campaign']);
+		$data[$_GET['campaign']]['submitapp']=$this->getsubmitapp($_GET['campaign']);
+		$data[$_GET['campaign']]['approve']=$this->getApprove($_GET['campaign']);
+		$data[$_GET['campaign']]['pending']=$this->getpending($_GET['campaign']);
+		$data[$_GET['campaign']]['decline']=$this->getdecline($_GET['campaign']);
+		$data[$_GET['campaign']]['shoppingcart']=$this->getshoppingcart($_GET['campaign']);
+		$data[$_GET['campaign']]['checkout']=$this->getcheckout($_GET['campaign']);
+		$data[$_GET['campaign']]['finishcheckout']=$this->getfinishcheckout($_GET['campaign']);
+		$data[$_GET['campaign']]['totalamount']=$this->getTotalAmount($_GET['campaign']);
+		$data[$_GET['campaign']]['cartamount']=$this->getCartAmount($_GET['campaign']);
+		
+	
+		
+		return $data;
+	}
+	
+	 function getlanding_page($campaign){
+			
+			$this->db->select('*');
+			$this->db->from('userActivitytrack');
+			$this->db->where('campaign',$campaign);
+			
+			$dT = explode('/',$_REQUEST['edate']);
+			$dF = explode('/',$_REQUEST['sdate']);
+			if(trim($_REQUEST['edate'])!=''){
+				$to = $dT[2].'-'.$dT[0].'-'.$dT[1];
+				$this->db->where('created_date <= ', $to); 
+				 
+			}
+		if(trim($_REQUEST['sdate'])!=''){
+				$from = $dF[2].'-'.$dF[0].'-'.$dF[1];
+				$this->db->where('created_date >= ', $from);
+			}
+			
+			
+			$q = $this->db->get();
+			return $q->num_rows(); 
+	  }
+	   function getfirst_page($campaign){
+			$this->db->select('*');
+			$this->db->from('userActivitytrack');
+			$this->db->where('campaign',$campaign);
+			$this->db->where('first_page = ', '1');
+			$dT = explode('/',$_REQUEST['edate']);
+			$dF = explode('/',$_REQUEST['sdate']);
+			if(trim($_REQUEST['edate'])!=''){
+				$to = $dT[2].'-'.$dT[0].'-'.$dT[1];
+				$this->db->where('created_date <= ', $to); 
+				 
+			}
+		if(trim($_REQUEST['sdate'])!=''){
+				$from = $dF[2].'-'.$dF[0].'-'.$dF[1];
+				$this->db->where('created_date >= ', $from);
+			}
+			 
+			$q = $this->db->get();
+			
+			return $q->num_rows(); 
+	  }
+	  
+	   function getfirst_page_complete($campaign){
+			$this->db->select('*');
+			$this->db->from('userActivitytrack');
+			$this->db->where('campaign',$campaign);
+			$this->db->where('complete_first_page = ', '1');
+			$dT = explode('/',$_REQUEST['edate']);
+			$dF = explode('/',$_REQUEST['sdate']);
+			if(trim($_REQUEST['edate'])!=''){
+				$to = $dT[2].'-'.$dT[0].'-'.$dT[1];
+				$this->db->where('created_date <= ', $to); 
+				 
+			}
+		if(trim($_REQUEST['sdate'])!=''){
+				$from = $dF[2].'-'.$dF[0].'-'.$dF[1];
+				$this->db->where('created_date >= ', $from);
+			}
+			 
+			$q = $this->db->get();
+			
+			return $q->num_rows(); 
+	  }
+	  
+	   function getauth_pass($campaign){
+			$this->db->select('*');
+			$this->db->from('userActivitytrack');
+			$this->db->where('campaign',$campaign);
+			$this->db->where('pass_auth = ', '1');
+			$dT = explode('/',$_REQUEST['edate']);
+			$dF = explode('/',$_REQUEST['sdate']);
+			if(trim($_REQUEST['edate'])!=''){
+				$to = $dT[2].'-'.$dT[0].'-'.$dT[1];
+				$this->db->where('created_date <= ', $to); 
+				 
+			}
+		if(trim($_REQUEST['sdate'])!=''){
+				$from = $dF[2].'-'.$dF[0].'-'.$dF[1];
+				$this->db->where('created_date >= ', $from);
+			}
+			 
+			$q = $this->db->get();
+			return $q->num_rows(); 
+	  }
+	  
+	   function getsubmitapp($campaign){
+			$this->db->select('*');
+			$this->db->from('userActivitytrack');
+			$where = '`campaign` = "'.$campaign.'" AND (`pending_app` = 1 or `approve` = 1 or `decline` =1)';
+			$this->db->where($where);
+			$dT = explode('/',$_REQUEST['edate']);
+			$dF = explode('/',$_REQUEST['sdate']);
+			if(trim($_REQUEST['edate'])!=''){
+				$to = $dT[2].'-'.$dT[0].'-'.$dT[1];
+				$this->db->where('created_date <= ', $to); 
+				 
+			}
+		if(trim($_REQUEST['sdate'])!=''){
+				$from = $dF[2].'-'.$dF[0].'-'.$dF[1];
+				$this->db->where('created_date >= ', $from);
+			}
+			 
+			$q = $this->db->get();
+			return $q->num_rows(); 
+	  }
+	  
+	   function getdecline($campaign){
+			$this->db->select('*');
+			$this->db->from('userActivitytrack');
+			$this->db->where('campaign',$campaign);
+			$this->db->where('decline = ', '1');
+			$dT = explode('/',$_REQUEST['edate']);
+			$dF = explode('/',$_REQUEST['sdate']);
+		if(trim($_REQUEST['edate'])!=''){
+				$to = $dT[2].'-'.$dT[0].'-'.$dT[1];
+				$this->db->where('created_date <= ', $to); 
+				 
+			}
+		if(trim($_REQUEST['sdate'])!=''){
+				$from = $dF[2].'-'.$dF[0].'-'.$dF[1];
+				$this->db->where('created_date >= ', $from);
+			}
+			 
+			$q = $this->db->get();
+			return $q->num_rows(); 
+	  }
+	   function getpending($campaign){
+			$this->db->select('*');
+			$this->db->from('userActivitytrack');
+			$this->db->where('campaign',$campaign);
+			$this->db->where('pending_app = ', '1');
+			$dT = explode('/',$_REQUEST['edate']);
+			$dF = explode('/',$_REQUEST['sdate']);
+			
+			if(trim($_REQUEST['edate'])!=''){
+				$to = $dT[2].'-'.$dT[0].'-'.$dT[1];
+				$this->db->where('created_date <= ', $to); 
+				 
+			}
+		if(trim($_REQUEST['sdate'])!=''){
+				$from = $dF[2].'-'.$dF[0].'-'.$dF[1];
+				$this->db->where('created_date >= ', $from);
+			}
+			 
+			$q = $this->db->get();
+			return $q->num_rows(); 
+	  }
+	   function getApprove($campaign){
+			
+			$this->db->select('*');
+			$this->db->from('userActivitytrack');
+			$this->db->where('approve = ', '1');
+			$this->db->where('campaign',$campaign);
+			
+			$dT = explode('/',$_REQUEST['edate']);
+			$dF = explode('/',$_REQUEST['sdate']);
+			
+			if(trim($_REQUEST['edate'])!=''){
+				$to = $dT[2].'-'.$dT[0].'-'.$dT[1];
+				$this->db->where('created_date <= ', $to); 
+				 
+			}
+		if(trim($_REQUEST['sdate'])!=''){
+				$from = $dF[2].'-'.$dF[0].'-'.$dF[1];
+				$this->db->where('created_date >= ', $from);
+			}
+			 
+			
+			$q = $this->db->get();
+			return $q->num_rows(); 
+	  }
+// Shopping cart Entries	  	
+	function getshoppingcart($campaign){
+			$this->db->select('*');
+			$this->db->from('userActivitytrack');
+			$this->db->where('campaign',$campaign);
+			$this->db->where('shop = ', '1');
+			$dT = explode('/',$_REQUEST['edate']);
+			$dF = explode('/',$_REQUEST['sdate']);
+			if(trim($_REQUEST['edate'])!=''){
+				$to = $dT[2].'-'.$dT[0].'-'.$dT[1];
+				$this->db->where('created_date <= ', $to); 
+				 
+			}
+		if(trim($_REQUEST['sdate'])!=''){
+				$from = $dF[2].'-'.$dF[0].'-'.$dF[1];
+				$this->db->where('created_date >= ', $from);
+			}
+			 
+			$q = $this->db->get();
+			
+			return $q->num_rows(); 
+	  }
+//Checkout Entries	  
+	   function getcheckout($campaign){
+			$this->db->select('*');
+			$this->db->from('userActivitytrack');
+			$this->db->where('campaign',$campaign);
+			$this->db->where('checkout = ', '1');
+			$dT = explode('/',$_REQUEST['edate']);
+			$dF = explode('/',$_REQUEST['sdate']);
+			if(trim($_REQUEST['edate'])!=''){
+				$to = $dT[2].'-'.$dT[0].'-'.$dT[1];
+				$this->db->where('created_date <= ', $to); 
+				 
+			}
+		if(trim($_REQUEST['sdate'])!=''){
+				$from = $dF[2].'-'.$dF[0].'-'.$dF[1];
+				$this->db->where('created_date >= ', $from);
+			}
+			 
+			$q = $this->db->get();
+			
+			return $q->num_rows(); 
+	  }
+	   function getCartAmount($campaign){
+			$this->db->select('sum(`amount`) as totalincart');
+			$this->db->from('userActivitytrack');
+			$this->db->where('campaign',$campaign);
+
+			$dT = explode('/',$_REQUEST['edate']);
+			$dF = explode('/',$_REQUEST['sdate']);
+			if(trim($_REQUEST['edate'])!=''){
+				$to = $dT[2].'-'.$dT[0].'-'.$dT[1];
+				$this->db->where('created_date <= ', $to); 
+				 
+			}
+		if(trim($_REQUEST['sdate'])!=''){
+				$from = $dF[2].'-'.$dF[0].'-'.$dF[1];
+				$this->db->where('created_date >= ', $from);
+			}
+			 
+			$q = $this->db->get();			
+			$data = array();
+			$data = $q->result_array();
+			
+			return $data[0]['totalincart']; 
+	  }
+	  
+//finishCheckout Entries	  
+	   function getfinishcheckout($campaign){
+			$this->db->select('*');
+			$this->db->from('userActivitytrack');
+			$this->db->where('campaign',$campaign);
+			$this->db->where('finishcheckout = ', '1');
+			$dT = explode('/',$_REQUEST['edate']);
+			$dF = explode('/',$_REQUEST['sdate']);
+			if(trim($_REQUEST['edate'])!=''){
+				$to = $dT[2].'-'.$dT[0].'-'.$dT[1];
+				$this->db->where('created_date <= ', $to); 
+				 
+			}
+		if(trim($_REQUEST['sdate'])!=''){
+				$from = $dF[2].'-'.$dF[0].'-'.$dF[1];
+				$this->db->where('created_date >= ', $from);
+			}
+			 
+			$q = $this->db->get();
+			
+			return $q->num_rows(); 
+	  }
+	  
+	    function getTotalAmount($campaign){
+			$this->db->select('sum(`checkoutAmount`) as totalcheckout');
+			$this->db->from('userActivitytrack');
+			$this->db->where('campaign',$campaign);
+			$this->db->where('finishcheckout = ', '1');
+			$dT = explode('/',$_REQUEST['edate']);
+			$dF = explode('/',$_REQUEST['sdate']);
+			if(trim($_REQUEST['edate'])!=''){
+				$to = $dT[2].'-'.$dT[0].'-'.$dT[1];
+				$this->db->where('created_date <= ', $to); 
+				 
+			}
+		if(trim($_REQUEST['sdate'])!=''){
+				$from = $dF[2].'-'.$dF[0].'-'.$dF[1];
+				$this->db->where('created_date >= ', $from);
+			}
+			 
+			$q = $this->db->get();			
+			$data = array();
+			$data = $q->result_array();
+			
+			return $data[0]['totalcheckout']; 
+	  }
+
+
+}
+

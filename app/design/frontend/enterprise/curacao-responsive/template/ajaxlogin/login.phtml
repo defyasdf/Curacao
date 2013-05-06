@@ -1,0 +1,98 @@
+<?php
+/**
+ * Magify
+ *
+ * @category    template
+ * @package     magify_ajaxlogin
+ * @copyright   Copyright (c) 2012 Magify Inc. (http://www.magify.com)
+ * @version		1.0
+ * @author		Magify (info@magify.com)
+ */
+?>
+<div class="account-login container account-create">
+    <div class="page-title">
+        <h1><?php echo Mage::helper('customer')->__('Please Login...') ?></h1>
+    </div>
+	<ul class="messages"></ul>
+	<div class="container">
+	    <form id="login-form">
+	        <div class="registered-users columns six">
+	            <div class="content">
+	                <ul class="form-list">
+	                    <li>
+	                        <label for="email" class="required"><em>*</em><?php echo Mage::helper('customer')->__('Email Address') ?></label>
+	                        <div class="input-box">
+	                            <input type="text" name="login[username]" id="email" class="input-text required-entry validate-email" title="<?php echo Mage::helper('customer')->__('Email Address') ?>" value="Email" />
+	                        </div>
+	                    </li>
+	                    <li>
+	                        <label for="pass" class="required"><em>*</em><?php echo Mage::helper('customer')->__('Password') ?></label>
+	                        <div class="input-box">
+	                            <input type="password" name="login[password]" class="input-text required-entry validate-password" id="pass" title="<?php echo Mage::helper('customer')->__('Password') ?>" value="Password" />
+	                        </div>
+	                    </li>
+	                </ul>
+	            </div>
+				<div class="buttons-set">
+	                <button type="button" class="button" onclick="ajaxlogin()" title="<?php echo Mage::helper('customer')->__('Login') ?>" name="send" id="send2"><span><span><?php echo Mage::helper('customer')->__('Login') ?></span></span></button>
+	                <a onclick="showRetrievePasswordPanel()" href="#" class="f-left"><?php echo Mage::helper('customer')->__('Forgot Your Password?') ?></a><br/>
+	                <a onclick="showRegisterPanel()" href="#" class="f-left"><?php echo Mage::helper('customer')->__('Create an Account') ?></a>
+	            </div>
+	        </div>
+	    </form>
+	</div>
+</div>
+<script type="text/javascript">	
+        
+	function showRegisterPanel()
+	{		
+		jQuery('#mg-register-panel .messages').hide();
+		jQuery.fancybox("#mg-register-panel");
+	}
+	
+	function showRetrievePasswordPanel()
+	{
+		jQuery('#mg-forgotpassword-panel .messages').hide();
+		jQuery.fancybox("#mg-forgotpassword-panel");
+		return false;
+	}
+	
+	function ajaxlogin()
+	{
+		var dataForm = new VarienForm('login-form', true);
+		if (!dataForm.validator.validate())
+		{
+			return;
+		}
+			
+		jQuery.post(	
+		'<?php echo $this->getUrl("ajaxlogin/index/loginpost") ?>',
+		jQuery("#login-form").serialize(),
+		function(data)
+		{
+			var result = eval("(" + data + ")");
+			if (result.logined)
+			{
+				var welcome = "<?php echo Mage::helper('customer')->__('Welcome, ') ?>" + result.user;				
+				jQuery('.header-container .welcome-msg').html(welcome);
+				
+				var logtext = "<a href='<?php echo $this->getUrl('customer/account/logout') ?>'><?php echo Mage::helper('customer')->__('Log out') ?></a>";
+				jQuery('.header-container .links .last').html(logtext);
+			}
+			
+			if (result.detail)
+			{
+				var msg = "<li class='error-msg'>" + result.detail + "</li>";
+				jQuery('.account-login .messages').show();
+				jQuery('.account-login .messages').html(msg);
+				jQuery.fancybox("#mg-login-panel");
+			}
+			else
+			{	
+				jQuery.fancybox.close();
+			}
+		});
+		
+	}	
+</script>
+

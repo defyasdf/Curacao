@@ -1,0 +1,104 @@
+<?php
+/**
+ * Magento Enterprise Edition
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Magento Enterprise Edition License
+ * that is bundled with this package in the file LICENSE_EE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.magentocommerce.com/license/enterprise-edition
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://www.magentocommerce.com/license/enterprise-edition
+ */
+?>
+<div class="sixteen columns alpha">
+    <div class="box">
+        <div class="box-title">
+            <h3><?php echo $this->__('Curacao Credit Information') ?></h3>
+        </div>
+        <div class="box-content">
+            <div class="sixteen columns alpha">
+                <?php 
+					 $data = $this->getCustomer()->getCuracaocustid();
+					 if($data){
+						?>
+					<p>
+                    	Curacao Number : <?php echo $data?>
+                    </p>
+                    
+                    <p>
+                    	Available Curacao Credit* : $<?php echo file_get_contents('http://www.icuracao.com/credit/getbalance.php?custnum='.$data);?>
+                    </p>
+                    <p>* Please allow up to 2 business days to reflact recent transactions.</p>
+                    <p>
+                    	<a href="http://online.icuracao.com/" target="_blank">Pay My Bill</a>
+                    </p>
+                    				
+					<?php
+					}				
+				?>
+ 
+ 
+ 
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+
+<!--<div class="sixteen columns alpha">
+    <div class="box">
+        <div class="box-title">
+            <h3><?php echo $this->__('Credit Balance') ?></h3>
+            <a href="<?php echo $this->getAddressBookUrl() ?>"><?php echo $this->__('Manage Addresses') ?></a>
+        </div>
+        <div class="box-content">
+            <div class="eight columns alpha">
+                <h4><?php echo $this->__('Default Billing Address') ?></h4>
+                <address>
+                    <?php echo $this->getPrimaryBillingAddressHtml() ?><br />
+                    <a href="<?php echo $this->getPrimaryBillingAddressEditUrl() ?>"><?php echo $this->__('Edit Address') ?></a>
+                </address>
+            </div>
+            <div class="eight columns">
+                <h4><?php echo $this->__('Default Shipping Address') ?></h4>
+                <address>
+                    <?php echo $this->getPrimaryShippingAddressHtml() ?><br />
+                    <a href="<?php echo $this->getPrimaryShippingAddressEditUrl() ?>"><?php echo $this->__('Edit Address') ?></a>
+                </address>
+            </div>
+        </div>
+    </div>
+</div>
+-->
+
+
+<script type="text/javascript">
+
+function popMyWindow() {      //add modalbox;
+     Modalbox.setOptions({
+            title:'Credit Application',
+         width: 814,
+         overlay: true,
+         overlayClose: true
+        });
+
+        Modalbox.show('/credit.php');
+ 
+        return false;
+    }
+</script>

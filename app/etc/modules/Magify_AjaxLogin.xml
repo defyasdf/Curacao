@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Magify_AjaxLogin>
+            <active>true</active>
+            <codePool>local</codePool>
+        </Magify_AjaxLogin>
+    </modules>
+</config> 
