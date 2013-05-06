@@ -789,7 +789,7 @@ $_storeId = Mage::app()->getStore()->getId();
 	                    <button class="button right" title="Submit" onClick="return finishform()" type="submit"><span><span id="submittofinish"><?php echo $txt_finish?></span></span></button>
                     <div class="clear"></div>
                     
-                    <div id="loadingmessage"><?php echo $loadingmessage;?></div>    
+                    <div id="loadingmessage" style="display:none; margin-top:10px;font-family: Arial; font-size:12px; color:#F00; font-weight: bold; text-align: right;"><?php echo $loadingmessage;?></div>    
                </div>
               </form>
                 
@@ -843,6 +843,7 @@ $_storeId = Mage::app()->getStore()->getId();
 								if(!result){
 									return false;
 								}else{
+									jQuery("#loadingmessage").show('slow');
 									if(jQuery('#agreeToTerms').is(':checked')){
 										return true;
 									}else{
