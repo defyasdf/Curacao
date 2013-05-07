@@ -4448,6 +4448,7 @@ p.hours { font-size: 11px; margin: 10px 0; }
 #gopro h1 {
 	font-family: Arial, Tahoma, sans-serif;
 	font-size: 36px;
+	font-weight: normal;
 	color: #444444;
 	margin: 0;
 	padding: 0;
