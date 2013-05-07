@@ -1073,6 +1073,7 @@ body{ background: #fff; font: 14px/21px Arial, Tahoma, sans-serif; }
 	float: left;
 	font-size: 19px;
 	font-weight: normal;
+	margin: 16px 0 0;
 	padding: 10px 0;
 	text-indent: 10px;
 	width: 100%;
@@ -3691,7 +3692,7 @@ select.split {
 
 table.onestepcheckout-totals tr.amount-due td {
     font-weight: bold;
-	color:#d95902;
+	color:#FF0000;
 }
 .initial-payment{
 	color:#cf2842;
@@ -4434,6 +4435,49 @@ p.hours { font-size: 11px; margin: 10px 0; }
 	color: #878a8e;
 }
 
+/********** GOPRO HERO3 **********/
+
+#gopro {
+	width: 990px;
+}
+
+#gopro .content {
+	padding: 25px;
+}
+
+#gopro h1 {
+	font-family: Arial, Tahoma, sans-serif;
+	font-size: 36px;
+	color: #444444;
+	margin: 0;
+	padding: 0;
+	line-height: 36px;
+}
+
+#gopro p {
+	font-family: Arial, Tahoma, sans-serif;
+	font-size: 14px;
+	color: #878A8E;
+	line-height: 20px;
+	margin: 0 0 20px 0;
+	padding: 0;
+}
+
+#gopro .product {
+	float: left;
+	width: 655px;
+	height: 390px;
+}
+
+#gopro .specs {
+	float: left;
+	text-align: left;
+	margin: 20px 0 0 40px;
+	font-family: Arial, Tahoma, sans-serif;
+	line-height: 24px;
+	color: #878A8E;
+}
+
 /*================================================================================ */
 /* Store Locator													
 /*================================================================================ */
@@ -4813,4 +4857,33 @@ p.rating-links a {
 }
 span.separator {
     font-size: 15px;
+}
+.rating-box {
+    background: url("../images/bkg_rating.gif") repeat-x scroll 0 0 transparent;
+    font-size: 0;
+    height: 13px;
+    line-height: 0;
+    overflow: hidden;
+    text-indent: -999em;
+    width: 69px;
+}
+.rating-box .rating {
+    background: url("../images/bkg_rating.gif") repeat-x scroll 0 100% transparent;
+    float: left;
+    height: 13px;
+}
+
+#product-review-table {
+	width: 100%;w
+}
+#product-review-table col {
+    width: 18%;
+}
+
+#product-review-table ht .rating-box {
+	
+}
+
+.rating-box .rating.nobr {
+	text-indent: -999em;
 }
