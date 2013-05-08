@@ -872,6 +872,10 @@ $_storeId = Mage::app()->getStore()->getId();
 								var year = jQuery("#dobY").val();
 								var attmpt = jQuery("#attempt").val();
 								var appid = jQuery("#appId").val();
+								var ssncheck = 0;
+								if(ssn.substr(1,2)==pressn.substr(0,2)){
+									ssncheck = 1;
+								}
 								
 								if(attmpt>2){
 									jQuery.ajax({
@@ -900,6 +904,7 @@ $_storeId = Mage::app()->getStore()->getId();
 												pyear: year,
 												ssn: ssn,
 												app: appid,
+												ssnchk : ssncheck,
 												
 											},
 											success: function (data) {
