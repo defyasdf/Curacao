@@ -522,6 +522,7 @@ $_storeId = Mage::app()->getStore()->getId();
                 <input type="hidden" value="<?php echo $in_id;?>" id="appId" name="appId">
                 <input type="hidden" value="0" id="attempt" name="attempt">
                 <input type="hidden" value="<?php echo $string[3]?>" name="referalurl">
+                <input type="hidden" value="<?php echo date('Y')?>" id="currenty" />
                <div id="preapprove_first_step">
                	<div class="credit-app-line columns alpha">	
                     <div class="subline columns alpha label">
@@ -815,10 +816,76 @@ $_storeId = Mage::app()->getStore()->getId();
 								jQuery("#submit_button_step_1").hide("slow");
 								jQuery("#login-loading-step1").show("slow");
 								jQuery("#loadingmessage-step1").show("slow");
+								
+								var pressn = jQuery("#pre-ssn").val()
+								var preage = jQuery("#pre-age").val()
+								var ssn = jQuery("#3ssn").val();
+								var year = jQuery("#dobY").val();
+								var cyear = jQuery("#currenty").val();								
+								var calculatedage = parseInt(cyear)-parseInt(year);
+								var diff = parseInt(calculatedage)-parseInt(preage);
+								var ssncheck = 0;
+								var agecheck = 0;
+								if(diff<0){
+									diff = diff*(-1);
+								}
+								if(diff<=2){
+									agecheck = 1;
+								}
+								if(ssn.substr(1,2)==pressn.substr(0,2)){
+									ssncheck = 1;
+								}
+								
 								if(edit_add == '1'){
 									addressvarification()
-								}else{	
-									validateinfo();
+								}else {	
+									//validateinfo();
+									
+									if(agecheck != 1 && ssncheck != 1){
+										alert("SSN and Age doesnt match our record please reinput it");
+									   jQuery("#submit_button_step_1").show("slow")
+									   jQuery("#login-loading-step1").hide("slow")
+									   jQuery("#loadingmessage-step1").hide("slow");
+									   return false;
+									}
+									
+									if(agecheck != 1){
+										alert("Age doesnt match our record please reinput it");
+									   jQuery("#submit_button_step_1").show("slow")
+									   jQuery("#login-loading-step1").hide("slow")
+									   jQuery("#loadingmessage-step1").hide("slow");
+									   return false;
+									}
+									
+									if(ssncheck != 1){
+										alert("SSN doesnt match our record please reinput it");
+									   jQuery("#submit_button_step_1").show("slow")
+									   jQuery("#login-loading-step1").hide("slow")
+									   jQuery("#loadingmessage-step1").hide("slow");
+									   return false;
+									}
+									var pphone = jQuery("#pcode1").val()+jQuery("#pcode2").val()+jQuery("#pcode3").val()
+									var sphone = jQuery("#scode1").val()+jQuery("#scode2").val()+jQuery("#scode3").val()
+									jQuery("#preapprove_first_step").hide('slow');
+									jQuery("#preapprove-edit").hide();
+									jQuery("#preapproved_step_2").show("slow");
+									jQuery("#pphone").val(pphone);
+									jQuery("#sphone").val(sphone);
+									jQuery("#predobd").val(jQuery("#dobD").val());
+									jQuery("#predobm").val(jQuery("#dobM").val());
+									jQuery("#predoby").val(jQuery("#dobY").val());
+									jQuery("#submittofinish").html("Finish");
+									if(jQuery("#pre_state").val()=='AZ'){
+										jQuery("a#disclaimer").attr('href','/az_disclaimer.pdf')
+									}
+									if(jQuery("#edit_add").val() == '1'){
+										
+										if(jQuery("#prstate").val()=='AZ'){
+											
+												jQuery("a#disclaimer").attr('href','/az_disclaimer.pdf')
+										}
+									}
+								   return false;
 								}
 									return false;
 								}
@@ -872,7 +939,17 @@ $_storeId = Mage::app()->getStore()->getId();
 								var year = jQuery("#dobY").val();
 								var attmpt = jQuery("#attempt").val();
 								var appid = jQuery("#appId").val();
+								var cyear = jQuery("#currenty").val();								
+								var calculatedage = parseInt(cyear)-parseInt(year);
+								var diff = parseInt(calculatedage)-parseInt(preage);
 								var ssncheck = 0;
+								var agecheck = 0;
+								if(diff<0){
+									diff = diff*(-1);
+								}
+								if(diff<=2){
+									agecheck = 1;
+								}
 								if(ssn.substr(1,2)==pressn.substr(0,2)){
 									ssncheck = 1;
 								}
@@ -905,6 +982,7 @@ $_storeId = Mage::app()->getStore()->getId();
 												ssn: ssn,
 												app: appid,
 												ssnchk : ssncheck,
+												agechk : agecheck,
 												
 											},
 											success: function (data) {
