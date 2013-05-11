@@ -29,8 +29,16 @@
 		$sql = 'update checkouttrack set billing_add_complete = 1 where checkouttrackid = "'.$_POST['checkouttrackid'].'"';
 		mysql_query($sql);
 	}
+	if($_REQUEST['billing_address_id']){
+		$sql = 'update checkouttrack set billing_add_complete = 1 where checkouttrackid = "'.$_POST['checkouttrackid'].'"';
+		mysql_query($sql);
+	}
 	if($shipping_add){
 		//echo "shipping address is done";
+		$sql = 'update checkouttrack set shipping_add_complete = 1 where checkouttrackid = "'.$_POST['checkouttrackid'].'"';
+		mysql_query($sql);
+	}
+	if($_REQUEST['shipping_address_id']){
 		$sql = 'update checkouttrack set shipping_add_complete = 1 where checkouttrackid = "'.$_POST['checkouttrackid'].'"';
 		mysql_query($sql);
 	}
