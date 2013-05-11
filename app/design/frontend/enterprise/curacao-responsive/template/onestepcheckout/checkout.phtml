@@ -8,7 +8,7 @@ $helper = Mage::helper('onestepcheckout/checkout');
 	$_storeId = Mage::app()->getStore()->getId();
 	if($_storeId == 1){
 		$due = 'Amount Due Today';
-		$downpaymentneeded = 'To process your order, an initial payment of $'.$Data.' is required. <br> Please ';
+		$downpaymentneeded = 'To process your order, an initial payment of  <strong>$'.number_format((float)$Data, 2, '.', '').'</strong> is required. ';
 		$billingaddress = "Billing And Shipping Information";
 		$billing = "Billing Address";
 		$shippingaddress = "Shipping Address";
@@ -49,6 +49,42 @@ $helper = Mage::helper('onestepcheckout/checkout');
 	}
 
 ?>
+
+<?php
+	// Check if the user logged in or not
+		$server = '192.168.100.121';
+		$user = 'curacaodata';
+		$pass = 'curacaodata';
+		$db = 'icuracaoproduct';
+		
+		
+		$link = mysql_connect($server,$user,$pass);
+		
+		mysql_select_db($db,$link);
+		$customer = Mage::getSingleton('customer/session');
+		
+		if(Mage::getSingleton('core/session')->getCheckouttrackid()){
+			if($customer->isLoggedIn()) {
+				$sql = 'update checkouttrack set loggedin = 1 where checkouttrackid = "'.Mage::getSingleton('core/session')->getCheckouttrackid().'"';
+			}else{
+				$sql = 'update checkouttrack set loggedin = 0 where checkouttrackid = "'.Mage::getSingleton('core/session')->getCheckouttrackid().'"';
+			}
+				mysql_query($sql);
+		}else{
+			if($customer->isLoggedIn()) {
+				 $sql = 'insert into checkouttrack(loggedin) values("1")';
+			}else{
+				 $sql = 'insert into checkouttrack(loggedin) values("0")';
+			}
+				mysql_query($sql);
+				$track = mysql_insert_id();
+				Mage::getSingleton('core/session')->setCheckouttrackid($track);
+		}
+		
+	// End logged in 
+?>
+
+
 <?php if(!$this->canCheckout() || !$this->validateMinimumAmount()): ?>
     <?php if($this->settings['checkout_title']): ?>
         <h1 class="onestepcheckout-title"><?php echo $this->settings['checkout_title']; ?></h1>
@@ -66,6 +102,8 @@ $helper = Mage::helper('onestepcheckout/checkout');
 <form id="onestepcheckout-form" method="post" action="<?php echo $this->getUrl('onestepcheckout', array('_secure'=>true)); ?>">
 	<fieldset class="group-select" style="margin: 0;">
 	
+    <input type="hidden" name="checkouttrackid" value="<?php echo Mage::getSingleton('core/session')->getCheckouttrackid()?>" />
+    
 	<?php if($this->settings['checkout_title']): ?>
 	    <h1 class="onestepcheckout-title"><?php echo $this->settings['checkout_title']; ?></h1>
 	<?php endif; ?>
@@ -413,7 +451,12 @@ $helper = Mage::helper('onestepcheckout/checkout');
 			                    
 			               
 			                
-						  	<?php }elseif($authention_error != ''){?>
+						  	<?php }elseif($authention_error != ''){
+								
+								$sql = 'update checkouttrack set authentication_error = 1, auth_track_id = '.Mage::getSingleton('core/session')->getTrackingId().' where checkouttrackid = "'.Mage::getSingleton('core/session')->getCheckouttrackid().'"';
+								mysql_query($sql);
+								
+								?>
 			              		<div class="onestepcheckout-error onestepcheckout-payment-method-error">
 									<?php echo $authenticatemsg; ?>
 			                    </div>
@@ -867,6 +910,7 @@ Event.observe(window, 'load', function() {
             elem.observe('click', function(e)   {
                 Event.stop(e);
 				
+				
 					
                // First validate the form
                 var form = new VarienForm('onestepcheckout-form');
@@ -912,7 +956,26 @@ Event.observe(window, 'load', function() {
                         submitelement.disabled = true;
 
                         /* Submit the form */
-                        $('onestepcheckout-form').submit();
+						
+						// Ajax Call for the place order click
+				
+						var url = '/custom/placeorder.php';
+						var track_id = <?php echo Mage::getSingleton('core/session')->getCheckouttrackid()?>;
+						var parameters = {
+							checkouttrackid : track_id
+						}
+						
+						new Ajax.Request(url, {
+							method: 'post',
+							parameters: parameters,
+							onSuccess: function(transport)  {
+								 $('onestepcheckout-form').submit();
+							}
+						});				
+						
+				// End Ajax Call	
+						
+                       
                     }
                 }
             });
@@ -1437,6 +1500,63 @@ function removebillingadd(id){
 	return false;
 	} 
 
+
+jQuery(document).ready(function() {
+	  //wireUpEvents();  
+	  jQuery("input[type=radio]").bind("click", function() {
+			//alert("here")
+			var formdata = jQuery('form').serializeArray();
+			 //alert(formdata.toSource());<br />
+			jQuery.ajax({
+			        type: "POST",
+			        url: "../custom/checkouttrack.php",
+			        data: formdata,
+			        success: function (data) {
+			        
+			        }
+			    })
+	
+	  });
+	  
+ 
+	  
+	  jQuery("input[type=text]").bind("change", function() {
+			//alert("here")
+			var formdata = jQuery('form').serializeArray();
+			 //alert(formdata.toSource());<br />
+			jQuery.ajax({
+			        type: "POST",
+			        url: "../custom/checkouttrack.php",
+			        data: formdata,
+			        success: function (data) {
+
+			            //jQuery("#appId").val(data);
+			        }
+			    })
+	
+	  });
+	  
+	  
+	  jQuery("button").bind("click", function() {
+			//alert("here")
+			var formdata = jQuery('form').serializeArray();
+			 //alert(formdata.toSource());<br />
+			jQuery.ajax({
+			        type: "POST",
+			        url: "../custom/checkouttrack.php",
+			        data: formdata,
+			        success: function (data) {
+
+			            //jQuery("#appId").val(data);
+			        }
+			    })
+	
+	  });
+	  
+	});
+	
+
+
 	/*jQuery(document).scroll(function(){
 		var scroll_top = jQuery(document).scrollTop();
 		var _top = jQuery('.checkout-left').height() - jQuery('.checkout-right').height();
@@ -1461,3 +1581,7 @@ function removebillingadd(id){
 	})
 */
 </script>
+
+<?php
+	mysql_close($link);
+?>
