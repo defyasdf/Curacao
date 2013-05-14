@@ -959,7 +959,7 @@ Event.observe(window, 'load', function() {
 						
 						// Ajax Call for the place order click
 				
-						var url = '/custom/placeorder.php';
+						/*var url = '/custom/placeorder.php';
 						var track_id = <?php echo Mage::getSingleton('core/session')->getCheckouttrackid()?>;
 						var parameters = {
 							checkouttrackid : track_id
@@ -969,10 +969,10 @@ Event.observe(window, 'load', function() {
 							method: 'post',
 							parameters: parameters,
 							onSuccess: function(transport)  {
-								 $('onestepcheckout-form').submit();
+								 
 							}
-						});				
-						
+						});*/				
+						$('onestepcheckout-form').submit();
 				// End Ajax Call	
 						
                        

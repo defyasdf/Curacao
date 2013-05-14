@@ -1719,6 +1719,8 @@ a.button.related strong { color: #fff; text-shadow:0 -1px #666666;}
 	}
 	
 	.box-related .block-header {
+		margin:0;
+		padding:0;
 	}
 	
 	.box-related .box-holder {
@@ -3052,18 +3054,18 @@ p.form-required { font-size: 11px; float: right; }
 /*================================================================================ */
 
 
-.messages { width:100%; text-align:left; margin:10px 0 20px 0 !important; overflow:hidden; }
+.messages { width:100%; text-align:left; margin:10px 0 20px 0 !important; overflow:hidden; clear:both; }
 .catalog-product-view .messages { margin:0 0 20px 0 !important; }
 .messages li { padding:0 !important; margin:0 0 10px; }
 .messages ul { position:relative; padding:10px 10px; margin:0 0 -11px !important;  height: 50px;
 }
 .messages ul li { background:none !important; padding:0 0 3px !important; margin:0; }
-.messages a { text-decoration:underline; }
+.messages a { text-decoration:none; }
 .messages a:hover { text-decoration:none; }
 .messages li.error-msg, .messages li.success-msg, .messages li.note-msg, .messages li.notice-msg { font-size:12px !important; font-style:italic; }
 p.error-msg { font-size:12px !important; padding:10px; margin:10px 0; }
 .messages li.error-msg, p.error-msg { background:#fff5f3 !important; color:#d91a00; }
-.messages li.error-msg a, .messages li.success-msg a, .messages li.note-msg a, .messages li.notice-msg a { color:#fefefe; }
+.messages li.error-msg a, .messages li.success-msg a, .messages li.note-msg a, .messages li.notice-msg a { color:#008ECF; }
 .messages li.success-msg { background:#eff5ea !important; color:#3d6611; border: 1px solid #bacba7; }
 .messages li.note-msg, .messages li.notice-msg { background:#e5eef4 !important; color:#113566; }
 

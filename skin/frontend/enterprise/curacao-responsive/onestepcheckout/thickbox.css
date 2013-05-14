@@ -169,10 +169,10 @@ margin-top: expression(0 - parseInt(this.offsetHeight / 2) + (TBWindowMargin = d
 	_margin-bottom:1px;
 }
 
-.eight.columns {
+#TB_ajaxContent .eight.columns {
     width: 382px;
 }
-.column.alpha, .columns.alpha {
+#TB_ajaxContent .column.alpha, #TB_ajaxContent .columns.alpha {
     margin-left: 0;
 }
 #TB_ajaxContent .columns {
@@ -185,33 +185,33 @@ margin-top: expression(0 - parseInt(this.offsetHeight / 2) + (TBWindowMargin = d
     padding: 24px;
     position: relative;
 }
-ul {
+#TB_ajaxContent ul {
     list-style: none outside none;
 }
-ul, ol {
+#TB_ajaxContent ul, ol {
     margin-bottom: 0;
 }
-.content button {
+#TB_ajaxContent .content button {
 	float:right;
 	clear:both;
 }
-.content p{
+#TB_ajaxContent .content p{
 	color:#878A8E;
 }
-.content label{
+#TB_ajaxContent .content label{
 	color:#878A8E;
 }
 #TB_ajaxContent .content a{
 	color:#008ecf !important;
 }
-#buttons{
+#TB_ajaxContent #buttons{
 	float:right;
 	text-align:right;
 }
-#buttons p a{
+#TB_ajaxContent #buttons p a{
 	color:#008ecf !important;
 }
-.form-required{
+#TB_ajaxContent .form-required{
 	margin-top:-5px;
 	margin-bottom:10px;
 }
@@ -261,4 +261,10 @@ div.onestepcheckout-error {
 
 #shippingaddright label, #billingaddright label{
 	display:inline;	
+}
+#wishlist-view-form{
+	clear:both;
+}
+#wishlist-table .add-to-cart-alt{
+	clear:both;
 }

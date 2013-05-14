@@ -1,4 +1,6 @@
 <?php
+	
+
 class Excellence_Pay_Model_Pay extends Mage_Payment_Model_Method_Abstract
 {
    protected $_code = 'pay';
@@ -15,7 +17,25 @@ class Excellence_Pay_Model_Pay extends Mage_Payment_Model_Method_Abstract
 			Mage::throwException('CCV Is required');
 			//return;
 		}
-				
+		if(Mage::getSingleton('core/session')->getCheckouttrackid()){
+			
+			$server = '192.168.100.121';
+			$user = 'curacaodata';
+			$pass = 'curacaodata';
+			$db = 'icuracaoproduct';
+			
+			$link = mysql_connect($server,$user,$pass);
+			
+			mysql_select_db($db,$link);
+					
+			$query = 'select place_order from checkouttrack where checkouttrackid = "'.Mage::getSingleton('core/session')->getCheckouttrackid().'"';
+			$re = mysql_query($query);
+			$row = mysql_fetch_array($re);
+			$pl_order = (int)$row['place_order']+1;
+			$sql = 'update checkouttrack set place_order = "'.$pl_order.'" where checkouttrackid = "'.Mage::getSingleton('core/session')->getCheckouttrackid().'"';
+			mysql_query($sql);
+			mysql_close($link);
+		}		
 		$Data = Mage::getSingleton('core/session')->getCuracacaodp();
 		if($Data){
 			Mage::getSingleton('core/session')->unsCuracacaodp();
