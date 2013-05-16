@@ -188,7 +188,7 @@ class Excellence_Pay_Model_Pay extends Mage_Payment_Model_Method_Abstract
 		if(strtolower($result->StatusMessage) == 'ok'){
 			
 			if(!Mage::getSingleton('core/session')->getCustbalance()){
-				$balance = file_get_contents('http://www.icuracao.com/credit/getbalance.php?custnum='.$cust_num);
+				$balance = file_get_contents('http://108.171.160.207/custom/getbalance.php?custnum='.$cust_num);
 				Mage::getSingleton('core/session')->setCustbalance($balance);
 			}
 			

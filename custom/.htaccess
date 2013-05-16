@@ -1,0 +1,15 @@
+# ALLOW USER BY IP
+#<Limit GET POST>
+# order deny,allow
+# deny from all
+# allow from 64.38.89.22
+# allow from 96.251.72.16
+# allow from 206.170.79.5
+
+ #AuthUserFile /var/www/html/.dfpasswd
+ #AuthName "Please Log In"
+ #AuthType Basic
+ #require valid-user
+
+#</Limit>
+php_flag apc.cache_by_default Off

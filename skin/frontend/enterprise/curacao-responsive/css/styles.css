@@ -2557,7 +2557,7 @@ a.button.related strong { color: #fff; text-shadow:0 -1px #666666;}
 	
 	a.cart-link { font-size: 12px !important; color: #008ECF !important; font-weight: normal !important; }
 	.continue-shop { float: right; margin-right: 20px; margin-top:10px; }
-	.totals-container { padding: 15px; background-color: #f1f1f1; margin: 0 0 20px 40px; }
+	.totals-container { padding: 15px; background-color: #f1f1f1; margin: 0 0 20px 40px; overflow:hidden; }
 	.totals td.grand-title { font-size: 16px; font-weight: bold; color: #444444 !important; }
 	.totals td.grand-price { font-size: 16px; font-weight: bold; color: #d5172f !important; }
 	button.update-button {
