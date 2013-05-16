@@ -128,9 +128,10 @@ class Excellence_Pay_Model_Pay extends Mage_Payment_Model_Method_Abstract
 		$session = Mage::getSingleton('customer/session', array('name'=>'frontend')); 
 		$customer_data = Mage::getModel('customer/customer')->load($session->id);
 		
-			
+		// Originally this
 		
-		$proxy = new SoapClient('https://exchangeweb.lacuracao.com:2007/ws1/eCommerce/Main.asmx?WSDL');
+		
+	/*	$proxy = new SoapClient('https://exchangeweb.lacuracao.com:2007/ws1/eCommerce/Main.asmx?WSDL');
 		$ns = 'http://lacuracao.com/WebServices/eCommerce/';
 		
 		$headerbody = array('UserName' => 'mike', 
@@ -149,7 +150,7 @@ class Excellence_Pay_Model_Pay extends Mage_Payment_Model_Method_Abstract
 											'CCV' => $ccv
 											);
 		print_r($arr);
-		exit;*/
+		exit;
 		
 		$credit = $proxy->ValidateDP(array(
 											'CustID' => $cust_num,
@@ -164,10 +165,49 @@ class Excellence_Pay_Model_Pay extends Mage_Payment_Model_Method_Abstract
 										 false, null , 'rpc', 'literal');  
 		
 		
-		$result =  $credit->ValidateDPResult;
+		$result =  $credit->ValidateDPResult;*/
 		//echo '<pre>';
 		//	print_r($result);	
-		//echo '</pre>';	
+		//echo '</pre>';
+		
+		// End Original
+		
+		// New change
+		
+			$url = 'http://108.171.160.207/custom/authenticate_user.php';
+			$fields = array(	
+								'CustID' => $cust_num,
+								'DOB' => $dob,
+								'SSN' => $ssn,
+								'MMaiden' => strtoupper($maiden),
+								'Amount' => $amount,
+								'CCV' => $ccv
+							);
+			$fields_string = '';
+			//url-ify the data for the POST
+			foreach($fields as $key=>$value) { $fields_string .= $key.'='.$value.'&'; }
+			rtrim($fields_string, '&');
+			
+			//open connection
+			$ch = curl_init();
+			
+			//set the url, number of POST vars, POST data
+			curl_setopt($ch,CURLOPT_URL, $url);
+			curl_setopt($ch,CURLOPT_POST, count($fields));
+			curl_setopt($ch,CURLOPT_POSTFIELDS, $fields_string);
+			curl_setopt($ch, CURLOPT_HEADER, false);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+			//execute post
+			$result = curl_exec($ch);
+			$result = unserialize($result);
+		//	print_r(unserialize($result));
+		
+			//close connection
+			curl_close($ch);
+		
+		
+		// End New Change	
 		
 		$server = '192.168.100.121';
 		$user = 'curacaodata';
