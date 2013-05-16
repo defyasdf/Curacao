@@ -26,7 +26,7 @@
 	print_r($result);*/
 
 
-	$url = 'http://108.171.160.207/custom/authenticate_user.php';
+	$url = 'http://108.171.160.207/custom/checkIP.php';
 	$fields = array(	
 						'CustID' => '53145246',
 						'DOB' => '',
@@ -52,13 +52,14 @@
 	curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
 	//execute post
 	$result = curl_exec($ch);
-	$result = unserialize($result);
+//	$result = unserialize($result);
 //	print_r(unserialize($result));
-
+	
+	echo $result;
 	//close connection
 	curl_close($ch);
 	
-	echo $result->StatusMessage;
+
 	
 	
 ?>

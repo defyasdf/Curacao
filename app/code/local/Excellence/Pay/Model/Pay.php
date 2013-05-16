@@ -1,6 +1,4 @@
 <?php
-	
-
 class Excellence_Pay_Model_Pay extends Mage_Payment_Model_Method_Abstract
 {
    protected $_code = 'pay';
@@ -174,7 +172,7 @@ class Excellence_Pay_Model_Pay extends Mage_Payment_Model_Method_Abstract
 		
 		// New change
 		
-			$url = 'http://108.171.160.207/custom/authenticate_user.php';
+			$url = 'http://108.171.160.207/SOAP/authenticate_user.php';
 			$fields = array(	
 								'CustID' => $cust_num,
 								'DOB' => $dob,
@@ -228,7 +226,7 @@ class Excellence_Pay_Model_Pay extends Mage_Payment_Model_Method_Abstract
 		if(strtolower($result->StatusMessage) == 'ok'){
 			
 			if(!Mage::getSingleton('core/session')->getCustbalance()){
-				$balance = file_get_contents('http://108.171.160.207/custom/getbalance.php?custnum='.$cust_num);
+				$balance = file_get_contents('http://108.171.160.207/SOAP/getbalance.php?custnum='.$cust_num);
 				Mage::getSingleton('core/session')->setCustbalance($balance);
 			}
 			

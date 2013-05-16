@@ -14,5 +14,5 @@
 <file name="checkssn_standalone.php" server="198.101.163.120//var/www/html/" local="130131330681512171" remote="130131330790000000" Dst="2" />
 <file name=".htaccess" server="198.101.163.120//var/www/html/" local="130131331304027777" remote="130131331340000000" Dst="2" />
 <file name="checkcustssn.php" server="198.101.163.120//var/www/html/" local="130131430324001395" remote="130131430360000000" Dst="2" />
-<file name="auth_cust.php" server="198.101.163.120//var/www/html/" local="130132029536614396" remote="130132029580000000" Dst="2" />
+<file name="auth_cust.php" server="198.101.163.120//var/www/html/" local="130132155028202105" remote="130132155090000000" Dst="2" />
 </dwsync>
