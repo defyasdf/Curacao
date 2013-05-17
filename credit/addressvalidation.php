@@ -1,40 +1,41 @@
 <?php 
-	ini_set('max_execution_time', 300);
 	$server = '192.168.100.121';
 	$user = 'curacaodata';
 	$pass = 'curacaodata';
 	$db = 'icuracaoproduct';
+	$proxy = new SoapClient('https://exchangeweb.lacuracao.com:2007/ws1/eCommerce/Main.asmx?WSDL');
+	$ns = 'http://lacuracao.com/WebServices/eCommerce/';
+		
 	
 	$link = mysql_connect($server,$user,$pass);
 	mysql_select_db($db,$link);
-
+	ini_set('max_execution_time', 300);
 	
-	$url = 'http://108.171.160.207/SOAP/addressvalidation.php';
-	$fields = array(	
-						'Street' => $_POST['street'],
-                        'Zip' => $_POST['zip']
-					);
-	$fields_string = '';
-	//url-ify the data for the POST
-	foreach($fields as $key=>$value) { $fields_string .= $key.'='.$value.'&'; }
-	rtrim($fields_string, '&');
+	$headerbody = array('UserName' => 'mike', 'Password' => 'ecom12'); 
 	
-	//open connection
-	$ch = curl_init();
+	//Create Soap Header.        
+	$header = new SOAPHeader($ns, 'TAuthHeader', $headerbody);        
+			
+	//set the Headers of Soap Client. 
+	$h = $proxy->__setSoapHeaders($header); 
 	
-	//set the url, number of POST vars, POST data
-	curl_setopt($ch,CURLOPT_URL, $url);
-	curl_setopt($ch,CURLOPT_POST, count($fields));
-	curl_setopt($ch,CURLOPT_POSTFIELDS, $fields_string);
-	curl_setopt($ch, CURLOPT_HEADER, false);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-	curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-	//execute post
-	$result = curl_exec($ch);
+	//$credit = $proxy->WebCustomerApplication('sfakjlkame','sljfllkjl','l','3234789654','sanjay@gmail.com','1625 W. Olympic blvd', 'Los Angeles','CA','90015','3235595459','755-75-4587','e2212345689','DL', 'somename','company','8001543654','1965-06-15T12:00:00','2015-06-15T12:00:00','10','10','100000','CA','173.240.126.254','E','0','');
 	
-	echo $result;	
+	$credit = $proxy->ValidateAddress(array(
+                                      	'Street' => $_POST['street'],
+                                        'Zip' => $_POST['zip']
+                                    ),
+									"http://www.lacuracao.com/LAC-eComm-WebServices", 
+									"http://www.lacuracao.com/LAC-eComm-WebServices/WebCustomerApplication",
+									false,
+									null ,
+									'rpc',
+									'literal'
+								);  
 	
-	if($result == 1){	
+	echo $credit->ValidateAddressResult;
+	
+	if($credit->ValidateAddressResult == 1){	
 		$sql = "UPDATE `credit_app` SET `is_validate_address_complete` = '1'  WHERE `credit_id` = ".$_POST['appid'];
 		mysql_query($sql);
 	}
