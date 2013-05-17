@@ -31,8 +31,6 @@
 	curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
 	//execute post
 	$result = curl_exec($ch);
-//	$result = unserialize($result);
-//	print_r(unserialize($result));
 	
 	echo $result;	
 	

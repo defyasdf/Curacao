@@ -225,7 +225,7 @@
 		$r = mysql_query($q,$link);
 		$customer = mysql_fetch_array($r);
 	
-		$proxy = new SoapClient('https://exchangeweb.lacuracao.com:2007/ws1/eCommerce/Main.asmx?WSDL');
+		/*$proxy = new SoapClient('https://exchangeweb.lacuracao.com:2007/ws1/eCommerce/Main.asmx?WSDL');
 		$ns = 'http://lacuracao.com/WebServices/eCommerce/';
 		$headerbody = array('UserName' => 'mike',  'Password' => 'ecom12');
 		
@@ -233,7 +233,7 @@
 		$header = new SOAPHeader($ns, 'TAuthHeader', $headerbody);        
 				
 		//set the Headers of Soap Client. 
-		$h = $proxy->__setSoapHeaders($header); 
+		$h = $proxy->__setSoapHeaders($header); */
 		
 		$dobs = explode("-", $customer['dob']);
 		$exps = explode("-", $customer['id_expire']);
@@ -245,7 +245,7 @@
 			$lang = "S";
 		}
 		
-		$credit = $proxy->WebCustomerApplication(array(
+		/*$credit = $proxy->WebCustomerApplication(array(
 								'LastName' => $customer['lastname'],
 								'FirstName' => $customer['firstname'],
 								'MiddleInitial' => $customer['middlename'],
@@ -275,9 +275,60 @@
 								),
 							 "http://www.lacuracao.com/LAC-eComm-WebServices", 
 							 "http://www.lacuracao.com/LAC-eComm-WebServices/WebCustomerApplication",
-							 false, null , 'rpc', 'literal');  
+							 false, null , 'rpc', 'literal');  */
 	
-		$re = $credit->WebCustomerApplicationResult;	
+		
+		
+		// New cUrl
+			$url = 'http://108.171.160.207/SOAP/creditapplication.php';
+			$fields = array(	
+								'LastName' => $customer['lastname'],
+								'FirstName' => $customer['firstname'],
+								'MiddleInitial' => $customer['middlename'],
+								'HomePhone' => $customer['telephone'],
+								'eMail' => $customer['email_address'],                                        
+								'Street' => trim($customer['address1']) . ' ' . trim($customer['address2']), 
+								'City' => $customer['city'],
+								'State' => $customer['state'],
+								'Zip' => $customer['zipcode'],
+								'Phone2' => $customer['telephone2'],
+								'SSN' => $customer['ssn'],
+								'ID' => $customer['id_num'],
+								'IDType' => $customer['id_type'],
+								'MotherMaidenName' => $customer['maiden_name'],
+								'WorkName' => $customer['company'],
+								'WorkPhone' => $customer['work_phone'],
+								'DOB' => date('Y-m-d\Th:i:s', mktime(0,0,0,$dobs[1], $dobs[2], $dobs[0])),
+								'IDExpiration' => date('Y-m-d\Th:i:s',mktime(0,0,0,$exps[1], $exps[2], $exps[0])), 
+								'LenghtInCurrAddress' => ($customer['res_year']*12+$customer['res_month']),
+								'LenghtInCurrWork' => ($customer['work_year']*12+$customer['work_month']),
+								'AnnualIncome' => $customer['salary'],
+								'IDState' => empty($customer['id_state'])?$customer['state']:$customer['id_state'],
+								'IPAddress' => $customer['ip_address'],
+								'Language' => $lang, 
+								'AGPP' => $customer['aggp'] == 1 ? 'Y' : 'N',
+								'Submit' => $customer['is_lexis_nexus_complete'] == 1 ? 'Y': 'N'
+							);
+			$fields_string = '';
+			//url-ify the data for the POST
+			foreach($fields as $key=>$value) { $fields_string .= $key.'='.$value.'&'; }
+			rtrim($fields_string, '&');
+			
+			//open connection
+			$ch = curl_init();
+			
+			//set the url, number of POST vars, POST data
+			curl_setopt($ch,CURLOPT_URL, $url);
+			curl_setopt($ch,CURLOPT_POST, count($fields));
+			curl_setopt($ch,CURLOPT_POSTFIELDS, $fields_string);
+			curl_setopt($ch, CURLOPT_HEADER, false);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+			//execute post
+			$re = curl_exec($ch);
+		//End cURL
+		
+		//$re = $credit->WebCustomerApplicationResult;	
 		$final = explode("|",$re);
 
 		if($final[0]=='APPROVED'){
