@@ -16,4 +16,5 @@
 <file name="checkcustssn.php" server="198.101.163.120//var/www/html/" local="130132241486917260" remote="130132241540000000" Dst="2" />
 <file name="auth_cust.php" server="198.101.163.120//var/www/html/" local="130132155028202105" remote="130132155090000000" Dst="2" />
 <file name="file_upload_360pi.php" server="198.101.163.120//var/www/html/" local="130108943520000000" remote="130108943520000000" Dst="2" />
+<file name="getproduct_withbrand.php" server="198.101.163.120//var/www/html/" local="130135573497197347" remote="130135573570000000" Dst="2" />
 </dwsync>
