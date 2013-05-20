@@ -52,7 +52,18 @@
             <?php echo $_link->toHtml() ?>
         <?php else: ?>
           
-           <li<?php if($_link->getIsFirst()||$_link->getIsLast()): ?> class="<?php if($_link->getIsFirst()): ?>first<?php endif; ?><?php if($_link->getIsLast()): ?> last<?php endif; ?>"<?php endif; ?> <?php echo $_link->getLiParams() ?>  <?php if($_link->getLabel()=='Login'){ ?> style="display:none"<?php }?>><?php echo $_link->getBeforeText() ?><a href="<?php if($_link->getLabel()!='Apply Now'){if($_link->getLabel()!='Our Stores'){if($_link->getLabel()!='Aplicar a Crédito'){echo $_link->getUrl();}else{ echo "https://www.icuracao.com/applynow";} }else{echo "http://www.icuracao.com/store-locator";}}else{?>https://www.icuracao.com/applynow<?php }?>" title="<?php echo $_link->getTitle() ?>" <?php echo $_link->getAParams() ?> ><?php if($_link->getLabel()=='Our Stores'){echo $our_store;}elseif($_link->getTitle()=='Mi cuenta'){echo $my_acc;}else{echo $_link->getLabel();} ?></a><?php echo $_link->getAfterText() ?></li>        <?php endif;?>
+           <li<?php if($_link->getIsFirst()||$_link->getIsLast()): ?> class="<?php if($_link->getIsFirst()): ?>first<?php endif; ?><?php if($_link->getIsLast()): ?> last<?php endif; ?>"<?php endif; ?> <?php echo $_link->getLiParams() ?>  <?php if($_link->getLabel()=='Login'){ ?> style="display:none"<?php }?>><?php echo $_link->getBeforeText() ?>
+           
+           <?php if($_link->getLabel()=='Sign Out'){ ?>
+          	<a href="#" onclick="return signoutAction()"><?php echo $_link->getLabel()?></a> 
+           <?php  }else{?>
+           
+           <a href="<?php if($_link->getLabel()!='Apply Now'){if($_link->getLabel()!='Our Stores'){if($_link->getLabel()!='Aplicar a Crédito'){echo $_link->getUrl();}else{ echo "https://www.icuracao.com/applynow";} }else{echo "http://www.icuracao.com/store-locator";}}else{?>https://www.icuracao.com/applynow<?php }?>" title="<?php echo $_link->getTitle() ?>" <?php echo $_link->getAParams() ?> ><?php if($_link->getLabel()=='Our Stores'){echo $our_store;}elseif($_link->getTitle()=='Mi cuenta'){echo $my_acc;}else{echo $_link->getLabel();} ?></a>
+		   <?php  }?>
+		   
+		   <?php echo $_link->getAfterText() ?>
+           
+           </li>        <?php endif;?>
     <?php endforeach; ?>
      <?php if(!$session->isLoggedIn()){ ?>  
    <!-- <li><a title="Login" href="/customer/account/login/">Login</a></li>-->
@@ -72,6 +83,8 @@
             <div class="content" id="login-content">
                 <ul class="form-list">
                 <h2 class="legend">Log Into your account</h2>
+                   
+                   <div id="ajax_login_form">
                     <p>If you have an account with us, log in using your email address.</p>
                     <li>
                         <label for="email" class="required">Email Address<em>*</em></label>
@@ -85,19 +98,26 @@
                             <input name="login[password]" class="input-text required-entry validate-password" id="userpass_link" title="Password" type="password">
                         </div>
                     </li>
-                                        <li id="remember-me-box" class="control">
+                    
+                    <li id="remember-me-box" class="control">
         <div class="input-box">
         <input name="persistent_remember_me" class="checkbox checkbox-label" id="remember_meZwnY9znjWf" checked="checked" title="Remember Me" type="checkbox">
     </div>
     <label for="remember_meZwnY9znjWf" class="checkbox-label">Remember Me</label>
     <!-- <a class="link-tip" href="#" class="remember">What's this?</a> -->
 </li>
+
+
  
                     <p class="clear"></p>
                     <p class="form-required"><em>*</em> Required Fields</p>
                     
                      <button type="submit" class="button" title="Login" name="send" id="send2_top" onclick="return create_login_link()"><span><span>Login</span></span></button>
-                     <div id="login-loading_link" style="display:none"><img src="/images/gray_fade_small.gif"></div>
+                     </div>
+                     <div id="login-loading_link" style="display:none"><img src="/images/gray_fade_small.gif"><br />
+                     <p>Logging In .......</p>
+                     
+</div>
                 </ul>
                 <div class="clear"></div>
                   <p style="margin-left:25px;">Not Registered? <a href="/customer/account/create/" class="f-left">Create an account</a></p>
@@ -114,7 +134,7 @@
     //<![CDATA[
    
 	function create_login_link(){
-		jQuery("#send2_top").hide('slow');
+		jQuery("#ajax_login_form").hide('slow');
 		jQuery("#login-loading_link").show('slow');
 		var login_url = '/onestepcheckout/ajax/login/'
 		//alert("I am Clicking login");
@@ -132,7 +152,7 @@
 						//alert(result.error);
 						jQuery("#onestepcheckout-login-error-link").html(result.error);
 						jQuery("#onestepcheckout-login-error-link").show('slow')
-						jQuery("#send2_top").show('slow');
+						jQuery("#ajax_login_form").show('slow');
 						jQuery("#login-loading_link").hide('slow');
 					}
 				}.bind(this)
@@ -140,5 +160,29 @@
 		
 		return false;
 	}
+	
+	function signoutAction(){
+		var login_url = '/onestepcheckout/ajax/logout/'
+
+		jQuery.ajax({ 
+				type: 'post',
+				data: {'onestepcheckout_username':jQuery("#useremail_link").val(),'onestepcheckout_password':jQuery("#userpass_link").val()},
+				url:  login_url,                    
+				success: function(data) {
+				   var result = jQuery.parseJSON(data); 
+					if(result.success) {
+
+						location.reload();
+					} else {
+		
+					}
+				}.bind(this)
+	     });
+		
+		return false;
+		
+	}
+	
+	
     //]]>
 </script>

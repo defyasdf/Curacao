@@ -674,7 +674,22 @@ class Magify_OneStepCheckout_AjaxController extends Mage_Core_Controller_Front_A
 
         $this->getResponse()->setBody(Zend_Json::encode($result));
     }
-   	//--------------------------------------------------------------------------------------------------------------------------------
+	//-------------------------------------------------------------------------------------------------------------------------------
+	#############################Log Out Function###########################################
+	
+	public function logoutAction()
+    {
+        $session = Mage::getSingleton('customer/session');
+		$session->logout();
+		 $result['success'] = true;
+		
+		$this->getResponse()->setBody(Zend_Json::encode($result));
+	}
+	
+	############################End Log out function #######################################
+	
+	//--------------------------------------------------------------------------------------------------------------------------------
+	
     public function loginAction()
     {
         $username = $this->getRequest()->getPost('onestepcheckout_username', false);

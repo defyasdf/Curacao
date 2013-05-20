@@ -399,12 +399,22 @@
 	<?php if( count($_product->getDescription()) > 0): ?>
         	<li class="tab active"><?php 
 			
-			if($_product->getLg_webcollage()&&$_storeId == 1){
+			if($_storeId == 1){
 				?>
 				<script>var wcCpi = "<?php echo $_product->getId();?>";</script>
 
 				<script src="http://content.webcollage.net/icuracao/smart-button"></script>
-                <span id="wc-power-page"></span>
+                <span id="wc-power-page">
+                	<?php echo( (($_product->getDescription() ) )) ?>
+            
+				<?php if( count($_product->getSpec001()) > 0 ): ?>
+                    <p style="margin-bottom:0;">&nbsp;</p>
+                    <dt><label class="required"><span id="warrenty_title"><?php echo $this->__('Specification')?>:</span></label></dt>
+                    
+    
+                    <?php echo(($_product->getSpec001())) ?>
+                    <?php  endif;  ?> 
+                </span>
 				
                <?php 
 			}else{
