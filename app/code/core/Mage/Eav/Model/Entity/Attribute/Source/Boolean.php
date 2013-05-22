@@ -20,20 +20,13 @@
  *
  * @category    Mage
  * @package     Mage_Eav
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
 
 class Mage_Eav_Model_Entity_Attribute_Source_Boolean extends Mage_Eav_Model_Entity_Attribute_Source_Abstract
 {
-    /**
-     * Option values
-     */
-    const VALUE_YES = 1;
-    const VALUE_NO = 0;
-
-
     /**
      * Retrieve all options array
      *
@@ -45,11 +38,11 @@ class Mage_Eav_Model_Entity_Attribute_Source_Boolean extends Mage_Eav_Model_Enti
             $this->_options = array(
                 array(
                     'label' => Mage::helper('eav')->__('Yes'),
-                    'value' => self::VALUE_YES
+                    'value' =>  1
                 ),
                 array(
                     'label' => Mage::helper('eav')->__('No'),
-                    'value' => self::VALUE_NO
+                    'value' =>  0
                 ),
             );
         }
@@ -142,23 +135,5 @@ class Mage_Eav_Model_Entity_Attribute_Source_Boolean extends Mage_Eav_Model_Enti
     {
         return Mage::getResourceModel('eav/entity_attribute')
             ->getFlatUpdateSelect($this->getAttribute(), $store);
-    }
-
-    /**
-     * Get a text for index option value
-     *
-     * @param  string|int $value
-     * @return string|bool
-     */
-    public function getIndexOptionText($value)
-    {
-        switch ($value) {
-            case self::VALUE_YES:
-                return 'Yes';
-            case self::VALUE_NO:
-                return 'No';
-        }
-
-        return parent::getIndexOptionText($value);
     }
 }

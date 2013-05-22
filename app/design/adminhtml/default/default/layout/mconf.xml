@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<layout version="1.0.0">
+    <adminhtml_catalog_product_edit>
+        <reference name="head">            
+            <action method="addJs"><stylesheet>magify/mconf/configurableEdit.js</stylesheet></action>
+        </reference>
+    </adminhtml_catalog_product_edit>
+</layout>

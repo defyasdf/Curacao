@@ -20,7 +20,7 @@
  *
  * @category    Mage
  * @package     Mage_Adminhtml
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
@@ -29,10 +29,11 @@
  *
  * @category   Mage
  * @package    Mage_Adminhtml
- * @author     Magento Core Team <core@magentocommerce.com>
+ * @author      Magento Core Team <core@magentocommerce.com>
  */
 class Mage_Adminhtml_Block_Customer_Edit_Tab_View_Cart extends Mage_Adminhtml_Block_Widget_Grid
 {
+
     public function __construct()
     {
         parent::__construct();
@@ -46,7 +47,6 @@ class Mage_Adminhtml_Block_Customer_Edit_Tab_View_Cart extends Mage_Adminhtml_Bl
 
     protected function _prepareCollection()
     {
-        /** @var $quote Mage_Sales_Model_Quote */
         $quote = Mage::getModel('sales/quote');
         // set website to quote, if any
         if ($this->getWebsiteId()) {
@@ -54,7 +54,12 @@ class Mage_Adminhtml_Block_Customer_Edit_Tab_View_Cart extends Mage_Adminhtml_Bl
         }
         $quote->loadByCustomer(Mage::registry('current_customer'));
 
-        $collection = $quote ? $quote->getItemsCollection(false) : new Varien_Data_Collection();
+        if ($quote) {
+            $collection = $quote->getItemsCollection(false);
+        }
+        else {
+            $collection = new Varien_Data_Collection();
+        }
 
         $collection->addFieldToFilter('parent_item_id', array('null' => true));
         $this->setCollection($collection);
@@ -64,56 +69,55 @@ class Mage_Adminhtml_Block_Customer_Edit_Tab_View_Cart extends Mage_Adminhtml_Bl
 
     protected function _prepareColumns()
     {
-        $currencyCode = (string)Mage::getStoreConfig(Mage_Directory_Model_Currency::XML_PATH_CURRENCY_BASE);
         $this->addColumn('product_id', array(
             'header' => Mage::helper('customer')->__('Product ID'),
             'index' => 'product_id',
-            'width' => '100px'
-        ))->addColumn('name', array(
+            'width' => '100px',
+        ));
+
+        $this->addColumn('name', array(
             'header' => Mage::helper('customer')->__('Product Name'),
-            'index' => 'name'
-        ))->addColumn('sku', array(
+            'index' => 'name',
+        ));
+
+        $this->addColumn('sku', array(
             'header' => Mage::helper('customer')->__('SKU'),
             'index' => 'sku',
-            'width' => '100px'
-        ))->addColumn('qty', array(
+            'width' => '100px',
+        ));
+
+        $this->addColumn('qty', array(
             'header' => Mage::helper('customer')->__('Qty'),
             'index' => 'qty',
             'type'  => 'number',
-            'width' => '60px'
-        ))->addColumn('price', array(
+            'width' => '60px',
+        ));
+
+        $this->addColumn('price', array(
             'header' => Mage::helper('customer')->__('Price'),
             'index' => 'price',
             'type'  => 'currency',
-            'currency_code' => $currencyCode
-        ))->addColumn('total', array(
+            'currency_code' => (string) Mage::getStoreConfig(Mage_Directory_Model_Currency::XML_PATH_CURRENCY_BASE),
+        ));
+
+        $this->addColumn('total', array(
             'header' => Mage::helper('customer')->__('Total'),
             'index' => 'row_total',
             'type'  => 'currency',
-            'currency_code' => $currencyCode
+            'currency_code' => (string) Mage::getStoreConfig(Mage_Directory_Model_Currency::XML_PATH_CURRENCY_BASE),
         ));
 
         return parent::_prepareColumns();
     }
 
-    /**
-     * Retrieve row url
-     *
-     * @param Mage_Sales_Model_Quote_Item $row
-     * @return string
-     */
     public function getRowUrl($row)
     {
         return $this->getUrl('*/catalog_product/edit', array('id' => $row->getProductId()));
     }
 
-    /**
-     * Check weather header should be shown
-     *
-     * @return bool
-     */
     public function getHeadersVisibility()
     {
         return ($this->getCollection()->getSize() > 0);
     }
+
 }

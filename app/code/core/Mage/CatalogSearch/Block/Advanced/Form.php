@@ -20,7 +20,7 @@
  *
  * @category    Mage
  * @package     Mage_CatalogSearch
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
@@ -62,7 +62,7 @@ class Mage_CatalogSearch_Block_Advanced_Form extends Mage_Core_Block_Template
     /**
      * Retrieve attribute label
      *
-     * @param Mage_Eav_Model_Entity_Attribute_Abstract $attribute
+     * @param  $attribute
      * @return string
      */
     public function getAttributeLabel($attribute)
@@ -73,8 +73,8 @@ class Mage_CatalogSearch_Block_Advanced_Form extends Mage_Core_Block_Template
     /**
      * Retrieve attribute input validation class
      *
-     * @param Mage_Eav_Model_Entity_Attribute_Abstract $attribute
-     * @return string
+     * @param   $attribute
+     * @return  string
      */
     public function getAttributeValidationClass($attribute)
     {
@@ -84,17 +84,18 @@ class Mage_CatalogSearch_Block_Advanced_Form extends Mage_Core_Block_Template
     /**
      * Retrieve search string for given field from request
      *
-     * @param Mage_Eav_Model_Entity_Attribute_Abstract $attribute
-     * @param string|null $part
+     * @param string $attribute
+     * @param string $part
      * @return mixed|string
      */
-    public function getAttributeValue($attribute, $part = null)
+    public function getAttributeValue($attribute, $part=null)
     {
         $value = $this->getRequest()->getQuery($attribute->getAttributeCode());
         if ($part && $value) {
             if (isset($value[$part])) {
                 $value = $value[$part];
-            } else {
+            }
+            else {
                 $value = '';
             }
         }
@@ -144,7 +145,7 @@ class Mage_CatalogSearch_Block_Advanced_Form extends Mage_Core_Block_Template
     /**
      * Retrieve currency code for attribute
      *
-     * @param Mage_Eav_Model_Entity_Attribute_Abstract $attribute
+     * @param $attribute
      * @return string
      */
     public function getCurrency($attribute)
@@ -159,7 +160,7 @@ class Mage_CatalogSearch_Block_Advanced_Form extends Mage_Core_Block_Template
     /**
      * Retrieve attribute input type
      *
-     * @param Mage_Eav_Model_Entity_Attribute_Abstract $attribute
+     * @param   $attribute
      * @return  string
      */
     public function getAttributeInputType($attribute)
@@ -192,7 +193,7 @@ class Mage_CatalogSearch_Block_Advanced_Form extends Mage_Core_Block_Template
     /**
      * Build attribute select element html string
      *
-     * @param Mage_Eav_Model_Entity_Attribute_Abstract $attribute
+     * @param $attribute
      * @return string
      */
     public function getAttributeSelectElement($attribute)
@@ -222,12 +223,6 @@ class Mage_CatalogSearch_Block_Advanced_Form extends Mage_Core_Block_Template
             ->getHtml();
     }
 
-    /**
-     * Retrieve yes/no element html for provided attribute
-     *
-     * @param Mage_Eav_Model_Entity_Attribute_Abstract $attribute
-     * @return string
-     */
     public function getAttributeYesNoElement($attribute)
     {
         $options = array(
@@ -278,7 +273,7 @@ class Mage_CatalogSearch_Block_Advanced_Form extends Mage_Core_Block_Template
     }
 
     /**
-     * Retrieve search form action url
+     * Retrieve search form action string
      *
      * @return string
      */
@@ -290,7 +285,7 @@ class Mage_CatalogSearch_Block_Advanced_Form extends Mage_Core_Block_Template
     /**
      * Build date element html string for attribute
      *
-     * @param Mage_Eav_Model_Entity_Attribute_Abstract $attribute
+     * @param $attribute
      * @param string $part
      * @return string
      */

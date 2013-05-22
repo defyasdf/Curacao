@@ -1,0 +1,349 @@
+<?php $_code=$this->getMethodCode() ?>
+
+<?php 
+$_storeId = Mage::app()->getStore()->getId();
+if($_storeId == 1){
+	$month = 'Month';
+	$year = 'Year';
+	$day = 'DD';
+	
+}else{
+	$month = 'Mes';
+	$year = 'Año';
+	$day = 'Día';
+}
+?>
+ <?php if ($this->helper('customer')->isLoggedIn() ) {?>
+<?php 
+	$session = Mage::getSingleton('customer/session', array('name'=>'frontend')); 
+	$customer_data = Mage::getModel('customer/customer')->load($session->id);
+	if($customer_data->isauthenticate){
+	?>
+    <ul class="form-list" id="payment_form_<?php echo $_code ?>" style="display:none;">
+    <li>
+         <div id="curacao_pay_line">
+            <div id="curacao_pay_number">
+                <ul>
+                    <li>
+                        <label for="<?php echo $_code ?>_check_no" class="required"><?php echo $this->__('Curacao Credit Card Number') ?><em>*</em></label>
+                        <span class="input-box">
+                           
+                           <input type="hidden" value="<?php echo $customer_data->curacaocustid?>" name="payment[check_no]" />
+                         <strong>  XXXX<?php echo substr($customer_data->curacaocustid,4)?></strong>
+                           
+                           <!--
+                            <input type="text" title="<?php //echo $this->__('Curacao Credit Card Number') ?>" class="input-text required-entry input-text validate-digits validate-length maximum-length-8" id="curacao_cust_num" onchange="return checkssn()" name="payment[check_no]" value="<?php //echo $this->htmlEscape($this->getInfoData('check_no')) ?>" maxlength="8" />-->
+                            
+                            
+                        </span>
+                    </li>
+            </ul>
+            </div>
+            <div id="curacao_pay_ccv">
+            	<ul>
+                    <li>
+                          <label for="ccv" class="required"><?php echo $this->__('CCV') ?><em>*</em></label>
+                        <div class="input-box">
+                            <div class="v-fix" id="curacao_ccv_number">
+                                <input type="password" maxlength="4" title="<?php echo $this->__('CCV') ?>" class="input-text required-entry input-text validate-digits validate-length maximum-length-4" id="<?php echo $_code ?>_cc_cid" name="payment[ccv]" value="" />
+                            </div>
+                            <a href="#" class="cvv-what-is-this-curacao"><?php echo $this->__('What is this?') ?></a>
+                        </div>
+      
+                       
+                            
+                            
+                        </span>
+                    </li>
+            </ul>
+            </div>
+         </div>
+        </li>
+       </ul>
+    	
+	<?php 
+	}else{
+?>
+
+<ul class="form-list" id="payment_form_<?php echo $_code ?>" style="display:none;">
+    <li>
+         <div id="curacao_pay_line">
+            <div id="curacao_pay_number">
+                <ul>
+                    <li>
+                        <label for="<?php echo $_code ?>_check_no" class="required"><?php echo $this->__('Curacao Credit Card Number') ?><em>*</em></label>
+                        <span class="input-box">
+                            <input type="text" title="<?php echo $this->__('Curacao Credit Card Number') ?>" class="input-text required-entry input-text validate-digits validate-length maximum-length-8" id="curacao_cust_num" onchange="return checkssn()" name="payment[check_no]" value="<?php echo $this->htmlEscape($this->getInfoData('check_no')) ?>" maxlength="8" />
+                            
+                            
+                        </span>
+                    </li>
+            </ul>
+            </div>
+            <div id="curacao_pay_ccv">
+            	<ul>
+                    <li>
+                          <label for="ccv" class="required"><?php echo $this->__('CCV') ?><em>*</em></label>
+                        <div class="input-box">
+                            <div class="v-fix" id="curacao_ccv_number">
+                                <input type="password" maxlength="4" title="<?php echo $this->__('CCV') ?>" class="input-text input-text required-entry validate-digits validate-length maximum-length-4" id="<?php echo $_code ?>_cc_cid" name="payment[ccv]" value="" />
+                            </div>
+                            <a href="#" class="cvv-what-is-this-curacao"><?php echo $this->__('What is this?') ?></a>
+                        </div>
+      
+                       
+                            
+                            
+                        </span>
+                    </li>
+            </ul>
+            </div>
+         </div>
+         <div id="curacao_pay_line" class="curacao_pay_loading"  style="display:none;">
+	         
+         </div>
+         <div id="curacao_pay_line" class="curacao_pay_with_maiden"  style="display:none;">
+         	
+            
+         	<div id="curacao_dob_month">
+            	<label for="<?php echo $_code ?>_dob" class="required"><?php echo $this->__('Date Of Birth') ?><em>*</em></label>
+            		 <select class="required-entry" name="payment[cc_dob_month]" id="dobM">
+	                                <option selected="selected" value=""><?php echo $month?></option>
+                                    <option value="01">01 - January</option>
+                                    <option value="02">02 - February</option>
+                                    <option value="03">03 - March</option>
+                                    <option value="04">04 - April</option>
+                                    <option value="05">05 - May</option>
+                                    <option value="06">06 - June</option>
+                                    <option value="07">07 - July</option>
+                                    <option value="08">08 - August</option>
+                                    <option value="09">09 - September</option>
+                                    <option value="10">10 - October</option>
+                                    <option value="11">11 - November</option>
+                                    <option value="12">12 - December</option>
+                                </select>
+            </div>
+			<div id="curacao_dob_day">
+            <label for="<?php echo $_code ?>_dob" class="required">&nbsp;</label>
+            	 <select class="required-entry" name="payment[cc_dob_day]" id="dobD">
+                                <option value=""><?php echo $day?></option>
+                                <?php for($i=1;$i<32;$i++){ ?>
+                                <?php if($i<10){?>
+                                <option value="<?php echo '0'.$i?>"><?php echo '0'.$i?></option>
+                                <?php }else{?>
+                                <option value="<?php echo $i?>"><?php echo $i?></option>
+                                <?php }} ?>
+            </select>
+            </div>
+			<div id="curacao_dob_year">
+            <label for="<?php echo $_code ?>_dob" class="required">&nbsp;</label>
+            	 <select class="year required-entry" name="payment[cc_dob_year]" id="dobY">
+                                    <option selected="selected" value=""><?php echo $year?></option>
+                                   <?php for($i=(date("Y")-18);$i>1900;$i--){ ?>
+                                    <option value="<?php echo $i?>"><?php echo $i?></option>
+                                    <?php } ?>
+                                </select>
+            </div>
+			<div id="curacao_pay_ssn_maiden">
+            	<ul>
+                	<li>
+                        <label for="<?php echo $_code ?>_check_date" class="required"><?php echo $this->__('Mother&acute;s Maiden Name') ?><em>*</em></label>
+                        <span class="input-box">
+                            <input type="text" title="<?php echo $this->__('Check Date:') ?>" class="input-text required-entry" id="<?php echo $_code ?>_check_date" name="payment[maiden]" value="<?php echo $this->htmlEscape($this->getInfoData('maiden')) ?>" />
+                        </span>
+                    </li>
+                </ul>
+            </div>
+
+         </div>	
+         
+         <div id="curacao_pay_line" class="curacao_pay_with_ssn" style="display:none;">
+         	
+            
+         	<div id="curacao_dob_month">
+            	<label for="<?php echo $_code ?>_dob" class="required"><?php echo $this->__('Date Of Birth') ?><em>*</em></label>
+            		 <select class="required-entry" name="payment[cc_dob_month]" id="dobM">
+	                                <option selected="selected" value=""><?php echo $month?></option>
+                                    <option value="01">01 - January</option>
+                                    <option value="02">02 - February</option>
+                                    <option value="03">03 - March</option>
+                                    <option value="04">04 - April</option>
+                                    <option value="05">05 - May</option>
+                                    <option value="06">06 - June</option>
+                                    <option value="07">07 - July</option>
+                                    <option value="08">08 - August</option>
+                                    <option value="09">09 - September</option>
+                                    <option value="10">10 - October</option>
+                                    <option value="11">11 - November</option>
+                                    <option value="12">12 - December</option>
+                                </select>
+            </div>
+			<div id="curacao_dob_day">
+            <label for="<?php echo $_code ?>_dob" class="required">&nbsp;</label>
+            	 <select class="required-entry" name="payment[cc_dob_day]" id="dobD">
+                                <option value=""><?php echo $day?></option>
+                                <?php for($i=1;$i<32;$i++){ ?>
+                                <?php if($i<10){?>
+                                <option value="<?php echo '0'.$i?>"><?php echo '0'.$i?></option>
+                                <?php }else{?>
+                                <option value="<?php echo $i?>"><?php echo $i?></option>
+                                <?php }} ?>
+            </select>
+            </div>
+			<div id="curacao_dob_year">
+            <label for="<?php echo $_code ?>_dob" class="required">&nbsp;</label>
+            	 <select class="year required-entry" name="payment[cc_dob_year]" id="dobY">
+                                    <option selected="selected" value=""><?php echo $year?></option>
+                                   <?php for($i=(date("Y")-18);$i>1900;$i--){ ?>
+                                    <option value="<?php echo $i?>"><?php echo $i?></option>
+                                    <?php } ?>
+                                </select>
+            </div>
+			<div id="curacao_pay_ssn_maiden">
+            	<ul>
+                	<li>
+                        <label for="<?php echo $_code ?>_check_date" class="required"><?php echo $this->__('Last 4 Digit of SSN') ?><em>*</em></label>
+                        <span class="input-box">
+                            <input type="password" maxlength="4" title="<?php echo $this->__('SSN:') ?>" class="input-text required-entry validate-digits validate-length maximum-length-4" id="<?php echo $_code ?>_check_date" name="payment[ssn]" value="" />
+                        </span>
+                    </li>
+                </ul>
+            </div>
+
+         </div>	
+         
+				
+     </li>
+</ul> 
+
+<?php }?>
+<div>
+    <?php echo $this->getMethod()->getConfigData('message');?>
+</div>
+<?php }else{?>
+	Please  <a href="#TB_inline?height=380&width=881&inlineId=login_content" class="thickbox" title="Billing Address">login/register</a> to use Curacao Credit
+    
+    <style>
+    	#req_field{
+			display:none;
+		}
+    </style>
+    
+<?php }?>
+
+
+<!--Login Popup-->
+
+<div class="account-login" id="login_content" style="display:none">
+    	<div class="onestepcheckout-error" id="snponestepcheckout-login-error" style="display:none;"></div>
+        <div class="eight columns alpha col-1 new-users">
+            <div class="content">
+                <ul class="form-list">
+                <h2 class="legend">New Customers</h2>
+                <p>By creating an account with our store, you will be able to move through the checkout process faster, store multiple shipping addresses, view and track your orders in your account and more.</p>
+               	 <div id="buttons">
+                <button type="button" title="Create an Account" class="button" onclick="window.location='/customer/account/create/';"><span><span>Create an Account</span></span></button>
+               
+                </div>
+               
+                </ul>
+               
+            </div>
+
+        </div>
+        <div class="eight columns omega col-2 registered-users" id="login-container">
+            <form action=""  onsubmit="return create_login()">
+            <div class="content" id="login-content">
+                <ul class="form-list">
+                <h2 class="legend">Registered Customers</h2>
+                    <p>If you have an account with us, log in using your email address.</p>
+                    <li>
+                        <label for="email" class="required">Email Address<em>*</em></label>
+                        <div class="input-box">
+                            <input name="login[username]" value="" id="useremail" class="input-text required-entry validate-email" title="Email Address" type="text">
+                        </div>
+                    </li>
+                    <li>
+                        <label for="pass" class="required">Password<em>*</em></label>
+                        <div class="input-box">
+                            <input name="login[password]" class="input-text required-entry validate-password" id="userpass" title="Password" type="password">
+                        </div>
+                    </li>
+                                        <li id="remember-me-box" class="control">
+        <div class="input-box">
+        <input name="persistent_remember_me" class="checkbox checkbox-label" id="remember_meZwnY9znjWf" checked="checked" title="Remember Me" type="checkbox">
+    </div>
+    <label for="remember_meZwnY9znjWf" class="checkbox-label">Remember Me</label>
+    <!-- <a class="link-tip" href="#" class="remember">What's this?</a> -->
+</li>
+ 
+                    <p class="clear"></p>
+                    <p class="form-required"><em>*</em> Required Fields</p>
+                    <a href="/customer/account/forgotpassword/" class="f-left">Forgot Your Password?</a>
+                     <button type="submit" class="button" title="Login" name="send" id="send2" onclick="return create_login()"><span><span>Login</span></span></button>
+                     <div id="login-loading" style="display:none"><img src="/images/gray_fade_small.gif"></div>
+                </ul>
+                   
+            </div>
+            </form>	
+        </div>
+          
+ </div>
+
+<!--end Login Pop up-->
+
+
+<script type="text/javascript">
+	function checkssn(){
+	  jQuery(".curacao_pay_loading").html('<div class="loading-ajax">&nbsp;</div>');	
+	  jQuery(".curacao_pay_loading").show('slow');
+	   var cid = jQuery("#curacao_cust_num").val();
+		jQuery.ajax({
+			type: "POST",
+			url: "/custom/checkssn.php",
+			data: {
+				custid: cid
+			},
+			success: function (data) {
+				jQuery(".curacao_pay_loading").html('&nbsp;');
+				jQuery(".curacao_pay_loading").hide('slow');
+				if(data=='1'){
+					jQuery(".curacao_pay_with_maiden").hide('slow')
+					jQuery(".curacao_pay_with_ssn").show('slow')
+				}else{
+					jQuery(".curacao_pay_with_ssn").hide('slow')
+					jQuery(".curacao_pay_with_maiden").show('slow')
+				}
+				return false;
+	
+			}
+		});
+	}
+	
+	function create_login(){
+		jQuery("#send2").hide('slow');
+		jQuery("#login-loading").show('slow');
+		var login_url = '/onestepcheckout/ajax/login/'
+		//alert("I am Clicking login");
+		jQuery.ajax({ 
+				type: 'post',
+				data: {'onestepcheckout_username':jQuery("#useremail").val(),'onestepcheckout_password':jQuery("#userpass").val()},
+				url:  login_url,                    
+				success: function(data) {
+				 
+				   var result = jQuery.parseJSON(data); 
+					if(result.success) {
+						window.location = '/onestepcheckout/';
+					} else {
+						//alert(result.error);
+						jQuery("#snponestepcheckout-login-error").html(result.error);
+						jQuery("#snponestepcheckout-login-error").show('slow')
+						jQuery("#send2").show('slow');
+						jQuery("#login-loading").hide('slow');
+					}
+				}.bind(this)
+	     });
+		
+		return false;
+	}
+</script>

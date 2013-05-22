@@ -20,7 +20,7 @@
  *
  * @category    Enterprise
  * @package     Enterprise_PageCache
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
@@ -62,13 +62,11 @@ class Enterprise_PageCache_Model_Observer
     /**
      * Class constructor
      */
-    public function __construct(array $args = array())
+    public function __construct()
     {
-        $this->_processor = isset($args['processor'])
-            ? $args['processor']
-            : Mage::getSingleton('enterprise_pagecache/processor');
-        $this->_config = isset($args['config']) ? $args['config'] : Mage::getSingleton('enterprise_pagecache/config');
-        $this->_isEnabled = isset($args['enabled']) ? $args['enabled'] : Mage::app()->useCache('full_page');
+        $this->_processor = Mage::getSingleton('enterprise_pagecache/processor');
+        $this->_config    = Mage::getSingleton('enterprise_pagecache/config');
+        $this->_isEnabled = Mage::app()->useCache('full_page');
     }
 
     /**
@@ -145,10 +143,10 @@ class Enterprise_PageCache_Model_Observer
         }
         $cacheId = Enterprise_PageCache_Model_Processor::DESIGN_EXCEPTION_KEY;
 
-        if (!Enterprise_PageCache_Model_Cache::getCacheInstance()->getFrontend()->test($cacheId)) {
+        $exception = Enterprise_PageCache_Model_Cache::getCacheInstance()->load($cacheId);
+        if (!$exception) {
             $exception = Mage::getStoreConfig(self::XML_PATH_DESIGN_EXCEPTION);
-            Enterprise_PageCache_Model_Cache::getCacheInstance()
-                ->save($exception, $cacheId, array(Enterprise_PageCache_Model_Processor::CACHE_TAG));
+            Enterprise_PageCache_Model_Cache::getCacheInstance()->save($exception, $cacheId);
             $this->_processor->refreshRequestIds();
         }
         return $this;
@@ -165,7 +163,6 @@ class Enterprise_PageCache_Model_Observer
         if (!$this->isCacheEnabled()) {
             return $this;
         }
-        /** @var $object Mage_Core_Model_Abstract */
         $object = $observer->getEvent()->getObject();
         if ($object && $object->getId()) {
             $tags = $object->getCacheIdTags();
@@ -173,40 +170,6 @@ class Enterprise_PageCache_Model_Observer
                 $this->_processor->addRequestTag($tags);
             }
         }
-        return $this;
-    }
-
-    /**
-     * Retrieve block tags and add it to processor
-     *
-     * @param Varien_Event_Observer $observer
-     * @return Enterprise_PageCache_Model_Observer
-     */
-    public function registerBlockTags(Varien_Event_Observer $observer)
-    {
-        if (!$this->isCacheEnabled()) {
-            return $this;
-        }
-
-        /** @var $block Mage_Core_Block_Abstract*/
-        $block = $observer->getEvent()->getBlock();
-        if (in_array($block->getType(), array_keys($this->_config->getDeclaredPlaceholders()))) {
-            return $this;
-        }
-
-        $tags = $block->getCacheTags();
-        if (empty($tags)) {
-            return $this;
-        }
-        $key = array_search(Mage_Core_Block_Abstract::CACHE_GROUP, $tags);
-        if (false !== $key) {
-            unset($tags[$key]);
-        }
-        if (empty($tags)) {
-            return $this;
-        }
-        $this->_processor->addRequestTag($tags);
-
         return $this;
     }
 
@@ -287,22 +250,6 @@ class Enterprise_PageCache_Model_Observer
     }
 
     /**
-     * Process entity action
-     *
-     * @param Varien_Event_Observer $observer
-     * @return Enterprise_PageCache_Model_Observer
-     */
-    public function processEntityAction(Varien_Event_Observer $observer)
-    {
-        if (!$this->isCacheEnabled()) {
-            return $this;
-        }
-        $object = $observer->getEvent()->getObject();
-        Mage::getModel('enterprise_pagecache/validator')->cleanEntityCache($object);
-        return $this;
-    }
-
-    /**
      * Clean full page cache
      *
      * @return Enterprise_PageCache_Model_Observer
@@ -310,25 +257,6 @@ class Enterprise_PageCache_Model_Observer
     public function cleanCache()
     {
         Enterprise_PageCache_Model_Cache::getCacheInstance()->clean(Enterprise_PageCache_Model_Processor::CACHE_TAG);
-        return $this;
-    }
-
-    /**
-     * Cleans cache by tags
-     *
-     * @param Varien_Event_Observer $observer
-     * @return Mage_Core_Model_Observer
-     */
-    public function cleanCacheByTags(Varien_Event_Observer $observer)
-    {
-        /** @var $tags array */
-        $tags = $observer->getEvent()->getTags();
-        if (empty($tags)) {
-            Enterprise_PageCache_Model_Cache::getCacheInstance()->clean();
-            return $this;
-        }
-
-        Enterprise_PageCache_Model_Cache::getCacheInstance()->clean($tags);
         return $this;
     }
 
@@ -366,23 +294,8 @@ class Enterprise_PageCache_Model_Observer
         $block = $observer->getEvent()->getBlock();
         $transport = $observer->getEvent()->getTransport();
         $placeholder = $this->_config->getBlockPlaceholder($block);
-
         if ($transport && $placeholder && !$block->getSkipRenderTag()) {
             $blockHtml = $transport->getHtml();
-
-            $request = Mage::app()->getFrontController()->getRequest();
-            /** @var $processor Enterprise_PageCache_Model_Processor_Default */
-            $processor = $this->_processor->getRequestProcessor($request);
-            if ($processor && $processor->allowCache($request)) {
-                $container = $placeholder->getContainerClass();
-                if ($container && !Mage::getIsDeveloperMode()) {
-                    $container = new $container($placeholder);
-                    $container->setProcessor(Mage::getSingleton('enterprise_pagecache/processor'));
-                    $container->setPlaceholderBlock($block);
-                    $container->saveCache($blockHtml);
-                }
-            }
-
             $blockHtml = $placeholder->getStartTag() . $blockHtml . $placeholder->getEndTag();
             $transport->setHtml($blockHtml);
         }
@@ -586,28 +499,7 @@ class Enterprise_PageCache_Model_Observer
         $this->_getCookie()->setObscure(Enterprise_PageCache_Model_Cookie::COOKIE_WISHLIST_ITEMS,
             'wishlist_item_count_' . Mage::helper('wishlist')->getItemCount());
 
-        Enterprise_PageCache_Model_Cache::getCacheInstance()->clean(
-            Mage::helper('wishlist')->getWishlist()->getCacheIdTags()
-        );
-
         return $this;
-    }
-
-    /**
-     * Register add wishlist item from cart in admin
-     *
-     * @param Varien_Event_Observer $observer
-     * @return Enterprise_PageCache_Model_Observer
-     */
-    public function registerAdminWishlistChange(Varien_Event_Observer $observer)
-    {
-        if (!$this->isCacheEnabled()) {
-            return $this;
-        }
-
-        Enterprise_PageCache_Model_Cache::getCacheInstance()->clean(
-            $observer->getEvent()->getWishlist()->getCacheIdTags()
-        );
     }
 
     /**
@@ -658,9 +550,9 @@ class Enterprise_PageCache_Model_Observer
             return $this;
         }
 
-        /** @var $blockContainer Enterprise_PageCache_Model_Container_Orders */
-        $blockContainer = Mage::getModel('enterprise_pagecache/container_orders');
-        Enterprise_PageCache_Model_Cache::getCacheInstance()->remove($blockContainer->getCacheId());
+        // Customer order sidebar tag
+        $cacheId = md5($this->_getCookie()->get(Enterprise_PageCache_Model_Cookie::COOKIE_CUSTOMER));
+        Enterprise_PageCache_Model_Cache::getCacheInstance()->remove($cacheId);
         return $this;
     }
 
@@ -785,63 +677,5 @@ class Enterprise_PageCache_Model_Observer
         $segmentIds = is_array($observer->getSegmentIds()) ? $observer->getSegmentIds() : array();
         $segmentsIdsString= implode(',', $segmentIds);
         $this->_getCookie()->set(Enterprise_PageCache_Model_Cookie::CUSTOMER_SEGMENT_IDS, $segmentsIdsString);
-    }
-
-    /**
-     * Drop top navigation block from cache if category becomes visible/invisible
-     *
-     * @param Varien_Event_Observer $observer
-     */
-    public function registerCategorySave(Varien_Event_Observer $observer)
-    {
-        /** @var $category Mage_Catalog_Model_Category */
-        $category = $observer->getEvent()->getDataObject();
-
-        if ($category->isObjectNew() ||
-            ($category->dataHasChangedFor('is_active') || $category->dataHasChangedFor('include_in_menu'))
-        ) {
-            Enterprise_PageCache_Model_Cache::getCacheInstance()->clean(Mage_Catalog_Model_Category::CACHE_TAG);
-        }
-    }
-
-    /**
-     * Register form key in session from cookie value
-     *
-     * @param Varien_Event_Observer $observer
-     */
-    public function registerCachedFormKey(Varien_Event_Observer $observer)
-    {
-        if (!$this->isCacheEnabled()) {
-            return;
-        }
-
-        /** @var $session Mage_Core_Model_Session  */
-        $session = Mage::getSingleton('core/session');
-        $cachedFrontFormKey = Enterprise_PageCache_Model_Cookie::getFormKeyCookieValue();
-        if ($cachedFrontFormKey) {
-            $session->setData('_form_key', $cachedFrontFormKey);
-        }
-    }
-
-    /**
-     * Clean cached tags for product if tags for product are saved
-     *
-     * @param Varien_Event_Observer $observer
-     */
-    public function cleanCachedProductTagsForTags(Varien_Event_Observer $observer)
-    {
-        if (!$this->isCacheEnabled()) {
-            return;
-        }
-
-        /** @var $tagModel Mage_Tag_Model_Tag */
-        $tagModel = $observer->getEvent()->getDataObject();
-        $productCollection = $tagModel->getEntityCollection()
-            ->addTagFilter($tagModel->getId());
-
-        /** @var $product Mage_Catalog_Model_Product */
-        foreach ($productCollection as $product) {
-            Enterprise_PageCache_Model_Cache::getCacheInstance()->clean($product->getCacheTags());
-        }
     }
 }

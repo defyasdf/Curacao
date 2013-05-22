@@ -20,7 +20,7 @@
  *
  * @category    Mage
  * @package     Mage_Sales
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
@@ -155,20 +155,12 @@
 class Mage_Sales_Model_Order_Payment extends Mage_Payment_Model_Info
 {
     /**
-     * Actions for payment when it triggered review state:
+     * Actions for payment when it triggered review state
      *
-     * Accept action
+     * @var string
      */
     const REVIEW_ACTION_ACCEPT = 'accept';
-
-    /**
-     * Deny action
-     */
     const REVIEW_ACTION_DENY   = 'deny';
-
-    /**
-     * Update action
-     */
     const REVIEW_ACTION_UPDATE = 'update';
 
     /**
@@ -198,18 +190,7 @@ class Mage_Sales_Model_Order_Payment extends Mage_Payment_Model_Info
      */
     protected $_transactionsLookup = array();
 
-    /**
-     * Event prefix
-     *
-     * @var string
-     */
     protected $_eventPrefix = 'sales_order_payment';
-
-    /**
-     * Event object
-     *
-     * @var string
-     */
     protected $_eventObject = 'payment';
 
     /**
@@ -270,31 +251,16 @@ class Mage_Sales_Model_Order_Payment extends Mage_Payment_Model_Info
         return true;
     }
 
-    /**
-     * Check whether refund could be done
-     *
-     * @return bool
-     */
     public function canRefund()
     {
         return $this->getMethodInstance()->canRefund();
     }
 
-    /**
-     * Check whether partial refund could be done
-     *
-     * @return bool
-     */
     public function canRefundPartialPerInvoice()
     {
         return $this->getMethodInstance()->canRefundPartialPerInvoice();
     }
 
-    /**
-     * Check whether partial capture could be done
-     *
-     * @return bool
-     */
     public function canCapturePartial()
     {
         return $this->getMethodInstance()->canCapturePartial();
@@ -318,7 +284,10 @@ class Mage_Sales_Model_Order_Payment extends Mage_Payment_Model_Info
 
         $methodInstance = $this->getMethodInstance();
         $methodInstance->setStore($order->getStoreId());
+
         $orderState = Mage_Sales_Model_Order::STATE_NEW;
+        $orderStatus= false;
+
         $stateObject = new Varien_Object();
 
         /**
@@ -374,11 +343,13 @@ class Mage_Sales_Model_Order_Payment extends Mage_Payment_Model_Info
             if ($message) {
                 $order->addStatusToHistory($order->getStatus(), $message, $isCustomerNotified);
             }
-        } elseif ($order->getState() && ($orderStatus !== $order->getStatus() || $message)) {
-            // add message to history if order state already declared
+        }
+        // add message to history if order state already declared
+        elseif ($order->getState() && ($orderStatus !== $order->getStatus() || $message)) {
             $order->setState($orderState, $orderStatus, $message, $isCustomerNotified);
-        } elseif (($order->getState() != $orderState) || ($order->getStatus() != $orderStatus) || $message) {
-            // set order state
+        }
+        // set order state
+        elseif (($order->getState() != $orderState) || ($order->getStatus() != $orderStatus) || $message) {
             $order->setState($orderState, $orderStatus, $message, $isCustomerNotified);
         }
 
@@ -480,10 +451,9 @@ class Mage_Sales_Model_Order_Payment extends Mage_Payment_Model_Info
      * TODO: eliminate logic duplication with capture()
      *
      * @param float $amount
-     * @param bool $skipFraudDetection
      * @return Mage_Sales_Model_Order_Payment
      */
-    public function registerCaptureNotification($amount, $skipFraudDetection = false)
+    public function registerCaptureNotification($amount)
     {
         $this->_generateTransactionId(Mage_Sales_Model_Order_Payment_Transaction::TYPE_CAPTURE,
             $this->getAuthorizationTransaction()
@@ -500,9 +470,7 @@ class Mage_Sales_Model_Order_Payment extends Mage_Payment_Model_Info
                 $order->addRelatedObject($invoice);
                 $this->setCreatedInvoice($invoice);
             } else {
-                if (!$skipFraudDetection) {
-                    $this->setIsFraudDetected(true);
-                }
+                $this->setIsFraudDetected(true);
                 $this->_updateTotals(array('base_amount_paid_online' => $amount));
             }
         }
@@ -760,8 +728,8 @@ class Mage_Sales_Model_Order_Payment extends Mage_Payment_Model_Info
             $amount = $amountRefundLeft;
         }
 
-        if ($amount != $baseGrandTotal) {
-            $order->addStatusHistoryComment(Mage::helper('sales')->__('IPN "Refunded". Refund issued by merchant. Registered notification about refunded amount of %s. Transaction ID: "%s". Credit Memo has not been created. Please create offline Credit Memo.', $this->_formatPrice($notificationAmount), $this->getTransactionId()), false);
+        if ($amount <= 0) {
+            $order->addStatusHistoryComment(Mage::helper('sales')->__('IPN "Refunded". Refund issued by merchant. Registered notification about refunded amount of %s. Transaction ID: "%s"', $this->_formatPrice($notificationAmount), $this->getTransactionId()), false);
             return $this;
         }
 
@@ -840,7 +808,7 @@ class Mage_Sales_Model_Order_Payment extends Mage_Payment_Model_Info
     public function cancel()
     {
         $isOnline = true;
-        if (!$this->canVoid($this)) {
+        if (!$this->canVoid(new Varien_Object())) {
             $isOnline = false;
         }
 
@@ -869,11 +837,6 @@ class Mage_Sales_Model_Order_Payment extends Mage_Payment_Model_Info
         return (bool)$this->getMethodInstance()->canReviewPayment($this);
     }
 
-    /**
-     * Check whether fetching info of transaction could be done
-     *
-     * @return bool
-     */
     public function canFetchTransactionInfo()
     {
         return (bool)$this->getMethodInstance()->canFetchTransactionInfo();
@@ -977,15 +940,7 @@ class Mage_Sales_Model_Order_Payment extends Mage_Payment_Model_Info
 
         // process payment in case of positive or negative result, or add a comment
         if (-1 === $result) { // switch won't work with such $result!
-            if ($order->getState() != Mage_Sales_Model_Order::STATE_PAYMENT_REVIEW) {
-                $status = $this->getIsFraudDetected() ? Mage_Sales_Model_Order::STATUS_FRAUD : false;
-                $order->setState(Mage_Sales_Model_Order::STATE_PAYMENT_REVIEW, $status, $message);
-                if ($transactionId) {
-                    $this->setLastTransId($transactionId);
-                }
-            } else {
-                $order->addStatusHistoryComment($message);
-            }
+            $order->addStatusHistoryComment($message);
         } elseif (true === $result) {
             if ($invoice) {
                 $invoice->pay();
@@ -1058,12 +1013,6 @@ class Mage_Sales_Model_Order_Payment extends Mage_Payment_Model_Info
      */
     protected function _authorize($isOnline, $amount)
     {
-        // check for authorization amount to be equal to grand total
-        $this->setShouldCloseParentTransaction(false);
-        if (!$this->_isCaptureFinal($amount)) {
-            $this->setIsFraudDetected(true);
-        }
-
         // update totals
         $amount = $this->_formatAmount($amount, true);
         $this->setBaseAmountAuthorized($amount);
@@ -1085,13 +1034,7 @@ class Mage_Sales_Model_Order_Payment extends Mage_Payment_Model_Info
                 $status = Mage_Sales_Model_Order::STATUS_FRAUD;
             }
         } else {
-            if ($this->getIsFraudDetected()) {
-                $state = Mage_Sales_Model_Order::STATE_PAYMENT_REVIEW;
-                $message = Mage::helper('sales')->__('Order is suspended as its authorizing amount %s is suspected to be fraudulent.', $this->_formatPrice($amount));
-                $status = Mage_Sales_Model_Order::STATUS_FRAUD;
-            } else {
-                $message = Mage::helper('sales')->__('Authorized amount of %s.', $this->_formatPrice($amount));
-            }
+            $message = Mage::helper('sales')->__('Authorized amount of %s.', $this->_formatPrice($amount));
         }
 
         // update transactions, order state and add comments
@@ -1510,8 +1453,7 @@ class Mage_Sales_Model_Order_Payment extends Mage_Payment_Model_Info
             $this->setParentTransactionId($transactionBasedOn->getTxnId());
         }
         // generate transaction id for an offline action or payment method that didn't set it
-        $parentTxnId = $this->getParentTransactionId();
-        if ($parentTxnId && !$this->getTransactionId()) {
+        if (($parentTxnId = $this->getParentTransactionId()) && !$this->getTransactionId()) {
             $this->setTransactionId("{$parentTxnId}-{$type}");
         }
     }

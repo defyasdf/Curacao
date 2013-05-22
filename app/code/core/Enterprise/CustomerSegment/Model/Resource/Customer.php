@@ -20,7 +20,7 @@
  *
  * @category    Enterprise
  * @package     Enterprise_CustomerSegment
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
@@ -98,12 +98,7 @@ class Enterprise_CustomerSegment_Model_Resource_Customer extends Mage_Core_Model
     public function getCustomerWebsiteSegments($customerId, $websiteId)
     {
         $select = $this->_getReadAdapter()->select()
-            ->from(array('c' => $this->getMainTable()), 'segment_id')
-            ->join(
-                array('s' => $this->getTable('enterprise_customersegment/segment')),
-                'c.segment_id = s.segment_id'
-            )
-            ->where('is_active = 1')
+            ->from($this->getMainTable(), 'segment_id')
             ->where('customer_id = :customer_id')
             ->where('website_id = :website_id');
         $bind = array(

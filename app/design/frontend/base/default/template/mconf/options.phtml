@@ -1,0 +1,11 @@
+ <?php
+    /**
+* @author Magify Team
+* @copyright Magify
+* @package Magify_Conf 
+*/
+?> 
+ <script type="text/javascript">
+     optionsPrice['<?php echo $this->productId;?>'] = new Product.OptionsPrice(<?php echo $this->getJsonConfig();?>);
+ </script>
+<?php   echo $this->getHtml(); ?>

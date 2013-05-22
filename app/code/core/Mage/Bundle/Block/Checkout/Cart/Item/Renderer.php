@@ -20,7 +20,7 @@
  *
  * @category    Mage
  * @package     Mage_Bundle
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
@@ -54,9 +54,7 @@ class Mage_Bundle_Block_Checkout_Cart_Item_Renderer extends Mage_Checkout_Block_
      */
     protected function _getSelectionFinalPrice($selectionProduct)
     {
-        $helper = Mage::helper('bundle/catalog_product_configuration');
-        $result = $helper->getSelectionFinalPrice($this->getItem(), $selectionProduct);
-        return $result;
+        return Mage::helper('bundle/catalog_product_configuration')->getSelectionFinalPrice($this->getItem(), $selectionProduct);
     }
 
     /**
@@ -82,22 +80,23 @@ class Mage_Bundle_Block_Checkout_Cart_Item_Renderer extends Mage_Checkout_Block_
     }
 
     /**
-     * Return cart item error messages
+     * Return cart backorder messages
      *
      * @return array
      */
     public function getMessages()
     {
-        $messages = array();
-        $quoteItem = $this->getItem();
+        $messages = $this->getData('messages');
+        if (is_null($messages)) {
+            $messages = array();
+        }
+        $options = $this->getItem()->getQtyOptions();
 
-        // Add basic messages occuring during this page load
-        $baseMessages = $quoteItem->getMessage(false);
-        if ($baseMessages) {
-            foreach ($baseMessages as $message) {
+        foreach ($options as $option) {
+            if ($option->getMessage()) {
                 $messages[] = array(
-                    'text' => $message,
-                    'type' => $quoteItem->getHasError() ? 'error' : 'notice'
+                    'text' => $option->getMessage(),
+                    'type' => ($this->getItem()->getHasError()) ? 'error' : 'notice'
                 );
             }
         }

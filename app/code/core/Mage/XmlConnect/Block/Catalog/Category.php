@@ -20,7 +20,7 @@
  *
  * @category    Mage
  * @package     Mage_XmlConnect
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
@@ -43,9 +43,8 @@ class Mage_XmlConnect_Block_Catalog_Category extends Mage_XmlConnect_Block_Catal
         /** @var $categoryXmlObj Mage_XmlConnect_Model_Simplexml_Element */
         $categoryXmlObj = Mage::getModel('xmlconnect/simplexml_element', '<category></category>');
         $categoryId     = $this->getRequest()->getParam('id', null);
-        $rootCategoryId = Mage::app()->getStore()->getRootCategoryId();
-        if (null === $categoryId) {
-            $categoryId = $rootCategoryId;
+        if ($categoryId === null) {
+            $categoryId = Mage::app()->getStore()->getRootCategoryId();
         }
 
         $productsXmlObj = $productListBlock = false;
@@ -74,14 +73,9 @@ class Mage_XmlConnect_Block_Catalog_Category extends Mage_XmlConnect_Block_Catal
         // subcategories are exists
         if (sizeof($categoryCollection)) {
             $itemsXmlObj = $categoryXmlObj->addChild('items');
-            $categoryImageSize = Mage::getModel('xmlconnect/images')->getImageLimitParam('content/category');
             foreach ($categoryCollection as $item) {
                 /** @var $item Mage_Catalog_Model_Category */
                 $item = Mage::getModel('catalog/category')->load($item->getId());
-
-                if ($categoryId == $rootCategoryId && !$item->getIncludeInMenu()) {
-                    continue;
-                }
 
                 $itemXmlObj = $itemsXmlObj->addChild('item');
                 $itemXmlObj->addChild('label', $categoryXmlObj->escapeXml($item->getName()));
@@ -91,10 +85,12 @@ class Mage_XmlConnect_Block_Catalog_Category extends Mage_XmlConnect_Block_Catal
                     $itemXmlObj->addChild('parent_id', $item->getParentId());
                 }
                 $icon = Mage::helper('xmlconnect/catalog_category_image')->initialize($item, 'thumbnail')
-                    ->resize($categoryImageSize);
+                    ->resize(Mage::helper('xmlconnect/image')->getImageSizeForContent('category'));
 
                 $iconXml = $itemXmlObj->addChild('icon', $icon);
-                $iconXml->addAttribute('modification_time', filemtime($icon->getNewFile()));
+
+                $file = Mage::helper('xmlconnect')->urlToPath($icon);
+                $iconXml->addAttribute('modification_time', filemtime($file));
             }
         }
 

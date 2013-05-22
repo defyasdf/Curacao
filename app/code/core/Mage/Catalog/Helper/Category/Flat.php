@@ -20,7 +20,7 @@
  *
  * @category    Mage
  * @package     Mage_Catalog
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
@@ -31,64 +31,44 @@
  * @package    Mage_Catalog
  * @author     Magento Core Team <core@magentocommerce.com>
  */
-class Mage_Catalog_Helper_Category_Flat extends Mage_Catalog_Helper_Flat_Abstract
+class Mage_Catalog_Helper_Category_Flat extends Mage_Core_Helper_Abstract
 {
-    /**
-     * Catalog Category Flat Is Enabled Config
-     */
     const XML_PATH_IS_ENABLED_FLAT_CATALOG_CATEGORY = 'catalog/frontend/flat_catalog_category';
 
     /**
-     * Catalog Flat Category index process code
-     */
-    const CATALOG_CATEGORY_FLAT_PROCESS_CODE = 'catalog_category_flat';
-
-    /**
-     * Catalog Category Flat index process code
+     * Return true if flat catalog is enabled, rebuileded and is not Admin
      *
-     * @var string
-     */
-    protected $_indexerCode = self::CATALOG_CATEGORY_FLAT_PROCESS_CODE;
-
-    /**
-     * Store catalog Category Flat index process instance
-     *
-     * @var Mage_Index_Model_Process|null
-     */
-    protected $_process = null;
-
-    /**
-     * Check if Catalog Category Flat Data is enabled
-     *
-     * @param bool $skipAdminCheck this parameter is deprecated and no longer in use
-     *
-     * @return bool
+     * @param boolean $skipAdmin
+     * @return boolean
      */
     public function isEnabled($skipAdminCheck = false)
     {
-        return Mage::getStoreConfigFlag(self::XML_PATH_IS_ENABLED_FLAT_CATALOG_CATEGORY);
+        $flatFlag = Mage::getStoreConfigFlag(self::XML_PATH_IS_ENABLED_FLAT_CATALOG_CATEGORY);
+        $isFront = !Mage::app()->getStore()->isAdmin();
+        if ($skipAdminCheck === true) {
+            $isFront = true;
+        }
+
+        return (boolean) $flatFlag && $isFront;
     }
 
     /**
-     * Check if Catalog Category Flat Data has been initialized
+     * Return true if catalog category flat data rebuilt
      *
-     * @param null|bool|int|Mage_Core_Model_Store $store Store(id) for which the value is checked
-     * @return bool
-     */
-    public function isBuilt($store = null)
-    {
-        return Mage::getResourceSingleton('catalog/category_flat')->isBuilt($store);
-    }
-
-    /**
-     * Check if Catalog Category Flat Data has been initialized
-     *
-     * @deprecated after 1.7.0.0 use Mage_Catalog_Helper_Category_Flat::isBuilt() instead
-     *
-     * @return bool
+     * @return boolean
      */
     public function isRebuilt()
     {
-        return $this->isBuilt();
+        return Mage::getResourceSingleton('catalog/category_flat')->isRebuilt();
+    }
+
+    /**
+     * Back Flat compatibility: check is built and enabled flat
+     *
+     * @return bool
+     */
+    public function isBuilt()
+    {
+        return $this->isEnabled(true);
     }
 }

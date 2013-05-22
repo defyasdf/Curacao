@@ -20,7 +20,7 @@
  *
  * @category    Enterprise
  * @package     Enterprise_PageCache
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
@@ -43,7 +43,7 @@ class Enterprise_PageCache_Model_Container_Catalognavigation extends Enterprise_
     protected function _getCategoryCacheId()
     {
         $shortCacheId = $this->_placeholder->getAttribute('short_cache_id');
-        $categoryPath = $this->_placeholder->getAttribute('entity_key');
+        $categoryPath = $this->_placeholder->getAttribute('category_path');
         $categoryId = $this->_getCategoryId();
         if (!$shortCacheId || !$categoryPath) {
             return false;
@@ -83,10 +83,9 @@ class Enterprise_PageCache_Model_Container_Catalognavigation extends Enterprise_
      * Save rendered block content to cache storage
      *
      * @param string $blockContent
-     * @param array $tags
      * @return Enterprise_PageCache_Model_Container_Abstract
      */
-    public function saveCache($blockContent, $tags = array())
+    public function saveCache($blockContent)
     {
         $blockCacheId = $this->_getBlockCacheId();
         if ($blockCacheId) {
@@ -94,13 +93,10 @@ class Enterprise_PageCache_Model_Container_Catalognavigation extends Enterprise_
             if ($categoryCacheId) {
                 $categoryUniqueClasses = '';
                 $classes = array();
-                $classesCount = preg_match_all('/< *li[^>]*class *= *["\']?([^"\']*)/i', $blockContent, $classes);
+                $classesCount = preg_match_all('/(?<=\s)class="(.*?active.*?)"/u', $blockContent, $classes);
                 for ($i = 0; $i < $classesCount; $i++) {
                     $classAttribute = $classes[0][$i];
                     $classValue = $classes[1][$i];
-                    if (false === strpos($classAttribute, 'active')) {
-                        continue;
-                    }
                     $classInactive = preg_replace('/\s+active|active\s+|active/', '', $classAttribute);
                     $blockContent = str_replace($classAttribute, $classInactive, $blockContent);
                     $matches = array();
@@ -111,7 +107,7 @@ class Enterprise_PageCache_Model_Container_Catalognavigation extends Enterprise_
                 $this->_saveCache($categoryUniqueClasses, $categoryCacheId);
             }
             if (!Enterprise_PageCache_Model_Cache::getCacheInstance()->getFrontend()->test($blockCacheId)) {
-                $this->_saveCache($blockContent, $blockCacheId, $tags);
+                $this->_saveCache($blockContent, $blockCacheId);
             }
         }
         return $this;
@@ -130,7 +126,6 @@ class Enterprise_PageCache_Model_Container_Catalognavigation extends Enterprise_
         if (!Mage::registry('current_category') && $categoryId) {
             $category = Mage::getModel('catalog/category')->load($categoryId);
             Mage::register('current_category', $category);
-            Mage::register('current_entity_key', $category->getPath());
         }
 
         Mage::dispatchEvent('render_block', array('block' => $block, 'placeholder' => $this->_placeholder));

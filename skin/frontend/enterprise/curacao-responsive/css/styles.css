@@ -1067,8 +1067,8 @@ body{ background: #fff; font: 14px/21px Arial, Tahoma, sans-serif; }
 	background: linear-gradient(to bottom,  #f7f7f7 0%,#e3e3e3 100%); /* W3C 
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f7f7f7', endColorstr='#e3e3e3',GradientType=0 ); /* IE6-9 
 
-	border-top: 1px solid #D0D0D0;
-	border-bottom: 1px solid #C5C5C5;*/
+	border-top: 1px solid #D0D0D0;*/
+	border-bottom: 1px solid #C5C5C5;
 	color: #ef6530;
 	float: left;
 	font-size: 19px;
@@ -1722,22 +1722,22 @@ a.button.related strong { color: #fff; text-shadow:0 -1px #666666;}
 	}
 	
 	.box-related .box-holder {
-		/* background: #e3e3e3; /* Old browsers */
-		/* background: -moz-linear-gradient(top,  #e3e3e3 0%, #e0e0e0 100%); /* FF3.6+ */
-		/* background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#e3e3e3), color-stop(100%,#e0e0e0)); /* Chrome,Safari4+ */
-		/* background: -webkit-linear-gradient(top,  #e3e3e3 0%,#e0e0e0 100%); /* Chrome10+,Safari5.1+ */
-		/* background: -o-linear-gradient(top,  #e3e3e3 0%,#e0e0e0 100%); /* Opera 11.10+ */
-		/* background: -ms-linear-gradient(top,  #e3e3e3 0%,#e0e0e0 100%); /* IE10+ */
-		/* background: linear-gradient(to bottom,  #e3e3e3 0%,#e0e0e0 100%); /* W3C */
-		/* filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e3e3e3', endColorstr='#e0e0e0',GradientType=0 ); /* IE6-9 */
+		background: #e3e3e3; /* Old browsers */
+		background: -moz-linear-gradient(top,  #e3e3e3 0%, #e0e0e0 100%); /* FF3.6+ */
+		background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#e3e3e3), color-stop(100%,#e0e0e0)); /* Chrome,Safari4+ */
+		background: -webkit-linear-gradient(top,  #e3e3e3 0%,#e0e0e0 100%); /* Chrome10+,Safari5.1+ */
+		background: -o-linear-gradient(top,  #e3e3e3 0%,#e0e0e0 100%); /* Opera 11.10+ */
+		background: -ms-linear-gradient(top,  #e3e3e3 0%,#e0e0e0 100%); /* IE10+ */
+		background: linear-gradient(to bottom,  #e3e3e3 0%,#e0e0e0 100%); /* W3C */
+		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e3e3e3', endColorstr='#e0e0e0',GradientType=0 ); /* IE6-9 */
 		
 		float: left;
 		margin: 0 0 16px;
 		padding: 10px 0 0;
 		width: 100%;
 		
-		/* box-shadow: 0 0 5px rgba(0,0,0,.3) inset; */
-		/* -webkit-box-shadow: 0 0 5px rgba(0,0,0,.3) inset; */
+		box-shadow: 0 0 5px rgba(0,0,0,.3) inset;
+		-webkit-box-shadow: 0 0 5px rgba(0,0,0,.3) inset;
 	}
 	
 	.box-related .block-header p {
@@ -1750,14 +1750,13 @@ a.button.related strong { color: #fff; text-shadow:0 -1px #666666;}
 	}
 	.box-related .box-content li.item {
 		background: none repeat scroll 0 0 #FFFFFF;
-		/* -webkit-box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3); */
-		/* box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3); */
+		-webkit-box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+		box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
 		list-style-type: none;
 		margin: 0 10px 10px;
 		overflow: hidden;
 		padding: 4px;
 		position: relative;
-		border: 1px solid #d7d7d7;
 	}
 	.box-related .box-content li.item .checkbox {
 		float: left;
@@ -1773,9 +1772,8 @@ a.button.related strong { color: #fff; text-shadow:0 -1px #666666;}
 	.box-related .box-content li.item .item-info .product-details {
 		margin-left: 148px;
 	}
-	.box-related .box-content li.item .item-info .product-details .product-name a { color: #444; font-weight: bold; }
+	.box-related .box-content li.item .item-info .product-details .product-name a { color: #444; }
 	.box-related .box-content li.item .item-info .product-details .price-box { clear: none; }
-	.box-related .box-content li.item .item-info .product-details .price-box .regular-price .price { font-size: 24px; color: #d5172f; font-weight: bold; line-height: 30px; }
 	.product-view .price-box .regular-price .price {
 		font-size: 22px;
 		font-family: Arial, Tahoma, sans-serif;
@@ -1814,9 +1812,8 @@ a.button.related strong { color: #fff; text-shadow:0 -1px #666666;}
 		font-weight:normal;
 	}
 	.product-info .price{
-		color:#d5172f;
+		color:#F26722;
 		font-weight:bold;
-		font-size: 18px;
 	}
 	
 	.product-info .price-or{
@@ -1949,7 +1946,6 @@ a.button.related strong { color: #fff; text-shadow:0 -1px #666666;}
 	.tab-content li.tab table th, td {
 		padding: 5px 15px;
 		text-align: left;
-		padding-top: 10px !important
 	}
 	
 	.tab-content li.tab table th.odd, td.odd {
@@ -2258,7 +2254,7 @@ a.button.related strong { color: #fff; text-shadow:0 -1px #666666;}
 		clear: none;
 	}
 	.box-up-sell li .price-box span span.price{
-		color: #d5172f;
+		color: #F26722;
 		font-weight: bold;
 	}
 	.box-up-sell li .price-box .credit-payment { }
@@ -2558,16 +2554,7 @@ a.button.related strong { color: #fff; text-shadow:0 -1px #666666;}
 	.totals-container { padding: 15px; background-color: #f1f1f1; margin: 0 0 20px 40px; }
 	.totals td.grand-title { font-size: 16px; font-weight: bold; color: #444444 !important; }
 	.totals td.grand-price { font-size: 16px; font-weight: bold; color: #d5172f !important; }
-	button.update-button {
-		font-size: 11px !important;
-		color: #008ECF !important;
-		font-weight: normal !important;
-		background: none !important;
-		padding: 0;
-		text-shadow: none;
-		float: left !important;
-		box-shadow: none;
-	}
+	button.update-button { font-size: 11px !important; color: #008ECF !important; font-weight: normal !important; background: none !important; margin: 3px 0 0 15px; padding: 0; text-shadow: none; }
 	.qty-box { float: right; text-align: center; width: 30px; }
 	
 	#shopping-cart-totals-table{
@@ -3692,7 +3679,7 @@ select.split {
 
 table.onestepcheckout-totals tr.amount-due td {
     font-weight: bold;
-	color:#FF0000;
+	color:#d95902;
 }
 .initial-payment{
 	color:#cf2842;
@@ -4756,7 +4743,7 @@ input[type="text"].authcode {
 }
 #yousave{
 	font-size:12px;
-	color:#d5172f;	
+	color:#f26722;	
 	margin-left:10px;
 	line-height:24px;
 	/* vertical-align:-4px; */
@@ -4807,40 +4794,4 @@ hr.protection{
 	float: left;
     margin-top: 14px;
 	font-size:11px;
-}
-
-p.rating-links a {
-    font-size: 11px;
-}
-span.separator {
-    font-size: 15px;
-}
-.rating-box {
-    background: url("../images/bkg_rating.gif") repeat-x scroll 0 0 transparent;
-    font-size: 0;
-    height: 13px;
-    line-height: 0;
-    overflow: hidden;
-    text-indent: -999em;
-    width: 69px;
-}
-.rating-box .rating {
-    background: url("../images/bkg_rating.gif") repeat-x scroll 0 100% transparent;
-    float: left;
-    height: 13px;
-}
-
-#product-review-table {
-	width: 100%;w
-}
-#product-review-table col {
-    width: 18%;
-}
-
-#product-review-table ht .rating-box {
-	
-}
-
-.rating-box .rating.nobr {
-	text-indent: -999em;
 }

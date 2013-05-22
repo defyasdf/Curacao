@@ -20,7 +20,7 @@
  *
  * @category    Mage
  * @package     Mage_GiftMessage
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
@@ -85,9 +85,7 @@ class Mage_GiftMessage_Helper_Message extends Mage_Core_Helper_Data
      */
     public function getInline($type, Varien_Object $entity, $dontDisplayContainer=false)
     {
-        if (!in_array($type, array('onepage_checkout','multishipping_adress'))
-            && !$this->isMessagesAvailable($type, $entity)
-        ) {
+        if (!in_array($type, array('onepage_checkout','multishipping_adress')) && !$this->isMessagesAvailable($type, $entity)) {
             return '';
         }
 
@@ -201,7 +199,7 @@ class Mage_GiftMessage_Helper_Message extends Mage_Core_Helper_Data
     {
         $message = $this->getGiftMessageForEntity($entity);
         if ($message) {
-            return nl2br($this->escapeHtml($message->getMessage()));
+            return nl2br($this->htmlEscape($message->getMessage()));
         }
         return null;
     }

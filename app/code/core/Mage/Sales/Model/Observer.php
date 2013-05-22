@@ -20,7 +20,7 @@
  *
  * @category    Mage
  * @package     Mage_Sales
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
@@ -418,7 +418,6 @@ class Mage_Sales_Model_Observer
         $quoteAddress = $observer->getQuoteAddress();
         $quoteInstance = $quoteAddress->getQuote();
         $customerInstance = $quoteInstance->getCustomer();
-        $isDisableAutoGroupChange = $customerInstance->getDisableAutoGroupChange();
 
         $storeId = $customerInstance->getStore();
 
@@ -438,9 +437,7 @@ class Mage_Sales_Model_Observer
         $customerCountryCode = $quoteAddress->getCountryId();
         $customerVatNumber = $quoteAddress->getVatId();
 
-        if ((empty($customerVatNumber) || !Mage::helper('core')->isCountryInEU($customerCountryCode))
-            && !$isDisableAutoGroupChange
-        ) {
+        if (empty($customerVatNumber) || !Mage::helper('core')->isCountryInEU($customerCountryCode)) {
             $groupId = ($customerInstance->getId()) ? $customerHelper->getDefaultCustomerGroupId($storeId)
                 : Mage_Customer_Model_Group::NOT_LOGGED_IN_ID;
 
@@ -488,13 +485,9 @@ class Mage_Sales_Model_Observer
         }
 
         // Magento always has to emulate group even if customer uses default billing/shipping address
-        if (!$isDisableAutoGroupChange) {
-            $groupId = $customerHelper->getCustomerGroupIdBasedOnVatNumber(
-                $customerCountryCode, $gatewayResponse, $customerInstance->getStore()
-            );
-        } else {
-            $groupId = $quoteInstance->getCustomerGroupId();
-        }
+        $groupId = $customerHelper->getCustomerGroupIdBasedOnVatNumber(
+            $customerCountryCode, $gatewayResponse, $customerInstance->getStore()
+        );
 
         if ($groupId) {
             $quoteAddress->setPrevQuoteCustomerGroupId($quoteInstance->getCustomerGroupId());

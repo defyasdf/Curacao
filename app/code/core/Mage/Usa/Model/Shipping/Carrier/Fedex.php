@@ -20,7 +20,7 @@
  *
  * @category    Mage
  * @package     Mage_Usa
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
@@ -368,7 +368,7 @@ class Mage_Usa_Model_Shipping_Carrier_Fedex
                     '0' => array(
                         'Weight' => array(
                             'Value' => (float)$r->getWeight(),
-                            'Units' => $this->getConfigData('unit_of_measure')
+                            'Units' => 'LB'
                         ),
                         'GroupPackageCount' => 1,
                     )
@@ -462,12 +462,7 @@ class Mage_Usa_Model_Shipping_Carrier_Fedex
 
         if (is_object($response)) {
             if ($response->HighestSeverity == 'FAILURE' || $response->HighestSeverity == 'ERROR') {
-                if (is_array($response->Notifications)) {
-                    $notification = array_pop($response->Notifications);
-                    $errorTitle = (string)$notification->Message;
-                } else {
-                    $errorTitle = (string)$response->Notifications->Message;
-                }
+                $errorTitle = (string)$response->Notifications->Message;
             } elseif (isset($response->RateReplyDetails)) {
                 $allowedMethods = explode(",", $this->getConfigData('allowed_methods'));
 
@@ -536,17 +531,7 @@ class Mage_Usa_Model_Shipping_Carrier_Fedex
             }
 
             // Order is important
-            $ratesOrder = array(
-                'RATED_ACCOUNT_PACKAGE',
-                'PAYOR_ACCOUNT_PACKAGE',
-                'RATED_ACCOUNT_SHIPMENT',
-                'PAYOR_ACCOUNT_SHIPMENT',
-                'RATED_LIST_PACKAGE',
-                'PAYOR_LIST_PACKAGE',
-                'RATED_LIST_SHIPMENT',
-                'PAYOR_LIST_SHIPMENT'
-            );
-            foreach ($ratesOrder as $rateType) {
+            foreach (array('RATED_ACCOUNT_SHIPMENT', 'RATED_LIST_SHIPMENT', 'RATED_LIST_PACKAGE') as $rateType) {
                 if (!empty($rateTypeAmounts[$rateType])) {
                     $amount = $rateTypeAmounts[$rateType];
                     break;
@@ -891,11 +876,6 @@ class Mage_Usa_Model_Shipping_Carrier_Fedex
                 'ADULT'                 => Mage::helper('usa')->__('Adult'),
                 'DIRECT'                => Mage::helper('usa')->__('Direct'),
                 'INDIRECT'              => Mage::helper('usa')->__('Indirect'),
-            ),
-
-            'unit_of_measure'=>array(
-                'LB'   =>  Mage::helper('usa')->__('Pounds'),
-                'KG'   =>  Mage::helper('usa')->__('Kilograms'),
             ),
         );
 

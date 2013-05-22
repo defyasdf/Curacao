@@ -20,7 +20,7 @@
  *
  * @category    Mage
  * @package     Mage_Catalog
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
@@ -34,12 +34,7 @@
  */
 class Mage_Catalog_Block_Navigation extends Mage_Core_Block_Template
 {
-    /**
-     * Category instance
-     *
-     * @var Mage_Catalog_Model_Category
-     */
-    protected $_categoryInstance;
+    protected $_categoryInstance = null;
 
     /**
      * Current category key
@@ -55,22 +50,11 @@ class Mage_Catalog_Block_Navigation extends Mage_Core_Block_Template
      */
     protected $_itemLevelPositions = array();
 
-    /**
-     * Current child categories collection
-     *
-     * @var Mage_Catalog_Model_Resource_Category_Collection
-     */
-    protected $_currentChildCategories;
-
-    /**
-     * Set cache data
-     */
     protected function _construct()
     {
-        $this->addData(array('cache_lifetime' => false));
-        $this->addCacheTag(array(
-            Mage_Catalog_Model_Category::CACHE_TAG,
-            Mage_Core_Model_Store_Group::CACHE_TAG
+        $this->addData(array(
+            'cache_lifetime'    => false,
+            'cache_tags'        => array(Mage_Catalog_Model_Category::CACHE_TAG, Mage_Core_Model_Store_Group::CACHE_TAG),
         ));
     }
 
@@ -123,7 +107,7 @@ class Mage_Catalog_Block_Navigation extends Mage_Core_Block_Template
     }
 
     /**
-     * Get categories of current store
+     * Get catagories of current store
      *
      * @return Varien_Data_Tree_Node_Collection
      */
@@ -136,38 +120,34 @@ class Mage_Catalog_Block_Navigation extends Mage_Core_Block_Template
     /**
      * Retrieve child categories of current category
      *
-     * @return Mage_Catalog_Model_Resource_Category_Collection
+     * @return Varien_Data_Tree_Node_Collection
      */
     public function getCurrentChildCategories()
     {
-        if (null === $this->_currentChildCategories) {
-            $layer = Mage::getSingleton('catalog/layer');
-            $category = $layer->getCurrentCategory();
-            $this->_currentChildCategories = $category->getChildrenCategories();
-            $productCollection = Mage::getResourceModel('catalog/product_collection');
-            $layer->prepareProductCollection($productCollection);
-            $productCollection->addCountToCategories($this->_currentChildCategories);
-        }
-        return $this->_currentChildCategories;
+        $layer = Mage::getSingleton('catalog/layer');
+        $category   = $layer->getCurrentCategory();
+        /* @var $category Mage_Catalog_Model_Category */
+        $categories = $category->getChildrenCategories();
+        $productCollection = Mage::getResourceModel('catalog/product_collection');
+        $layer->prepareProductCollection($productCollection);
+        $productCollection->addCountToCategories($categories);
+        return $categories;
     }
 
     /**
-     * Check whether specified category is active
+     * Checkin activity of category
      *
-     * @param Varien_Object $category
-     * @return bool
+     * @param   Varien_Object $category
+     * @return  bool
      */
     public function isCategoryActive($category)
     {
-        return $this->getCurrentCategory()
-            ? in_array($category->getId(), $this->getCurrentCategory()->getPathIds()) : false;
+        if ($this->getCurrentCategory()) {
+            return in_array($category->getId(), $this->getCurrentCategory()->getPathIds());
+        }
+        return false;
     }
 
-    /**
-     * Retrieve category instance
-     *
-     * @return Mage_Catalog_Model_Category
-     */
     protected function _getCategoryInstance()
     {
         if (is_null($this->_categoryInstance)) {
@@ -244,9 +224,7 @@ class Mage_Catalog_Block_Navigation extends Mage_Core_Block_Template
         $html = array();
 
         // get all children
-        // If Flat Data enabled then use it but only on frontend
-        $flatHelper = Mage::helper('catalog/category_flat');
-        if ($flatHelper->isAvailable() && $flatHelper->isBuilt(true) && !Mage::app()->getStore()->isAdmin()) {
+        if (Mage::helper('catalog/category_flat')->isEnabled()) {
             $children = (array)$category->getChildrenNodes();
             $childrenCount = count($children);
         } else {
@@ -395,33 +373,33 @@ class Mage_Catalog_Block_Navigation extends Mage_Core_Block_Template
             return $html;
         }
 
-        $html .= '<li';
+        $html.= '<li';
 
         if ($this->isCategoryActive($category)) {
-            $html .= ' class="active"';
+            $html.= ' class="active"';
         }
 
-        $html .= '>' . "\n";
-        $html .= '<a href="'.$this->getCategoryUrl($category).'">'
-            . '<span>' . $this->escapeHtml($category->getName()) . '</span></a>' . "\n";
+        $html.= '>'."\n";
+        $html.= '<a href="'.$this->getCategoryUrl($category).'"><span>'.$this->htmlEscape($category->getName()).'</span></a>'."\n";
 
-        if (in_array($category->getId(), $this->getCurrentCategoryPath())) {
+        if (in_array($category->getId(), $this->getCurrentCategoryPath())){
             $children = $category->getChildren();
             $hasChildren = $children && $children->count();
 
             if ($hasChildren) {
                 $htmlChildren = '';
                 foreach ($children as $child) {
-                    $htmlChildren .= $this->drawOpenCategoryItem($child);
+                    $htmlChildren.= $this->drawOpenCategoryItem($child);
                 }
 
                 if (!empty($htmlChildren)) {
-                    $html .= '<ul>' . "\n" . $htmlChildren . '</ul>';
+                    $html.= '<ul>'."\n"
+                            .$htmlChildren
+                            .'</ul>';
                 }
             }
         }
-        $html .= '</li>'."\n";
-
+        $html.= '</li>'."\n";
         return $html;
     }
 
@@ -466,4 +444,5 @@ class Mage_Catalog_Block_Navigation extends Mage_Core_Block_Template
 
         return $html;
     }
+
 }

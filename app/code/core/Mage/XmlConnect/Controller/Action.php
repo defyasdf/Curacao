@@ -20,7 +20,7 @@
  *
  * @category    Mage
  * @package     Mage_XmlConnect
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
@@ -77,7 +77,9 @@ abstract class Mage_XmlConnect_Controller_Action extends Mage_Core_Controller_Fr
         $screenSizeCookieName = Mage_XmlConnect_Model_Application::APP_SCREEN_SIZE_NAME;
         $screenSize = isset($_COOKIE[$screenSizeCookieName]) ? (string) $_COOKIE[$screenSizeCookieName] : '';
         if (!$appCode) {
-            $this->_message(Mage::helper('xmlconnect')->__('Specified invalid app code.'), self::MESSAGE_STATUS_ERROR);
+            $this->_message(
+                Mage::helper('xmlconnect')->__('Specified invalid app code.'), self::MESSAGE_STATUS_ERROR
+            );
             $this->setFlag('', self::FLAG_NO_DISPATCH, true);
             return;
         }
@@ -97,11 +99,15 @@ abstract class Mage_XmlConnect_Controller_Action extends Mage_Core_Controller_Fr
         $appModel = Mage::getModel('xmlconnect/application')->loadByCode($appCode);
         $appModel->setScreenSize($screenSize);
         if ($appModel && $appModel->getId()) {
-            Mage::app()->setCurrentStore(Mage::app()->getStore($appModel->getStoreId())->getCode());
+            Mage::app()->setCurrentStore(
+                Mage::app()->getStore($appModel->getStoreId())->getCode()
+            );
             Mage::getSingleton('core/locale')->emulate($appModel->getStoreId());
-            Mage::register('current_app', $appModel, true);
+            Mage::register('current_app', $appModel);
         } else {
-            $this->_message(Mage::helper('xmlconnect')->__('Specified invalid app code.'), self::MESSAGE_STATUS_ERROR);
+            $this->_message(
+                Mage::helper('xmlconnect')->__('Specified invalid app code.'), self::MESSAGE_STATUS_ERROR
+            );
             $this->setFlag('', self::FLAG_NO_DISPATCH, true);
             return;
         }
@@ -116,7 +122,7 @@ abstract class Mage_XmlConnect_Controller_Action extends Mage_Core_Controller_Fr
     {
         parent::postDispatch();
         $body = $this->getResponse()->getBody();
-        if (empty($body) && !$this->getFlag('forwarded')) {
+        if (empty($body)) {
             $this->_message(
                 Mage::helper('xmlconnect')->__('An error occurred while processing your request.'),
                 self::MESSAGE_STATUS_ERROR
@@ -144,36 +150,5 @@ abstract class Mage_XmlConnect_Controller_Action extends Mage_Core_Controller_Fr
         }
 
         $this->getResponse()->setBody($message->asNiceXml());
-    }
-
-    /**
-     * Throw control to different action (control and module if was specified).
-     *
-     * @param string $action
-     * @param string|null $controller
-     * @param string|null $module
-     * @param array|null $params
-     * @return null
-     */
-    protected function _forward($action, $controller = null, $module = null, array $params = null)
-    {
-        $this->setFlag('', 'forwarded', true);
-        return parent::_forward($action, $controller, $module, $params);
-    }
-
-    /**
-     * Check api version and forward if equal
-     *
-     * @param string $action
-     * @param string $apiVersion
-     * @return bool
-     */
-    protected function _checkApiForward($action, $apiVersion)
-    {
-        if (Mage::helper('xmlconnect')->checkApiVersion($apiVersion)) {
-            $this->_forward($action);
-            return true;
-        }
-        return false;
     }
 }

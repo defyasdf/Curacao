@@ -20,7 +20,7 @@
  *
  * @category    Enterprise
  * @package     Enterprise_Banner
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
@@ -240,14 +240,7 @@ class Enterprise_Banner_Model_Resource_Banner extends Mage_Core_Model_Resource_D
         if (empty($segmentIds)) {
             $select->where('banner_segments.segment_id IS NULL');
         } else {
-            $select->joinLeft(
-                array('customer_segments' => $this->getTable('enterprise_customersegment/segment')),
-                'customer_segments.segment_id = banner_segments.segment_id',
-                array()
-            );
-            $condition = 'banner_segments.segment_id IS NULL OR '
-                . '(banner_segments.segment_id IN (?) AND customer_segments.is_active = 1)';
-            $select->where($condition, $segmentIds);
+            $select->where('banner_segments.segment_id IS NULL OR banner_segments.segment_id IN (?)', $segmentIds);
         }
 
         if ($this->_bannerTypesFilter) {
@@ -444,15 +437,14 @@ class Enterprise_Banner_Model_Resource_Banner extends Mage_Core_Model_Resource_D
      *
      * @param array $matchedCustomerSegments
      * @param array $aplliedRules
-     * @param bool $enabledOnly
      * @return array
      */
-    public function getSalesRuleRelatedBannerIds($matchedCustomerSegments, $aplliedRules, $enabledOnly = true)
+    public function getSalesRuleRelatedBannerIds($matchedCustomerSegments, $aplliedRules)
     {
         $adapter = $this->_getReadAdapter();
         $collection = Mage::getResourceModel('enterprise_banner/salesrule_collection');
         $collection->resetColumns()
-               ->addBannersFilter($aplliedRules, $enabledOnly)
+               ->addBannersFilter($aplliedRules, true)
                ->addCustomerSegmentFilter($matchedCustomerSegments);
         return $adapter->fetchCol($collection->getSelect());
     }
@@ -463,17 +455,15 @@ class Enterprise_Banner_Model_Resource_Banner extends Mage_Core_Model_Resource_D
      * @param int $websiteId
      * @param int $customerGroupId
      * @param array $matchedCustomerSegments
-     * @param bool $enabledOnly
      * @return array
      */
-    public function getCatalogRuleRelatedBannerIds(
-        $websiteId, $customerGroupId, $matchedCustomerSegments, $enabledOnly = true
-    ) {
+    public function getCatalogRuleRelatedBannerIds($websiteId, $customerGroupId, $matchedCustomerSegments)
+    {
         $adapter = $this->_getReadAdapter();
         $collection = Mage::getResourceModel('enterprise_banner/catalogrule_collection');
         $collection->resetSelect()
                ->addAppliedRuleFilter($websiteId, $customerGroupId)
-               ->addBannersFilter($enabledOnly)
+               ->addBannersFilter(true)
                ->addCustomerSegmentFilter($matchedCustomerSegments);
         return $adapter->fetchCol($collection->getSelect());
     }

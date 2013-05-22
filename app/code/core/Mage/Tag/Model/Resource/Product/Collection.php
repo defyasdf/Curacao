@@ -20,7 +20,7 @@
  *
  * @category    Mage
  * @package     Mage_Tag
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
@@ -71,7 +71,7 @@ class Mage_Tag_Model_Resource_Product_Collection extends Mage_Catalog_Model_Reso
          * Allow analytic function usage
          */
         $this->_useAnalyticFunction = true;
-
+        
         return $this;
     }
 
@@ -451,28 +451,18 @@ class Mage_Tag_Model_Resource_Product_Collection extends Mage_Catalog_Model_Reso
     }
 
     /**
-     * Treat "order by" items as attributes to sort
+     * Set attribute order
      *
+     * @param string $attribute
+     * @param string $dir
      * @return Mage_Tag_Model_Resource_Product_Collection
      */
-    protected function _renderOrders()
+    public function setOrder($attribute, $dir = 'desc')
     {
-        if (!$this->_isOrdersRendered) {
-            parent::_renderOrders();
-
-            $orders = $this->getSelect()
-                ->getPart(Zend_Db_Select::ORDER);
-
-            $appliedOrders = array();
-            foreach ($orders as $order) {
-                $appliedOrders[$order[0]] = true;
-            }
-
-            foreach ($this->_orders as $field => $direction) {
-                if (empty($appliedOrders[$field])) {
-                    $this->_select->order(new Zend_Db_Expr($field . ' ' . $direction));
-                }
-            }
+        if ($attribute == 'popularity') {
+            $this->getSelect()->order($attribute . ' ' . $dir);
+        } else {
+            parent::setOrder($attribute, $dir);
         }
         return $this;
     }

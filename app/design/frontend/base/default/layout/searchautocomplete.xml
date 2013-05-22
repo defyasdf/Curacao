@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <default>
+    	<reference name="head">
+    		<action method="addCss"><stylesheet>css/magify_searchautocomplete.css</stylesheet></action>
+            <!-- action method="addJs"><script>magify/core/jquery. min .js</script></action -->
+            <action method="addJs"><script>magify/core/underscore.js</script></action>
+            <action method="addJs"><script>magify/core/backbone.js</script></action>
+    		<action method="addJs"><script>magify/code/searchautocomplete/form.js</script></action>
+    		<action method="addJs"><script>magify/code/searchautocomplete/autocomplete.js</script></action>
+    	</reference>
+        <reference name="header">
+            <block type="searchautocomplete/form" name="top.search" as="topSearch" template="searchautocomplete/form.phtml"/>
+        </reference>
+    </default>
+</layout>

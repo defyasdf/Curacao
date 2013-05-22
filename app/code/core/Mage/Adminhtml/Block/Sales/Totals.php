@@ -20,7 +20,7 @@
  *
  * @category    Mage
  * @package     Mage_Adminhtml
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
@@ -77,7 +77,7 @@ class Mage_Adminhtml_Block_Sales_Totals extends Mage_Sales_Block_Order_Totals
          */
         if (((float)$this->getSource()->getDiscountAmount()) != 0) {
             if ($this->getSource()->getDiscountDescription()) {
-                $discountLabel = $this->helper('sales')->__('Discount (%s)', $this->getSource()->getDiscountDescription());
+                $discountLabel = $this->helper('sales')->__(%s', $this->getSource()->getDiscountDescription());
             } else {
                 $discountLabel = $this->helper('sales')->__('Discount');
             }

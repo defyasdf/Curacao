@@ -20,7 +20,7 @@
  *
  * @category    Mage
  * @package     Mage_XmlConnect
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
@@ -59,9 +59,6 @@ class Mage_XmlConnect_Block_Wishlist extends Mage_Wishlist_Block_Customer_Wishli
         $wishlistXmlObj->addAttribute('items_count', $this->getWishlistItemsCount());
         $wishlistXmlObj->addAttribute('has_more_items', $hasMoreItems);
 
-        $productSmallImageSize = Mage::getModel('xmlconnect/images')->getImageLimitParam('content/product_small');
-        /** @var $categoryImageHelper Mage_XmlConnect_Helper_Catalog_Product_Image */
-        $categoryImageHelper = $this->helper('xmlconnect/catalog_product_image');
         if ($this->hasWishlistItems()) {
             /**
              * @var Mage_Wishlist_Model_Mysql4_Product_Collection
@@ -85,11 +82,13 @@ class Mage_XmlConnect_Block_Wishlist extends Mage_Wishlist_Block_Customer_Wishli
                 }
                 $itemXmlObj->addChild('has_options', (int)$item->getProduct()->getHasOptions());
 
-                $icon = $categoryImageHelper->init($item->getProduct(), 'small_image')
-                    ->resize($productSmallImageSize);
+                $icon = $this->helper('catalog/image')->init($item->getProduct(), 'small_image')
+                    ->resize(Mage::helper('xmlconnect/image')->getImageSizeForContent('product_small'));
 
                 $iconXml = $itemXmlObj->addChild('icon', $icon);
-                $iconXml->addAttribute('modification_time', filemtime($icon->getNewFile()));
+
+                $file = Mage::helper('xmlconnect')->urlToPath($icon);
+                $iconXml->addAttribute('modification_time', filemtime($file));
 
                 $description = $wishlistXmlObj->escapeXml($item->getDescription());
                 $itemXmlObj->addChild('description', $description);

@@ -20,7 +20,7 @@
  *
  * @category    Mage
  * @package     Mage_XmlConnect
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
@@ -233,14 +233,14 @@ class Mage_XmlConnect_Model_Theme
     /**
      * Load data (flat array) for Varien_Data_Form
      *
-     * @param array $subTree
+     * @param array $subtree
      * @param string $prefix
      * @return array
      */
-    protected function _flatArray($subTree, $prefix = null)
+    protected function _flatArray($subtree, $prefix = null)
     {
         $result = array();
-        foreach ($subTree as $key => $value) {
+        foreach ($subtree as $key => $value) {
             if (is_null($prefix)) {
                 $name = $key;
             } else {
@@ -296,7 +296,7 @@ class Mage_XmlConnect_Model_Theme
      */
     protected function _buildRecursive($parent, $data)
     {
-        foreach ($data as $key => $value) {
+        foreach ($data as $key=>$value) {
             if (is_array($value)) {
                 $this->_buildRecursive($parent->addChild($key), $value);
             } else {
@@ -308,13 +308,12 @@ class Mage_XmlConnect_Model_Theme
     /**
      * Import data into theme form $data array, and save XML to file
      *
-     * @throws Mage_Core_Exception
      * @param array $data
      * @return null
      */
     public function importAndSaveData($data)
     {
-        $xml = new SimpleXMLElement('<theme>' . $this->_xml->manifest->asXML() . '</theme>');
+        $xml = new SimpleXMLElement('<theme>'.$this->_xml->manifest->asXML().'</theme>');
         $this->_buildRecursive($xml->addChild('configuration'), $this->_validateFormInput($data));
         clearstatcache();
         if (is_writeable($this->_file)) {

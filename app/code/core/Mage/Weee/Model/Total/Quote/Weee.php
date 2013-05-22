@@ -20,17 +20,11 @@
  *
  * @category    Mage
  * @package     Mage_Weee
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
-/**
- * Weee calculation model
- *
- * @category    Mage
- * @package     Mage_Weee
- * @author      Magento Core Team <core@magentocommerce.com>
- */
+
 class Mage_Weee_Model_Total_Quote_Weee extends Mage_Tax_Model_Sales_Total_Quote_Tax
 {
     /**
@@ -39,12 +33,6 @@ class Mage_Weee_Model_Total_Quote_Weee extends Mage_Tax_Model_Sales_Total_Quote_
      * @var Mage_Weee_Helper_Data
      */
     protected $_helper;
-
-    /**
-     * Store model
-     *
-     * @var Mage_Core_Model_Store
-     */
     protected $_store;
 
     /**
@@ -142,7 +130,7 @@ class Mage_Weee_Model_Total_Quote_Weee extends Mage_Tax_Model_Sales_Total_Quote_
         $totalRowValue      = 0;
         $baseTotalRowValue  = 0;
 
-        foreach ($attributes as $k => $attribute) {
+        foreach ($attributes as $k=>$attribute) {
             $baseValue      = $attribute->getAmount();
             $value          = $this->_store->convertPrice($baseValue);
             $rowValue       = $value*$item->getTotalQty();
@@ -159,7 +147,7 @@ class Mage_Weee_Model_Total_Quote_Weee extends Mage_Tax_Model_Sales_Total_Quote_
                 'base_amount'   => $baseValue,
                 'amount'        => $value,
                 'row_amount'    => $rowValue,
-                'base_row_amount' => $baseRowValue,
+                'base_row_amount'=> $baseRowValue,
                 /**
                  * Tax value can't be presented as include/exclude tax
                  */
@@ -174,7 +162,7 @@ class Mage_Weee_Model_Total_Quote_Weee extends Mage_Tax_Model_Sales_Total_Quote_
                 'percent'   => null,
                 'hidden'    => $this->_helper->includeInSubtotal($this->_store),
                 'rates'     => array(array(
-                    'base_real_amount' => $baseRowValue,
+                    'base_real_amount'=> $baseRowValue,
                     'base_amount'   => $baseRowValue,
                     'amount'        => $rowValue,
                     'code'          => $attribute->getCode(),
@@ -192,7 +180,8 @@ class Mage_Weee_Model_Total_Quote_Weee extends Mage_Tax_Model_Sales_Total_Quote_
             ->setBaseWeeeTaxAppliedRowAmount($baseTotalRowValue);
 
         $this->_processTaxSettings($item, $totalValue, $baseTotalValue, $totalRowValue, $baseTotalRowValue)
-            ->_processTotalAmount($address, $totalRowValue, $baseTotalRowValue);
+            ->_processTotalAmount($address, $totalRowValue, $baseTotalRowValue)
+            ->_processDiscountSettings($item, $totalValue, $baseTotalValue);
 
         $this->_helper->setApplied($item, array_merge($this->_helper->getApplied($item), $productTaxes));
         if ($applied) {
@@ -208,7 +197,6 @@ class Mage_Weee_Model_Total_Quote_Weee extends Mage_Tax_Model_Sales_Total_Quote_
     /**
      * Check if discount should be applied to weee and add weee to discounted price
      *
-     * @deprecated since 1.8
      * @param   Mage_Sales_Model_Quote_Item_Abstract $item
      * @param   float $value
      * @param   float $baseValue
@@ -234,20 +222,18 @@ class Mage_Weee_Model_Total_Quote_Weee extends Mage_Tax_Model_Sales_Total_Quote_
      */
     protected function _processTaxSettings($item, $value, $baseValue, $rowValue, $baseRowValue)
     {
-        if ($rowValue) {
-            $this->_isTaxAffected = true;
-            $item->unsRowTotalInclTax()
-                ->unsBaseRowTotalInclTax()
-                ->unsPriceInclTax()
-                ->unsBasePriceInclTax();
-        }
         if ($this->_helper->isTaxable($this->_store) && $rowValue) {
-            if (!$this->_helper->includeInSubtotal($this->_store)) {
+            if (!$this->_config->priceIncludesTax($this->_store)) {
                 $item->setExtraTaxableAmount($value)
                     ->setBaseExtraTaxableAmount($baseValue)
                     ->setExtraRowTaxableAmount($rowValue)
                     ->setBaseExtraRowTaxableAmount($baseRowValue);
             }
+            $item->unsRowTotalInclTax()
+                ->unsBaseRowTotalInclTax()
+                ->unsPriceInclTax()
+                ->unsBasePriceInclTax();
+            $this->_isTaxAffected = true;
         }
         return $this;
     }
@@ -368,7 +354,7 @@ class Mage_Weee_Model_Total_Quote_Weee extends Mage_Tax_Model_Sales_Total_Quote_
         $applied = array();
         $productTaxes = array();
 
-        foreach ($attributes as $k => $attribute) {
+        foreach ($attributes as $k=>$attribute) {
             $baseValue = $attribute->getAmount();
             $value = $store->convertPrice($baseValue);
 
@@ -470,33 +456,33 @@ class Mage_Weee_Model_Total_Quote_Weee extends Mage_Tax_Model_Sales_Total_Quote_
 
 
             $productTaxes[] = array(
-                'title' => $title,
-                'base_amount' => $baseValue,
-                'amount' => $value,
+                'title'=>$title,
+                'base_amount'=>$baseValue,
+                'amount'=>$value,
 
-                'row_amount' => $rowValue,
-                'base_row_amount' => $baseRowValue,
+                'row_amount'=>$rowValue,
+                'base_row_amount'=>$baseRowValue,
 
-                'base_amount_incl_tax' => $baseValue+$baseOneDisposition,
-                'amount_incl_tax' => $value+$oneDisposition,
+                'base_amount_incl_tax'=>$baseValue+$baseOneDisposition,
+                'amount_incl_tax'=>$value+$oneDisposition,
 
-                'row_amount_incl_tax' => $rowValue+$disposition,
-                'base_row_amount_incl_tax' => $baseRowValue+$baseDisposition,
+                'row_amount_incl_tax'=>$rowValue+$disposition,
+                'base_row_amount_incl_tax'=>$baseRowValue+$baseDisposition,
             );
 
             $applied[] = array(
-                'id' => $attribute->getCode(),
-                'percent' => null,
-                'hidden' => $this->_helper->includeInSubtotal($store),
+                'id'=>$attribute->getCode(),
+                'percent'=>null,
+                'hidden'=>$this->_helper->includeInSubtotal($store),
                 'rates' => array(array(
-                    'amount' => $rowValue,
-                    'base_amount' => $baseRowValue,
-                    'base_real_amount' => $baseRowValue,
-                    'code' => $attribute->getCode(),
-                    'title' => $title,
-                    'percent' => null,
-                    'position' => 1,
-                    'priority' => -1000 + $k,
+                    'amount'=>$rowValue,
+                    'base_amount'=>$baseRowValue,
+                    'base_real_amount'=>$baseRowValue,
+                    'code'=>$attribute->getCode(),
+                    'title'=>$title,
+                    'percent'=>null,
+                    'position'=>1,
+                    'priority'=>-1000+$k,
                 ))
             );
 

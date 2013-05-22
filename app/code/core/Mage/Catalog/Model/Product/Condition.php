@@ -20,18 +20,11 @@
  *
  * @category    Mage
  * @package     Mage_Catalog
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
-/**
- * Class Mage_Catalog_Model_Product_Condition
- *
- * @method Mage_Catalog_Model_Product_Condition setTable(string $tableName)
- * @method Mage_Catalog_Model_Product_Condition setPkFieldName(string $fieldName)
- */
-class Mage_Catalog_Model_Product_Condition extends Varien_Object
-    implements Mage_Catalog_Model_Product_Condition_Interface
+class Mage_Catalog_Model_Product_Condition extends Varien_Object implements Mage_Catalog_Model_Product_Condition_Interface
 {
     public function applyToCollection($collection)
     {

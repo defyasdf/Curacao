@@ -1,0 +1,33 @@
+<?php
+$_helper = Mage::helper('searchautocomplete');
+$query   = Mage::helper('catalogsearch')->getQueryText();
+?>
+<?php if (count($this->getCollection())): ?>
+<div class="top"></div>
+<ul>
+<?php foreach ($this->getCollection() as $_product): ?>
+    <li data-url="<?php echo $_product->getProductUrl() ?>">
+        <?php if ($this->isShowImage()): ?>
+        <div class="searchautocomlete-image">
+            <img src="<?php echo $this->helper('mstcore/image')->init($_product, 'thumbnail', 'catalog/product')->resize($this->getImageWidth(), $this->getImageHeight()) ?>" width="<?php echo $this->getImageWidth() ?>px" height="<?php echo $this->getImageHeight() ?>px"/>
+        </div>
+        <?php endif ?>
+        <a class="name highlight" href="<?php echo $_product->getProductUrl() ?>"><?php echo $_product->getName() ?></a>
+        <br>
+        <?php if ($this->isShowShortDescription()): ?>
+            <div class="highlight">
+            <?php echo Mage::helper('core/string')->truncate(strip_tags($_product->getShortDescription()), $this->getShortDescriptionLen()) ?>
+            </div>
+        <?php endif ?>
+
+        <?php if ($this->isShowPrice()): ?>
+            <?php echo $this->getPriceHtml($_product, false) ?>
+            <div class="clearfix"></div>
+        <?php endif ?>
+
+    </li>
+<?php endforeach ?>
+</ul>
+<div class="all"><a href="<?php echo Mage::getUrl('catalogsearch/result', array('_query' => array('q' => $query))) ?>"><?php echo $this->__('All search results →') ?></a></div>
+<div class="clearfix"></div>
+<?php endif ?>

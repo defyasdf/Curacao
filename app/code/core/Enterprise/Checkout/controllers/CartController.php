@@ -20,7 +20,7 @@
  *
  * @category    Enterprise
  * @package     Enterprise_Checkout
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
@@ -91,9 +91,6 @@ class Enterprise_Checkout_CartController extends Mage_Core_Controller_Front_Acti
      */
     public function advancedAddAction()
     {
-        if (!$this->_validateFormKey()) {
-            return $this->_redirect('*/*');
-        }
         // check empty data
         /** @var $helper Enterprise_Checkout_Helper_Data */
         $helper = Mage::helper('enterprise_checkout');
@@ -130,13 +127,10 @@ class Enterprise_Checkout_CartController extends Mage_Core_Controller_Front_Acti
     /**
      * Add failed items to cart
      *
-     * @return null
+     * @return void
      */
     public function addFailedItemsAction()
     {
-        if (!$this->_validateFormKey()) {
-            return $this->_redirect('*/*');
-        }
         $failedItemsCart = $this->_getFailedItemsCart()->removeAllAffectedItems();
         $failedItems = $this->getRequest()->getParam('failed', array());
         foreach ($failedItems as $data) {
@@ -238,7 +232,7 @@ class Enterprise_Checkout_CartController extends Mage_Core_Controller_Front_Acti
             $this->_getFailedItemsCart()->removeAffectedItem($this->getRequest()->getParam('sku'));
 
             if (!$this->_getSession()->getNoCartRedirect(true)) {
-                if (!$cart->getQuote()->getHasError()) {
+                if (!$cart->getQuote()->getHasError()){
                     $productName = Mage::helper('core')->escapeHtml($product->getName());
                     $message = $this->__('%s was added to your shopping cart.', $productName);
                     $this->_getSession()->addSuccess($message);

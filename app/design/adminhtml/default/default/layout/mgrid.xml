@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <adminhtml_catalog_product_index>
+        <reference name="head">
+            <action method="addJs"><file>magify/mgrid/attribute.js</file></action>
+            <action method="addJs"><file>magify/mgrid/grid.js</file></action>
+            <action method="addJs"><file>magify/mgrid/sortable.js</file></action>
+            <action method="addCss"><name>magify/mgrid/grid.css</name></action>
+            
+            <action method="addItem"><type>js</type><name>prototype/window.js</name></action>
+            <action method="addItem"><type>js_css</type><name>prototype/windows/themes/default.css</name></action>
+            <action method="addItem"><type>js_css</type><name>prototype/windows/themes/magento.css</name></action>
+            
+            <action method="addJs"><stylesheet>magify/mgrid/lightbox/js/lightbox.js</stylesheet></action>
+            <action method="addItem"><type>js_css</type><name>magify/mgrid/lightbox/css/lightbox.css</name><params/></action>
+        </reference>
+        <reference name="content">
+            <block type="mgrid/adminhtml_catalog_product_grid_jsinit" name="mgrid_jsinit"></block>
+            <block type="mgrid/adminhtml_catalog_product_grid_attributes" name="mgrid_attributes"></block>
+        </reference>
+    </adminhtml_catalog_product_index>
+</layout>

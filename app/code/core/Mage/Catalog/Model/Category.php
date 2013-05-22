@@ -20,7 +20,7 @@
  *
  * @category    Mage
  * @package     Mage_Catalog
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
@@ -111,22 +111,12 @@ class Mage_Catalog_Model_Category extends Mage_Catalog_Model_Abstract
     protected $_treeModel = null;
 
     /**
-     * Category Url instance
-     *
-     * @var Mage_Catalog_Model_Category_Url
-     */
-    protected $_urlModel;
-
-    /**
      * Initialize resource mode
      *
-     * @return void
      */
     protected function _construct()
     {
-        // If Flat Data enabled then use it but only on frontend
-        $flatHelper = Mage::helper('catalog/category_flat');
-        if ($flatHelper->isAvailable() && !Mage::app()->getStore()->isAdmin() && $flatHelper->isBuilt(true)) {
+        if (Mage::helper('catalog/category_flat')->isEnabled()) {
             $this->_init('catalog/category_flat');
             $this->_useFlatResource = true;
         } else {
@@ -155,7 +145,7 @@ class Mage_Catalog_Model_Category extends Mage_Catalog_Model_Abstract
     public function getUrlRewrite()
     {
         if (!self::$_urlRewrite) {
-            self::$_urlRewrite = Mage::getSingleton('core/factory')->getUrlRewriteInstance();
+            self::$_urlRewrite = Mage::getModel('core/url_rewrite');
         }
         return self::$_urlRewrite;
     }
@@ -428,20 +418,37 @@ class Mage_Catalog_Model_Category extends Mage_Catalog_Model_Abstract
      */
     public function getUrl()
     {
-        return $this->getUrlModel()->getCategoryUrl($this);
-    }
+        $url = $this->_getData('url');
+        if (is_null($url)) {
+            Varien_Profiler::start('REWRITE: '.__METHOD__);
 
-    /**
-     * Get product url model
-     *
-     * @return Mage_Catalog_Model_Category_Url
-     */
-    public function getUrlModel()
-    {
-        if ($this->_urlModel === null) {
-            $this->_urlModel = Mage::getSingleton('catalog/factory')->getCategoryUrlInstance();
+            if ($this->hasData('request_path') && $this->getRequestPath() != '') {
+                $this->setData('url', $this->getUrlInstance()->getDirectUrl($this->getRequestPath()));
+                Varien_Profiler::stop('REWRITE: '.__METHOD__);
+                return $this->getData('url');
+            }
+
+            Varien_Profiler::stop('REWRITE: '.__METHOD__);
+
+            $rewrite = $this->getUrlRewrite();
+            if ($this->getStoreId()) {
+                $rewrite->setStoreId($this->getStoreId());
+            }
+            $idPath = 'category/' . $this->getId();
+            $rewrite->loadByIdPath($idPath);
+
+            if ($rewrite->getId()) {
+                $this->setData('url', $this->getUrlInstance()->getDirectUrl($rewrite->getRequestPath()));
+                Varien_Profiler::stop('REWRITE: '.__METHOD__);
+                return $this->getData('url');
+            }
+
+            Varien_Profiler::stop('REWRITE: '.__METHOD__);
+
+            $this->setData('url', $this->getCategoryIdUrl());
+            return $this->getData('url');
         }
-        return $this->_urlModel;
+        return $url;
     }
 
     /**

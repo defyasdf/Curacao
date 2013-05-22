@@ -19,7 +19,7 @@
  *
  * @category    design
  * @package     base_default
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 var Checkout = Class.create();
@@ -37,8 +37,6 @@ Checkout.prototype = {
         this.payment = '';
         this.loadWaiting = false;
         this.steps = ['login', 'billing', 'shipping', 'shipping_method', 'payment', 'review'];
-        //We use billing as beginning step since progress bar tracks from billing
-        this.currentStep = 'billing';
 
         this.accordion.sections.each(function(section) {
             Event.observe($(section).down('.step-title'), 'click', this._onSectionClick.bindAsEventListener(this));
@@ -56,7 +54,7 @@ Checkout.prototype = {
         var section = $(Event.element(event).up().up());
         if (section.hasClassName('allow')) {
             Event.stop(event);
-            this.gotoSection(section.readAttribute('id').replace('opc-', ''), false);
+            this.gotoSection(section.readAttribute('id').replace('opc-', ''));
             return false;
         }
     },
@@ -66,21 +64,10 @@ Checkout.prototype = {
     },
 
     reloadProgressBlock: function(toStep) {
-        this.reloadStep(toStep);
-        if (this.syncBillingShipping) {
-            this.syncBillingShipping = false;
-            this.reloadStep('shipping');
-        }
-    },
-
-    reloadStep: function(prevStep) {
-        var updater = new Ajax.Updater(prevStep + '-progress-opcheckout', this.progressUrl, {
-            method:'get',
-            onFailure:this.ajaxFailure.bind(this),
-            onComplete: function(){
-                this.checkout.resetPreviousSteps();
-            },
-            parameters:prevStep ? { prevStep:prevStep } : null
+        var updater = new Ajax.Updater('checkout-progress-wrapper', this.progressUrl, {
+            method: 'get',
+            onFailure: this.ajaxFailure.bind(this),
+            parameters: toStep ? {toStep: toStep} : null
         });
     },
 
@@ -121,46 +108,12 @@ Checkout.prototype = {
         this.loadWaiting = step;
     },
 
-    gotoSection: function (section, reloadProgressBlock) {
-
-        if (reloadProgressBlock) {
-            this.reloadProgressBlock(this.currentStep);
-        }
-        this.currentStep = section;
-        var sectionElement = $('opc-' + section);
+    gotoSection: function(section)
+    {
+        var sectionElement = $('opc-'+section);
         sectionElement.addClassName('allow');
-        this.accordion.openSection('opc-' + section);
-        if(!reloadProgressBlock) {
-            this.resetPreviousSteps();
-        }
-    },
-
-    resetPreviousSteps: function () {
-        var stepIndex = this.steps.indexOf(this.currentStep);
-
-        //Clear other steps if already populated through javascript
-        for (var i = stepIndex; i < this.steps.length; i++) {
-            var nextStep = this.steps[i];
-            var progressDiv = nextStep + '-progress-opcheckout';
-            if ($(progressDiv)) {
-                //Remove the link
-                $(progressDiv).select('.changelink').each(function (item) {
-                    item.remove();
-                });
-                $(progressDiv).select('dt').each(function (item) {
-                    item.removeClassName('complete');
-                });
-                //Remove the content
-                $(progressDiv).select('dd.complete').each(function (item) {
-                    item.remove();
-                });
-            }
-        }
-    },
-
-    changeSection: function (section) {
-        var changeStep = section.replace('opc-', '');
-        this.gotoSection(changeStep, false);
+        this.accordion.openSection('opc-'+section);
+        this.reloadProgressBlock(section);
     },
 
     setMethod: function(){
@@ -171,7 +124,7 @@ Checkout.prototype = {
                 {method: 'post', onFailure: this.ajaxFailure.bind(this), parameters: {method:'guest'}}
             );
             Element.hide('register-customer-password');
-            this.gotoSection('billing', true);
+            this.gotoSection('billing');
         }
         else if($('login:register') && ($('login:register').checked || $('login:register').type == 'hidden')) {
             this.method = 'register';
@@ -180,7 +133,7 @@ Checkout.prototype = {
                 {method: 'post', onFailure: this.ajaxFailure.bind(this), parameters: {method:'register'}}
             );
             Element.show('register-customer-password');
-            this.gotoSection('billing', true);
+            this.gotoSection('billing');
         }
         else{
             alert(Translator.translate('Please choose to register or to checkout as a guest').stripTags());
@@ -193,13 +146,13 @@ Checkout.prototype = {
         if (($('billing:use_for_shipping_yes')) && ($('billing:use_for_shipping_yes').checked)) {
             shipping.syncWithBilling();
             $('opc-shipping').addClassName('allow');
-            this.gotoSection('shipping_method', true);
+            this.gotoSection('shipping_method');
         } else if (($('billing:use_for_shipping_no')) && ($('billing:use_for_shipping_no').checked)) {
             $('shipping:same_as_billing').checked = false;
-            this.gotoSection('shipping', true);
+            this.gotoSection('shipping');
         } else {
             $('shipping:same_as_billing').checked = true;
-            this.gotoSection('shipping', true);
+            this.gotoSection('shipping');
         }
 
         // this refreshes the checkout progress column
@@ -220,19 +173,19 @@ Checkout.prototype = {
 
     setShipping: function() {
         //this.nextStep();
-        this.gotoSection('shipping_method', true);
+        this.gotoSection('shipping_method');
         //this.accordion.openNextSection(true);
     },
 
     setShippingMethod: function() {
         //this.nextStep();
-        this.gotoSection('payment', true);
+        this.gotoSection('payment');
         //this.accordion.openNextSection(true);
     },
 
     setPayment: function() {
         //this.nextStep();
-        this.gotoSection('review', true);
+        this.gotoSection('review');
         //this.accordion.openNextSection(true);
     },
 
@@ -244,18 +197,7 @@ Checkout.prototype = {
 
     back: function(){
         if (this.loadWaiting) return;
-        //Navigate back to the previous available step
-        var stepIndex = this.steps.indexOf(this.currentStep);
-        var section = this.steps[--stepIndex];
-        var sectionElement = $('opc-' + section);
-
-        //Traverse back to find the available section. Ex Virtual product does not have shipping section
-        while (sectionElement === null && stepIndex > 0) {
-            --stepIndex;
-            section = this.steps[stepIndex];
-            sectionElement = $('opc-' + section);
-        }
-        this.changeSection('opc-' + section);
+        this.accordion.openPrevSection(true);
     },
 
     setStepResponse: function(response){
@@ -270,12 +212,11 @@ Checkout.prototype = {
 
         if(response.duplicateBillingInfo)
         {
-            this.syncBillingShipping = true;
             shipping.setSameAsBilling(true);
         }
 
         if (response.goto_section) {
-            this.gotoSection(response.goto_section, true);
+            this.gotoSection(response.goto_section);
             return true;
         }
         if (response.redirect) {
@@ -388,9 +329,9 @@ Billing.prototype = {
     },
 
     /**
-     This method recieves the AJAX response on success.
-     There are 3 options: error, redirect or html with shipping options.
-     */
+        This method recieves the AJAX response on success.
+        There are 3 options: error, redirect or html with shipping options.
+    */
     nextStep: function(transport){
         if (transport && transport.responseText){
             try{
@@ -577,12 +518,12 @@ Shipping.prototype = {
         checkout.setStepResponse(response);
 
         /*
-         var updater = new Ajax.Updater(
-         'checkout-shipping-method-load',
-         this.methodsUrl,
-         {method:'get', onSuccess: checkout.setShipping.bind(checkout)}
-         );
-         */
+        var updater = new Ajax.Updater(
+            'checkout-shipping-method-load',
+            this.methodsUrl,
+            {method:'get', onSuccess: checkout.setShipping.bind(checkout)}
+        );
+        */
         //checkout.setShipping();
     }
 }
@@ -665,7 +606,7 @@ ShippingMethod.prototype = {
         payment.initWhatIsCvvListeners();
 
         if (response.goto_section) {
-            checkout.gotoSection(response.goto_section, true);
+            checkout.gotoSection(response.goto_section);
             checkout.reloadProgressBlock();
             return;
         }
@@ -699,7 +640,7 @@ Payment.prototype = {
 
     beforeInit : function() {
         (this.beforeInitFunc).each(function(init){
-            (init.value)();;
+           (init.value)();;
         });
     },
 
@@ -858,8 +799,8 @@ Payment.prototype = {
             }
         }
         /*
-         * if there is an error in payment, need to show error message
-         */
+        * if there is an error in payment, need to show error message
+        */
         if (response.error) {
             if (response.fields) {
                 var fields = response.fields.split(',');
@@ -953,7 +894,7 @@ Review.prototype = {
             }
 
             if (response.goto_section) {
-                checkout.gotoSection(response.goto_section, true);
+                checkout.gotoSection(response.goto_section);
             }
         }
     },

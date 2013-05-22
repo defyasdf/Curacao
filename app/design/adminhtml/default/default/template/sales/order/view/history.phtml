@@ -20,7 +20,7 @@
  *
  * @category    design
  * @package     default_default
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 ?>
@@ -30,15 +30,23 @@
         <div><?php echo Mage::helper('sales')->__('Add Order Comments') ?></div>
         <span class="field-row">
             <label class="normal" for="history_status"><?php echo Mage::helper('sales')->__('Status') ?></label><br/>
+           <?php if($this->getOrder()->getStatus() == 'pending' || $this->getOrder()->getStatus() == 'processing'){?>
+            <select id="history_status" class="select" name="history[status]">
+                     <option value="pending">Pending</option>
+                     <option selected="selected" value="processing">Processing</option>
+            </select>
+            <?php }else{?>
             <select name="history[status]" class="select" id="history_status">
             <?php foreach ($this->getStatuses() as $_code=>$_label): ?>
                 <option value="<?php echo $_code ?>"<?php if($_code==$this->getOrder()->getStatus()): ?> selected="selected"<?php endif; ?>><?php echo $_label ?></option>
             <?php endforeach; ?>
             </select>
+            <?php }?>
         </span>
         <span class="field-row">
             <label class="normal" for="history_comment"><?php echo Mage::helper('sales')->__('Comment') ?></label>
             <textarea name="history[comment]" rows="3" cols="5" style="height:6em; width:99%;" id="history_comment"></textarea>
+	<input type='hidden' name="history[comment_user]" value="by Sanjay" />	
         </span>
         <div class="f-left">
             <?php if ($this->canSendCommentEmail()): ?>
@@ -47,7 +55,8 @@
             <input name="history[is_visible_on_front]" type="checkbox" id="history_visible" value="1" /><label class="normal" for="history_visible"> <?php echo Mage::helper('sales')->__('Visible on Frontend') ?></label>
         </div>
         <div class="f-right">
-            <?php echo $this->getChildHtml('submit_button') ?>
+        	<button style="" onclick="return submitComment()" class="scalable save" type="button" title="Submit Comment" id="id_37aab20b3b6674b991971fbdae7ff11d"><span><span><span>Submit Comment</span></span></span></button>
+            <?php //echo $this->getChildHtml('submit_button') ?>
         </div>
         <div class="clear"></div>
     </div>
@@ -74,7 +83,17 @@
         </li>
     <?php endforeach; ?>
     </ul>
+    <?php 
+		$user = Mage::getSingleton('admin/session');
+		$userFirstname = $user->getUser()->getFirstname();
+		$userLastname = $user->getUser()->getLastname();
+	?>
     <script type="text/javascript">
+	function submitComment() {
+		$('history_comment').value += ' By <?php echo $userFirstname.' '.$userLastname;?>'
+		submitAndReloadArea($('order_history_block').parentNode, '<?php echo $this->getSubmitUrl() ?>')
+	}
+
     if($('order_status'))$('order_status').update('<?php echo $this->getOrder()->getStatusLabel() ?>');
     </script>
 </div>

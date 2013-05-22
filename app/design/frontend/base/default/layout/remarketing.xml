@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!-- 
+	/**
+	* Listrak Remarketing Magento Extension Ver. 1.0.0 - © 2011 Listrak, Inc. 
+	*/
+-->
+<layout>
+    <default>
+        <reference name="after_body_start">
+            <block type="remarketing/ecjs" name="remarketing_ecjs" as="remarketing_ecjs" />
+            <block type="remarketing/modal" name="remarketing_modal" as="remarketing_modal" />
+        </reference>
+    </default>
+</layout>

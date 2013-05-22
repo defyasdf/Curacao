@@ -20,7 +20,7 @@
  *
  * @category    Mage
  * @package     Mage_XmlConnect
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
@@ -79,14 +79,7 @@ class Mage_XmlConnect_Model_Queue extends Mage_Core_Model_Template
      *
      * @var null|string
      */
-    protected $_appType;
-
-    /**
-     * Application code
-     *
-     * @var string
-     */
-    protected $_appCode;
+    protected $_appType = null;
 
     /**
      * Initialize queue message
@@ -109,14 +102,8 @@ class Mage_XmlConnect_Model_Queue extends Mage_Core_Model_Template
     {
         parent::load($id, $field);
 
-        if (!$this->getTemplateId() && Mage::app()->getRequest()->getParam('template_id', false)) {
-            $this->setTemplateId(Mage::app()->getRequest()->getParam('template_id'));
-        }
-
         if ($this->getTemplateId()) {
-            $template = Mage::getModel('xmlconnect/template')->load($this->getTemplateId());
-            $this->setName($template->getName());
-            $this->setApplicationId($template->getApplicationId());
+            $this->setName(Mage::getModel('xmlconnect/template')->load($this->getTemplateId())->getName());
         }
         return $this;
     }
@@ -308,21 +295,5 @@ EOT;
             }
         }
         return parent::save();
-    }
-
-    /**
-     * Get application code
-     *
-     * @return string
-     */
-    public function getAppCode()
-    {
-        if (null === $this->_appCode) {
-            if ($this->getApplicationId()) {
-                $application = Mage::getModel('xmlconnect/application')->load($this->getApplicationId());
-                $this->_appCode = $application->getCode();
-            }
-        }
-        return $this->_appCode;
     }
 }

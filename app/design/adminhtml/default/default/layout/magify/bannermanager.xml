@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layout version="0.1.0">
+    <adminhtml_magifybannermanager_index>
+		<reference name="head">
+			<action method="addCss"><name>magify/bannermanager/css/main.css</name></action>
+		</reference>
+        <reference name="content">
+            <block type="magify_bannermanager/adminhtml_bannermanager" name="bannermanager" />
+        </reference>
+    </adminhtml_magifybannermanager_index>
+	
+    <adminhtml_magifybannermanager_new>
+        <update handle="adminhtml_magifybannermanager_edit" />
+    </adminhtml_magifybannermanager_new>
+
+    <adminhtml_magifybannermanager_edit>
+		<reference name="head">
+            <action method="addItem"><type>skin_js</type><name>magify/bannermanager/js/tabs.js</name></action>
+			<action method="addCss"><name>magify/bannermanager/css/main.css</name></action>
+			<action method="addJs"><name>jquery/1/jquery.min.js</name></action>
+			<action method="addJs"><name>prototype/prototype.colorpicker.js</name></action>
+			<action method="addCss"><name>magify/bannermanager/css/colorpicker.css</name></action>
+		</reference>
+        <update handle="editor"/>
+        <reference name="content">
+            <block type="magify_bannermanager/adminhtml_bannermanager_edit" name="bannermanager_edit"/>
+        </reference>
+        <reference name="left">
+            <block type="magify_bannermanager/adminhtml_bannermanager_edit_tabs" name="magify_bannermanager_edit_tabs"/>
+		</reference>		
+    </adminhtml_magifybannermanager_edit>
+	
+    <adminhtml_magifybannermanager_link>
+        <block type="core/text_list" name="root" output="toHtml">
+            <block type="magify_bannermanager/adminhtml_bannermanager_edit_tab_link" name="magify.bannermanager.edit.tab.link"/>
+        </block>
+    </adminhtml_magifybannermanager_link>
+	
+    <adminhtml_magifybannermanager_linkcmspage>
+        <block type="core/text_list" name="root" output="toHtml">
+            <block type="adminhtml/cms_page_widget_chooser" name="magify.bannermanager.csmpage"/>
+        </block>
+    </adminhtml_magifybannermanager_linkcmspage>
+		
+    <adminhtml_magifybannermanager_locationsproducts>
+        <block type="core/text_list" name="root" output="toHtml">
+            <block type="magify_bannermanager/adminhtml_bannermanager_edit_tab_locations_products_grid" name="magify.bannermanager.edit.tab.lacations.tabs.products"/>
+            <block type="adminhtml/widget_grid_serializer" name="magify_bannermanager_locations_products_grid_serializer">
+                <reference name="magify_bannermanager_locations_products_grid_serializer">
+                    <action method="initSerializerBlock">
+                        <grid_block_name>magify.bannermanager.edit.tab.lacations.tabs.products</grid_block_name>
+                        <data_callback>getSelectedProducts</data_callback>
+                        <hidden_input_name>locations[products]</hidden_input_name>
+                        <reload_param_name>banner_locations_products</reload_param_name>
+                    </action>
+                </reference>
+            </block>
+        </block>
+    </adminhtml_magifybannermanager_locationsproducts>
+		
+    <adminhtml_magifybannermanager_locationsproductsgrid>
+        <block type="core/text_list" name="root" output="toHtml">
+            <block type="magify_bannermanager/adminhtml_bannermanager_edit_tab_locations_products_grid" name="magify.bannermanager.edit.tab.lacations.tabs.products"/>
+            <block type="adminhtml/widget_grid_serializer" name="magify_bannermanager_locations_products_grid_serializer">
+                <reference name="magify_bannermanager_locations_products_grid_serializer">
+                    <action method="initSerializerBlock">
+                        <grid_block_name>magify.bannermanager.edit.tab.lacations.tabs.products</grid_block_name>
+                        <data_callback>getSelectedProducts</data_callback>
+                        <hidden_input_name>locations[products]</hidden_input_name>
+                        <reload_param_name>banner_locations_products</reload_param_name>
+                    </action>
+                </reference>
+            </block>
+        </block>
+    </adminhtml_magifybannermanager_locationsproductsgrid>
+		
+    <adminhtml_magifybannermanager_locationspagesgrid>
+        <block type="core/text_list" name="root" output="toHtml">
+            <block type="magify_bannermanager/adminhtml_bannermanager_edit_tab_locations_pages_grid" name="magify.bannermanager.edit.tab.locations.tabs.pages"/>
+            <block type="adminhtml/widget_grid_serializer" name="magify_bannermanager_locations_pages_grid_serializer">
+                <reference name="magify_bannermanager_locations_pages_grid_serializer">
+                    <action method="initSerializerBlock">
+                        <grid_block_name>magify.bannermanager.edit.tab.locations.tabs.pages</grid_block_name>
+                        <data_callback>getSelectedPages</data_callback>
+                        <hidden_input_name>locations[pages]</hidden_input_name>
+                        <reload_param_name>banner_locations_pages</reload_param_name>
+                    </action>
+                </reference>
+            </block>
+        </block>
+    </adminhtml_magifybannermanager_locationspagesgrid>
+		
+    <adminhtml_magifybannermanager_locationscustomgrid>
+        <block type="core/text_list" name="root" output="toHtml">
+            <block type="magify_bannermanager/adminhtml_bannermanager_edit_tab_locations_custom_grid" name="magify.bannermanager.edit.tab.locations.tabs.custom"/>
+            <block type="adminhtml/widget_grid_serializer" name="magify_bannermanager_locations_custom_grid_serializer">
+                <reference name="magify_bannermanager_locations_custom_grid_serializer">
+                    <action method="initSerializerBlock">
+                        <grid_block_name>magify.bannermanager.edit.tab.locations.tabs.custom</grid_block_name>
+                        <data_callback>getSelectedCustom</data_callback>
+                        <hidden_input_name>locations[custom]</hidden_input_name>
+                        <reload_param_name>banner_locations_custom</reload_param_name>
+                    </action>
+                </reference>
+            </block>
+        </block>
+    </adminhtml_magifybannermanager_locationscustomgrid>
+
+    <adminhtml_magifybannermanager_productsgrid>
+        <block type="core/text_list" name="root" output="toHtml">
+            <block type="magify_bannermanager/adminhtml_bannermanager_edit_tab_products" name="magify.bannermanager.edit.tab.products"/>
+        </block>
+    </adminhtml_magifybannermanager_productsgrid>
+	
+    <adminhtml_magifybannermanager_history>
+        <block type="core/text_list" name="root" output="toHtml">
+            <block type="magify_bannermanager/adminhtml_bannermanager_edit_tab_history" name="magify.bannermanager.edit.tab.history"/>
+        </block>
+    </adminhtml_magifybannermanager_history>
+		
+    <adminhtml_magifybannermanager_groups_index>
+		<reference name="head">
+			<action method="addCss"><name>magify/bannermanager/css/main.css</name></action>
+		</reference>
+        <reference name="content">
+            <block type="magify_bannermanager/adminhtml_bannermanager_groups" name="bannermanager_groups" />
+        </reference>
+    </adminhtml_magifybannermanager_groups_index>
+    
+    <adminhtml_magifybannermanager_groups_new>
+        <update handle="adminhtml_magifybannermanager_groups_edit" />
+    </adminhtml_magifybannermanager_groups_new>
+
+    <adminhtml_magifybannermanager_groups_edit>
+		<reference name="head">
+            <action method="addItem"><type>skin_js</type><name>magify/bannermanager/js/tabs.js</name></action>
+			<action method="addCss"><name>magify/bannermanager/css/main.css</name></action>
+			<!--action method="addCss"><name>magify/bannermanager/css/fullcalendar.css</name></action-->
+			<action method="addJs"><name>jquery/1/jquery.min.js</name></action>
+			<!--action method="addJs"><name>jquery/plugins/jquery-ui-1.8.11.custom.min.js</name></action>
+			<action method="addJs"><name>jquery/plugins/fullcalendar.min.js</name></action>
+			<action method="addJs"><name>jquery/plugins/gcal.js</name></action-->
+			<action method="addJs"><name>prototype/prototype.colorpicker.js</name></action>
+			<action method="addCss"><name>magify/bannermanager/css/colorpicker.css</name></action>
+		</reference>
+        <update handle="editor"/>
+        <reference name="content">
+            <block type="magify_bannermanager/adminhtml_bannermanager_groups_edit" name="bannermanager_groups_edit"/>
+        </reference>
+        <reference name="left">
+            <block type="magify_bannermanager/adminhtml_bannermanager_groups_edit_tabs" name="magify_bannermanager_groups_edit_tabs"/>
+		</reference>		
+    </adminhtml_magifybannermanager_groups_edit>
+    
+    <adminhtml_magifybannermanager_groups_children>
+        <block type="core/text_list" name="root" output="toHtml">
+            <block type="magify_bannermanager/adminhtml_bannermanager_groups_edit_tab_banners" name="magify.bannermanager.group.tab.banners"/>
+            <block type="adminhtml/widget_grid_serializer" name="magify_bannermanager_group_banners_serializer">
+                <reference name="magify_bannermanager_group_banners_serializer">
+                    <action method="initSerializerBlock">
+                        <grid_block_name>magify.bannermanager.group.tab.banners</grid_block_name>
+                        <data_callback>getSelectedBanners</data_callback>
+                        <hidden_input_name>child_banners</hidden_input_name>
+                        <reload_param_name>child_banners</reload_param_name>
+                    </action>
+                    <action method="addColumnInputName">
+                        <input_name>position</input_name>
+                    </action>
+                </reference>
+            </block>
+        </block>
+    </adminhtml_magifybannermanager_groups_children>
+    
+		
+    <adminhtml_magifybannermanager_groups_locationsproducts>
+        <block type="core/text_list" name="root" output="toHtml">
+            <block type="magify_bannermanager/adminhtml_bannermanager_groups_edit_tab_locations_products_grid" name="magify.bannermanager.groups.edit.tab.lacations.tabs.products"/>
+            <block type="adminhtml/widget_grid_serializer" name="magify_bannermanager_groups_locations_products_grid_serializer">
+                <reference name="magify_bannermanager_groups_locations_products_grid_serializer">
+                    <action method="initSerializerBlock">
+                        <grid_block_name>magify.bannermanager.groups.edit.tab.lacations.tabs.products</grid_block_name>
+                        <data_callback>getSelectedProducts</data_callback>
+                        <hidden_input_name>locations[products]</hidden_input_name>
+                        <reload_param_name>groups_locations_products</reload_param_name>
+                    </action>
+                </reference>
+            </block>
+        </block>
+    </adminhtml_magifybannermanager_groups_locationsproducts>
+		
+    <adminhtml_magifybannermanager_groups_locationsproductsgrid>
+        <block type="core/text_list" name="root" output="toHtml">
+            <block type="magify_bannermanager/adminhtml_bannermanager_groups_edit_tab_locations_products_grid" name="magify.bannermanager.groups.edit.tab.lacations.tabs.products"/>
+            <block type="adminhtml/widget_grid_serializer" name="magify_bannermanager_groups_locations_products_grid_serializer">
+                <reference name="magify_bannermanager_groups_locations_products_grid_serializer">
+                    <action method="initSerializerBlock">
+                        <grid_block_name>magify.bannermanager.groups.edit.tab.lacations.tabs.products</grid_block_name>
+                        <data_callback>getSelectedProducts</data_callback>
+                        <hidden_input_name>locations[products]</hidden_input_name>
+                        <reload_param_name>groups_locations_products</reload_param_name>
+                    </action>
+                </reference>
+            </block>
+        </block>
+    </adminhtml_magifybannermanager_groups_locationsproductsgrid>
+		
+    <adminhtml_magifybannermanager_groups_locationspagesgrid>
+        <block type="core/text_list" name="root" output="toHtml">
+            <block type="magify_bannermanager/adminhtml_bannermanager_groups_edit_tab_locations_pages_grid" name="magify.bannermanager.groups.edit.tab.locations.tabs.pages"/>
+            <block type="adminhtml/widget_grid_serializer" name="magify_bannermanager_groups_locations_pages_grid_serializer">
+                <reference name="magify_bannermanager_groups_locations_pages_grid_serializer">
+                    <action method="initSerializerBlock">
+                        <grid_block_name>magify.bannermanager.groups.edit.tab.locations.tabs.pages</grid_block_name>
+                        <data_callback>getSelectedPages</data_callback>
+                        <hidden_input_name>locations[pages]</hidden_input_name>
+                        <reload_param_name>groups_locations_pages</reload_param_name>
+                    </action>
+                </reference>
+            </block>
+        </block>
+    </adminhtml_magifybannermanager_groups_locationspagesgrid>
+		
+    <adminhtml_magifybannermanager_groups_locationscustomgrid>
+        <block type="core/text_list" name="root" output="toHtml">
+            <block type="magify_bannermanager/adminhtml_bannermanager_groups_edit_tab_locations_custom_grid" name="magify.bannermanager.groups.edit.tab.locations.tabs.custom"/>
+            <block type="adminhtml/widget_grid_serializer" name="magify_bannermanager_groups_locations_custom_grid_serializer">
+                <reference name="magify_bannermanager_groups_locations_custom_grid_serializer">
+                    <action method="initSerializerBlock">
+                        <grid_block_name>magify.bannermanager.groups.edit.tab.locations.tabs.custom</grid_block_name>
+                        <data_callback>getSelectedCustom</data_callback>
+                        <hidden_input_name>locations[custom]</hidden_input_name>
+                        <reload_param_name>groups_locations_custom</reload_param_name>
+                    </action>
+                </reference>
+            </block>
+        </block>
+    </adminhtml_magifybannermanager_groups_locationscustomgrid>
+    
+    		
+</layout>

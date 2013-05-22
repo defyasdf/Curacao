@@ -20,7 +20,7 @@
  *
  * @category    Mage
  * @package     Mage_Authorizenet
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
@@ -126,8 +126,7 @@ class Mage_Authorizenet_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getPlaceOrderFrontUrl()
     {
-        $params = array(Mage_Core_Model_Url::FORM_KEY => Mage::getSingleton('core/session')->getFormKey());
-        return $this->_getUrl('authorizenet/directpost_payment/place', $params);
+        return $this->_getUrl('authorizenet/directpost_payment/place');
     }
 
     /**

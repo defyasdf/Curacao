@@ -20,7 +20,7 @@
  *
  * @category    Mage
  * @package     Mage_Catalog
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
@@ -209,25 +209,6 @@ class Mage_Catalog_Model_Resource_Product_Collection extends Mage_Catalog_Model_
     protected $_catalogPreparePriceSelect = null;
 
     /**
-     * Catalog factory instance
-     *
-     * @var Mage_Catalog_Model_Factory
-     */
-    protected $_factory;
-
-    /**
-     * Initialize factory
-     *
-     * @param Mage_Core_Model_Resource_Abstract $resource
-     * @param array $args
-     */
-    public function __construct($resource = null, array $args = array())
-    {
-        parent::__construct($resource);
-        $this->_factory = !empty($args['factory']) ? $args['factory'] : Mage::getSingleton('catalog/factory');
-    }
-
-    /**
      * Get cloned Select after dispatching 'catalog_prepare_price_select' event
      *
      * @return Varien_Db_Select
@@ -323,22 +304,20 @@ class Mage_Catalog_Model_Resource_Product_Collection extends Mage_Catalog_Model_
 
     /**
      * Retrieve is flat enabled flag
-     * Return always false if magento run admin
+     * Return alvays false if magento run admin
      *
      * @return bool
      */
     public function isEnabledFlat()
     {
-        // Flat Data can be used only on frontend
         if (Mage::app()->getStore()->isAdmin()) {
             return false;
         }
-        $storeId = $this->getStoreId();
-        if (!isset($this->_flatEnabled[$storeId])) {
-            $flatHelper = $this->getFlatHelper();
-            $this->_flatEnabled[$storeId] = $flatHelper->isAvailable() && $flatHelper->isBuilt($storeId);
+        if (!isset($this->_flatEnabled[$this->getStoreId()])) {
+            $this->_flatEnabled[$this->getStoreId()] = $this->getFlatHelper()
+                ->isEnabled($this->getStoreId());
         }
-        return $this->_flatEnabled[$storeId];
+        return $this->_flatEnabled[$this->getStoreId()];
     }
 
     /**
@@ -541,6 +520,8 @@ class Mage_Catalog_Model_Resource_Product_Collection extends Mage_Catalog_Model_
            $this->_addUrlRewrite($this->_urlRewriteCategory);
         }
 
+        $this->_prepareUrlDataObject();
+
         if (count($this) > 0) {
             Mage::dispatchEvent('catalog_product_collection_load_after', array('collection' => $this));
         }
@@ -558,7 +539,6 @@ class Mage_Catalog_Model_Resource_Product_Collection extends Mage_Catalog_Model_
      * Prepare Url Data object
      *
      * @return Mage_Catalog_Model_Resource_Product_Collection
-     * @deprecated after 1.7.0.2
      */
     protected function _prepareUrlDataObject()
     {
@@ -673,6 +653,7 @@ class Mage_Catalog_Model_Resource_Product_Collection extends Mage_Catalog_Model_
         $store = Mage::app()->getStore($store);
 
         if (!$store->isAdmin()) {
+            $this->setStoreId($store);
             $this->_productLimitationFilters['store_id'] = $store->getId();
             $this->_applyProductLimitations();
         }
@@ -924,11 +905,9 @@ class Mage_Catalog_Model_Resource_Product_Collection extends Mage_Catalog_Model_
         $priceExpression = $this->getPriceExpression($select) . ' ' . $this->getAdditionalPriceExpression($select);
         $sqlEndPart = ') * ' . $this->getCurrencyRate() . ', 2)';
         $select = $this->_getSelectCountSql($select, false);
-        $select->columns(array(
-            'max' => 'ROUND(MAX(' . $priceExpression . $sqlEndPart,
-            'min' => 'ROUND(MIN(' . $priceExpression . $sqlEndPart,
-            'std' => $this->getConnection()->getStandardDeviationSql('ROUND((' . $priceExpression . $sqlEndPart)
-        ));
+        $select->columns('ROUND(MAX(' . $priceExpression . $sqlEndPart);
+        $select->columns('ROUND(MIN(' . $priceExpression . $sqlEndPart);
+        $select->columns($this->getConnection()->getStandardDeviationSql('ROUND((' . $priceExpression . $sqlEndPart));
         $select->where($this->getPriceExpression($select) . ' IS NOT NULL');
         $row = $this->getConnection()->fetchRow($select, $this->_bindParams, Zend_Db::FETCH_NUM);
         $this->_pricesCount = (int)$row[0];
@@ -1112,7 +1091,6 @@ class Mage_Catalog_Model_Resource_Product_Collection extends Mage_Catalog_Model_
     /**
      * Joins url rewrite rules to collection
      *
-     * @deprecated after 1.7.0.2. Method is not used anywhere in the code.
      * @return Mage_Catalog_Model_Resource_Product_Collection
      */
     public function joinUrlRewrite()
@@ -1132,7 +1110,7 @@ class Mage_Catalog_Model_Resource_Product_Collection extends Mage_Catalog_Model_
      * Add URL rewrites data to product
      * If collection loadded - run processing else set flag
      *
-     * @param int|string $categoryId
+     * @param int $categoryId
      * @return Mage_Catalog_Model_Resource_Product_Collection
      */
     public function addUrlRewrite($categoryId = '')
@@ -1175,10 +1153,15 @@ class Mage_Catalog_Model_Resource_Product_Collection extends Mage_Catalog_Model_
                 return;
             }
 
-            $select = $this->_factory->getProductUrlRewriteHelper()
-                ->getTableSelect($productIds, $this->_urlRewriteCategory, Mage::app()->getStore()->getId());
-
+            $select = $this->getConnection()->select()
+                ->from($this->getTable('core/url_rewrite'), array('product_id', 'request_path'))
+                ->where('store_id = ?', Mage::app()->getStore()->getId())
+                ->where('is_system = ?', 1)
+                ->where('category_id = ? OR category_id IS NULL', $this->_urlRewriteCategory)
+                ->where('product_id IN(?)', $productIds)
+                ->order('category_id ' . self::SORT_ORDER_DESC); // more priority is data with category id
             $urlRewrites = array();
+
             foreach ($this->getConnection()->fetchAll($select) as $row) {
                 if (!isset($urlRewrites[$row['product_id']])) {
                     $urlRewrites[$row['product_id']] = $row['request_path'];
@@ -1833,12 +1816,6 @@ class Mage_Catalog_Model_Resource_Product_Collection extends Mage_Catalog_Model_
      */
     protected function _applyProductLimitations()
     {
-        Mage::dispatchEvent('catalog_product_collection_apply_limitations_before', array(
-            'collection'  => $this,
-            'category_id' => isset($this->_productLimitationFilters['category_id'])
-                ? $this->_productLimitationFilters['category_id']
-                : null,
-        ));
         $this->_prepareProductLimitationFilters();
         $this->_productLimitationJoinWebsite();
         $this->_productLimitationJoinPrice();
@@ -1856,11 +1833,8 @@ class Mage_Catalog_Model_Resource_Product_Collection extends Mage_Catalog_Model_
             $conditions[] = $this->getConnection()
                 ->quoteInto('cat_index.visibility IN(?)', $filters['visibility']);
         }
-
-        if (!$this->getFlag('disable_root_category_filter')) {
-            $conditions[] = $this->getConnection()->quoteInto('cat_index.category_id = ?', $filters['category_id']);
-        }
-
+        $conditions[] = $this->getConnection()
+            ->quoteInto('cat_index.category_id=?', $filters['category_id']);
         if (isset($filters['category_is_anchor'])) {
             $conditions[] = $this->getConnection()
                 ->quoteInto('cat_index.is_parent=?', $filters['category_is_anchor']);
@@ -1883,7 +1857,7 @@ class Mage_Catalog_Model_Resource_Product_Collection extends Mage_Catalog_Model_
         $this->_productLimitationJoinStore();
 
         Mage::dispatchEvent('catalog_product_collection_apply_limitations_after', array(
-            'collection' => $this
+            'collection'    => $this
         ));
 
         return $this;

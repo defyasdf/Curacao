@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+
+<layout version="0.1.0">
+
+<checkout_onepage_index>
+	<reference name="checkout.onepage">
+		<!-- Extra step added to OnePage Checkout -->
+		<block type="credit/onepage_credit" name="checkout.onepage.credit" as="credit" after="checkout.onepage.billing" template="checkout/onepage/credit.phtml"/>		
+	</reference>
+</checkout_onepage_index>
+
+</layout>

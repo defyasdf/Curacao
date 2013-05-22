@@ -20,7 +20,7 @@
  *
  * @category    Enterprise
  * @package     Enterprise_Banner
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
@@ -143,26 +143,11 @@ class Enterprise_Banner_Block_Widget_Banner
             foreach ($bannerIds as $_key => $_id) {
                 $bannerIds[$_key] = (int)trim($_id);
             }
+            $bannerIds = $this->_bannerResource->getExistingBannerIdsBySpecifiedIds($bannerIds);
             $this->setData('banner_ids', $bannerIds);
-            $enabledBannerIds = $this->_bannerResource->getExistingBannerIdsBySpecifiedIds($bannerIds);
-            $this->setData('enabled_banner_ids', !empty($enabledBannerIds)? $enabledBannerIds : array(0));
         }
 
         return $this->_getData('banner_ids');
-    }
-
-    /**
-     * Retrive array of enabled banners filtered from available banners
-     *
-     * @return array
-     */
-    public function getEnabledBannerIds()
-    {
-        if (!$this->hasData('enabled_banner_ids')) {
-            $this->getBannerIds();
-        }
-
-        return $this->_getData('enabled_banner_ids');
     }
 
     /**
@@ -201,6 +186,7 @@ class Enterprise_Banner_Block_Widget_Banner
      */
     public function getBannersContent()
     {
+        $bannersContent = array();
         $aplliedRules = null;
         $segmentIds = array();
         $customer = Mage::registry('segment_customer');
@@ -229,25 +215,22 @@ class Enterprise_Banner_Block_Widget_Banner
                     $quote = Mage::getSingleton('checkout/session')->getQuote();
                     $aplliedRules = explode(',', $quote->getAppliedRuleIds());
                 }
-                $bannerIds = $this->_bannerResource->getSalesRuleRelatedBannerIds($segmentIds, $aplliedRules, false);
-                $bannerIds = array_intersect($bannerIds, $this->getEnabledBannerIds());
-                $bannersContent = $this->_getBannersContent(!empty($bannerIds)? $bannerIds : array(0), $segmentIds);
+                $bannerIds = $this->_bannerResource->getSalesRuleRelatedBannerIds($segmentIds, $aplliedRules);
+                $bannersContent = $this->_getBannersContent($bannerIds, $segmentIds);
                 break;
 
             case self::BANNER_WIDGET_DISPLAY_CATALOGRULE :
                 $bannerIds = $this->_bannerResource->getCatalogRuleRelatedBannerIds(
                     Mage::app()->getWebsite()->getId(),
                     Mage::getSingleton('customer/session')->getCustomerGroupId(),
-                    $segmentIds,
-                    false
+                    $segmentIds
                 );
-                $bannerIds = array_intersect($bannerIds, $this->getEnabledBannerIds());
-                $bannersContent = $this->_getBannersContent(!empty($bannerIds)? $bannerIds : array(0), $segmentIds);
+                $bannersContent = $this->_getBannersContent($bannerIds, $segmentIds);
                 break;
 
             case self::BANNER_WIDGET_DISPLAY_FIXED :
             default :
-                $bannersContent = $this->_getBannersContent($this->getEnabledBannerIds(), $segmentIds);
+                $bannersContent = $this->_getBannersContent($this->getBannerIds(), $segmentIds);
                 break;
         }
 
@@ -298,6 +281,7 @@ class Enterprise_Banner_Block_Widget_Banner
      *
      * @param array $bannerIds
      * @param array $segmentIds
+     * @param int $storeId
      * @return array
      */
     protected function _getBannersContent($bannerIds, $segmentIds = array())
@@ -403,24 +387,7 @@ class Enterprise_Banner_Block_Widget_Banner
             }
         }
 
-        $this->_prepareCacheTags();
         return $content;
-    }
-
-    /**
-     * Prepare cache tags based on renderedBannerIds param.
-     *
-     * @return Enterprise_Banner_Block_Widget_Banner
-     */
-    protected function _prepareCacheTags()
-    {
-        $banner = $this->_factory->getModel('enterprise_banner/banner');
-        foreach ($this->getBannerIds() as $bannerId) {
-            $bannerCacheTags = $banner->setId($bannerId)->getCacheIdTags();
-            $this->addCacheTag($bannerCacheTags);
-        }
-
-        return $this;
     }
 
     /**
@@ -471,8 +438,6 @@ class Enterprise_Banner_Block_Widget_Banner
     /**
      * Sets rendered param information
      *
-     * @param string $key
-     * @param mixed $value
      * @return Enterprise_Banner_Block_Widget_Banner
      */
     protected function _setRenderedParam($key, $value)
@@ -508,4 +473,5 @@ class Enterprise_Banner_Block_Widget_Banner
         );
         return $result;
     }
+
 }

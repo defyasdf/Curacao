@@ -1,0 +1,155 @@
+<?php
+/**
+ * Magento Enterprise Edition
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Magento Enterprise Edition License
+ * that is bundled with this package in the file LICENSE_EE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.magentocommerce.com/license/enterprise-edition
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://www.magentocommerce.com/license/enterprise-edition
+ */
+?>
+<?php
+/**
+ * Category view template
+ *
+ * @see Mage_Catalog_Block_Category_View
+ */
+?>
+<?php
+    $_helper    = $this->helper('catalog/output');
+    $_category  = $this->getCurrentCategory();
+
+	// create folder for resize category images
+	if(!file_exists("./media/catalog/category/resized")) mkdir("./media/catalog/category/resized",0777);
+    
+    $_imgUrl = $_category->getImageUrl();
+    $_imgHtml   = '';
+    
+
+
+/*
+    if ($_imgUrl = $_category->getImageUrl()) {
+        $_imgHtml = '<p class="category-image"><img src="'.$_imgUrl.'" alt="'.$this->htmlEscape($_category->getName()).'" title="'.$this->htmlEscape($_category->getName()).'" /></p>';
+        $_imgHtml = $_helper->categoryAttribute($_category, $_imgHtml, 'image');
+    }
+    */
+?>
+<div class="page-title category-title">
+    <?php if($this->IsRssCatalogEnable() && $this->IsTopCategory()): ?>
+        <a href="<?php echo $this->getRssLink() ?>" class="link-rss"><?php echo $this->__('Subscribe to RSS Feed') ?></a>
+    <?php endif; ?>
+    <h1><?php echo $_helper->categoryAttribute($_category, $_category->getName(), 'name') ?></h1>
+</div>
+
+<?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+
+<?php if($_imgUrl): ?>
+    <?php echo $_imgHtml ?>
+<?php endif; ?>
+
+<div class="featured-products">
+	<?php
+		$_collection =   $_category->getCategories($_category->entity_id);
+	    $_myhelper     = Mage::helper('catalog/category');
+	    
+	    $qty = 0;
+	    
+	    foreach ($_collection as $_cat):
+	    	$qty++;
+	    endforeach;
+	    		
+	    
+	    if( $qty > 1):
+	?>
+	<div class="sixteen columns alpha top-sellers">
+		<div class="block-header"><?php echo($_category->getDescription()) ?> <!-- <a class="right" href="#">See All</a> --></div>
+		<div class="collection-holder">
+			<ul class="category-thumbs">
+	    	<?php 
+	    		foreach ($_collection as $_cat):
+					$_imgHtml   = '';
+					$_cat = Mage::getModel('catalog/category')->load($_cat->getId());
+					$_imgUrl = $_cat->getImageUrl();
+//					$_imgUrl = $_cat->getImage();
+
+					if ( trim($_imgUrl) != '' ) {
+					
+ 
+ 					/*
+ 						NEED TO MODIFY PERMISSIONS - CANNOT CREATE IMAGES?
+						// get image name
+						$_imgName = substr(strrchr($_imgUrl,"/"),1);
+ 
+						// resized image path (media/catalog/category/resized/IMAGE_NAME)
+						$_imgResized = Mage::getBaseDir('media').DS."catalog".DS."category".DS."resized".DS.$_imgName;
+ 
+						// changing image url into direct path
+						$_dirImg = Mage::getBaseDir().str_replace("/",DS,strstr($_imgUrl,'/media'));
+ 
+						// if resized image doesn't exist, save the resized image to the resized directory
+						if (!file_exists($_imgResized)&&file_exists($_dirImg)) :
+							$_imgObj = new Varien_Image($_dirImg);
+							$_imgObj->constrainOnly(TRUE);
+							$_imgObj->keepAspectRatio(TRUE);
+							$_imgObj->keepFrame(FALSE);
+							$_imgObj->resize(120, 120);
+							$_imgObj->save($_imgResized);
+						endif;
+ 
+						$_newImgUrl = Mage::getBaseUrl('media')."catalog/category/resized/".$_imgUrl;
+
+						$_imgHtml = '<div class="category-image">';
+						$_imgHtml .= '<img src="'.$_newImgUrl.'" title="'.$this->htmlEscape($_cat->getName()).'" name="'.$this->htmlEscape($_cat->getName()).'" />';
+ 						$_imgHtml .= '<div>';
+ 					*/
+						$_imgHtml = '<div class="category-image">';
+						$_imgHtml .= '<a href="'.($_myhelper->getCategoryUrl($_cat)).'">';
+						$_imgHtml .= '<img src="'.$_imgUrl.'" title="'.$this->htmlEscape($_cat->getName()).'" name="'.$this->htmlEscape($_cat->getName()).'" />';
+						$_imgHtml .= '</a>';
+ 						$_imgHtml .= '</div>';
+ 					
+			?>
+	            <li>
+	                <?php echo($_imgHtml); ?>
+	                <div class="category-thumb-title"><a href="<?php echo $_myhelper->getCategoryUrl($_cat);?>"><?php echo($this->htmlEscape($_cat->getName())) ?></a></div>
+	            </li>			
+			<?php
+					}
+	    	?>
+
+			<?php endforeach;?>
+			</ul>
+		</div>
+	</div>
+	<?php
+ endif; 
+?>
+</div>
+
+
+<?php if($this->isContentMode()): ?>
+    <?php echo $this->getCmsBlockHtml() ?>
+
+<?php elseif($this->isMixedMode()): ?>
+    <?php echo $this->getCmsBlockHtml() ?>
+    <?php echo $this->getProductListHtml() ?>
+
+<?php else: ?>
+    <?php echo $this->getProductListHtml() ?>
+<?php endif; ?>

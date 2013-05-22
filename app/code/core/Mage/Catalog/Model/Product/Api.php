@@ -20,7 +20,7 @@
  *
  * @category    Mage
  * @package     Mage_Catalog
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
@@ -123,18 +123,13 @@ class Mage_Catalog_Model_Product_Api extends Mage_Catalog_Model_Api_Resource
      *
      * @param int|string $productId
      * @param string|int $store
-     * @param array      $attributes
-     * @param string     $identifierType
+     * @param array $attributes
      * @return array
      */
     public function info($productId, $store = null, $attributes = null, $identifierType = null)
     {
-        // make sku flag case-insensitive
-        if (!empty($identifierType)) {
-            $identifierType = strtolower($identifierType);
-        }
-
         $product = $this->_getProduct($productId, $store, $identifierType);
+
 
         $result = array( // Basic product data
             'product_id' => $product->getId(),
@@ -357,15 +352,7 @@ class Mage_Catalog_Model_Product_Api extends Mage_Catalog_Model_Api_Resource
      */
     public function getSpecialPrice($productId, $store = null)
     {
-        $product = $this->_getProduct($productId, $store);
-
-        $result = array(
-            'special_price'     => $product->getSpecialPrice(),
-            'special_from_date' => $product->getSpecialFromDate(),
-            'special_to_date'   => $product->getSpecialToDate()
-        );
-
-        return $result;
+        return $this->info($productId, $store, array('special_price', 'special_from_date', 'special_to_date'));
     }
 
     /**

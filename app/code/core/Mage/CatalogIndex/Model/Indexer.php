@@ -20,7 +20,7 @@
  *
  * @category    Mage
  * @package     Mage_CatalogIndex
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
@@ -186,9 +186,7 @@ class Mage_CatalogIndex_Model_Indexer extends Mage_Core_Model_Abstract
      */
     public function cleanup($product)
     {
-        $store = $product->getNeedStoreForReindex() === true ? $this->_getStores() : null;
-        $this->_getResource()->clear(true, true, true, true, true, $product, $store);
-
+        $this->_getResource()->clear(true, true, true, true, true, $product, ($product->getNeedStoreForReindex() === true ? $this->_getStores() : null));
         return $this;
     }
 
@@ -344,9 +342,7 @@ class Mage_CatalogIndex_Model_Indexer extends Mage_Core_Model_Abstract
             /**
              * Catalog Product Flat price update
              */
-            /** @var $productFlatHelper Mage_Catalog_Helper_Product_Flat */
-            $productFlatHelper = Mage::helper('catalog/product_flat');
-            if ($productFlatHelper->isAvailable() && $productFlatHelper->isBuilt()) {
+            if (Mage::helper('catalog/product_flat')->isBuilt()) {
                 foreach ($stores as $store) {
                     $this->updateCatalogProductFlat($store, $products);
                 }
@@ -380,9 +376,7 @@ class Mage_CatalogIndex_Model_Indexer extends Mage_Core_Model_Abstract
         /**
          * Catalog Product Flat price update
          */
-        /** @var $productFlatHelper Mage_Catalog_Helper_Product_Flat */
-        $productFlatHelper = Mage::helper('catalog/product_flat');
-        if ($productFlatHelper->isAvailable() && $productFlatHelper->isBuilt()) {
+        if (Mage::helper('catalog/product_flat')->isBuilt()) {
             if ($store instanceof Mage_Core_Model_Website) {
                 foreach ($store->getStores() as $storeObject) {
                     $this->_afterPlainReindex($storeObject->getId(), $products);
@@ -648,25 +642,21 @@ class Mage_CatalogIndex_Model_Indexer extends Mage_Core_Model_Abstract
 
                                 if (isset($values[$code]['from']) && isset($values[$code]['to'])) {
                                     if (isset($values[$code]['currency'])) {
-                                        $rateConversion = $this->_getBaseToSpecifiedCurrencyRate(
-                                            $values[$code]['currency']
-                                        );
+                                        $rateConversion = $this->_getBaseToSpecifiedCurrencyRate($values[$code]['currency']);
                                     } else {
                                         $rateConversion = $this->_getBaseToSpecifiedCurrencyRate($currentStoreCurrency);
                                     }
 
-                                    if (strlen($values[$code]['from']) > 0) {
+                                    if (strlen($values[$code]['from'])>0) {
                                         $filter[$code]->where(
-                                            "($table.min_price"
-                                            . implode('', $additionalCalculations[$code]).")*{$rateConversion} >= ?",
+                                            "($table.min_price".implode('', $additionalCalculations[$code]).")*{$rateConversion} >= ?",
                                             $values[$code]['from']
                                         );
                                     }
 
-                                    if (strlen($values[$code]['to']) > 0) {
+                                    if (strlen($values[$code]['to'])>0) {
                                         $filter[$code]->where(
-                                            "($table.min_price"
-                                            . implode('', $additionalCalculations[$code]).")*{$rateConversion} <= ?",
+                                            "($table.min_price".implode('', $additionalCalculations[$code]).")*{$rateConversion} <= ?",
                                             $values[$code]['to']
                                         );
                                     }
@@ -730,8 +720,7 @@ class Mage_CatalogIndex_Model_Indexer extends Mage_Core_Model_Abstract
 
                                     if ($values[$code]['from']) {
                                         if (!is_numeric($values[$code]['from'])) {
-                                            $_date = date("Y-m-d H:i:s", strtotime($values[$code]['from']));
-                                            $values[$code]['from'] = $_date;
+                                            $values[$code]['from'] = date("Y-m-d H:i:s", strtotime($values[$code]['from']));
                                         }
 
                                         $filter[$code]->where("value >= ?", $values[$code]['from']);

@@ -20,7 +20,7 @@
  *
  * @category    Mage
  * @package     Mage
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
@@ -168,9 +168,9 @@ final class Mage
     {
         return array(
             'major'     => '1',
-            'minor'     => '13',
+            'minor'     => '12',
             'revision'  => '0',
-            'patch'     => '0',
+            'patch'     => '1',
             'stability' => '',
             'number'    => '',
         );
@@ -695,7 +695,7 @@ final class Mage
             }
             try {
                 self::dispatchEvent('mage_run_exception', array('exception' => $e));
-                if (!headers_sent() && self::isInstalled()) {
+                if (!headers_sent()) {
                     header('Location:' . self::getUrl('install'));
                 } else {
                     self::printException($e);

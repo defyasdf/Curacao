@@ -20,7 +20,7 @@
  *
  * @category    Mage
  * @package     Mage_XmlConnect
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
@@ -47,16 +47,14 @@ class Mage_XmlConnect_Block_Customer_Order_Item_Renderer_Grouped extends Mage_Sa
      */
     public function addItemToXmlObject(Mage_XmlConnect_Model_Simplexml_Element $orderItemXmlObj)
     {
-        $item = $this->getItem()->getOrderItem();
-        if (!$item) {
+        if (!($item = $this->getItem()->getOrderItem())) {
             $item = $this->getItem();
         }
-        $productType = $item->getRealProductType();
-        if (!$productType) {
+        if (!($productType = $item->getRealProductType())) {
             $productType = self::DEFAULT_PRODUCT_TYPE;
         }
         $renderer = $this->getRenderedBlock()->getItemRenderer($productType);
-        $renderer->setItem($this->getItem())->setNewApi($this->getNewApi());
+        $renderer->setItem($this->getItem());
         $renderer->addItemToXmlObject($orderItemXmlObj);
     }
 }

@@ -20,7 +20,7 @@
  *
  * @category    Mage
  * @package     Mage_Usa
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
@@ -457,9 +457,6 @@ class Mage_Usa_Model_Shipping_Carrier_Usps
                     }
                     $r = $this->_rawRequest;
                     $allowedMethods = explode(",", $this->getConfigData('allowed_methods'));
-                    foreach ($allowedMethods as $key => $method) {
-                        $allowedMethods[$key] = $this->getMethodLabel($method);
-                    }
                     $allMethods = $this->getCode('method');
                     $newMethod = false;
                     if ($this->_isUSCountry($r->getDestCountryId())) {
@@ -529,7 +526,7 @@ class Mage_Usa_Model_Shipping_Carrier_Usps
                 $rate = Mage::getModel('shipping/rate_result_method');
                 $rate->setCarrier('usps');
                 $rate->setCarrierTitle($this->getConfigData('title'));
-                $rate->setMethod($this->getMethodValue($method));
+                $rate->setMethod($method);
                 $rate->setMethodTitle($method);
                 $rate->setCost($costArr[$method]);
                 $rate->setPrice($price);
@@ -556,8 +553,7 @@ class Mage_Usa_Model_Shipping_Carrier_Usps
                 'PRIORITY'    => Mage::helper('usa')->__('Priority Mail'),
                 'EXPRESS'     => Mage::helper('usa')->__('Express Mail'),
                 'BPM'         => Mage::helper('usa')->__('Bound Printed Matter'),
-                'PARCEL'      => Mage::helper('usa')->__('Standard Post'), // deprecated
-                'STANDARD'    => Mage::helper('usa')->__('Standard Post'),
+                'PARCEL'      => Mage::helper('usa')->__('Parcel Post'),
                 'MEDIA'       => Mage::helper('usa')->__('Media Mail'),
                 'LIBRARY'     => Mage::helper('usa')->__('Library'),
             ),
@@ -565,11 +561,9 @@ class Mage_Usa_Model_Shipping_Carrier_Usps
             'service_to_code'=>array(
                 'First-Class'                                   => 'FIRST CLASS',
                 'First-Class Mail International Large Envelope' => 'FIRST CLASS',
-                'First-Class Mail International Letter'         => 'FIRST CLASS', // deprecated
-                'First-Class Mail International Letters'        => 'FIRST CLASS',
+                'First-Class Mail International Letter'         => 'FIRST CLASS',
                 'First-Class Mail International Package'        => 'FIRST CLASS',
-                'First-Class Mail International Parcel'         => 'FIRST CLASS', // deprecated
-                'First-Class Package International Service'     => 'FIRST CLASS',
+                'First-Class Mail International Parcel'         => 'FIRST CLASS',
                 'First-Class Mail'                 => 'FIRST CLASS',
                 'First-Class Mail Flat'            => 'FIRST CLASS',
                 'First-Class Mail Large Envelope'  => 'FIRST CLASS',
@@ -577,8 +571,7 @@ class Mage_Usa_Model_Shipping_Carrier_Usps
                 'First-Class Mail Letter'          => 'FIRST CLASS',
                 'First-Class Mail Parcel'          => 'FIRST CLASS',
                 'First-Class Mail Package'         => 'FIRST CLASS',
-                'Parcel Post'                      => 'STANDARD', // deprecated
-                'Standard Post'                    => 'STANDARD',
+                'Parcel Post'                      => 'PARCEL',
                 'Bound Printed Matter'             => 'BPM',
                 'Media Mail'                       => 'MEDIA',
                 'Library Mail'                     => 'LIBRARY',
@@ -637,8 +630,7 @@ class Mage_Usa_Model_Shipping_Carrier_Usps
                                 'Priority Mail Small Flat Rate Box',
                                 'Express Mail',
                                 'Priority Mail',
-                                'Parcel Post', // deprecated
-                                'Standard Post',
+                                'Parcel Post',
                                 'Media Mail',
                                 'First-Class Mail Large Envelope',
                             )
@@ -656,8 +648,7 @@ class Mage_Usa_Model_Shipping_Carrier_Usps
                                 'Priority Mail International',
                                 'First-Class Mail International Package',
                                 'First-Class Mail International Large Envelope',
-                                'First-Class Mail International Parcel', // deprecated
-                                'First-Class Package International Service',
+                                'First-Class Mail International Parcel',
                             )
                         )
                     )
@@ -706,8 +697,7 @@ class Mage_Usa_Model_Shipping_Carrier_Usps
                             'method' => array(
                                 'Express Mail',
                                 'Priority Mail',
-                                'Parcel Post', // deprecated
-                                'Standard Post',
+                                'Parcel Post',
                                 'Media Mail',
                             )
                         ),
@@ -717,8 +707,7 @@ class Mage_Usa_Model_Shipping_Carrier_Usps
                                 'Express Mail International',
                                 'Priority Mail International',
                                 'First-Class Mail International Package',
-                                'First-Class Mail International Parcel', // deprecated
-                                'First-Class Package International Service',
+                                'First-Class Mail International Parcel',
                             )
                         )
                     )
@@ -730,8 +719,7 @@ class Mage_Usa_Model_Shipping_Carrier_Usps
                             'method' => array(
                                 'Express Mail',
                                 'Priority Mail',
-                                'Parcel Post', // deprecated
-                                'Standard Post',
+                                'Parcel Post',
                                 'Media Mail',
                             )
                         ),
@@ -742,8 +730,7 @@ class Mage_Usa_Model_Shipping_Carrier_Usps
                                 'Express Mail International',
                                 'Priority Mail International',
                                 'First-Class Mail International Package',
-                                'First-Class Mail International Parcel', // deprecated
-                                'First-Class Package International Service',
+                                'First-Class Mail International Parcel',
                             )
                         )
                     )
@@ -1303,11 +1290,8 @@ class Mage_Usa_Model_Shipping_Carrier_Usps
             case 'FIRST CLASS':
                 $serviceType = 'First Class';
                 break;
-            case 'PARCEL': // deprecated
+            case 'PARCEL':
                 $serviceType = 'Parcel Post';
-                break;
-            case 'STANDARD':
-                $serviceType = 'Standard Post';
                 break;
             case 'MEDIA':
                 $serviceType = 'Media Mail';
@@ -1811,54 +1795,5 @@ class Mage_Usa_Model_Shipping_Carrier_Usps
         }
 
         return array($zip5, $zip4);
-    }
-
-    /**
-     * Map values-labels of shipping methods
-     *
-     * @param string $method
-     * @param bool $valuesToLabels
-     * @return string
-     */
-    protected function _methodsMapper($method, $valuesToLabels = true)
-    {
-        $values = array(
-            'First-Class Mail International Parcel',
-            'Parcel Post',
-            'First-Class Mail International Letter',
-        );
-        $labels = array(
-            'First-Class Package International Service',
-            'Standard Post',
-            'First-Class Mail International Letters',
-        );
-        $from = $valuesToLabels ? $values : $labels;
-        $index = array_search($method, $from);
-        if ($index !== false) {
-            return $valuesToLabels ? $labels[$index] : $values[$index];
-        }
-        return $method;
-    }
-
-    /**
-     * Get label of method by its value
-     *
-     * @param string $value
-     * @return string
-     */
-    public function getMethodLabel($value)
-    {
-        return $this->_methodsMapper($value, true);
-    }
-
-    /**
-     * Get value of method by its label
-     *
-     * @param string $label
-     * @return string
-     */
-    public function getMethodValue($label)
-    {
-        return $this->_methodsMapper($label, false);
     }
 }

@@ -20,7 +20,7 @@
  *
  * @category    Mage
  * @package     Mage
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
@@ -78,8 +78,18 @@ ini_set('display_errors', 1);
 
 umask(0);
 
+
+if( isset($_GET['___store']) ){
+	if( ($_GET['___store'] == 'espn') || ($_GET['___store'] == 'default') ) {
+		$_COOKIE['MAGE_RUN_CODE'] = $_GET['___store'];
+		$mageRunCode = $_GET['___store'];
+		$_SERVER['MAGE_RUN_CODE'] = $_GET['___store'];
+	}
+}
+
 /* Store or website code */
-$mageRunCode = isset($_SERVER['MAGE_RUN_CODE']) ? $_SERVER['MAGE_RUN_CODE'] : '';
+$mageRunCode = isset($_SERVER['MAGE_RUN_CODE']) ? $_SERVER['MAGE_RUN_CODE'] : 'default';
+
 
 /* Run store or run website */
 $mageRunType = isset($_SERVER['MAGE_RUN_TYPE']) ? $_SERVER['MAGE_RUN_TYPE'] : 'store';

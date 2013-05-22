@@ -20,7 +20,7 @@
  *
  * @category    Enterprise
  * @package     Enterprise_Staging
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
@@ -31,8 +31,7 @@
  * @package    Enterprise_Staging
  * @author     Magento Core Team <core@magentocommerce.com>
  */
-class Enterprise_Staging_Block_Adminhtml_Widget_Grid_Column_Renderer_Action
-    extends Mage_Adminhtml_Block_Widget_Grid_Column_Renderer_Action
+class Enterprise_Staging_Block_Adminhtml_Widget_Grid_Column_Renderer_Action extends Mage_Adminhtml_Block_Widget_Grid_Column_Renderer_Action
 {
     /**
      * Renders column
@@ -117,7 +116,7 @@ class Enterprise_Staging_Block_Adminhtml_Widget_Grid_Column_Renderer_Action
                 if ($field == '__method_callback') {
                     if (isset($condition['method'])) {
                         $method = $condition['method'];
-                        if (method_exists($row, $method)) {
+                        if (is_callable(array($row, $method))) {
                             if (!call_user_func_array(array($row, $method), $args)) {
                                 return false;
                             }

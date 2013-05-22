@@ -1,0 +1,7 @@
+h3.head-adminhtml-bannermanager,h3.head-adminhtml-bannermanager-groups { background-image:url(../images/magify_logo_mini.png); color:#00a4cd; font-style:italic; padding-left:95px; }
+#vortex_schedule_table { }
+#vortex_schedule_table tr { }
+#vortex_schedule_table th { padding:10px 5px; }
+#vortex_schedule_table td { padding:15px 5px; width:140px; border-top:1px solid #ddd; }
+#vortex_schedule_table td.count { color:#00A4CD; width:auto; font-size:120%; font-weight:700; text-align:right; }
+#vortex_schedule_table td img { padding:3px 5px; }

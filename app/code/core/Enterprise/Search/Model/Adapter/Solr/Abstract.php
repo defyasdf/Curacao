@@ -20,7 +20,7 @@
  *
  * @category    Enterprise
  * @package     Enterprise_Search
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
@@ -197,13 +197,12 @@ abstract class Enterprise_Search_Model_Adapter_Solr_Abstract extends Enterprise_
                 } else {
                     foreach ($facetFieldConditions as $facetCondition) {
                         if (is_array($facetCondition) && isset($facetCondition['from'])
-                            && isset($facetCondition['to'])
-                        ) {
-                            $from = strlen(trim($facetCondition['from']))
-                                ? $facetCondition['from']
+                                && isset($facetCondition['to'])) {
+                            $from = (isset($facetCondition['from']) && strlen(trim($facetCondition['from'])))
+                                ? $this->_prepareQueryText($facetCondition['from'])
                                 : '*';
-                            $to = strlen(trim($facetCondition['to']))
-                                ? $facetCondition['to']
+                            $to = (isset($facetCondition['to']) && strlen(trim($facetCondition['to'])))
+                                ? $this->_prepareQueryText($facetCondition['to'])
                                 : '*';
                             $fieldCondition = "$facetField:[$from TO $to]";
                         } else {
@@ -233,12 +232,12 @@ abstract class Enterprise_Search_Model_Adapter_Solr_Abstract extends Enterprise_
         if (is_array($filters) && !empty($filters)) {
             foreach ($filters as $field => $value) {
                 if (is_array($value)) {
-                    if (isset($value['from']) || isset($value['to'])) {
+                    if ($field == 'price' || isset($value['from']) || isset($value['to'])) {
                         $from = (isset($value['from']) && !empty($value['from']))
-                            ? $value['from']
+                            ? $this->_prepareFilterQueryText($value['from'])
                             : '*';
                         $to = (isset($value['to']) && !empty($value['to']))
-                            ? $value['to']
+                            ? $this->_prepareFilterQueryText($value['to'])
                             : '*';
                         $fieldCondition = "$field:[$from TO $to]";
                     } else {

@@ -20,7 +20,7 @@
  *
  * @category    Mage
  * @package     Mage_CatalogRule
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
@@ -110,45 +110,6 @@ class Mage_CatalogRule_Model_Rule extends Mage_Rule_Model_Abstract
      * @var array
      */
     protected static $_priceRulesData = array();
-
-    /**
-     * Factory instance
-     *
-     * @var Mage_Core_Model_Factory
-     */
-    protected $_factory = null;
-
-    /**
-     * Configuration object
-     *
-     * @var Mage_Core_Model_Config
-     */
-    protected $_config = null;
-
-    /**
-     * Configuration object
-     *
-     * @var Mage_Core_Model_App
-     */
-    protected $_app = null;
-
-    /**
-     * Constructor with parameters
-     * Array of arguments with keys
-     *  - 'factory' Mage_Core_Model_Factory
-     *  - 'config' Mage_Core_Model_Config
-     *  - 'app' Mage_Core_Model_App
-     *
-     * @param array $args
-     */
-    public function __construct(array $args = array())
-    {
-        $this->_factory = !empty($args['factory']) ? $args['factory'] : Mage::getSingleton('core/factory');
-        $this->_config  = !empty($args['config']) ? $args['config'] : Mage::getConfig();
-        $this->_app     = !empty($args['app']) ? $args['app'] : Mage::app();
-
-        parent::__construct();
-    }
 
     /**
      * Init resource model and id field
@@ -262,28 +223,9 @@ class Mage_CatalogRule_Model_Rule extends Mage_Rule_Model_Abstract
         $product = clone $args['product'];
         $product->setData($args['row']);
 
-        $results = array();
-        foreach ($this->_getWebsitesMap() as $websiteId => $defaultStoreId) {
-            $product->setStoreId($defaultStoreId);
-            $results[$websiteId] = (int)$this->getConditions()->validate($product);
+        if ($this->getConditions()->validate($product)) {
+            $this->_productIds[] = $product->getId();
         }
-        $this->_productIds[$product->getId()] = $results;
-    }
-
-    /**
-     * Prepare website to default assigned store map
-     *
-     * @return array
-     */
-    protected function _getWebsitesMap()
-    {
-        $map = array();
-        foreach ($this->_app->getWebsites(true) as $website) {
-            if ($website->getDefaultStore()) {
-                $map[$website->getId()] = $website->getDefaultStore()->getId();
-            }
-        }
-        return $map;
     }
 
     /**
@@ -297,14 +239,12 @@ class Mage_CatalogRule_Model_Rule extends Mage_Rule_Model_Abstract
     public function applyToProduct($product, $websiteIds = null)
     {
         if (is_numeric($product)) {
-            $product = $this->_factory->getModel('catalog/product')->load($product);
+            $product = Mage::getModel('catalog/product')->load($product);
         }
         if (is_null($websiteIds)) {
             $websiteIds = $this->getWebsiteIds();
         }
         $this->getResource()->applyToProduct($this, $product, $websiteIds);
-        $this->getResource()->applyAllRules($product);
-        $this->_invalidateCache();
     }
 
     /**
@@ -315,7 +255,7 @@ class Mage_CatalogRule_Model_Rule extends Mage_Rule_Model_Abstract
     public function applyAll()
     {
         $this->getResourceCollection()->walk(array($this->_getResource(), 'updateRuleProductData'));
-        $this->_getResource()->applyAllRules();
+        $this->_getResource()->applyAllRulesForDateRange();
         $this->_invalidateCache();
         $indexProcess = Mage::getSingleton('index/indexer')->getProcessByCode('catalog_product_price');
         if ($indexProcess) {
@@ -331,31 +271,22 @@ class Mage_CatalogRule_Model_Rule extends Mage_Rule_Model_Abstract
      */
     public function applyAllRulesToProduct($product)
     {
-        if (is_numeric($product)) {
-            /** @var $product Mage_Catalog_Model_Product */
-            $product = Mage::getModel('catalog/product')->load($product);
-        }
-
-        $productWebsiteIds = $product->getWebsiteIds();
-
-        /** @var $rules Mage_CatalogRule_Model_Resource_Rule_Collection */
-        $rules = Mage::getModel('catalogrule/rule')->getCollection()
-            ->addFieldToFilter('is_active', 1);
-        foreach ($rules as $rule) {
-            $websiteIds = array_intersect($productWebsiteIds, $rule->getWebsiteIds());
-            $this->getResource()->applyToProduct($rule, $product, $websiteIds);
-        }
-
-        $this->getResource()->applyAllRules($product);
+        $this->_getResource()->applyAllRulesForDateRange(NULL, NULL, $product);
         $this->_invalidateCache();
 
-        Mage::getSingleton('index/indexer')->processEntityAction(
-            new Varien_Object(array('id' => $product->getId())),
-            Mage_Catalog_Model_Product::ENTITY,
-            Mage_Catalog_Model_Product_Indexer_Price::EVENT_TYPE_REINDEX_PRICE
-        );
+        if ($product instanceof Mage_Catalog_Model_Product) {
+            $productId = $product->getId();
+        } else {
+            $productId = $product;
+        }
 
-        return $this;
+        if ($productId) {
+            Mage::getSingleton('index/indexer')->processEntityAction(
+                new Varien_Object(array('id' => $productId)),
+                Mage_Catalog_Model_Product::ENTITY,
+                Mage_Catalog_Model_Product_Indexer_Price::EVENT_TYPE_REINDEX_PRICE
+            );
+        }
     }
 
     /**
@@ -444,13 +375,16 @@ class Mage_CatalogRule_Model_Rule extends Mage_Rule_Model_Abstract
      */
     protected function _invalidateCache()
     {
-        $types = $this->_config->getNode(self::XML_NODE_RELATED_CACHE);
+        $types = Mage::getConfig()->getNode(self::XML_NODE_RELATED_CACHE);
         if ($types) {
             $types = $types->asArray();
-            $this->_app->getCacheInstance()->invalidateType(array_keys($types));
+            Mage::app()->getCacheInstance()->invalidateType(array_keys($types));
         }
         return $this;
     }
+
+
+
 
     /**
      * @deprecated after 1.11.2.0

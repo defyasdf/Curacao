@@ -20,7 +20,7 @@
  *
  * @category    Mage
  * @package     Mage_Index
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 class Mage_Index_Adminhtml_ProcessController extends Mage_Adminhtml_Controller_Action
@@ -34,9 +34,8 @@ class Mage_Index_Adminhtml_ProcessController extends Mage_Adminhtml_Controller_A
     {
         $processId = $this->getRequest()->getParam('process');
         if ($processId) {
-            /** @var $process Mage_Index_Model_Process */
             $process = Mage::getModel('index/process')->load($processId);
-            if ($process->getId() && $process->getIndexer()->isVisible()) {
+            if ($process->getId()) {
                 return $process;
             }
         }
@@ -52,6 +51,7 @@ class Mage_Index_Adminhtml_ProcessController extends Mage_Adminhtml_Controller_A
 
         $this->loadLayout();
         $this->_setActiveMenu('system/index');
+        $this->_addContent($this->getLayout()->createBlock('index/adminhtml_process'));
         $this->renderLayout();
     }
 
@@ -60,7 +60,6 @@ class Mage_Index_Adminhtml_ProcessController extends Mage_Adminhtml_Controller_A
      */
     public function editAction()
     {
-        /** @var $process Mage_Index_Model_Process */
         $process = $this->_initProcess();
         if ($process) {
             $this->_title($process->getIndexCode());
@@ -85,7 +84,6 @@ class Mage_Index_Adminhtml_ProcessController extends Mage_Adminhtml_Controller_A
      */
     public function saveAction()
     {
-        /** @var $process Mage_Index_Model_Process */
         $process = $this->_initProcess();
         if ($process) {
             $mode = $this->getRequest()->getPost('mode');
@@ -118,7 +116,6 @@ class Mage_Index_Adminhtml_ProcessController extends Mage_Adminhtml_Controller_A
      */
     public function reindexProcessAction()
     {
-        /** @var $process Mage_Index_Model_Process */
         $process = $this->_initProcess();
         if ($process) {
             try {
@@ -174,17 +171,16 @@ class Mage_Index_Adminhtml_ProcessController extends Mage_Adminhtml_Controller_A
             $this->_getSession()->addError(Mage::helper('index')->__('Please select Indexes'));
         } else {
             try {
-                $counter = 0;
                 foreach ($processIds as $processId) {
                     /* @var $process Mage_Index_Model_Process */
                     $process = $indexer->getProcessById($processId);
-                    if ($process && $process->getIndexer()->isVisible()) {
+                    if ($process) {
                         $process->reindexEverything();
-                        $counter++;
                     }
                 }
+                $count = count($processIds);
                 $this->_getSession()->addSuccess(
-                    Mage::helper('index')->__('Total of %d index(es) have reindexed data.', $counter)
+                    Mage::helper('index')->__('Total of %d index(es) have reindexed data.', $count)
                 );
             } catch (Mage_Core_Exception $e) {
                 $this->_getSession()->addError($e->getMessage());
@@ -207,18 +203,18 @@ class Mage_Index_Adminhtml_ProcessController extends Mage_Adminhtml_Controller_A
             $this->_getSession()->addError(Mage::helper('index')->__('Please select Index(es)'));
         } else {
             try {
-                $counter = 0;
                 $mode = $this->getRequest()->getParam('index_mode');
                 foreach ($processIds as $processId) {
                     /* @var $process Mage_Index_Model_Process */
                     $process = Mage::getModel('index/process')->load($processId);
-                    if ($process->getId() && $process->getIndexer()->isVisible()) {
-                        $process->setMode($mode)->save();
-                        $counter++;
+                    if ($process->getId()) {
+                        $process->setMode($mode)
+                            ->save();
                     }
                 }
+                $count = count($processIds);
                 $this->_getSession()->addSuccess(
-                    Mage::helper('index')->__('Total of %d index(es) have changed index mode.', $counter)
+                    Mage::helper('index')->__('Total of %d index(es) have changed index mode.', $count)
                 );
             } catch (Mage_Core_Exception $e) {
                 $this->_getSession()->addError($e->getMessage());

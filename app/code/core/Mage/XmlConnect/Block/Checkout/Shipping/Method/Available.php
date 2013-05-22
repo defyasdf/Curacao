@@ -20,7 +20,7 @@
  *
  * @category    Mage
  * @package     Mage_XmlConnect
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
@@ -43,34 +43,33 @@ class Mage_XmlConnect_Block_Checkout_Shipping_Method_Available
     {
         /** @var $methodsXmlObj Mage_XmlConnect_Model_Simplexml_Element */
         $methodsXmlObj = Mage::getModel('xmlconnect/simplexml_element', '<shipping_methods></shipping_methods>');
-        $shippingRateGroups = $this->getShippingRates();
-        if ($shippingRateGroups) {
+        $_shippingRateGroups = $this->getShippingRates();
+        if ($_shippingRateGroups) {
             $store = $this->getQuote()->getStore();
-            $sole = count($shippingRateGroups) == 1;
-            foreach ($shippingRateGroups as $code => $rates) {
+            $_sole = count($_shippingRateGroups) == 1;
+            foreach ($_shippingRateGroups as $code => $_rates) {
                 $methodXmlObj = $methodsXmlObj->addChild('method');
                 $methodXmlObj->addAttribute('label', $methodsXmlObj->escapeXml($this->getCarrierName($code)));
                 $ratesXmlObj = $methodXmlObj->addChild('rates');
 
-                $sole = $sole && count($rates) == 1;
-                foreach ($rates as $rate) {
-                    $rateOptions = array();
-                    $rateOptions['label'] = $rate->getMethodTitle();
-                    $rateOptions['code'] = $rate->getCode();
-                    if ($rate->getErrorMessage()) {
-                        $rateXmlObj = $ratesXmlObj->addCustomChild('rate', null, $rateOptions);
-                        $rateXmlObj->addChild('error_message', $methodsXmlObj->escapeXml($rate->getErrorMessage()));
+                $_sole = $_sole && count($_rates) == 1;
+                foreach ($_rates as $_rate) {
+                    $rateXmlObj = $ratesXmlObj->addChild('rate');
+                    $rateXmlObj->addAttribute('label', $methodsXmlObj->escapeXml($_rate->getMethodTitle()));
+                    $rateXmlObj->addAttribute('code', $_rate->getCode());
+                    if ($_rate->getErrorMessage()) {
+                        $rateXmlObj->addChild('error_message', $methodsXmlObj->escapeXml($_rate->getErrorMessage()));
                     } else {
                         $price = Mage::helper('tax')->getShippingPrice(
-                            $rate->getPrice(),
+                            $_rate->getPrice(),
                             Mage::helper('tax')->displayShippingPriceIncludingTax(),
                             $this->getAddress()
                         );
-                        $rateOptions['price'] = Mage::helper('xmlconnect')->formatPriceForXml(
+                        $formattedPrice = $store->convertPrice($price, true, false);
+                        $rateXmlObj->addAttribute('price', Mage::helper('xmlconnect')->formatPriceForXml(
                             $store->convertPrice($price, false, false)
-                        );
-                        $rateOptions['formated_price'] = $store->convertPrice($price, true, false);
-                        $ratesXmlObj->addCustomChild('rate', null, $rateOptions);
+                        ));
+                        $rateXmlObj->addAttribute('formated_price', $formattedPrice);
                     }
                 }
             }

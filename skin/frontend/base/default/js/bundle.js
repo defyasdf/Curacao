@@ -19,7 +19,7 @@
  *
  * @category    design
  * @package     base_default
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 if(typeof Product=='undefined') {
@@ -75,12 +75,6 @@ Product.Bundle.prototype = {
                 this.config.selected[parts[2]] = new Array();
             }
             this.populateQty(parts[2], selection.value);
-            var tierPriceElement = $('bundle-option-' + parts[2] + '-tier-prices'),
-                tierPriceHtml = '';
-            if (selection.value != '' && this.config.options[parts[2]].selections[selection.value].customQty == 1) {
-                tierPriceHtml = this.config.options[parts[2]].selections[selection.value].tierPriceHtml;
-            }
-            tierPriceElement.update(tierPriceHtml);
         }
         this.reloadPrice();
     },
@@ -122,7 +116,6 @@ Product.Bundle.prototype = {
             return 0;
         }
         var qty = null;
-        var tierPriceInclTax, tierPriceExclTax;
         if (this.config.options[optionId].selections[selectionId].customQty == 1 && !this.config['options'][optionId].isMulti) {
             if ($('bundle-option-' + optionId + '-qty-input')) {
                 qty = $('bundle-option-' + optionId + '-qty-input').value;
@@ -132,6 +125,7 @@ Product.Bundle.prototype = {
         } else {
             qty = this.config.options[optionId].selections[selectionId].qty;
         }
+
         if (this.config.priceType == '0') {
             price = this.config.options[optionId].selections[selectionId].price;
             tierPrice = this.config.options[optionId].selections[selectionId].tierPrice;
@@ -139,8 +133,6 @@ Product.Bundle.prototype = {
             for (var i=0; i < tierPrice.length; i++) {
                 if (Number(tierPrice[i].price_qty) <= qty && Number(tierPrice[i].price) <= price) {
                     price = tierPrice[i].price;
-                    tierPriceInclTax = tierPrice[i].priceInclTax;
-                    tierPriceExclTax = tierPrice[i].priceExclTax;
                 }
             }
         } else {
@@ -164,10 +156,7 @@ Product.Bundle.prototype = {
         }
 
         selection = this.config.options[optionId].selections[selectionId];
-        if (tierPriceInclTax !== undefined && tierPriceExclTax !== undefined) {
-            priceInclTax = tierPriceInclTax;
-            price = tierPriceExclTax;
-        } else if (selection.priceInclTax !== undefined) {
+        if (selection.priceInclTax !== undefined) {
             priceInclTax = selection.priceInclTax;
             price = selection.priceExclTax !== undefined ? selection.priceExclTax : selection.price;
         } else {

@@ -20,7 +20,7 @@
  *
  * @category    Enterprise
  * @package     Enterprise_PageCache
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
@@ -48,11 +48,6 @@ class Enterprise_PageCache_Model_Processor
     const LAST_PRODUCT_COOKIE           = 'LAST_PRODUCT';
 
     const METADATA_CACHE_SUFFIX        = '_metadata';
-
-    /**
-     * Action name for 404 page
-     */
-    const NOT_FOUND_ACTION = 'noroute';
 
     /**
      * Request identifier
@@ -393,15 +388,6 @@ class Enterprise_PageCache_Model_Processor
             $isProcessed = false;
         }
 
-        if (isset($_COOKIE[Enterprise_PageCache_Model_Cookie::COOKIE_FORM_KEY])) {
-            $formKey = $_COOKIE[Enterprise_PageCache_Model_Cookie::COOKIE_FORM_KEY];
-        } else {
-            $formKey = Enterprise_PageCache_Helper_Data::getRandomString(16);
-            Enterprise_PageCache_Model_Cookie::setFormKeyCookieValue($formKey);
-        }
-
-        Enterprise_PageCache_Helper_Form_Key::restoreFormKey($content, $formKey);
-
         /**
          * restore session_id in content whether content is completely processed or not
          */
@@ -521,7 +507,6 @@ class Enterprise_PageCache_Model_Processor
                  * Replace all occurrences of session_id with unique marker
                  */
                 Enterprise_PageCache_Helper_Url::replaceSid($content);
-                Enterprise_PageCache_Helper_Form_Key::replaceFormKey($content);
 
                 if (function_exists('gzcompress')) {
                     $content = gzcompress($content);
@@ -529,10 +514,6 @@ class Enterprise_PageCache_Model_Processor
 
                 $contentSize = strlen($content);
                 $currentStorageSize = (int) $cacheInstance->load(self::CACHE_SIZE_KEY);
-
-                if (Mage::getStoreConfig(Enterprise_PageCache_Model_Processor::XML_PATH_CACHE_DEBUG)) {
-                    $response->setBody(implode(', ', $this->getRequestTags()) . $response->getBody());
-                }
 
                 $maxSizeInBytes = Mage::getStoreConfig(self::XML_PATH_CACHE_MAX_SIZE) * 1024 * 1024;
 
@@ -620,7 +601,7 @@ class Enterprise_PageCache_Model_Processor
      * Get specific request processor based on request parameters.
      *
      * @param Zend_Controller_Request_Http $request
-     * @return Enterprise_PageCache_Model_Processor_Default|false
+     * @return Enterprise_PageCache_Model_Processor_Default
      */
     public function getRequestProcessor(Zend_Controller_Request_Http $request)
     {
@@ -631,22 +612,20 @@ class Enterprise_PageCache_Model_Processor
                 $configuration = $configuration->asArray();
             }
             $module = $request->getModuleName();
-            $action = $request->getActionName();
-            if (strtolower($action) == self::NOT_FOUND_ACTION && isset($configuration['_no_route'])) {
-                $model = $configuration['_no_route'];
-            } elseif (isset($configuration[$module])) {
+            if (isset($configuration[$module])) {
                 $model = $configuration[$module];
                 $controller = $request->getControllerName();
                 if (is_array($configuration[$module]) && isset($configuration[$module][$controller])) {
                     $model = $configuration[$module][$controller];
+                    $action = $request->getActionName();
                     if (is_array($configuration[$module][$controller])
                             && isset($configuration[$module][$controller][$action])) {
                         $model = $configuration[$module][$controller][$action];
                     }
                 }
-            }
-            if (isset($model) && is_string($model)) {
-                $this->_requestProcessor = Mage::getModel($model);
+                if (is_string($model)) {
+                    $this->_requestProcessor = Mage::getModel($model);
+                }
             }
         }
         return $this->_requestProcessor;

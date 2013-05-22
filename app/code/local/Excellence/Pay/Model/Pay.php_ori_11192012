@@ -1,0 +1,157 @@
+<?php
+class Excellence_Pay_Model_Pay extends Mage_Payment_Model_Method_Abstract
+{
+   protected $_code = 'pay';
+   protected $_formBlockType = 'pay/form_pay';
+ 
+    public function assignData($data)
+    {
+        if (!($data instanceof Varien_Object)) {
+            $data = new Varien_Object($data);
+		}
+		
+		
+		$Data = Mage::getSingleton('core/session')->getCuracacaodp();
+		if($Data){
+			Mage::getSingleton('core/session')->unsCuracacaodp();
+		}
+		if(Mage::getSingleton('core/session')->getAuthentication()){
+			Mage::getSingleton('core/session')->unsAuthentication();
+		}
+		
+		
+		$no = $data->getCheckNo();
+		if(substr(trim($no),0,1)=='8'){
+			$no = '5'.substr($no,1);	
+		}
+		
+		Mage::getSingleton('core/session')->setCuracacaonum($no);
+		
+		$dob = $data->getCc_dob_year().'-'.$data->getCc_dob_month().'-'.$data->getCc_dob_day();
+		$ssn = $data->getSsn();
+		$maiden = $data->getMaiden();
+
+		if(trim($no)!=''){
+			if(substr(trim($no),0,1)!='5'){
+				Mage::getSingleton('core/session')->setAuthentication(0);
+				Mage::getSingleton('core/session')->setAuthenticationerror("acc_error");
+				Mage::throwException('Accpunt not active only raference number'); 			
+			}
+			$d = $this->validate_customer_calculate_dp($no, $dob, $ssn, $maiden);
+			if($d!=0){
+				Mage::getSingleton('core/session')->setCuracacaodp($d);
+				Mage::throwException('Initial Down Payment Require $'.$d); 			
+			}		
+		}else{
+			Mage::throwException('Curacao Credit'); 		
+		}
+		
+		
+				
+        return $this;
+    }
+	
+	public function validate_customer_calculate_dp($cust_num,$dob,$ssn,$maiden){
+	  
+	  $cust_num = str_replace('-','',str_replace(' ','',$cust_num));
+	  // Authentication, Authorization and Downpayment calculation
+		$amount = Mage::getModel('checkout/cart')->getQuote()->getGrandTotal();
+		$zip = Mage::getSingleton('checkout/session')->getQuote()->getBillingAddress()->getPostcode();
+		
+		//echo Mage::getSingleton('adminhtml/session_quote')->getQuote()->getBillingAddress()->getPostcode();
+		//exit;
+		
+		if(!$amount){
+			$amount = Mage::getSingleton('adminhtml/session_quote')->getQuote()->getGrandTotal();
+		}
+		if(!$zip){
+			$zip = Mage::getSingleton('adminhtml/session_quote')->getQuote()->getBillingAddress()->getPostcode();
+		}
+		
+		Mage::getSingleton('adminhtml/session_quote')->getQuote()->getBillingAddress()->getPostcode();
+		
+		$proxy = new SoapClient('https://exchangeweb.lacuracao.com:2007/ws1/eCommerce/Main.asmx?WSDL');
+		$ns = 'http://lacuracao.com/WebServices/eCommerce/';
+		
+		$headerbody = array('UserName' => 'mike', 
+							'Password' => 'ecom12'); 
+		//Create Soap Header.        
+		$header = new SOAPHeader($ns, 'TAuthHeader', $headerbody);        
+				
+		//set the Headers of Soap Client. 
+		$h = $proxy->__setSoapHeaders($header); 
+		$arr = array(
+											'CustID' => $cust_num,
+											'DOB' => $dob,
+											'Zip' => $zip,
+											'SSN' => $ssn,
+											'MMaiden' => strtoupper($maiden),
+											'Amount' => $amount
+											);
+		//print_r($arr);
+		//exit;
+		$credit = $proxy->ValidateDP(array(
+											'CustID' => $cust_num,
+											'DOB' => $dob,
+											'Zip' => $zip,
+											'SSN' => $ssn,
+											'MMaiden' => strtoupper($maiden),
+											'Amount' => $amount
+											),
+										 "http://www.lacuracao.com/LAC-eComm-WebServices", 
+										 "http://www.lacuracao.com/LAC-eComm-WebServices/WebCustomerApplication",
+										 false, null , 'rpc', 'literal');  
+		
+		
+		$result =  $credit->ValidateDPResult;
+		//echo '<pre>';
+		//	print_r($result);	
+		//echo '</pre>';	
+		
+		$server = '192.168.100.121';
+		$user = 'curacaodata';
+		$pass = 'curacaodata';
+		$db = 'icuracaoproduct';
+		
+		$link = mysql_connect($server,$user,$pass);
+		
+		mysql_select_db($db,$link);
+		
+		$sql = "INSERT INTO `curacao_cust_tracking` (`cust_number`, `cust_zip`, `cust_dob`, `cust_ssn`, `cust_maiden`, `cust_amount`, `ar_response`, `order_complete`, checkoutdate) VALUES ('".$cust_num."', '".$zip."', '".$dob."', '".$ssn."', '".$maiden."', '".$amount."', '".$result->StatusMessage."', '0', '".date('Y-m-d')."')";
+		mysql_query($sql);
+		$tracker_id = mysql_insert_id();		
+		if(strtolower($result->StatusMessage) == 'ok'){
+			$dp = $result->DownPayment;
+			if($dp>0){
+				$que = "update curacao_cust_tracking set downpayment_req = 1, downpayment = '".$dp."' where trackId = ".$tracker_id;
+				mysql_query($que);
+			}
+			Mage::getSingleton('core/session')->setTrackingId($tracker_id);
+		}else{
+			//$dp = $amount;
+			if(strtolower($result->StatusMessage) == 'authentication error'){
+				$auth = "auth_error";
+			}else{
+				$auth = 'credit_error';
+			}
+			Mage::getSingleton('core/session')->setAuthenticationerror($auth);
+			Mage::getSingleton('core/session')->setAuthentication(0);
+			
+			if(strtolower($result->StatusMessage) == 'authentication error'){
+				Mage::throwException('Authentication Failed');
+			}else{
+				Mage::throwException('Credit Related issue Please contact credit : '.$result->StatusMessage);
+			}
+			
+		}	
+		mysql_close($link);
+		/*if($cust_num=='53145246'){
+			$dp = 0;
+		}else{
+			$grandTotal = Mage::getModel('checkout/cart')->getQuote()->getGrandTotal();
+			$dp = $grandTotal - 10;
+		}	*/
+		return $dp;
+	}
+}
+?>

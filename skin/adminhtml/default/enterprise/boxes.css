@@ -1784,3 +1784,40 @@ div.actions:after,
 .files-wide .row:after,
 .grid tr.filter .range .range-line:after,
 .store-scope:after { display:block; clear:both; content:"."; font-size:0; line-height:0; height:0; overflow:hidden; }
+#curacao_pay_line{
+	clear:both;
+	overflow:hidden;
+}
+#curacao_pay_line ul{
+	margin:0;
+}
+#curacao_pay_number{
+	float:left;
+	width:190px;
+}
+#curacao_pay_ccv{
+	float:left;
+	width:160px;
+}
+#curacao_ccv_number{
+	float:left;
+	width:65px;
+}
+#curacao_dob_month{
+	float:left;
+	width:190px;
+}
+
+#curacao_dob_day{
+	float:left;
+	width:90px;
+}
+
+#curacao_dob_year{
+	float:left;
+	width:90px;
+}
+#curacao_pay_ssn_maiden{
+	float:left;
+	width:140px;
+}

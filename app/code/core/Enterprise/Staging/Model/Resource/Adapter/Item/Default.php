@@ -20,7 +20,7 @@
  *
  * @category    Enterprise
  * @package     Enterprise_Staging
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
@@ -144,8 +144,7 @@ class Enterprise_Staging_Model_Resource_Adapter_Item_Default extends Enterprise_
         $helper   = Mage::helper($entityName);
         $resource = Mage::getResourceModel($entityName);
 
-        /** @var $helper Mage_Catalog_Helper_Flat_Abstract */
-        if ($helper->isAvailable() && $helper->isBuilt()) {
+        if ($helper->isBuilt()) {
             $staging    = $this->getStaging();
             $websites   = $staging->getMapperInstance()->getWebsiteObjects();
             $callback   = $callbackMethod . 'Flat';

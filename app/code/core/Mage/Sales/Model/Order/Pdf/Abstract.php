@@ -20,7 +20,7 @@
  *
  * @category    Mage
  * @package     Mage_Sales
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
@@ -728,28 +728,6 @@ abstract class Mage_Sales_Model_Order_Pdf_Abstract extends Varien_Object
     }
 
     /**
-     * Render item
-     *
-     * @param Varien_Object $item
-     * @param Zend_Pdf_Page $page
-     * @param Mage_Sales_Model_Order $order
-     * @param Mage_Sales_Model_Order_Pdf_Items_Abstract $renderer
-     *
-     * @return Mage_Sales_Model_Order_Pdf_Abstract
-     */
-    public function renderItem(Varien_Object $item, Zend_Pdf_Page $page, Mage_Sales_Model_Order $order, $renderer)
-    {
-        $renderer->setOrder($order)
-            ->setItem($item)
-            ->setPdf($this)
-            ->setPage($page)
-            ->setRenderedModel($this)
-            ->draw();
-
-        return $this;
-    }
-
-    /**
      * Draw Item process
      *
      * @param  Varien_Object $item
@@ -759,24 +737,15 @@ abstract class Mage_Sales_Model_Order_Pdf_Abstract extends Varien_Object
      */
     protected function _drawItem(Varien_Object $item, Zend_Pdf_Page $page, Mage_Sales_Model_Order $order)
     {
-        $orderItem = $item->getOrderItem();
-        $type = $orderItem->getProductType();
+        $type = $item->getOrderItem()->getProductType();
         $renderer = $this->_getRenderer($type);
+        $renderer->setOrder($order);
+        $renderer->setItem($item);
+        $renderer->setPdf($this);
+        $renderer->setPage($page);
+        $renderer->setRenderedModel($this);
 
-        $this->renderItem($item, $page, $order, $renderer);
-
-        $transportObject = new Varien_Object(array('renderer_type_list' => array()));
-        Mage::dispatchEvent('pdf_item_draw_after', array(
-            'transport_object' => $transportObject,
-            'entity_item'      => $item
-        ));
-
-        foreach ($transportObject->getRendererTypeList() as $type) {
-            $renderer = $this->_getRenderer($type);
-            if ($renderer) {
-                $this->renderItem($orderItem, $page, $order, $renderer);
-            }
-        }
+        $renderer->draw();
 
         return $renderer->getPage();
     }

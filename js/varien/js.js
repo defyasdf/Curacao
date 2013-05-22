@@ -19,7 +19,7 @@
  *
  * @category    Varien
  * @package     js
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 function popWin(url,win,para) {
@@ -280,12 +280,10 @@ if (!window.Varien)
     var Varien = new Object();
 
 Varien.showLoading = function(){
-    var loader = $('loading-process');
-    loader && loader.show();
+    Element.show('loading-process');
 }
 Varien.hideLoading = function(){
-    var loader = $('loading-process');
-    loader && loader.hide();
+    Element.hide('loading-process');
 }
 Varien.GlobalHandlers = {
     onCreate: function() {
@@ -439,13 +437,10 @@ Varien.DateElement.prototype = {
     },
     validate: function() {
         var error = false,
-            day   = parseInt(this.day.value, 10)   || 0,
-            month = parseInt(this.month.value, 10) || 0,
-            year  = parseInt(this.year.value, 10)  || 0;
-        if (this.day.value.strip().empty()
-            && this.month.value.strip().empty()
-            && this.year.value.strip().empty()
-        ) {
+            day = parseInt(this.day.value.replace(/^0*/, '')) || 0,
+            month = parseInt(this.month.value.replace(/^0*/, '')) || 0,
+            year = parseInt(this.year.value) || 0;
+        if (!day && !month && !year) {
             if (this.required) {
                 error = 'This date is a required value.';
             } else {

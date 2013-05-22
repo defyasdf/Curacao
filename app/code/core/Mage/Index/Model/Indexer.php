@@ -20,7 +20,7 @@
  *
  * @category    Mage
  * @package     Mage_Index
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
@@ -60,18 +60,11 @@ class Mage_Index_Model_Indexer
     protected $_currentEvent = null;
 
     /**
-     * Array of errors
-     *
-     * @var array
-     */
-    protected $_errors = array();
-
-    /**
      * Class constructor. Initialize index processes based on configuration
      */
     public function __construct()
     {
-        $this->getProcessesCollection();
+        $this->_processesCollection = Mage::getResourceModel('index/process_collection');
     }
 
     /**
@@ -81,9 +74,6 @@ class Mage_Index_Model_Indexer
      */
     public function getProcessesCollection()
     {
-        if (is_null($this->_processesCollection)) {
-            $this->_processesCollection = Mage::getResourceModel('index/process_collection');
-        }
         return $this->_processesCollection;
     }
 
@@ -95,7 +85,7 @@ class Mage_Index_Model_Indexer
      */
     public function getProcessById($processId)
     {
-        foreach ($this->getProcessesCollection() as $process) {
+        foreach ($this->_processesCollection as $process) {
             if ($process->getId() == $processId) {
                 return $process;
             }
@@ -111,53 +101,12 @@ class Mage_Index_Model_Indexer
      */
     public function getProcessByCode($code)
     {
-        foreach ($this->getProcessesCollection() as $process) {
+        foreach ($this->_processesCollection as $process) {
             if ($process->getIndexerCode() == $code) {
                 return $process;
             }
         }
         return false;
-    }
-
-    /**
-     * Function returns array of indexer's process with order by sort_order field
-     *
-     * @param array $codes
-     * @return array
-     */
-    public function getProcessesCollectionByCodes(array $codes)
-    {
-        $processes = array();
-        $this->_errors = array();
-        foreach($codes as $code) {
-            $process = $this->getProcessByCode($code);
-            if (!$process) {
-                $this->_errors[] = sprintf('Warning: Unknown indexer with code %s', trim($code));
-                continue;
-            }
-            $processes[$process->getIndexerCode()] = $process;
-        }
-        return $processes;
-    }
-
-    /**
-     * Return true if model has errors
-     *
-     * @return bool
-     */
-    public function hasErrors()
-    {
-        return (bool)count($this->_errors);
-    }
-
-    /**
-     * Return array of errors
-     *
-     * @return array
-     */
-    public function getErrors()
-    {
-        return $this->_errors;
     }
 
     /**
@@ -201,7 +150,6 @@ class Mage_Index_Model_Indexer
      *
      * @param   null | string $entity
      * @param   null | string $type
-     * @throws Exception
      * @return  Mage_Index_Model_Indexer
      */
     public function indexEvents($entity=null, $type=null)
@@ -251,7 +199,6 @@ class Mage_Index_Model_Indexer
      * Register event in each indexing process process
      *
      * @param Mage_Index_Model_Event $event
-     * @return Mage_Index_Model_Indexer
      */
     public function registerEvent(Mage_Index_Model_Event $event)
     {
@@ -290,7 +237,6 @@ class Mage_Index_Model_Indexer
      * @param   Varien_Object $entity
      * @param   string $entityType
      * @param   string $eventType
-     * @throws Exception
      * @return  Mage_Index_Model_Indexer
      */
     public function processEntityAction(Varien_Object $entity, $entityType, $eventType)
@@ -349,7 +295,7 @@ class Mage_Index_Model_Indexer
     {
         $checkLocks = $method != 'register';
         $processed = array();
-        foreach ($this->getProcessesCollection() as $process) {
+        foreach ($this->_processesCollection as $process) {
             $code = $process->getIndexerCode();
             if (in_array($code, $processed)) {
                 continue;
@@ -390,7 +336,7 @@ class Mage_Index_Model_Indexer
     protected function _changeKeyStatus($enable = true)
     {
         $processed = array();
-        foreach ($this->getProcessesCollection() as $process) {
+        foreach ($this->_processesCollection as $process) {
             $code = $process->getIndexerCode();
             if (in_array($code, $processed)) {
                 continue;

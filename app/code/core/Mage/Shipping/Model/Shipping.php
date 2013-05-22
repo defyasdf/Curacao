@@ -20,7 +20,7 @@
  *
  * @category    Mage
  * @package     Mage_Shipping
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
@@ -174,10 +174,8 @@ class Mage_Shipping_Model_Shipping
                     if (!empty($packages)) {
                         $sumResults = array();
                         foreach ($packages as $weight => $packageCount) {
-                            //clone carrier for multi-requests
-                            $carrierObj = clone $carrier;
                             $request->setPackageWeight($weight);
-                            $result = $carrierObj->collectRates($request);
+                            $result = $carrier->collectRates($request);
                             if (!$result) {
                                 return $this;
                             } else {
@@ -385,8 +383,7 @@ class Mage_Shipping_Model_Shipping
         $request->setPackageCurrency(Mage::app()->getStore()->getCurrentCurrency());
         $request->setLimitCarrier($limitCarrier);
 
-        $request->setBaseSubtotalInclTax($address->getBaseSubtotalInclTax()
-            + $address->getBaseExtraTaxAmount());
+        $request->setBaseSubtotalInclTax($address->getBaseSubtotalInclTax());
 
         return $this->collectRates($request);
     }

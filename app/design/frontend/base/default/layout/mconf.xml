@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<layout version="1.0.0">
+    <catalog_product_view>
+        <reference name="head">            
+            <action method="addCss"><stylesheet>css/magify/mconf.css</stylesheet></action>
+            <action method="addJs"><stylesheet>magify/mconf/zoomer.js</stylesheet></action>
+            <action method="addItem"><type>js_css</type><name>magify/mconf/css/lightbox.css</name><params/></action>
+            <action method="addJs" ifconfig="mconf/general/show_title_view"><script>magify/mconf/bubleTooltip.js</script></action>
+            <action method="addItem" ifconfig="mconf/general/show_title_view"><type>js_css</type><name>magify/mconf/css/bubleTooltip.css</name><params/></action>
+        </reference>
+        <reference name="product.info.media">
+            <action method="setTemplate"><template>mconf/media.phtml</template></action>
+        </reference>
+        <reference name="content">
+           <block type="mconf/catalog_product_tooltip" name="tooltip" template="mconf/tooltip.phtml"/>
+        </reference>
+    </catalog_product_view>
+    <catalog_category_default>
+        <reference name="head">            
+            <action method="addCss" ifconfig="mconf/general/enable_list"><stylesheet>css/magify/mconf.css</stylesheet></action>
+            <action method="addJs" ifconfig="mconf/general/enable_list"><script>varien/product.js</script></action>
+            <action method="addJs" ifconfig="mconf/general/enable_list"><script>varien/configurable.js</script></action>
+            <action method="addJs" ifconfig="mconf/general/enable_list"><script>magify/mconf/formList.js</script></action>
+            <action method="addJs" ifconfig="mconf/general/enable_list"><script>magify/mconf/configurableList.js</script></action>
+            <action method="addJs" ifconfig="mconf/general/show_title_list"><script>magify/mconf/bubleTooltip.js</script></action>
+            <action method="addItem" ifconfig="mconf/general/show_title_list"><type>js_css</type><name>magify/mconf/css/bubleTooltip.css</name><params/></action>
+        </reference>
+        <reference name="content">
+           <block type="mconf/catalog_product_tooltip" name="tooltip" template="mconf/tooltip.phtml"/>
+        </reference>
+    </catalog_category_default>  
+    
+    <catalogsearch_result_index>
+        <reference name="head">            
+            <action method="addCss" ifconfig="mconf/general/enable_list"><stylesheet>css/magify/mconf.css</stylesheet></action>
+            <action method="addJs" ifconfig="mconf/general/enable_list"><script>varien/product.js</script></action>
+            <action method="addJs" ifconfig="mconf/general/enable_list"><script>varien/configurable.js</script></action>
+            <action method="addJs" ifconfig="mconf/general/enable_list"><script>magify/mconf/formList.js</script></action>
+            <action method="addJs" ifconfig="mconf/general/enable_list"><script>magify/mconf/configurableList.js</script></action>
+            <action method="addJs" ifconfig="mconf/general/show_title_list"><script>magify/mconf/bubleTooltip.js</script></action>
+            <action method="addItem" ifconfig="mconf/general/show_title_list"><type>js_css</type><name>magify/mconf/css/bubleTooltip.css</name><params/></action>
+        </reference>
+        <reference name="content">
+           <block type="mconf/catalog_product_tooltip" name="tooltip" template="mconf/tooltip.phtml"/>
+        </reference>
+    </catalogsearch_result_index>  
+    
+    <catalog_category_layered>
+        <reference name="head">            
+            <action method="addCss" ifconfig="mconf/general/enable_list"><stylesheet>css/magify/mconf.css</stylesheet></action>
+            <action method="addJs" ifconfig="mconf/general/enable_list"><script>varien/product.js</script></action>
+            <action method="addJs" ifconfig="mconf/general/enable_list"><script>varien/configurable.js</script></action>
+            <action method="addJs" ifconfig="mconf/general/enable_list"><script>magify/mconf/formList.js</script></action>
+            <action method="addJs" ifconfig="mconf/general/enable_list"><script>magify/mconf/configurableList.js</script></action>
+            <action method="addJs" ifconfig="mconf/general/show_title_list"><script>magify/mconf/bubleTooltip.js</script></action>
+           <action method="addItem" ifconfig="mconf/general/show_title_list"><type>js_css</type><name>magify/mconf/css/bubleTooltip.css</name><params/></action>
+         </reference>
+         <reference name="content">
+           <block type="mconf/catalog_product_tooltip" name="tooltip" template="mconf/tooltip.phtml"/>
+        </reference>
+    </catalog_category_layered> 
+    
+    <mconf_media_gallery translate="label">
+        <label>Catalog Product Image Gallery Popup</label>
+        <!-- Mage_Catalog -->
+        <reference name="root">
+            <action method="setTemplate"><template>page/popup.phtml</template></action>
+        </reference>
+        <reference name="content">
+            <block type="catalog/product_gallery" name="catalog_product_gallery" template="catalog/product/gallery.phtml"/>
+        </reference>
+    </mconf_media_gallery>
+</layout>

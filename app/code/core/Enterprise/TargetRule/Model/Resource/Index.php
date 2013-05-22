@@ -20,7 +20,7 @@
  *
  * @category    Enterprise
  * @package     Enterprise_TargetRule
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
@@ -42,25 +42,8 @@ class Enterprise_TargetRule_Model_Resource_Index extends Mage_Index_Model_Resour
     protected $_bindIncrement  = 0;
 
     /**
-     * Factory instance
+     * Initialize connection and define main table
      *
-     * @var Mage_Core_Model_Factory
-     */
-    protected $_factory;
-
-    /**
-     * Constructor for Enterprise_TargetRule_Model_Resource_Index
-     *
-     * @param array $args
-     */
-    public function __construct(array $args = array())
-    {
-        $this->_factory = !empty($args['factory']) ? $args['factory'] : Mage::getSingleton('core/factory');
-        parent::__construct();
-    }
-
-    /**
-     * Initialize object
      */
     protected function _construct()
     {
@@ -137,7 +120,10 @@ class Enterprise_TargetRule_Model_Resource_Index extends Mage_Index_Model_Resour
             ->where('store_id = :store_id')
             ->where('customer_group_id = :customer_group_id');
 
-        $rotationMode = $this->_factory->getHelper('enterprise_targetrule')->getRotationMode($object->getType());
+        $rotationMode = Mage::helper('enterprise_targetrule')->getRotationMode($object->getType());
+        if ($rotationMode == Enterprise_TargetRule_Model_Rule::ROTATION_SHUFFLE) {
+            $this->orderRand($select);
+        }
 
         $segmentsIds = array_merge(array(0), $this->_getSegmentsIdsFromCurrentCustomer());
         $bind = array(
@@ -163,15 +149,11 @@ class Enterprise_TargetRule_Model_Resource_Index extends Mage_Index_Model_Resour
                 $matchedProductIds = $this->_matchProductIdsBySegmentId($object, $segmentId);
                 $productIds = array_merge($matchedProductIds, $productIds);
                 $this->getTypeIndex($object->getType())
-                    ->saveResultForCustomerSegments($object, $segmentId, $matchedProductIds);
+                    ->saveResultForCustomerSegments($object, $segmentId, implode(',', $matchedProductIds));
                 $this->saveFlag($object, $segmentId);
             }
         }
         $productIds = array_diff(array_unique($productIds), $object->getExcludeProductIds());
-
-        if ($rotationMode == Enterprise_TargetRule_Model_Rule::ROTATION_SHUFFLE) {
-             shuffle($productIds);
-        }
         return array_slice($productIds, 0, $object->getLimit());
     }
 
@@ -190,7 +172,6 @@ class Enterprise_TargetRule_Model_Resource_Index extends Mage_Index_Model_Resour
         if (Mage::helper('enterprise_customersegment')->isEnabled()) {
             $ruleCollection->addSegmentFilter($segmentId);
         }
-
         foreach ($ruleCollection as $rule) {
             /* @var $rule Enterprise_TargetRule_Model_Rule */
             if (count($productIds) >= $limit) {
@@ -601,7 +582,7 @@ class Enterprise_TargetRule_Model_Resource_Index extends Mage_Index_Model_Resour
     {
         /** @var $targetRule Enterprise_TargetRule_Model_Resource_Rule */
         $targetRule = Mage::getResourceSingleton('enterprise_targetrule/rule');
-        $targetRule->bindRuleToEntity($ruleId, $productId, 'product', false);
+        $targetRule->bindRuleToEntity($ruleId, $productId, 'product');
 
         return $this;
     }
@@ -644,7 +625,7 @@ class Enterprise_TargetRule_Model_Resource_Index extends Mage_Index_Model_Resour
                     ->getCustomerSegmentIdsForWebsite($customer->getId(), $websiteId);
             }
 
-            if (count($segmentIds)) {
+            if(count($segmentIds)) {
                 $segmentIds = Mage::getResourceModel('enterprise_customersegment/segment')
                     ->getActiveSegmentsByIds($segmentIds);
             }
@@ -652,4 +633,3 @@ class Enterprise_TargetRule_Model_Resource_Index extends Mage_Index_Model_Resour
         return $segmentIds;
     }
 }
-

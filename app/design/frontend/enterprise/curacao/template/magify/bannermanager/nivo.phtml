@@ -1,0 +1,60 @@
+<?php
+	$_banners 	= $this->getBannerGroup();
+	$_size 		= $this->getSize();
+	$_params	= $this->getParams();
+	$_resize	= (isset($_params['resize']) ? $_params['resize'] : null);
+	$_id 		= 'magify_banner_' . md5(microtime());
+	$_helper	= Mage::helper('magify_bannermanager');
+?>
+<?php if($_banners && $_size): ?>
+	<div id="magify_banner_wrapper_<?php echo $_id; ?>" class="magify_banner_wrapper" <?php echo $this->getStyles('wrapper'); ?>>
+		<div class="banners" id="v_<?php echo $_id; ?>" <?php echo $this->getStyles(); ?>>
+			<?php foreach($_banners as $_banner): ?>
+			<?php if($_banner['link']): ?>
+				<a href="<?php echo $_banner['link']; ?>" title="<?php echo $_banner['title']; ?>">
+			<?php endif; ?>
+				<img src="<?php echo $_banner['resize_file']; ?>" <?php #echo $this->getStyles('image'); ?> <?php if($_banner['background_color'] && Mage::getStoreConfig('magify_bannermanager/settings/fluid_background')): ?> rel="#<?php echo $_banner['background_color']; ?>"<?php endif; ?>/>
+			<?php if($_banner['link']): ?>
+				</a>
+			<?php endif; ?>
+			<?php endforeach; ?>
+		</div>
+	</div>
+	<div class="clear"></div>
+	<?php if($_size > 1): ?>
+	<script type="text/javascript">
+		<?php if(Mage::getStoreConfig('magify_bannermanager/settings/fluid_background')): ?>
+			function changeBannerColour() {
+				var vars = jQuery('#magify_banner_wrapper_<?php echo $_id; ?> .banners').data('nivo:vars');
+				console.log(jQuery('#magify_banner_wrapper_<?php echo $_id; ?> .banners').data());
+				var slide = vars.currentSlide + 1;
+				if(slide >= vars.totalSlides) {
+					slide = 0;
+				}
+				var element = jQuery('#magify_banner_wrapper_<?php echo $_id; ?> .banners img').get(slide);
+				jQuery('#magify_banner_wrapper_<?php echo $_id; ?>').animate({'background-color' : jQuery(element).attr('rel')}, <?php echo $this->getJsParams('animSpeed') * 3; ?>);
+			}
+		<?php else: ?>
+			function changeBannerColour() {}
+		<?php endif; ?>
+		
+		function bannerSetup() {
+			var nav = jQuery('#magify_banner_wrapper_<?php echo $_id; ?> .nivo-controlNav');
+			jQuery(nav).css('margin-left', - jQuery(nav).outerWidth() / 2);
+		}
+
+		
+		jQuery(window).load(function() {
+			jQuery('#magify_banner_wrapper_<?php echo $_id; ?> .banners').nivoSlider({<?php echo $this->getJsParams(); ?>});
+		});
+
+		
+		
+	</script>
+	<?php endif; ?>
+
+<?php endif; ?>
+
+<?php if($this->isDebug()):?>
+<?php $this->getDebugData(); ?>
+<?php endif; ?>

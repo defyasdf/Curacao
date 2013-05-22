@@ -20,7 +20,7 @@
  *
  * @category    Mage
  * @package     Mage_Adminhtml
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
@@ -290,9 +290,7 @@ class Mage_Adminhtml_CustomerController extends Mage_Adminhtml_Controller_Action
                 }
             }
 
-            if (Mage::getSingleton('admin/session')->isAllowed('customer/newsletter')
-                && !$customer->getConfirmation()
-            ) {
+            if (Mage::getSingleton('admin/session')->isAllowed('customer/newsletter')) {
                 $customer->setIsSubscribed(isset($data['subscription']));
             }
 
@@ -513,10 +511,10 @@ class Mage_Adminhtml_CustomerController extends Mage_Adminhtml_Controller_Action
     public function viewCartAction()
     {
         $this->_initCustomer();
-        $this->loadLayout()
+        $layout = $this->loadLayout()
             ->getLayout()
             ->getBlock('admin.customer.view.cart')
-            ->setWebsiteId($this->getRequest()->getParam('website_id'));
+            ->setWebsiteId();
         $this->renderLayout();
     }
 

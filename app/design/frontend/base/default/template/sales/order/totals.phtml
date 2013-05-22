@@ -20,19 +20,42 @@
  *
  * @category    design
  * @package     base_default
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 /**
  * @var $this Mage_Sales_Block_Order_Totals
  * @see Mage_Sales_Block_Order_Totals
  */
+ 
+foreach($this->getTotals() as $total):  
+
+ $code = $total->getCode();
+			$value = $total->getValue();
+			
+			if($code != 'subtotal' && $code != 'shipping' && $code != 'tax'){
+				if($code != 'grand_total'){
+					$tot += $value*(-1);
+				}else{
+					$tot += $value;
+				}				
+			}
+			
+
+ endforeach
 ?>
+
+
 <?php foreach ($this->getTotals() as $_code => $_total): ?>
     <?php if ($_total->getBlockName()): ?>
         <?php echo $this->getChildHtml($_total->getBlockName(), false); ?>
-    <?php else:?>
-    <tr class="<?php echo $_code?>">
+    <?php else:
+	
+	?>
+    
+    
+    <?php if($_code!='discount'):?>
+    <tr class="<?php echo $_code?>"<?php if($_code=='shipping'){?> style="float:none;"<?php }?>>
         <td <?php echo $this->getLabelProperties()?>>
             <?php if ($_total->getStrong()):?>
             <strong><?php echo $this->escapeHtml($_total->getLabel());?></strong>
@@ -42,11 +65,16 @@
         </td>
         <td <?php echo $this->getValueProperties()?>>
             <?php if ($_total->getStrong()):?>
-            <strong><?php echo $this->formatValue($_total) ?></strong>
+            <strong><?php echo $this->helper('checkout')->formatPrice($tot); ?></strong>
             <?php else:?>
-            <?php echo $this->formatValue($_total) ?>
+            <?php echo $this->formatValue($_total)?>
             <?php endif?>
         </td>
     </tr>
+    
+     
     <?php endif?>
+     <?php endif?>
 <?php endforeach?>
+
+ 

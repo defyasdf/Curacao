@@ -20,7 +20,7 @@
  *
  * @category    Enterprise
  * @package     Enterprise_Rma
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
@@ -145,9 +145,7 @@ class Enterprise_Rma_TrackingController extends Mage_Core_Controller_Front_Actio
                     $pdf = new Zend_Pdf();
                     $page = $shipping->createPdfPageFromImageString($labelContent);
                     if (!$page) {
-                        $this->_getSession()->addError(
-                            Mage::helper('sales')->__('File extension not known or unsupported type in the following shipment: %s', $shipping->getIncrementId())
-                        );
+                        $this->_getSession()->addError(Mage::helper('sales')->__('File extension not known or unsupported type in the following shipment: %s', $shipment->getIncrementId()));
                     }
                     $pdf->pages[] = $page;
                     $pdfContent = $pdf->render();

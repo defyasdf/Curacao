@@ -293,7 +293,6 @@ $_storeId = Mage::app()->getStore()->getId();
 		$txt_sorry = 'Sorry the promo code doesnt match our record please <a href="credit-offer">Retry</a>.';
 		$login_credantial = "CREATE A LOGIN AND PASSWORD";
 		$locked = "You have been locked due to three or more attempt";
-		$loadingmessage = 'This process may take up to one minute, please do not close your browser.';
 		
 		define('GREET',"Congratulations! You&acute;re Pre-Approved");
 		define('CONGRATES','Congratulations!');
@@ -336,7 +335,7 @@ $_storeId = Mage::app()->getStore()->getId();
 		$login_credantial = "CREAR ACCESO Y CONTRASEÑA";
 		$personalinfo = "POR FAVOR VERIFIQUE SU INFORMACION PERSONAL";
 		$locked = "Su cuenta ha sido bloqueada debido a tres intentos fallidos";
-		$loadingmessage = 'Este proceso podría tomar hasta un minuto, por favor no cierre su navegador.';
+		
 		define('GREET',"Felicitaciones! usted ha sido pre-aprobado");
 		define('CONGRATES','Felicitaciones!');
 		define('APPROVE_1','Usted ha sido <span id="spendinglimit">APPROBADO</span> para una cuenta de crédito de Curacao con un límite de <span id="spendinglimit">$');
@@ -787,9 +786,6 @@ $_storeId = Mage::app()->getStore()->getId();
                     <div class="clear"></div>
                     
 	                    <button class="button right" title="Submit" onClick="return finishform()" type="submit"><span><span id="submittofinish"><?php echo $txt_finish?></span></span></button>
-                    <div class="clear"></div>
-                    
-                    <div id="loadingmessage"><?php echo $loadingmessage;?></div>    
                </div>
               </form>
                 

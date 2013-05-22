@@ -20,7 +20,7 @@
  *
  * @category    design
  * @package     enterprise_default
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
@@ -34,9 +34,15 @@
 <div class="top-cart">
 <?php $_cartQty = $this->getSummaryCount() ?>
 <?php if ($_cartQty > 0): ?>
-    <?php $_myCart = $this->__('My Cart (%s)', '<span>' . $_cartQty . '</span>') ?>
+    <?php 
+		$_myCart = $this->__('My Cart (%s)', '<span>' . $_cartQty . '</span>'); 
+		$_myCartStr = $this->__('My Shopping Cart (%s)', '<span>' . $_cartQty . '</span>');
+	?>
 <?php else: ?>
-    <?php $_myCart = $this->__('My Cart (%s)', '<span>0</span>') ?>
+    <?php 
+			$_myCart = $this->__('My Cart (%s)', '<span>0</span>');
+			$_myCartStr = $this->__('My Shopping Cart (%s)', '<span>0</span>');
+	?>
 <?php endif ?>
 <?php if ($this->getIsLinkMode() || !$this->getIsNeedToDisplaySideBar()):?>
     <div class="block-title no-items">
@@ -54,18 +60,25 @@
         <?php if(count($_items)): ?>
             <p class="block-subtitle">
                 <span onclick="Enterprise.TopCart.hideCart()" class="close-btn"><?php echo $this->__('Close'); ?></span>
-                <?php echo $this->__('Recently added item(s)') ?>
+                <?php echo $_myCartStr ?>
             </p>
-            <ol id="mini-cart" class="mini-products-list">
+            <div id="mini-cart" class="mini-products-list">
+			<table class="item">
+			<tr>
+				<th style="width:320px;"><?php echo $this->__('Product') ?></th>
+				<th style="text-align:right;width:50px;"><?php echo $this->__('Qty') ?></th>
+				<th style="text-align:right;width:100px;"><?php echo $this->__('Price') ?></th>
+			</tr>
             <?php foreach($_items as $_item): ?>
                 <?php echo $this->getItemHtml($_item) ?>
             <?php endforeach; ?>
-            </ol>
+			</table>
+            </div>
             <script type="text/javascript">decorateList('mini-cart', 'none-recursive')</script>
         <?php else: ?>
             <p class="block-subtitle">
                 <span onclick="Enterprise.TopCart.hideCart()" class="close-btn"><?php echo $this->__('Close'); ?></span>
-                <?php echo $this->__('Recently added item(s)') ?>
+                <?php echo $_myCartStr ?>
             </p>
             <p class="cart-empty">
                 <?php echo $this->__('You have no items in your shopping cart.') ?>
@@ -77,11 +90,12 @@
         <?php if ($_cartQty || $this->getAllowCartLink()): ?>
             <?php $isPossibleOnepageCheckout = $_cartQty && $this->isPossibleOnepageCheckout() ?>
             <?php if ($isPossibleOnepageCheckout): ?>
+				<a href="<?php echo $this->getUrl('checkout/cart'); ?>" class="view-cart-link"><span><?php echo $this->__('View Cart') ?></span></a>
                 <p class="subtotal">
                     <?php if ($this->canApplyMsrp()): ?>
                         <span class="map-cart-sidebar-total"><?php echo $this->__('ORDER TOTAL WILL BE DISPLAYED BEFORE YOU SUBMIT THE ORDER'); ?></span>
                     <?php else: ?>
-                        <span class="label"><?php echo $this->__('Cart Subtotal:') ?></span> <?php echo Mage::helper('checkout')->formatPrice($this->getSubtotal()) ?><?php if ($_subtotalInclTax = $this->getSubtotalInclTax()): ?> / <?php echo Mage::helper('checkout')->formatPrice($_subtotalInclTax) ?> <?php echo Mage::helper('tax')->getIncExcText(true) ?><?php endif; ?>
+                        <span class="label"><?php echo $this->__('Subtotal:') ?></span> <?php echo Mage::helper('checkout')->formatPrice($this->getSubtotal()) ?><?php if ($_subtotalInclTax = $this->getSubtotalInclTax()): ?> / <?php echo Mage::helper('checkout')->formatPrice($_subtotalInclTax) ?> <?php echo Mage::helper('tax')->getIncExcText(true) ?><?php endif; ?>
                     <?php endif; ?>
                 </p>
             <?php endif ?>
@@ -90,7 +104,7 @@
                     <?php echo $this->getChildHtml('extra_actions') ?>
                     <button class="button" type="button" onclick="setLocation('<?php echo $this->getCheckoutUrl() ?>')"><span><span><?php echo $this->__('Checkout') ?></span></span></button>
                 <?php endif ?>
-                <a href="<?php echo $this->getUrl('checkout/cart'); ?>"><span><?php echo $this->__('Go to Shopping Cart') ?></span></a>
+                
             </div>
         <?php endif ?>
         </div>

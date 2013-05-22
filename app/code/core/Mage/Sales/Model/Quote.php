@@ -20,7 +20,7 @@
  *
  * @category    Mage
  * @package     Mage_Sales
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
@@ -140,15 +140,6 @@ class Mage_Sales_Model_Quote extends Mage_Core_Model_Abstract
 {
     protected $_eventPrefix = 'sales_quote';
     protected $_eventObject = 'quote';
-
-    /**
-     * Model cache tag for clear cache in after save and after delete
-     *
-     * When you use true - all cache will be clean
-     *
-     * @var string || true
-     */
-    protected $_cacheTag = 'quote';
 
     /**
      * Quote customer model object
@@ -557,7 +548,7 @@ class Mage_Sales_Model_Quote extends Mage_Core_Model_Abstract
     }
 
     /**
-     * Retrieve quote shipping address
+     * retrieve quote shipping address
      *
      * @return Mage_Sales_Model_Quote_Address
      */
@@ -636,40 +627,11 @@ class Mage_Sales_Model_Quote extends Mage_Core_Model_Abstract
         return $this;
     }
 
-    /**
-     * Leave no more than one billing and one shipping address, fill them with default data
-     *
-     * @return Mage_Sales_Model_Quote
-     */
     public function removeAllAddresses()
     {
-        $addressByType = array();
-        $addressesCollection = $this->getAddressesCollection();
-
-        // mark all addresses as deleted
-        foreach ($addressesCollection as $address) {
-            $type = $address->getAddressType();
-            if (!isset($addressByType[$type]) || $addressByType[$type]->getId() > $address->getId()) {
-                $addressByType[$type] = $address;
-            }
+        foreach ($this->getAddressesCollection() as $address) {
             $address->isDeleted(true);
         }
-
-        // create new billing and shipping addresses filled with default values, set this data to existing records
-        foreach ($addressByType as $type => $address) {
-            $id = $address->getId();
-            $emptyAddress = $this->_getAddressByType($type);
-            $address->setData($emptyAddress->getData())->setId($id)->isDeleted(false);
-            $emptyAddress->setDeleteImmediately(true);
-        }
-
-        // remove newly created billing and shipping addresses from collection to avoid senseless delete queries
-        foreach ($addressesCollection as $key => $item) {
-            if ($item->getDeleteImmediately()) {
-                $addressesCollection->removeItemByKey($key);
-            }
-        }
-
         return $this;
     }
 
@@ -831,36 +793,6 @@ class Mage_Sales_Model_Quote extends Mage_Core_Model_Abstract
     public function getItemById($itemId)
     {
         return $this->getItemsCollection()->getItemById($itemId);
-    }
-
-    /**
-     * Delete quote item. If it does not have identifier then it will be only removed from collection
-     *
-     * @param   Mage_Sales_Model_Quote_Item $item
-     * @return  Mage_Sales_Model_Quote
-     */
-    public function deleteItem(Mage_Sales_Model_Quote_Item $item)
-    {
-        if ($item->getId()) {
-            $this->removeItem($item->getId());
-        } else {
-            $quoteItems = $this->getItemsCollection();
-            $items = array($item);
-            if ($item->getHasChildren()) {
-                foreach ($item->getChildren() as $child) {
-                    $items[] = $child;
-                }
-            }
-            foreach ($quoteItems as $key => $quoteItem) {
-                foreach ($items as $item) {
-                    if ($quoteItem->compare($item)) {
-                        $quoteItems->removeItemByKey($key);
-                    }
-                }
-            }
-        }
-
-        return $this;
     }
 
     /**

@@ -1,0 +1,39 @@
+#vortex_admin_footer {
+	text-align:center;
+	font-style:italic;
+	font-size:140%;
+	color:#666;
+	padding:0 0 50px;
+	}
+	#vortex_admin_footer a {
+		font-weight:700;
+		color:#00a4cd;
+		text-decoration:none;
+		}
+	#vortex_admin_footer a:hover {
+		text-decoration:underline;
+		}
+	#vortex_admin_footer a.image {
+		padding:0 0 10px;
+		clear:both;
+		}
+	#vortex_admin_footer p.small {
+		font-size:75%;
+		}
+.vortex_logo {
+	padding:2px 0 0;
+	float:left;
+	}
+.config-tabs li.vortex dt.label {
+	background:#00a4cd;
+	border-top-color:#007f9f;
+	color:#fff;
+	font-style:italic;
+	}
+.content-header h3.vortex {
+	background:url(../images/vortex_logo_mini.png) no-repeat 0 0;
+	color:#00a4cd;
+	font-style:italic;
+	font-weight:700;
+	padding-left:95px;
+	}

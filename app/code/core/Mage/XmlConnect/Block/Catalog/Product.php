@@ -20,7 +20,7 @@
  *
  * @category    Mage
  * @package     Mage_XmlConnect
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
@@ -52,24 +52,23 @@ class Mage_XmlConnect_Block_Catalog_Product extends Mage_XmlConnect_Block_Catalo
             $description = Mage::helper('xmlconnect')->htmlize($item->xmlentities($product->getDescription()));
             $item->addChild('description', $description);
             $item->addChild('link', $product->getProductUrl());
-            /** @var $imageLimitsModel Mage_XmlConnect_Model_Images */
-            $imageLimitsModel = Mage::getModel('xmlconnect/images');
 
             if ($itemNodeName == 'item') {
-                $imageToResize = $imageLimitsModel->getImageLimitParam('content/product_small');
+                $imageToResize = Mage::helper('xmlconnect/image')->getImageSizeForContent('product_small');
                 $propertyToResizeName = 'small_image';
             } else {
-                $imageToResize = $imageLimitsModel->getImageLimitParam('content/product_big');
+                $imageToResize = Mage::helper('xmlconnect/image')->getImageSizeForContent('product_big');
                 $propertyToResizeName = 'image';
             }
 
-            $icon = clone Mage::helper('xmlconnect/catalog_product_image')->init($product, $propertyToResizeName)
-                ->resize($imageToResize);
+            $icon = clone Mage::helper('catalog/image')->init($product, $propertyToResizeName)->resize($imageToResize);
 
             $iconXml = $item->addChild('icon', $icon);
-            $iconXml->addAttribute('modification_time', filemtime($icon->getNewFile()));
 
-            $item->addChild('in_stock', (int)$product->getStockItem()->getIsInStock());
+            $file = Mage::helper('xmlconnect')->urlToPath($icon);
+            $iconXml->addAttribute('modification_time', filemtime($file));
+
+            $item->addChild('in_stock', (int)$product->getIsInStock());
             $item->addChild('is_salable', (int)$product->isSalable());
             /**
              * By default all products has gallery (because of collection not load gallery attribute)
@@ -88,14 +87,8 @@ class Mage_XmlConnect_Block_Catalog_Product extends Mage_XmlConnect_Block_Catalo
             }
             $item->addChild('has_options', (int)$product->getHasOptions());
 
-            $minSaleQty = null;
-            if ($product->hasPreconfiguredValues()) {
-                $minSaleQty = $product->getPreconfiguredValues()->getData('qty');
-            }
-            $minSaleQty = $minSaleQty ? $minSaleQty : $this->_getMinimalQty($product);
-
-            if ($minSaleQty) {
-                $item->addChild('min_sale_qty', (int)$minSaleQty);
+            if ($minSaleQty = $this->_getMinimalQty($product)) {
+                $item->addChild('min_sale_qty', (int) $minSaleQty);
             }
 
             if (!$product->getRatingSummary()) {
@@ -106,7 +99,8 @@ class Mage_XmlConnect_Block_Catalog_Product extends Mage_XmlConnect_Block_Catalo
             $item->addChild('reviews_count', $product->getRatingSummary()->getReviewsCount());
 
             if ($this->getChild('product_price')) {
-                $this->getChild('product_price')->setProduct($product)->setProductXmlObj($item)->collectProductPrices();
+                $this->getChild('product_price')->setProduct($product)->setProductXmlObj($item)
+                    ->collectProductPrices();
             }
 
             if ($this->getChild('additional_info')) {
@@ -142,28 +136,24 @@ class Mage_XmlConnect_Block_Catalog_Product extends Mage_XmlConnect_Block_Catalo
     protected function _toHtml()
     {
         /** @var $product Mage_Catalog_Model_Product */
-        if ($this->getProduct()) {
-            $product = $this->getProduct();
+        $product = Mage::getModel('catalog/product')->setStoreId(Mage::app()->getStore()->getId())
+            ->load($this->getRequest()->getParam('id', 0));
+
+        if (!$product) {
+            Mage::throwException($this->__('Selected product is unavailable.'));
         } else {
-            $product = Mage::getModel('catalog/product')->setStoreId(Mage::app()->getStore()->getId())
-                ->load($this->getRequest()->getParam('id', 0));
-            if (!$product) {
-                Mage::throwException($this->__('Selected product is unavailable.'));
-            } else {
-                $this->setProduct($product);
+            $this->setProduct($product);
+            $productXmlObj = $this->productToXmlObject($product, 'product');
+
+            $relatedProductsBlock = $this->getChild('related_products');
+            if ($relatedProductsBlock) {
+                $relatedXmlObj = $relatedProductsBlock->getRelatedProductsXmlObj();
+                $productXmlObj->appendChild($relatedXmlObj);
             }
         }
-        /** @var $productXmlObj Mage_XmlConnect_Model_Simplexml_Element */
-        $productXmlObj = $this->productToXmlObject($product, 'product');
 
-        /** @var $relatedProductsBlock Mage_XmlConnect_Block_Catalog_Product_Related */
-        $relatedProductsBlock = $this->getChild('related_products');
-        if ($relatedProductsBlock) {
-            $relatedXmlObj = $relatedProductsBlock->getRelatedProductsXmlObj();
-            $productXmlObj->appendChild($relatedXmlObj);
-        }
-
-        $productOptions = $this->getChild('xmlconnect.catalog.product.options')->getProductOptionsXmlObject($product);
+        $productOptions = $this->getChild('xmlconnect.catalog.product.options')
+            ->getProductOptionsXmlObject($product);
         if ($productOptions instanceof Mage_XmlConnect_Model_Simplexml_Element) {
             $productXmlObj->appendChild($productOptions);
         }

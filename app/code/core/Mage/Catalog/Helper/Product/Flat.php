@@ -20,9 +20,10 @@
  *
  * @category    Mage
  * @package     Mage_Catalog
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
+
 
 /**
  * Catalog Product Flat Helper
@@ -31,48 +32,33 @@
  * @package    Mage_Catalog
  * @author     Magento Core Team <core@magentocommerce.com>
  */
-class Mage_Catalog_Helper_Product_Flat extends Mage_Catalog_Helper_Flat_Abstract
+class Mage_Catalog_Helper_Product_Flat extends Mage_Core_Helper_Abstract
 {
-    /**
-     * Catalog Product Flat Config
-     */
     const XML_PATH_USE_PRODUCT_FLAT          = 'catalog/frontend/flat_catalog_product';
     const XML_NODE_ADD_FILTERABLE_ATTRIBUTES = 'global/catalog/product/flat/add_filterable_attributes';
     const XML_NODE_ADD_CHILD_DATA            = 'global/catalog/product/flat/add_child_data';
 
     /**
-     * Path for flat flag model
-     */
-    const XML_PATH_FLAT_FLAG                 = 'global/catalog/product/flat/flag/model';
-
-    /**
      * Catalog Flat Product index process code
-     */
-    const CATALOG_FLAT_PROCESS_CODE = 'catalog_product_flat';
-
-    /**
-     * Catalog Product Flat index process code
-     *
+     * 
      * @var string
      */
-    protected $_indexerCode = self::CATALOG_FLAT_PROCESS_CODE;
-
+    const CATALOG_FLAT_PROCESS_CODE = 'catalog_product_flat';
+    
     /**
-     * Catalog Product Flat index process instance
-     *
-     * @var Mage_Index_Model_Process|null
+     * Catalog Product Flat index process
+     * 
+     * @var Mage_Index_Model_Process
      */
-    protected $_process = null;
+    protected $_process;
 
     /**
-     * Store flags which defines if Catalog Product Flat functionality is enabled
-     *
-     * @deprecated after 1.7.0.0
-     *
+     * Catalog Product Flat status by store
+     * 
      * @var array
      */
-    protected $_isEnabled = array();
-
+    protected $_isEnabled = array();    
+    
     /**
      * Catalog Product Flat Flag object
      *
@@ -88,52 +74,43 @@ class Mage_Catalog_Helper_Product_Flat extends Mage_Catalog_Helper_Flat_Abstract
     public function getFlag()
     {
         if (is_null($this->_flagObject)) {
-            $className = (string)Mage::getConfig()->getNode(self::XML_PATH_FLAT_FLAG);
-            $this->_flagObject = Mage::getSingleton($className)
+            $this->_flagObject = Mage::getSingleton('catalog/product_flat_flag')
                 ->loadSelf();
         }
         return $this->_flagObject;
     }
 
     /**
-     * Check Catalog Product Flat functionality is enabled
-     *
-     * @param int|string|null|Mage_Core_Model_Store $store this parameter is deprecated and no longer in use
+     * Check is builded Catalog Product Flat Data
      *
      * @return bool
      */
-    public function isEnabled($store = null)
+    public function isBuilt()
     {
-        return Mage::getStoreConfigFlag(self::XML_PATH_USE_PRODUCT_FLAT);
-    }
-
-    /**
-     * Check if Catalog Product Flat Data has been initialized
-     *
-     * @param null|bool|int|Mage_Core_Model_Store $store Store(id) for which the value is checked
-     * @return bool
-     */
-    public function isBuilt($store = null)
-    {
-        if ($store !== null) {
-            return $this->getFlag()->isStoreBuilt(Mage::app()->getStore($store)->getId());
-        }
         return $this->getFlag()->getIsBuilt();
     }
 
     /**
-     * Check if Catalog Product Flat Data has been initialized for all stores
+     * Check is enable catalog product for store
      *
+     * @param mixed $store
      * @return bool
      */
-    public function isBuiltAllStores()
+    public function isEnabled($store = null)
     {
-        $isBuildAll = true;
-        foreach(Mage::app()->getStores(false) as $store) {
-            /** @var $store Mage_Core_Model_Store */
-            $isBuildAll = $isBuildAll && $this->isBuilt($store->getId());
+        $store = Mage::app()->getStore($store);
+        if ($store->isAdmin()) {
+            return false;
         }
-        return $isBuildAll;
+        
+        if (!isset($this->_isEnabled[$store->getId()])) {
+            if (Mage::getStoreConfigFlag(self::XML_PATH_USE_PRODUCT_FLAT, $store)) {
+                $this->_isEnabled[$store->getId()] = $this->getProcess()->getStatus() == Mage_Index_Model_Process::STATUS_PENDING;
+            } else {
+                $this->_isEnabled[$store->getId()] = false;
+            }
+        }
+        return $this->_isEnabled[$store->getId()];        
     }
 
     /**
@@ -154,5 +131,19 @@ class Mage_Catalog_Helper_Product_Flat extends Mage_Catalog_Helper_Flat_Abstract
     public function isAddChildData()
     {
         return intval(Mage::getConfig()->getNode(self::XML_NODE_ADD_CHILD_DATA));
+    }
+
+    /**
+     * Retrive Catalog Product Flat index process
+     * 
+     * @return Mage_Index_Model_Process
+     */
+    public function getProcess()
+    {
+        if (is_null($this->_process)) {
+            $this->_process = Mage::getModel('index/process')
+                ->load(self::CATALOG_FLAT_PROCESS_CODE, 'indexer_code');
+        }
+        return $this->_process;
     }
 }

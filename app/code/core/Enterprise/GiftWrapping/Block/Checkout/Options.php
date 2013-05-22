@@ -20,7 +20,7 @@
  *
  * @category    Enterprise
  * @package     Enterprise_GiftWrapping
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
@@ -33,14 +33,8 @@
  */
 class Enterprise_GiftWrapping_Block_Checkout_Options extends Mage_Core_Block_Template
 {
-    /**
-     * @var Enterprise_GiftWrapping_Model_Resource_Mysql4_Wrapping_Collection
-     */
     protected $_designCollection;
 
-    /**
-     * @var bool
-     */
     protected $_giftWrappingAvailable = false;
 
     /**
@@ -183,8 +177,7 @@ class Enterprise_GiftWrapping_Block_Checkout_Options extends Mage_Core_Block_Tem
             if (Mage::helper('enterprise_giftwrapping')->isGiftWrappingAvailableForProduct($allowed)
                 && !$item->getIsVirtual()) {
                 $temp = array();
-                $price = $item->getProduct()->getGiftWrappingPrice();
-                if ($price) {
+                if ($price = $item->getProduct()->getGiftWrappingPrice()) {
                     if ($this->getDisplayWrappingBothPrices()) {
                         $temp['price_incl_tax'] = $this->calculatePrice(
                             new Varien_Object(),
@@ -339,19 +332,22 @@ class Enterprise_GiftWrapping_Block_Checkout_Options extends Mage_Core_Block_Tem
      */
     public function canDisplayGiftWrapping()
     {
-        $cartItems = $this->_getModelInstance('checkout/cart')->getItems();
+        $cartItems      = Mage::getModel('checkout/cart')->getItems();
+        $productModel   = Mage::getModel('catalog/product');
         foreach ($cartItems as $item) {
-            if ($item->getProduct()->getGiftWrappingAvailable()) {
+            $product = $productModel->load($item->getProductId());
+            if ($product->getGiftWrappingAvailable()) {
                 $this->_giftWrappingAvailable = true;
                 continue;
             }
         }
 
-        return $this->getAllowForOrder()
+        $canDisplay = $this->getAllowForOrder()
             || $this->getAllowForItems()
             || $this->getAllowPrintedCard()
             || $this->getAllowGiftReceipt()
             || $this->_giftWrappingAvailable;
+        return $canDisplay;
     }
 
     /**
@@ -362,16 +358,5 @@ class Enterprise_GiftWrapping_Block_Checkout_Options extends Mage_Core_Block_Tem
     public function getDesignCollectionCount()
     {
         return count($this->getDesignCollection());
-    }
-
-    /**
-     * Get Mage Model
-     *
-     * @param string $modelClass
-     * @param array $arguments
-     * @return false|Mage_Core_Model_Abstract
-     */
-    protected function _getModelInstance($modelClass = '', $arguments = array()) {
-        return Mage::getModel($modelClass, $arguments);
     }
 }

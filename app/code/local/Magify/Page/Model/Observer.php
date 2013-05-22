@@ -8,7 +8,7 @@ class Magify_Page_Model_Observer
 		
 		$current_page = str_replace($base,'',$page);
 		
-		if($current_page == 'credit-application' || $current_page == 'preapprove'){
+		if($current_page == 'credit-application' || $current_page == 'preapprove' || $current_page == 'onestepcheckout/'){
 	
 			$action = $observer->getEvent()->getControllerAction();
 		

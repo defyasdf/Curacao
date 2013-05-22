@@ -1,0 +1,172 @@
+<form id="co-credit-form" action="" enctype="multipart/form-data" name="co-credit-form" method="post">
+    
+<?php 
+	
+	$grandtotal = Mage::getSingleton('checkout/cart')->getQuote()->getGrandTotal();
+
+	$clId = Mage::getSingleton('customer/session')->getCustomer()->getId(); 
+	if($clId == "" or !$clId){
+		?>
+		<br />To use Curaçao Credit please <a href="javascript:void(0);" onclick="document.location.reload();">login</a> or <a href="http://data.icuracao.com/index.php/customer/account/create/">register</a>
+		<?php
+	}else{
+		
+		
+		$creditID = Mage::getSingleton('customer/session')->getCustomer()->getCuracaocustid();
+	?>
+	
+     <dl>
+        <dt class="input-box">
+            <strong>Curacao Account Number</strong>
+        </dt>
+        <dd>
+		<input type="text" name="credit_customer_number" id="credit_customer_number" class="input-text" value="<?php echo $creditID;?>" />
+		<button type="button" class="form-button right button" id="curacao_credit" onclick="getCuracaoCredit();"><span><span><?php echo $this->__('Pay With Credit') ?></span></span></button>
+        </dd>
+    </dl>
+    
+	<?php 	
+	}
+?>
+
+<input type="hidden" name="grand_total" id="grand_total" value="<?php echo $grandtotal;?>" />
+
+<input type="hidden" name="credit_customer_discount_dp" id="credit_customer_discount_dp" value="" />    
+<input type="hidden" name="credit_customer_discount" id="credit_customer_discount" value="" />
+</form>
+
+<div class="button-set">
+    <p class="required"><?php echo $this->__('* Required Fields') ?></p>
+    <div id="credit-buttons-container">
+        <button type="button" class="form-button right button" id="credit-btn-submit" onclick="credit.save();"><span><span><?php echo $this->__('Continue') ?></span></span></button>
+        
+        <span id="credit-please-wait" style="display:none;" class="opc-please-wait">
+            <img src="<?php echo $this->getSkinUrl('images/opc-ajax-loader.gif') ?>" class="v-middle" alt="" /> &nbsp; <?php echo $this->__('Loading next step...') ?> &nbsp;
+        </span>
+    </div>
+</div>
+<style type="text/css">
+#co-credit-form .f-right, #co-credit-form .right,#credit-btn-submit{
+float:none !important;
+}
+</style>
+<script type="text/javascript">
+//<![CDATA[
+
+function getCuracaoCredit(){
+	var cust_num = $$('[name="credit_customer_number"]')[0].value;
+	var amount = $$('[name="grand_total"]')[0].value;
+if (checkout.loadWaiting!=false) return;
+       checkout.setLoadWaiting('credit');
+          var request = new Ajax.Request(
+              'http://data.icuracao.com/credit/checkcredit.php?cust_num='+cust_num+'&amount='+amount, // Change this to actual server path
+              {
+                 method: 'post',
+                 onComplete: function(){checkout.setLoadWaiting(false);},
+                 onSuccess: function(data){
+                         try{
+                              //  alert(data.responseText);
+							  var sc = data.responseText.split(',')
+							   $("credit_customer_discount_dp").value=parseInt(sc[1])
+							   $("credit_customer_discount").value=(data.responseText)
+                         }catch(e){$("credit_customer_discount").value = "0";}
+                 },
+                 onFailure: function(){alert("Server not responding. please try again.");},
+                 parameters: Form.serialize('co-credit-form')
+              }
+              );
+}
+
+/*function getCuracaoCredit(){
+ if (checkout.loadWaiting!=false) return;
+	checkout.setLoadWaiting('credit');
+           var request = new Ajax.Request(
+               'http://localhost/myproject/iCuracao/magento/testcredit.php',
+               {
+                  method: 'post',
+                  onComplete: function(){checkout.setLoadWaiting(false);},
+                  onSuccess: function(data){
+					try{
+                  		$("credit_customer_discount").value=parseInt(data.responseText)
+                  	}catch(e){$("credit_customer_discount").value = "0";}
+                  },
+                  onFailure: function(){alert("Server not responding. please try again.");},
+                  parameters: Form.serialize('co-credit-form')
+               }
+               );
+}*/
+var Credit = Class.create();
+Credit.prototype = {
+    initialize: function(form, saveUrl){
+        this.form = form;
+        if ($(this.form)) {
+           // $(this.form).observe('submit', function(event){this.save();Event.stop(event);}.bind(this));
+        }
+        this.saveUrl = saveUrl;
+        this.onSave = this.nextStep.bindAsEventListener(this);
+        this.onComplete = this.resetLoadWaiting.bindAsEventListener(this);
+    },
+
+    save: function(){
+   
+        if (checkout.loadWaiting!=false) return;
+
+        var validator = new Validation(this.form);
+        if (validator.validate()) {
+
+            checkout.setLoadWaiting('credit');
+           var request = new Ajax.Request(
+               this.saveUrl,
+               {
+                  method: 'post',
+	         
+                  onComplete: this.onComplete,
+                  onSuccess: this.onSave,
+                  onFailure: checkout.ajaxFailure.bind(checkout),
+                  parameters: Form.serialize(this.form)
+               }
+               ); 
+            
+            
+        }
+    },
+
+    resetLoadWaiting: function(transport){
+        checkout.setLoadWaiting(false);
+    },
+
+    nextStep: function(transport){
+	//alert(transport.responseText);
+        if (transport && transport.responseText){
+            try{
+                response = eval('(' + transport.responseText + ')');
+                //alert("done");
+            }
+            catch (e) {
+            alert("error");
+                response = {};
+            }
+        }
+
+        if (response.error){
+            if ((typeof response.message) == 'string') {
+                alert(response.message);
+            } else {
+                if (window.billingRegionUpdater) {
+                    billingRegionUpdater.update();
+                }
+
+                alert(response.message.join("\n"));
+            }
+
+            return false;
+        }
+
+        checkout.setStepResponse(response);
+    }    
+}
+
+var credit = new Credit('co-credit-form', '<?php echo $this->getUrl('checkout/onepage/saveCredit') ?>');
+
+//]]>
+</script>

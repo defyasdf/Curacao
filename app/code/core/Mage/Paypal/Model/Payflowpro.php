@@ -20,7 +20,7 @@
  *
  * @category    Mage
  * @package     Mage_Paypal
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
@@ -79,9 +79,8 @@ class Mage_Paypal_Model_Payflowpro extends  Mage_Payment_Model_Method_Cc
     protected $_isGateway               = true;
     protected $_canAuthorize            = true;
     protected $_canCapture              = true;
-    protected $_canCapturePartial       = true;
+    protected $_canCapturePartial       = false;
     protected $_canRefund               = true;
-    protected $_canRefundInvoicePartial = true;
     protected $_canVoid                 = true;
     protected $_canUseInternal          = true;
     protected $_canUseCheckout          = true;
@@ -155,6 +154,10 @@ class Mage_Paypal_Model_Payflowpro extends  Mage_Payment_Model_Method_Cc
      */
     public function authorize(Varien_Object $payment, $amount)
     {
+	 $Data = Mage::getSingleton('core/session')->getCuracacaodp();
+	 if($Data != ''){
+		$amount = $Data;
+  	 }	
         $request = $this->_buildPlaceRequest($payment, $amount);
         $request->setTrxtype(self::TRXTYPE_AUTH_ONLY);
         $this->_setReferenceTransaction($payment, $request);
@@ -175,20 +178,6 @@ class Mage_Paypal_Model_Payflowpro extends  Mage_Payment_Model_Method_Cc
     }
 
     /**
-     * Get capture amount
-     *
-     * @param float $amount
-     * @return float
-     */
-    protected function _getCaptureAmount($amount)
-    {
-        $infoInstance = $this->getInfoInstance();
-        $amountToPay = round($amount, 2);
-        $authorizedAmount = round($infoInstance->getAmountAuthorized(), 2);
-        return $amountToPay != $authorizedAmount ? $amountToPay : 0;
-    }
-
-    /**
      * Capture payment
      *
      * @param Mage_Sales_Model_Order_Payment $payment
@@ -202,13 +191,8 @@ class Mage_Paypal_Model_Payflowpro extends  Mage_Payment_Model_Method_Cc
             $request->setOrigid($payment->getReferenceTransactionId());
         } elseif ($payment->getParentTransactionId()) {
             $request = $this->_buildBasicRequest($payment);
+            $request->setTrxtype(self::TRXTYPE_DELAYED_CAPTURE);
             $request->setOrigid($payment->getParentTransactionId());
-            $captureAmount = $this->_getCaptureAmount($amount);
-            if ($captureAmount) {
-                $request->setAmt($captureAmount);
-            }
-            $trxType = $this->getInfoInstance()->hasAmountPaid() ? self::TRXTYPE_SALE : self::TRXTYPE_DELAYED_CAPTURE;
-            $request->setTrxtype($trxType);
         } else {
             $request = $this->_buildPlaceRequest($payment, $amount);
             $request->setTrxtype(self::TRXTYPE_SALE);
@@ -254,26 +238,6 @@ class Mage_Paypal_Model_Payflowpro extends  Mage_Payment_Model_Method_Cc
     }
 
     /**
-     * Check void availability
-     *
-     * @param   Varien_Object $payment
-     * @return  bool
-     */
-    public function canVoid(Varien_Object $payment)
-    {
-        if ($payment instanceof Mage_Sales_Model_Order_Invoice
-            || $payment instanceof Mage_Sales_Model_Order_Creditmemo
-        ) {
-            return false;
-        }
-        if ($payment->getAmountPaid()) {
-            $this->_canVoid = false;
-        }
-
-        return $this->_canVoid;
-    }
-
-    /**
      * Attempt to void the authorization on cancelling
      *
      * @param Varien_Object $payment
@@ -281,11 +245,7 @@ class Mage_Paypal_Model_Payflowpro extends  Mage_Payment_Model_Method_Cc
      */
     public function cancel(Varien_Object $payment)
     {
-        if (!$payment->getOrder()->getInvoiceCollection()->count()) {
-            return $this->void($payment);
-        }
-
-        return false;
+        return $this->void($payment);
     }
 
     /**
@@ -306,7 +266,6 @@ class Mage_Paypal_Model_Payflowpro extends  Mage_Payment_Model_Method_Cc
         if ($response->getResultCode() == self::RESPONSE_CODE_APPROVED){
             $payment->setTransactionId($response->getPnref())
                 ->setIsTransactionClosed(1);
-            $payment->setShouldCloseParentTransaction(!$payment->getCreditmemo()->getInvoice()->canRefund());
         }
         return $this;
     }
@@ -464,18 +423,12 @@ class Mage_Paypal_Model_Payflowpro extends  Mage_Payment_Model_Method_Cc
         }
 
         $order = $payment->getOrder();
-        if (!empty($order)) {
+        if(!empty($order)){
+            $request->setCurrency($order->getBaseCurrencyCode());
+
             $orderIncrementId = $order->getIncrementId();
-
-            $request->setCurrency($order->getBaseCurrencyCode())
-                ->setInvnum($orderIncrementId)
-                ->setPonum($order->getId())
+            $request->setCustref($orderIncrementId)
                 ->setComment1($orderIncrementId);
-
-            $customerId = $order->getCustomerId();
-            if ($customerId) {
-                $request->setCustref($customerId);
-            }
 
             $billing = $order->getBillingAddress();
             if (!empty($billing)) {

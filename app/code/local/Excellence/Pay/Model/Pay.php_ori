@@ -1,0 +1,84 @@
+<?php
+class Excellence_Pay_Model_Pay extends Mage_Payment_Model_Method_Abstract
+{
+   protected $_code = 'pay';
+   protected $_formBlockType = 'pay/form_pay';
+ 
+    public function assignData($data)
+    {
+        if (!($data instanceof Varien_Object)) {
+            $data = new Varien_Object($data);
+		}
+		
+		Mage::getSingleton('core/session')->setCuracacaonum($data->getCheckNo());
+		
+		$no = $data->getCheckNo();
+
+		$dob = $data->getCc_dob_year().'-'.$data->getCc_dob_month().'-'.$data->getCc_dob_day();
+		$ssn = $data->getSsn();
+		$maiden = $data->getMaiden();
+		
+		if(trim($no)!=''){
+			$d = $this->validate_customer_calculate_dp($no, $dob, $ssn, $maiden);
+			if($d!=0){
+				Mage::getSingleton('core/session')->setCuracacaodp($d);
+				Mage::throwException('Initial Down Payment Require'); 			
+			}		
+		}else{
+			Mage::throwException('Curacao Credit'); 		
+		}
+		
+		
+				
+        return $this;
+    }
+	
+	public function validate_customer_calculate_dp($cust_num,$dob,$ssn,$maiden){
+	  
+	  // Authentication, Authorization and Downpayment calculation
+		$amount = Mage::getModel('checkout/cart')->getQuote()->getGrandTotal();
+		$zip = Mage::getSingleton('checkout/session')->getQuote()->getBillingAddress()->getPostcode();
+		
+		$proxy = new SoapClient('https://exchangeweb.lacuracao.com:2007/ws1/eCommerce/Main.asmx?WSDL');
+		$ns = 'http://lacuracao.com/WebServices/eCommerce/';
+		
+		$headerbody = array('UserName' => 'mike', 
+							'Password' => 'ecom12'); 
+		//Create Soap Header.        
+		$header = new SOAPHeader($ns, 'TAuthHeader', $headerbody);        
+				
+		//set the Headers of Soap Client. 
+		$h = $proxy->__setSoapHeaders($header); 
+		
+		$credit = $proxy->ValidateDP(array(
+											'CustID' => $cust_num,
+											'DOB' => $dob,
+											'Zip' => $zip,
+											'SSN' => $ssn,
+											'MMaiden' => strtoupper($maiden),
+											'Amount' => $amount
+											),
+										 "http://www.lacuracao.com/LAC-eComm-WebServices", 
+										 "http://www.lacuracao.com/LAC-eComm-WebServices/WebCustomerApplication",
+										 false, null , 'rpc', 'literal');  
+		
+		
+		$result =  $credit->ValidateDPResult;
+		//echo '<pre>';
+		//	print_r($result);	
+		//echo '</pre>';	
+		if(strtolower($result->StatusMessage) == 'ok'){
+			$dp = $result->DownPayment;
+		}else{
+			$dp = $amount;
+		}	
+		/*if($cust_num=='53145246'){
+			$dp = 0;
+		}else{
+			$grandTotal = Mage::getModel('checkout/cart')->getQuote()->getGrandTotal();
+			$dp = $grandTotal - 10;
+		}	*/
+		return $dp;
+	}
+}
+?>

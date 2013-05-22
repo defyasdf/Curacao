@@ -20,7 +20,7 @@
  *
  * @category    Mage
  * @package     Mage_Catalog
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
@@ -34,11 +34,6 @@
  */
 abstract class Mage_Catalog_Block_Product_Abstract extends Mage_Core_Block_Template
 {
-    /**
-     * Price block array
-     *
-     * @var array
-     */
     protected $_priceBlock = array();
 
     /**
@@ -48,25 +43,10 @@ abstract class Mage_Catalog_Block_Product_Abstract extends Mage_Core_Block_Templ
      */
     protected $_block = 'catalog/product_price';
 
-    /**
-     * Price template
-     *
-     * @var string
-     */
     protected $_priceBlockDefaultTemplate = 'catalog/product/price.phtml';
 
-    /**
-     * Tier price template
-     *
-     * @var string
-     */
     protected $_tierPriceDefaultTemplate  = 'catalog/product/view/tierprices.phtml';
 
-    /**
-     * Price types
-     *
-     * @var array
-     */
     protected $_priceBlockTypes = array();
 
     /**
@@ -76,11 +56,6 @@ abstract class Mage_Catalog_Block_Product_Abstract extends Mage_Core_Block_Templ
      */
     protected $_useLinkForAsLowAs = true;
 
-    /**
-     * Review block instance
-     *
-     * @var null|Mage_Review_Block_Helper
-     */
     protected $_reviewsHelperBlock;
 
     /**
@@ -114,33 +89,18 @@ abstract class Mage_Catalog_Block_Product_Abstract extends Mage_Core_Block_Templ
      */
     public function getAddToCartUrl($product, $additional = array())
     {
-        if (!$product->getTypeInstance(true)->hasRequiredOptions($product)) {
-            return $this->helper('checkout/cart')->getAddUrl($product, $additional);
-        }
-        $additional = array_merge(
-            $additional,
-            array(Mage_Core_Model_Url::FORM_KEY => $this->_getSingletonModel('core/session')->getFormKey())
-        );
-        if (!isset($additional['_escape'])) {
-            $additional['_escape'] = true;
-        }
-        if (!isset($additional['_query'])) {
-            $additional['_query'] = array();
-        }
-        $additional['_query']['options'] = 'cart';
-        return $this->getProductUrl($product, $additional);
-    }
+        if ($product->getTypeInstance(true)->hasRequiredOptions($product)) {
+            if (!isset($additional['_escape'])) {
+                $additional['_escape'] = true;
+            }
+            if (!isset($additional['_query'])) {
+                $additional['_query'] = array();
+            }
+            $additional['_query']['options'] = 'cart';
 
-    /**
-     * Return model instance
-     *
-     * @param string $className
-     * @param array $arguments
-     * @return Mage_Core_Model_Abstract
-     */
-    protected function _getSingletonModel($className, $arguments = array())
-    {
-        return Mage::getSingleton($className, $arguments);
+            return $this->getProductUrl($product, $additional);
+        }
+        return $this->helper('checkout/cart')->getAddUrl($product, $additional);
     }
 
     /**
@@ -166,7 +126,7 @@ abstract class Mage_Catalog_Block_Product_Abstract extends Mage_Core_Block_Templ
     }
 
     /**
-     * Return link to Add to Wishlist
+     * Enter description here...
      *
      * @param Mage_Catalog_Model_Product $product
      * @return string
@@ -187,28 +147,14 @@ abstract class Mage_Catalog_Block_Product_Abstract extends Mage_Core_Block_Templ
         return $this->helper('catalog/product_compare')->getAddUrl($product);
     }
 
-    /**
-     * Gets minimal sales quantity
-     *
-     * @param Mage_Catalog_Model_Product $product
-     * @return int|null
-     */
     public function getMinimalQty($product)
     {
-        $stockItem = $product->getStockItem();
-        if ($stockItem) {
-            return ($stockItem->getMinSaleQty()
-                && $stockItem->getMinSaleQty() > 0 ? $stockItem->getMinSaleQty() * 1 : null);
+        if ($stockItem = $product->getStockItem()) {
+            return ($stockItem->getMinSaleQty() && $stockItem->getMinSaleQty() > 0 ? $stockItem->getMinSaleQty() * 1 : null);
         }
         return null;
     }
 
-    /**
-     * Return price block
-     *
-     * @param string $productTypeId
-     * @return mixed
-     */
     protected function _getPriceBlock($productTypeId)
     {
         if (!isset($this->_priceBlock[$productTypeId])) {
@@ -223,12 +169,6 @@ abstract class Mage_Catalog_Block_Product_Abstract extends Mage_Core_Block_Templ
         return $this->_priceBlock[$productTypeId];
     }
 
-    /**
-     * Return Block template
-     *
-     * @param string $productTypeId
-     * @return string
-     */
     protected function _getPriceBlockTemplate($productTypeId)
     {
         if (isset($this->_priceBlockTypes[$productTypeId])) {
@@ -364,11 +304,6 @@ abstract class Mage_Catalog_Block_Product_Abstract extends Mage_Core_Block_Templ
         return $this->getData('product');
     }
 
-    /**
-     * Return tier price template
-     *
-     * @return mixed|string
-     */
     public function getTierPriceTemplate()
     {
         if (!$this->hasData('tier_price_template')) {
@@ -484,13 +419,13 @@ abstract class Mage_Catalog_Block_Product_Abstract extends Mage_Core_Block_Templ
      *
      * @return string
      */
-    public function getImageLabel($product = null, $mediaAttributeCode = 'image')
+    public function getImageLabel($product=null, $mediaAttributeCode='image')
     {
         if (is_null($product)) {
             $product = $this->getProduct();
         }
 
-        $label = $product->getData($mediaAttributeCode . '_label');
+        $label = $product->getData($mediaAttributeCode.'_label');
         if (empty($label)) {
             $label = $product->getName();
         }
@@ -513,6 +448,7 @@ abstract class Mage_Catalog_Block_Product_Abstract extends Mage_Core_Block_Templ
             }
             return $product->getUrlModel()->getUrl($product, $additional);
         }
+
         return '#';
     }
 
@@ -521,13 +457,18 @@ abstract class Mage_Catalog_Block_Product_Abstract extends Mage_Core_Block_Templ
      *
      * @param Mage_Catalog_Model_Product $product
      * @return bool
-     *
      */
     public function hasProductUrl($product)
     {
         if ($product->getVisibleInSiteVisibilities()) {
             return true;
         }
+        if ($product->hasUrlDataObject()) {
+            if (in_array($product->hasUrlDataObject()->getVisibility(), $product->getVisibleInSiteVisibilities())) {
+                return true;
+            }
+        }
+
         return false;
     }
 
@@ -615,18 +556,6 @@ abstract class Mage_Catalog_Block_Product_Abstract extends Mage_Core_Block_Templ
     public function getCanShowProductPrice($product)
     {
         return $product->getCanShowPrice() !== false;
-    }
-
-    /**
-     * Get if it is necessary to show product stock status
-     *
-     * @return bool
-     */
-    public function displayProductStockStatus()
-    {
-        $statusInfo = new Varien_Object(array('display_status' => true));
-        Mage::dispatchEvent('catalog_block_product_status_display', array('status' => $statusInfo));
-        return (boolean)$statusInfo->getDisplayStatus();
     }
 
     /**

@@ -1,0 +1,167 @@
+<?php $elementId = $this->elementId(); ?>
+<div class="entry-edit magify_bannermanager <?php echo $elementId; ?>">
+    <div class="entry-edit-head">
+        <h4><?php echo $this->getTitle(); ?></h4>
+    </div>
+    <div id="magify_bannermanager_schedule_fieldset" class="fieldset box">
+        <div class="hor-scroll">
+            <table class="dynamic-grid" cellspacing="0" id="magify_schedule_table" cellpadding="0">
+                <tr id="banner-schedule-table">
+                	<th></th>
+					<th><?php echo Mage::helper('magify_bannermanager')->__('From Date') ?></th>
+					<th><?php echo Mage::helper('magify_bannermanager')->__('To Date') ?></th>
+					<th>
+					<?php if (!$this->getReadOnly()):?>
+						<?php echo $this->getAddNewButtonHtml() ?>
+					<?php endif;?>
+					</th>
+				</tr>
+				<?php $i=1; if(count($this->getSchedule())): ?>
+				<?php foreach($this->getSchedule() as $event): ?>
+                <tr class="template" id="row-template">
+                	<td class="count"><?php echo $i; ?></td>
+                	<td class="a-center">
+						<input class="input-text validate-date left" type="text" id="schedule_<?php echo $i; ?>_from_date" name="<?php echo $elementId; ?>[<?php echo $i; ?>][from_date]" value="<?php echo $event['from_date']; ?>" <?php if ($this->getReadOnly()):?> disabled="disabled"<?php endif;?>/>
+						<img src="<?php echo $this->getSkinUrl('images/grid-cal.gif'); ?>" alt="" class="v-middle left" id="schedule_from_<?php echo $i; ?>_trig" title="Select Date">
+			            <script type="text/javascript">
+			            //<![CDATA[
+			                Calendar.setup({
+			                    inputField:"schedule_<?php echo $i; ?>_from_date",
+			                    ifFormat:"%Y-%m-%d",
+			                    showsTime:false,
+			                    button:"schedule_from_<?php echo $i; ?>_trig",
+			                    align:"Bl",
+			                    singleClick:true
+			                });
+			            //]]>
+			            </script>
+                        	
+					</td>
+                    <td class="a-center">
+                    	<input class="input-text validate-date left" type="text" id="schedule_<?php echo $i; ?>_to_date" name="<?php echo $elementId; ?>[<?php echo $i; ?>][to_date]" value="<?php echo $event['to_date']; ?>" <?php if ($this->getReadOnly()):?> disabled="disabled"<?php endif;?>/>
+                    	<img src="<?php echo $this->getSkinUrl('images/grid-cal.gif'); ?>" alt="" class="v-middle left" id="schedule_to_<?php echo $i; ?>_trig" title="Select Date">
+			            <script type="text/javascript">
+			            //<![CDATA[
+			                Calendar.setup({
+			                    inputField:"schedule_<?php echo $i; ?>_to_date",
+			                    ifFormat:"%Y-%m-%d",
+			                    showsTime:false,
+			                    button:"schedule_to_<?php echo $i; ?>_trig",
+			                    align:"Bl",
+			                    singleClick:true
+			                });
+			            //]]>
+			            </script>
+                    </td>
+                    <td class="a-left">
+						<input type="hidden" class="delete-flag" name="option[delete][{{id}}]" value="" />
+						<?php if(!$this->getReadOnly()):?>
+							<?php echo $this->getDeleteButtonHtml() ?>
+						<?php endif;?>
+					</td>
+				</tr>
+				<?php $i++; endforeach; ?>
+				<?php endif; ?>
+            </table>
+        </div>
+	</div>
+</div>
+<input type="hidden" id="option-count-check" value="" />
+<script type="text/javascript">
+//<![CDATA[
+           
+	var optionDefaultInputType = 'radio';
+	           
+	// IE removes quotes from element.innerHTML whenever it thinks they're not needed, which breaks html.
+	var templateText =
+	        '<tr class="option-row"><td class="count">{{id}}<\/td>'+
+    		'<td><input class="input-text validate-date left" type="text" id="schedule_{{id}}_from_date" name="<?php echo $elementId; ?>[{{id}}][from_date]" value="" <?php if ($this->getReadOnly()):?> disabled="disabled"<?php endif;?>/><img src="<?php echo $this->getSkinUrl('images/grid-cal.gif'); ?>" alt="" class="v-middle left" id="schedule_from_{{id}}_trig" title="Select Date">'+
+    		'<\/td><td><input class="input-text validate-date left" type="text" id="schedule_{{id}}_to_date" name="<?php echo $elementId; ?>[{{id}}][to_date]" value="" <?php if ($this->getReadOnly()):?> disabled="disabled"<?php endif;?>/><img src="<?php echo $this->getSkinUrl('images/grid-cal.gif'); ?>" alt="" class="v-middle left" id="schedule_to_{{id}}_trig" title="Select Date">'+
+			'<\/td>'+
+		        '<td class="a-left">'+
+	                '<input type="hidden" class="delete-flag" name="option[delete][{{id}}]" value="" />'+
+	                <?php if (!$this->getReadOnly()):?>
+	                    '<?php echo $this->getDeleteButtonHtml() ?>'+
+	                <?php endif;?>
+	            '<\/td>'+
+	        '<\/tr>';
+           
+	var scheduleOptions = {
+	    table : $('banner-schedule-table'),
+	    templateSyntax : /(^|.|\r|\n)({{(\w+)}})/,
+	    templateText : templateText,
+	    itemCount : <?php echo count($this->getSchedule())+1; ?>,
+	    totalItems : <?php echo count($this->getSchedule())+1; ?>,
+	    add : function(data) {
+	        this.template = new Template(this.templateText, this.templateSyntax);
+	        if(!data.id){
+	            data = {};
+	            data.id  = this.itemCount;
+	        }
+	        if (!data.intype)
+	            data.intype = optionDefaultInputType;
+	
+	        Element.insert(this.table, {after: this.template.evaluate(data)});
+	        this.bindRemoveButtons();
+	        this.itemCount++;
+	        this.totalItems++;
+            Calendar.setup({
+                inputField:"schedule_"+data.id+"_to_date",
+                ifFormat:"%Y-%m-%d",
+                showsTime:false,
+                button:"schedule_to_"+data.id+"_trig",
+                align:"Bl",
+                singleClick:true
+            });
+            Calendar.setup({
+                inputField:"schedule_"+data.id+"_from_date",
+                ifFormat:"%Y-%m-%d",
+                showsTime:false,
+                button:"schedule_from_"+data.id+"_trig",
+                align:"Bl",
+                singleClick:true
+            });
+	    },
+	    remove : function(event){
+	        var element = $(Event.findElement(event, 'tr')); // !!! Button already
+	                                                               // have table parent in safari
+	        // Safari workaround
+	        element.ancestors().each(function(parentItem){
+	           if (parentItem.hasClassName('option-row')) {
+	               element = parentItem;
+	               throw $break;
+	           } else if (parentItem.hasClassName('box')) {
+	               throw $break;
+	           }
+	        });
+	
+	
+	        if(element){
+	            var elementFlags = element.getElementsByClassName('delete-flag');
+	            if(elementFlags[0]){
+	                elementFlags[0].value=1;
+	            }
+	
+	            element.remove();
+	            this.itemCount--;
+	            this.totalItems--;
+	        }
+	    },
+	    bindRemoveButtons : function(){
+	        var buttons = $$('.delete-schedule');
+	        for(var i=0;i<buttons.length;i++){
+	            if(!$(buttons[i]).binded){
+	                $(buttons[i]).binded = true;
+	                Event.observe(buttons[i], 'click', this.remove.bind(this));
+	            }
+	        }
+	    }
+	    
+	}
+	scheduleOptions.bindRemoveButtons();
+	if($('add_new_option_button')){
+	    Event.observe('add_new_option_button', 'click', scheduleOptions.add.bind(scheduleOptions));
+	}
+	
+//]]>
+</script>

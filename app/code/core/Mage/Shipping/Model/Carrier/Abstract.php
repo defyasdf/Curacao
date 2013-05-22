@@ -20,7 +20,7 @@
  *
  * @category    Mage
  * @package     Mage_Shipping
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
@@ -37,9 +37,9 @@ abstract class Mage_Shipping_Model_Carrier_Abstract extends Varien_Object
     /**
      * Rates result
      *
-     * @var array|null
+     * @var array
      */
-    protected $_rates;
+    protected $_rates = null;
 
     /**
      * Number of boxes in package
@@ -398,19 +398,22 @@ abstract class Mage_Shipping_Model_Carrier_Abstract extends Varien_Object
      *
      * @param string $cost
      * @param string $method
-     * @return float|string
+     * @return string
      */
-    public function getMethodPrice($cost, $method = '')
+    public function getMethodPrice($cost, $method='')
     {
-        return $method == $this->getConfigData($this->_freeMethod)
-            && $this->getConfigFlag('free_shipping_enable')
+        if ($method == $this->getConfigData($this->_freeMethod) && $this->getConfigData('free_shipping_enable')
             && $this->getConfigData('free_shipping_subtotal') <= $this->_rawRequest->getBaseSubtotalInclTax()
-            ? '0.00'
-            : $this->getFinalPriceWithHandlingFee($cost);
+        ) {
+            $price = '0.00';
+        } else {
+            $price = $this->getFinalPriceWithHandlingFee($cost);
+        }
+        return $price;
     }
 
     /**
-     * Get the handling fee for the shipping + cost
+     * get the handling fee for the shipping + cost
      *
      * @param float $cost
      * @return float final price for shipping method
@@ -427,7 +430,7 @@ abstract class Mage_Shipping_Model_Carrier_Abstract extends Varien_Object
             $handlingAction = self::HANDLING_ACTION_PERORDER;
         }
 
-        return $handlingAction == self::HANDLING_ACTION_PERPACKAGE
+        return ($handlingAction == self::HANDLING_ACTION_PERPACKAGE)
             ? $this->_getPerpackagePrice($cost, $handlingType, $handlingFee)
             : $this->_getPerorderPrice($cost, $handlingType, $handlingFee);
     }

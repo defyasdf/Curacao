@@ -20,7 +20,7 @@
  *
  * @category    Mage
  * @package     Mage_Bundle
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
@@ -97,7 +97,6 @@ class Mage_Bundle_Block_Catalog_Product_View_Type_Bundle extends Mage_Catalog_Bl
             $defaultValues       = array();
         }
 
-        $position = 0;
         foreach ($optionsArray as $_option) {
             /* @var $_option Mage_Bundle_Model_Option */
             if (!$_option->getSelections()) {
@@ -108,13 +107,11 @@ class Mage_Bundle_Block_Catalog_Product_View_Type_Bundle extends Mage_Catalog_Bl
             $option = array (
                 'selections' => array(),
                 'title'      => $_option->getTitle(),
-                'isMulti'    => in_array($_option->getType(), array('multi', 'checkbox')),
-                'position'   => $position++
+                'isMulti'    => in_array($_option->getType(), array('multi', 'checkbox'))
             );
 
             $selectionCount = count($_option->getSelections());
-            /** @var $taxHelper Mage_Tax_Helper_Data */
-            $taxHelper = Mage::helper('tax');
+
             foreach ($_option->getSelections() as $_selection) {
                 /* @var $_selection Mage_Catalog_Model_Product */
                 $selectionId = $_selection->getSelectionId();
@@ -123,8 +120,6 @@ class Mage_Bundle_Block_Catalog_Product_View_Type_Bundle extends Mage_Catalog_Bl
                 $tierPrices = $_selection->getTierPrice();
                 foreach ($tierPrices as &$tierPriceInfo) {
                     $tierPriceInfo['price'] = $coreHelper->currency($tierPriceInfo['price'], false, false);
-                    $tierPriceInfo['priceInclTax'] = $taxHelper->getPrice($_selection, $tierPriceInfo['price'], true);
-                    $tierPriceInfo['priceExclTax'] = $taxHelper->getPrice($_selection, $tierPriceInfo['price']);
                 }
                 unset($tierPriceInfo); // break the reference with the last element
 
@@ -157,8 +152,7 @@ class Mage_Bundle_Block_Catalog_Product_View_Type_Bundle extends Mage_Catalog_Bl
                     'name'             => $_selection->getName(),
                     'plusDisposition'  => 0,
                     'minusDisposition' => 0,
-                    'canApplyMAP'      => $canApplyMAP,
-                    'tierPriceHtml'    => $this->getTierPriceHtml($_selection),
+                    'canApplyMAP'      => $canApplyMAP
                 );
 
                 $responseObject = new Varien_Object();

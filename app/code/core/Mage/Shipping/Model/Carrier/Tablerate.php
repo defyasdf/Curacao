@@ -20,7 +20,7 @@
  *
  * @category    Mage
  * @package     Mage_Shipping
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
@@ -45,9 +45,9 @@ class Mage_Shipping_Model_Carrier_Tablerate
     }
 
     /**
-     * Collect and get rates
+     * Enter description here...
      *
-     * @param Mage_Shipping_Model_Rate_Request $request
+     * @param Mage_Shipping_Model_Rate_Request $data
      * @return Mage_Shipping_Model_Rate_Result
      */
     public function collectRates(Mage_Shipping_Model_Rate_Request $request)
@@ -77,7 +77,6 @@ class Mage_Shipping_Model_Carrier_Tablerate
         // Free shipping by qty
         $freeQty = 0;
         if ($request->getAllItems()) {
-            $freePackageValue = 0;
             foreach ($request->getAllItems() as $item) {
                 if ($item->getProduct()->isVirtual() || $item->getParentItem()) {
                     continue;
@@ -86,26 +85,17 @@ class Mage_Shipping_Model_Carrier_Tablerate
                 if ($item->getHasChildren() && $item->isShipSeparately()) {
                     foreach ($item->getChildren() as $child) {
                         if ($child->getFreeShipping() && !$child->getProduct()->isVirtual()) {
-                            $freeShipping = is_numeric($child->getFreeShipping()) ? $child->getFreeShipping() : 0;
-                            $freeQty += $item->getQty() * ($child->getQty() - $freeShipping);
+                            $freeQty += $item->getQty() * ($child->getQty() - (is_numeric($child->getFreeShipping()) ? $child->getFreeShipping() : 0));
                         }
                     }
                 } elseif ($item->getFreeShipping()) {
-                    $freeShipping = is_numeric($item->getFreeShipping()) ? $item->getFreeShipping() : 0;
-                    $freeQty += $item->getQty() - $freeShipping;
-                    $freePackageValue += $item->getBaseRowTotal();
+                    $freeQty += ($item->getQty() - (is_numeric($item->getFreeShipping()) ? $item->getFreeShipping() : 0));
                 }
             }
-            $oldValue = $request->getPackageValue();
-            $request->setPackageValue($oldValue - $freePackageValue);
         }
 
-        if ($freePackageValue) {
-            $request->setPackageValue($request->getPackageValue() - $freePackageValue);
-        }
         if (!$request->getConditionName()) {
-            $conditionName = $this->getConfigData('condition_name');
-            $request->setConditionName($conditionName ? $conditionName : $this->_default_condition_name);
+            $request->setConditionName($this->getConfigData('condition_name') ? $this->getConfigData('condition_name') : $this->_default_condition_name);
         }
 
          // Package weight and qty free shipping
@@ -140,36 +130,6 @@ class Mage_Shipping_Model_Carrier_Tablerate
             $method->setCost($rate['cost']);
 
             $result->append($method);
-        } elseif (empty($rate) && $request->getFreeShipping() === true) {
-            /**
-             * was applied promotion rule for whole cart
-             * other shipping methods could be switched off at all
-             * we must show table rate method with 0$ price, if grand_total more, than min table condition_value
-             * free setPackageWeight() has already was taken into account
-             */
-            $request->setPackageValue($freePackageValue);
-            $request->setPackageQty($freeQty);
-            $rate = $this->getRate($request);
-            if (!empty($rate) && $rate['price'] >= 0) {
-                $method = Mage::getModel('shipping/rate_result_method');
-
-                $method->setCarrier('tablerate');
-                $method->setCarrierTitle($this->getConfigData('title'));
-
-                $method->setMethod('bestway');
-                $method->setMethodTitle($this->getConfigData('name'));
-
-                $method->setPrice(0);
-                $method->setCost(0);
-
-                $result->append($method);
-            }
-        } else {
-            $error = Mage::getModel('shipping/rate_result_error');
-            $error->setCarrier('tablerate');
-            $error->setCarrierTitle($this->getConfigData('title'));
-            $error->setErrorMessage($this->getConfigData('specificerrmsg'));
-            $result->append($error);
         }
 
         return $result;

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layout version="0.1.0">
+    <default>
+		<reference name="head">
+			<action method="addCss"><name>magify/base/css/main.css</name></action>
+		</reference>
+        <reference name="header">
+        	<action method="setTemplate"><template>magify/base/page/header.phtml</template></action>
+        </reference>
+        <reference name="before_body_end">
+            <block type="magify_base/adminhtml_page_footer" name="magify_base_page_footer" after="-"/>
+        </reference>
+    </default>
+</layout>

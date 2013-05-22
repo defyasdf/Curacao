@@ -20,7 +20,7 @@
  *
  * @category    design
  * @package     enterprise_default
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 ?>
@@ -47,12 +47,18 @@
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($_orders as $_order): ?>
+            <?php foreach ($_orders as $_order): 
+				$_totalData =$_order->getData(); 
+				$_sub = $_totalData['subtotal'];
+				$_tax = $_totalData['base_tax_amount'];
+				$_shipping = $_totalData['shipping_amount'];
+				$grand_total = $_sub + $_tax + $_shipping;
+			?>
                 <tr>
                     <td><?php echo $_order->getRealOrderId() ?></td>
                     <td><span class="nobr"><?php echo $this->formatDate($_order->getCreatedAtStoreDate()) ?></span></td>
-                    <td><?php echo $_order->getShippingAddress() ? $this->escapeHtml($_order->getShippingAddress()->getName()) : '&nbsp;' ?></td>
-                    <td><?php echo $_order->formatPrice($_order->getGrandTotal()) ?></td>
+                    <td><?php echo $_order->getShippingAddress() ? $this->htmlEscape($_order->getShippingAddress()->getName()) : '&nbsp;' ?></td>
+                    <td><?php echo $_order->formatPrice($grand_total) ?></td>
                     <td><em><?php echo $_order->getStatusLabel() ?></em></td>
                     <td class="a-center">
                         <a href="<?php echo $this->getViewUrl($_order) ?>" class="nobr"><?php echo $this->__('View Order') ?></a>

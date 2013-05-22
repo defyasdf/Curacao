@@ -20,7 +20,7 @@
  *
  * @category    Mage
  * @package     Mage_Catalog
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
@@ -31,14 +31,9 @@
  * @package    Mage_Catalog
  * @author      Magento Core Team <core@magentocommerce.com>
  */
+
 class Mage_Catalog_Model_Product_Attribute_Backend_Urlkey extends Mage_Eav_Model_Entity_Attribute_Backend_Abstract
 {
-    /**
-     * Format url_key value
-     *
-     * @param Mage_Catalog_Model_Product $object
-     * @return Mage_Catalog_Model_Product_Attribute_Backend_Urlkey
-     */
     public function beforeSave($object)
     {
         $attributeName = $this->getAttribute()->getName();
@@ -50,39 +45,22 @@ class Mage_Catalog_Model_Product_Attribute_Backend_Urlkey extends Mage_Eav_Model
         if ($urlKey == '') {
             $urlKey = $object->getName();
         }
-        $urlKey = $object->formatUrlKey($urlKey);
-        if (empty($urlKey)) {
-            $urlKey = Mage::helper('core')->uniqHash();
-        }
-        $object->setData($attributeName, $urlKey);
 
-        $this->_validateUrlKey($object);
+        $object->setData($attributeName, $object->formatUrlKey($urlKey));
+
         return $this;
     }
 
-    /**
-     * Check unique url_key value in catalog_product_entity_url_key table.
-     *
-     * @param Mage_Catalog_Model_Product $object
-     * @return Mage_Catalog_Model_Product_Attribute_Backend_Urlkey
-     * @throws Mage_Core_Exception
-     */
-    protected function _validateUrlKey($object)
+    public function afterSave($object)
     {
-        $connection = $object->getResource()->getReadConnection();
-
-        $select = $connection->select()
-            ->from($this->getAttribute()->getBackendTable(), array('count' => new Zend_Db_Expr('COUNT(\'value_id\')')))
-            ->where($connection->quoteInto('entity_id <> ?', $object->getId()))
-            ->where($connection->quoteInto('value = ?', $object->getUrlKey()));
-        $result = $connection->fetchOne($select);
-        if ((int)$result) {
-           throw new Mage_Core_Exception(
-               Mage::helper('catalog')->__("Product with the '%s' url_key attribute already exists.",
-                   $object->getUrlKey())
-           );
-        }
-
+        /* @var $object Mage_Catalog_Model_Product */
+        /**
+         * Logic moved to Mage_Catalog_Model_Indexer_Url
+         */
+        /*if (!$object->getExcludeUrlRewrite() &&
+            ($object->dataHasChangedFor('url_key') || $object->getIsChangedCategories() || $object->getIsChangedWebsites())) {
+            Mage::getSingleton('catalog/url')->refreshProductRewrite($object->getId());
+        }*/
         return $this;
     }
 }

@@ -20,7 +20,7 @@
  *
  * @category    Mage
  * @package     Mage_XmlConnect
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
@@ -31,7 +31,8 @@
  * @package     Mage_XmlConnect
  * @author      Magento Core Team <core@magentocommerce.com>
  */
-class Mage_XmlConnect_Model_Simplexml_Form_Element_Select extends Mage_XmlConnect_Model_Simplexml_Form_Element_Abstract
+class Mage_XmlConnect_Model_Simplexml_Form_Element_Select
+    extends Mage_XmlConnect_Model_Simplexml_Form_Element_Abstract
 {
     /**
      * Init text element
@@ -54,7 +55,10 @@ class Mage_XmlConnect_Model_Simplexml_Form_Element_Select extends Mage_XmlConnec
     {
         $value = $this->getEscapedValue();
         if ($value !== null) {
-            $xmlObj->addAttribute('value', $xmlObj->xmlAttribute($value));
+            $xmlObj->addAttribute(
+                'value',
+                $xmlObj->xmlAttribute($value)
+            );
         }
         $this->_addOptions($xmlObj);
 
@@ -72,10 +76,15 @@ class Mage_XmlConnect_Model_Simplexml_Form_Element_Select extends Mage_XmlConnec
         if ($this->getOptions() && is_array($this->getOptions())) {
             $valuesXmlObj = $xmlObj->addCustomChild('values');
             foreach ($this->getOptions() as $option) {
-                if (empty($option['value'])) {
+
+                if (!isset($option['value']) || $option['value'] == '') {
                     continue;
                 }
-                $valuesXmlObj->addCustomChild('item', $option['value'], array('label' => $option['label']));
+
+                $valuesXmlObj->addCustomChild('item', null, array(
+                    'label' => $option['label'],
+                    'value' => $option['value']
+                ));
             }
         }
     }

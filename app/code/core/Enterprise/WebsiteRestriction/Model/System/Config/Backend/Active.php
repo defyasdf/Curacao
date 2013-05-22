@@ -20,39 +20,24 @@
  *
  * @category    Enterprise
  * @package     Enterprise_WebsiteRestriction
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
 /**
  * Cleanup blocks HTML cache
  *
- * @category    Enterprise
- * @package     Enterprise_WebsiteRestriction
- * @author      Magento Core Team <core@magentocommerce.com>
  */
 class Enterprise_WebsiteRestriction_Model_System_Config_Backend_Active extends Mage_Core_Model_Config_Data
 {
     /**
-     * Prefix of model events names
+     * Cleanup blocks HTML cache if a value was changed
      *
-     * @var string
-     */
-    protected $_eventPrefix = 'enterprise_websiterestriction_config_active';
-
-    /**
-     * Cleanup blocks HTML cache if value has been changed
-     *
-     * @return Enterprise_WebsiteRestriction_Model_System_Config_Backend_Active
      */
     protected function _afterSave()
     {
         if ($this->isValueChanged()) {
-            Mage::dispatchEvent('clean_cache_by_tags', array('tags' => array(
-                Mage_Core_Model_Store::CACHE_TAG,
-                Mage_Cms_Model_Block::CACHE_TAG
-            )));
+            Mage::app()->cleanCache(array(Mage_Core_Model_Store::CACHE_TAG, Mage_Cms_Model_Block::CACHE_TAG));
         }
-        return parent::_afterSave();
     }
 }

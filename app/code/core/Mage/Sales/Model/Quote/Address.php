@@ -20,7 +20,7 @@
  *
  * @category    Mage
  * @package     Mage_Sales
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
@@ -110,8 +110,6 @@
  * @method Mage_Sales_Model_Quote_Address setCustomerNotes(string $value)
  * @method string getDiscountDescription()
  * @method Mage_Sales_Model_Quote_Address setDiscountDescription(string $value)
- * @method null|array getDiscountDescriptionArray()
- * @method Mage_Sales_Model_Quote_Address setDiscountDescriptionArray(array $value)
  * @method float getShippingDiscountAmount()
  * @method Mage_Sales_Model_Quote_Address setShippingDiscountAmount(float $value)
  * @method float getBaseShippingDiscountAmount()
@@ -141,10 +139,8 @@
  */
 class Mage_Sales_Model_Quote_Address extends Mage_Customer_Model_Address_Abstract
 {
-    /**
-     * Default value for Destination street
-     */
-    const DEFAULT_DEST_STREET = -1;
+    const RATES_FETCH = 1;
+    const RATES_RECALCULATE = 2;
 
     /**
      * Prefix of model events
@@ -184,7 +180,7 @@ class Mage_Sales_Model_Quote_Address extends Mage_Customer_Model_Address_Abstrac
     /**
      * Total models collector
      *
-     * @var Mage_Sales_Model_Quote_Address_Total_Collector
+     * @var Mage_Sales_Model_Quote_Address_Totla_Collector
      */
     protected $_totalCollector = null;
 
@@ -195,18 +191,7 @@ class Mage_Sales_Model_Quote_Address extends Mage_Customer_Model_Address_Abstrac
      */
     protected $_totals = array();
 
-    /**
-     * Total amounts
-     *
-     * @var array
-     */
     protected $_totalAmounts = array();
-
-    /**
-     * Total base amounts
-     *
-     * @var array
-     */
     protected $_baseTotalAmounts = array();
 
     /**
@@ -236,79 +221,34 @@ class Mage_Sales_Model_Quote_Address extends Mage_Customer_Model_Address_Abstrac
     }
 
     /**
-     * Initialize Quote identifier before save
+     * Initialize quote identifier before save
      *
      * @return Mage_Sales_Model_Quote_Address
      */
     protected function _beforeSave()
     {
         parent::_beforeSave();
-        $this->_populateBeforeSaveData();
-        return $this;
-    }
-
-    /**
-     * Set the required fields
-     */
-    protected function _populateBeforeSaveData()
-    {
         if ($this->getQuote()) {
-            $this->_dataSaveAllowed = (bool)$this->getQuote()->getId();
-
-            if ($this->getQuote()->getId()) {
-                $this->setQuoteId($this->getQuote()->getId());
+            $quoteId = $this->getQuote()->getId();
+            if ($quoteId) {
+                $this->setQuoteId($quoteId);
+            } else {
+                $this->_dataSaveAllowed = false;
             }
             $this->setCustomerId($this->getQuote()->getCustomerId());
-
             /**
              * Init customer address id if customer address is assigned
              */
             if ($this->getCustomerAddress()) {
                 $this->setCustomerAddressId($this->getCustomerAddress()->getId());
             }
-
-            /**
-             * Set same_as_billing to "1" when default shipping address is set as default
-             * and it is not equal billing address
-             */
-            if (!$this->getId()) {
-                $this->setSameAsBilling((int)$this->_isSameAsBilling());
-            }
         }
-    }
-
-    /**
-     * Returns true if the billing address is same as the shipping
-     *
-     * @return bool
-     */
-    protected function _isSameAsBilling()
-    {
-        return ($this->getAddressType() == Mage_Sales_Model_Quote_Address::TYPE_SHIPPING
-            && ($this->_isNotRegisteredCustomer() || $this->_isDefaultShippingNullOrSameAsBillingAddress()));
-    }
-
-    /**
-     * Checks if the user is a registered customer
-     *
-     * @return bool
-     */
-    protected function _isNotRegisteredCustomer()
-    {
-        return !$this->getQuote()->getCustomerId() || $this->getCustomerAddressId() === null;
-    }
-
-    /**
-     * Returns true if the def billing address is same as customer address
-     *
-     * @return bool
-     */
-    protected function _isDefaultShippingNullOrSameAsBillingAddress()
-    {
-        $customer = $this->getQuote()->getCustomer();
-        return !$customer->getDefaultShippingAddress()
-            || $customer->getDefaultBillingAddress() && $customer->getDefaultShippingAddress()
-                && $customer->getDefaultBillingAddress()->getId() == $customer->getDefaultShippingAddress()->getId();
+        if ($this->getAddressType() == Mage_Sales_Model_Quote_Address::TYPE_SHIPPING
+            && $this->getSameAsBilling() === null
+        ) {
+            $this->setSameAsBilling(1);
+        }
+        return $this;
     }
 
     /**
@@ -362,8 +302,9 @@ class Mage_Sales_Model_Quote_Address extends Mage_Customer_Model_Address_Abstrac
         Mage::helper('core')->copyFieldset('customer_address', 'to_quote_address', $address, $this);
         $email = null;
         if ($address->hasEmail()) {
-            $email = $address->getEmail();
-        } elseif ($address->getCustomer()) {
+            $email =  $address->getEmail();
+        }
+        elseif ($address->getCustomer()) {
             $email = $address->getCustomer()->getEmail();
         }
         if ($email) {
@@ -413,7 +354,7 @@ class Mage_Sales_Model_Quote_Address extends Mage_Customer_Model_Address_Abstrac
         $arr = parent::toArray($arrAttributes);
         $arr['rates'] = $this->getShippingRatesCollection()->toArray($arrAttributes);
         $arr['items'] = $this->getItemsCollection()->toArray($arrAttributes);
-        foreach ($this->getTotals() as $k => $total) {
+        foreach ($this->getTotals() as $k=>$total) {
             $arr['totals'][$k] = $total->toArray();
         }
         return $arr;
@@ -622,7 +563,7 @@ class Mage_Sales_Model_Quote_Address extends Mage_Customer_Model_Address_Abstrac
     public function getItemById($itemId)
     {
         foreach ($this->getItemsCollection() as $item) {
-            if ($item->getId() == $itemId) {
+            if ($item->getId()==$itemId) {
                 return $item;
             }
         }
@@ -638,7 +579,7 @@ class Mage_Sales_Model_Quote_Address extends Mage_Customer_Model_Address_Abstrac
     public function getValidItemById($itemId)
     {
         foreach ($this->getAllItems() as $item) {
-            if ($item->getId() == $itemId) {
+            if ($item->getId()==$itemId) {
                 return $item;
             }
         }
@@ -654,7 +595,7 @@ class Mage_Sales_Model_Quote_Address extends Mage_Customer_Model_Address_Abstrac
     public function getItemByQuoteItemId($itemId)
     {
         foreach ($this->getItemsCollection() as $item) {
-            if ($item->getQuoteItemId() == $itemId) {
+            if ($item->getQuoteItemId()==$itemId) {
                 return $item;
             }
         }
@@ -683,7 +624,7 @@ class Mage_Sales_Model_Quote_Address extends Mage_Customer_Model_Address_Abstrac
      * @param   int $qty
      * @return  Mage_Sales_Model_Quote_Address
      */
-    public function addItem(Mage_Sales_Model_Quote_Item_Abstract $item, $qty = null)
+    public function addItem(Mage_Sales_Model_Quote_Item_Abstract $item, $qty=null)
     {
         if ($item instanceof Mage_Sales_Model_Quote_Item) {
             if ($item->getParentItemId()) {
@@ -703,7 +644,8 @@ class Mage_Sales_Model_Quote_Address extends Mage_Customer_Model_Address_Abstrac
                     $this->getItemsCollection()->addItem($addressChildItem);
                 }
             }
-        } else {
+        }
+        else {
             $addressItem = $item;
             $addressItem->setAddress($this);
             if (!$addressItem->getId()) {
@@ -788,9 +730,11 @@ class Mage_Sales_Model_Quote_Address extends Mage_Customer_Model_Address_Abstrac
     {
         if ((int)$a[0]->carrier_sort_order < (int)$b[0]->carrier_sort_order) {
             return -1;
-        } elseif ((int)$a[0]->carrier_sort_order > (int)$b[0]->carrier_sort_order) {
+        }
+        elseif ((int)$a[0]->carrier_sort_order > (int)$b[0]->carrier_sort_order) {
             return 1;
-        } else {
+        }
+        else {
             return 0;
         }
     }
@@ -804,7 +748,7 @@ class Mage_Sales_Model_Quote_Address extends Mage_Customer_Model_Address_Abstrac
     public function getShippingRateById($rateId)
     {
         foreach ($this->getShippingRatesCollection() as $rate) {
-            if ($rate->getId() == $rateId) {
+            if ($rate->getId()==$rateId) {
                 return $rate;
             }
         }
@@ -820,7 +764,7 @@ class Mage_Sales_Model_Quote_Address extends Mage_Customer_Model_Address_Abstrac
     public function getShippingRateByCode($code)
     {
         foreach ($this->getShippingRatesCollection() as $rate) {
-            if ($rate->getCode() == $code) {
+            if ($rate->getCode()==$code) {
                 return $rate;
             }
         }
@@ -902,7 +846,7 @@ class Mage_Sales_Model_Quote_Address extends Mage_Customer_Model_Address_Abstrac
          * need to call getStreet with -1
          * to get data in string instead of array
          */
-        $request->setDestStreet($this->getStreet(self::DEFAULT_DEST_STREET));
+        $request->setDestStreet($this->getStreet(-1));
         $request->setDestCity($this->getCity());
         $request->setDestPostcode($this->getPostcode());
         $request->setPackageValue($item ? $item->getBaseRowTotal() : $this->getBaseSubtotal());
@@ -939,7 +883,7 @@ class Mage_Sales_Model_Quote_Address extends Mage_Customer_Model_Address_Abstrac
         $request->setPackageCurrency($this->getQuote()->getStore()->getCurrentCurrency());
         $request->setLimitCarrier($this->getLimitCarrier());
 
-        $request->setBaseSubtotalInclTax($this->getBaseSubtotalInclTax() + $this->getBaseExtraTaxAmount());
+        $request->setBaseSubtotalInclTax($this->getBaseSubtotalInclTax());
 
         $result = Mage::getModel('shipping/shipping')->collectRates($request)->getResult();
 
@@ -984,7 +928,7 @@ class Mage_Sales_Model_Quote_Address extends Mage_Customer_Model_Address_Abstrac
         if ($this->_totalCollector === null) {
             $this->_totalCollector = Mage::getSingleton(
                 'sales/quote_address_total_collector',
-                array('store' => $this->getQuote()->getStore())
+                array('store'=>$this->getQuote()->getStore())
             );
         }
         return $this->_totalCollector;
@@ -1072,7 +1016,8 @@ class Mage_Sales_Model_Quote_Address extends Mage_Customer_Model_Address_Abstrac
 
         if ($this->getQuote()->getIsVirtual() && $this->getAddressType() == self::TYPE_SHIPPING) {
             return true;
-        } elseif (!$this->getQuote()->getIsVirtual() && $this->getAddressType() != self::TYPE_SHIPPING) {
+        }
+        elseif (!$this->getQuote()->getIsVirtual() && $this->getAddressType() != self::TYPE_SHIPPING) {
             return true;
         }
 

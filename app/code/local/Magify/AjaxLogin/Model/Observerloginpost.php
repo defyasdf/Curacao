@@ -1,22 +1,4 @@
 <?php
-/**
- * Magextend
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the EULA
- * that is bundled with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * http://www.magextend.com/LICENSE.txt
- *
- * @category   Magextend
- * @package    Magextend_Ajaxlogin
- * @author     Baptiste Cutajar
- * @copyright  Copyright (c) 2008-2010 magextend (http://www.magextend.com)
- * @license    http://www.magextend.com/LICENSE.txt
- */
-?>
-<?php
 class Magify_AjaxLogin_Model_Observerloginpost
 {
 	public function __construct()

@@ -20,13 +20,13 @@
  *
  * @category    design
  * @package     base_default
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 ?>
 <form id="co-shipping-method-form" action="">
     <div id="checkout-shipping-method-load">
-       <!-- Content loaded dynamically -->
+        <?php echo $this->getChildHtml('available') ?>
     </div>
     <script type="text/javascript">
     //<![CDATA[

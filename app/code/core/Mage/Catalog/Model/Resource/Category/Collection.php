@@ -20,7 +20,7 @@
  *
  * @category    Mage
  * @package     Mage_Catalog
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
@@ -75,25 +75,6 @@ class Mage_Catalog_Model_Resource_Category_Collection extends Mage_Catalog_Model
      * @var boolean
      */
     protected $_loadWithProductCount     = false;
-
-    /**
-     * Catalog factory instance
-     *
-     * @var Mage_Catalog_Model_Factory
-     */
-    protected $_factory;
-
-    /**
-     * Initialize factory
-     *
-     * @param Mage_Core_Model_Resource_Abstract $resource
-     * @param array $args
-     */
-    public function __construct($resource = null, array $args = array())
-    {
-        parent::__construct($resource);
-        $this->_factory = !empty($args['factory']) ? $args['factory'] : Mage::getSingleton('catalog/factory');
-    }
 
     /**
      * Init collection and determine table names
@@ -339,20 +320,18 @@ class Mage_Catalog_Model_Resource_Category_Collection extends Mage_Catalog_Model
      */
     public function joinUrlRewrite()
     {
-        $this->_factory->getCategoryUrlRewriteHelper()
-            ->joinTableToEavCollection($this, $this->_getCurrentStoreId());
-
+        $storeId = Mage::app()->getStore()->getId();
+        $this->joinTable(
+            'core/url_rewrite',
+            'category_id=entity_id',
+            array('request_path'),
+            "{{table}}.is_system=1"
+                . " AND {{table}}.product_id IS NULL"
+                . " AND {{table}}.store_id='{$storeId}'"
+                . " AND id_path LIKE 'category/%'",
+            'left'
+        );
         return $this;
-    }
-
-    /**
-     * Retrieves store_id from current store
-     *
-     * @return int
-     */
-    protected function _getCurrentStoreId()
-    {
-        return (int)Mage::app()->getStore()->getId();
     }
 
     /**

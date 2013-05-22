@@ -19,7 +19,7 @@
  *
  * @category    Mage
  * @package     Mage_Adminhtml
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 function setLocation(url){
@@ -133,23 +133,27 @@ function toggleValueElements(checkbox, container, excludedElements, checked){
         var isDisabled = (checked != undefined ? checked : checkbox.checked);
         elems.each(function (elem) {
             if (checkByProductPriceType(elem)) {
-                var i = ignoredElements.length;
-                while (i-- && elem != ignoredElements[i]);
-                if (i != -1) {
+                var isIgnored = false;
+                for (var i = 0; i < ignoredElements.length; i++) {
+                    if (elem == ignoredElements[i]) {
+                        isIgnored = true;
+                        break;
+                    }
+                }
+                if (isIgnored) {
                     return;
                 }
-
-                elem.disabled = isDisabled;
+                elem.disabled=isDisabled;
                 if (isDisabled) {
                     elem.addClassName('disabled');
                 } else {
                     elem.removeClassName('disabled');
                 }
-                if (elem.nodeName.toLowerCase() == 'img') {
+                if(elem.tagName == 'IMG') {
                     isDisabled ? elem.hide() : elem.show();
                 }
             }
-        });
+        })
     }
 }
 

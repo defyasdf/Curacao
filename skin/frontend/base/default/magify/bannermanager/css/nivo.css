@@ -1,0 +1,168 @@
+/* The Nivo Slider styles */
+.category-banners {
+	margin:0 0 10px;
+}
+
+.vortex_banner_wrapper {
+	width:100%;
+	margin:0;
+}
+
+.vortex_banner_wrapper .banners {
+	position:relative;
+	display:block;
+	margin:0 auto;
+	background:url(../images/loading.gif) no-repeat 50% 50%;
+}
+
+.vortex_banner_wrapper .banners img {
+	position:absolute;
+	top:0;
+	left:0;
+}
+
+
+	
+/* If an image is wrapped in a link */
+.vortex_banner_wrapper .banners a.nivo-imageLink {
+	position:absolute;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+	border:0;
+	padding:0;
+	margin:0;
+	z-index:6;
+	display:none;
+}
+
+
+	
+/* The slices and boxes in the Slider */
+.nivo-slice {
+	display:block;
+	position:absolute;
+	z-index:0;
+	height:100%;
+	cursor: pointer;
+}
+
+.nivo-box {
+	display:block;
+	position:absolute;
+	z-index:5;
+}
+
+
+	
+/* Direction nav styles (e.g. Next & Prev) */
+.nivo-directionNav a {
+	position:absolute;
+	top:80%;
+	z-index:1;
+	cursor:pointer;
+	margin:-15px 0 0;
+	height:30px;
+	width:30px;
+	text-indent:-999em;
+	background:url(../images/arrows.png) no-repeat 0 0;
+}
+
+a.nivo-prevNav {
+	left:10px;
+}
+
+a.nivo-nextNav {
+	right:10px;
+	background-position:100% 0;
+}
+
+
+	
+/* Control nav styles (e.g. 1,2,3...) */
+.nivo-controlNav {
+	bottom: -26px;
+	position:absolute;
+	text-align:center;
+	left:50%;
+}
+
+.nivo-controlNav a {
+	position:relative;
+	z-index:9;
+	cursor:pointer;
+	width:10px;
+	height:10px;
+	display:block;
+	float:left;
+	text-indent:-999em;
+	background:url(../images/navigation.png) no-repeat -20px 0;
+	margin:10px 5px;
+}
+
+.nivo-controlNav a:hover {
+	font-weight:bold;
+	background-position:-10px 0;
+}
+
+.nivo-controlNav a.active {
+	font-weight:bold;
+	background-position:0 0;
+}
+.nivo-controlNav.text { 
+	background: #f7f6f6; /* Old browsers */
+	background: -moz-linear-gradient(top,  #f7f6f6 0%, #f7f6f6 50%, #eeeded 51%, #e8e7e7 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f7f6f6), color-stop(50%,#f7f6f6), color-stop(51%,#eeeded), color-stop(100%,#e8e7e7)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #f7f6f6 0%,#f7f6f6 50%,#eeeded 51%,#e8e7e7 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #f7f6f6 0%,#f7f6f6 50%,#eeeded 51%,#e8e7e7 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #f7f6f6 0%,#f7f6f6 50%,#eeeded 51%,#e8e7e7 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  #f7f6f6 0%,#f7f6f6 50%,#eeeded 51%,#e8e7e7 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f7f6f6', endColorstr='#e8e7e7',GradientType=0 ); /* IE6-9 */
+	bottom: 0px;
+	margin: 0;
+	width: 100%;
+	height: 28px;
+	z-index: 999;
+}
+
+.nivo-controlNav.text a {
+	background: none;
+	border-right: 1px solid #D0D0D0;
+    color: #565657;
+    display: block;
+    font-weight: bold;
+    height: 25px;
+    margin: 2px 0 0;
+    padding: 2px 0 0;
+    text-indent: 0;
+    width: auto;
+	font-size: 12px !important;
+	text-shadow: 0 1px #ffffff;
+}
+
+.nivo-controlNav.text a.active,
+.nivo-controlNav.text a:hover {
+	color: #ff4b00;
+}
+
+
+	
+/** Custom Banner Styles for Pages **/
+.cms-index-index .vortex_banner_wrapper.content {
+	float: left; 
+	margin:0 0 10px;
+}
+
+.cms-index-index .vortex_banner_wrapper.sub_content_left,
+.cms-index-index .vortex_banner_wrapper.sub_content_middle,
+.cms-index-index .vortex_banner_wrapper.sub_content_right {
+	margin:0 10px 10px 0;
+	float:left;
+	width:310px;
+	overflow:hidden;
+}
+
+.cms-index-index .vortex_banner_wrapper.sub_content_right {
+	margin-right:0;
+}

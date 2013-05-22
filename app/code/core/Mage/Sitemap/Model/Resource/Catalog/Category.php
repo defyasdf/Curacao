@@ -20,7 +20,7 @@
  *
  * @category    Mage
  * @package     Mage_Sitemap
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
@@ -32,10 +32,25 @@
  * @package     Mage_Sitemap
  * @author      Magento Core Team <core@magentocommerce.com>
  */
-class Mage_Sitemap_Model_Resource_Catalog_Category extends Mage_Sitemap_Model_Resource_Catalog_Abstract
+class Mage_Sitemap_Model_Resource_Catalog_Category extends Mage_Core_Model_Resource_Db_Abstract
 {
     /**
+     * Collection Zend Db select
+     *
+     * @var Zend_Db_Select
+     */
+    protected $_select;
+
+    /**
+     * Attribute cache
+     *
+     * @var array
+     */
+    protected $_attributesCache    = array();
+
+    /**
      * Init resource model (catalog/category)
+     *
      */
     protected function _construct()
     {
@@ -45,13 +60,16 @@ class Mage_Sitemap_Model_Resource_Catalog_Category extends Mage_Sitemap_Model_Re
     /**
      * Get category collection array
      *
-     * @param int $storeId
+     * @param unknown_type $storeId
      * @return array
      */
     public function getCollection($storeId)
     {
-        /* @var $store Mage_Core_Model_Store */
+        $categories = array();
+
         $store = Mage::app()->getStore($storeId);
+        /* @var $store Mage_Core_Model_Store */
+
         if (!$store) {
             return false;
         }
@@ -59,69 +77,117 @@ class Mage_Sitemap_Model_Resource_Catalog_Category extends Mage_Sitemap_Model_Re
         $this->_select = $this->_getWriteAdapter()->select()
             ->from($this->getMainTable())
             ->where($this->getIdFieldName() . '=?', $store->getRootCategoryId());
-
         $categoryRow = $this->_getWriteAdapter()->fetchRow($this->_select);
+
         if (!$categoryRow) {
             return false;
         }
 
+        $urConditions = array(
+            'e.entity_id=ur.category_id',
+            $this->_getWriteAdapter()->quoteInto('ur.store_id=?', $store->getId()),
+            'ur.product_id IS NULL',
+            $this->_getWriteAdapter()->quoteInto('ur.is_system=?', 1),
+        );
         $this->_select = $this->_getWriteAdapter()->select()
-            ->from(array('main_table' => $this->getMainTable()), array($this->getIdFieldName()))
-            ->where('main_table.path LIKE ?', $categoryRow['path'] . '/%');
-
-        $storeId = (int)$store->getId();
-
-        /** @var $urlRewrite Mage_Catalog_Helper_Category_Url_Rewrite_Interface */
-        $urlRewrite = $this->_factory->getCategoryUrlRewriteHelper();
-        $urlRewrite->joinTableToSelect($this->_select, $storeId);
+            ->from(array('e' => $this->getMainTable()), array($this->getIdFieldName()))
+            ->joinLeft(
+                array('ur' => $this->getTable('core/url_rewrite')),
+                join(' AND ', $urConditions),
+                array('url'=>'request_path')
+            )
+            ->where('e.path LIKE ?', $categoryRow['path'] . '/%');
 
         $this->_addFilter($storeId, 'is_active', 1);
 
-        return $this->_loadEntities();
+        $query = $this->_getWriteAdapter()->query($this->_select);
+        while ($row = $query->fetch()) {
+            $category = $this->_prepareCategory($row);
+            $categories[$category->getId()] = $category;
+        }
+
+        return $categories;
     }
 
     /**
      * Prepare category
-     *
-     * @deprecated after 1.7.0.2
      *
      * @param array $categoryRow
      * @return Varien_Object
      */
     protected function _prepareCategory(array $categoryRow)
     {
-        return $this->_prepareObject($categoryRow);
+        $category = new Varien_Object();
+        $category->setId($categoryRow[$this->getIdFieldName()]);
+        $categoryUrl = !empty($categoryRow['url']) ? $categoryRow['url'] : 'catalog/category/view/id/' . $category->getId();
+        $category->setUrl($categoryUrl);
+        return $category;
     }
 
     /**
-     * Retrieve entity url
+     * Add attribute to filter
      *
-     * @param array $row
-     * @param Varien_Object $entity
-     * @return string
-     */
-    protected function _getEntityUrl($row, $entity)
-    {
-        return !empty($row['request_path']) ? $row['request_path'] : 'catalog/category/view/id/' . $entity->getId();
-    }
-
-    /**
-     * Loads category attribute by given attribute code.
-     *
+     * @param int $storeId
      * @param string $attributeCode
-     * @return Mage_Sitemap_Model_Resource_Catalog_Abstract
+     * @param mixed $value
+     * @param string $type
+     * @return Zend_Db_Select
      */
-    protected function _loadAttribute($attributeCode)
+    protected function _addFilter($storeId, $attributeCode, $value, $type = '=')
     {
-        $attribute = Mage::getSingleton('catalog/category')->getResource()->getAttribute($attributeCode);
+        if (!isset($this->_attributesCache[$attributeCode])) {
+            $attribute = Mage::getSingleton('catalog/category')->getResource()->getAttribute($attributeCode);
 
-        $this->_attributesCache[$attributeCode] = array(
-            'entity_type_id' => $attribute->getEntityTypeId(),
-            'attribute_id'   => $attribute->getId(),
-            'table'          => $attribute->getBackend()->getTable(),
-            'is_global'      => $attribute->getIsGlobal(),
-            'backend_type'   => $attribute->getBackendType()
-        );
-        return $this;
+            $this->_attributesCache[$attributeCode] = array(
+                'entity_type_id'    => $attribute->getEntityTypeId(),
+                'attribute_id'      => $attribute->getId(),
+                'table'             => $attribute->getBackend()->getTable(),
+                'is_global'         => $attribute->getIsGlobal(),
+                'backend_type'      => $attribute->getBackendType()
+            );
+        }
+
+        $attribute = $this->_attributesCache[$attributeCode];
+
+        if (!$this->_select instanceof Zend_Db_Select) {
+            return false;
+        }
+
+        switch ($type) {
+            case '=':
+                $conditionRule = '=?';
+                break;
+            case 'in':
+                $conditionRule = ' IN(?)';
+                break;
+            default:
+                return false;
+                break;
+        }
+
+        if ($attribute['backend_type'] == 'static') {
+            $this->_select->where('e.' . $attributeCode . $conditionRule, $value);
+        } else {
+            $this->_select->join(
+                array('t1_'.$attributeCode => $attribute['table']),
+                'e.entity_id=t1_'.$attributeCode.'.entity_id AND t1_'.$attributeCode.'.store_id=0',
+                array()
+            )
+            ->where('t1_'.$attributeCode.'.attribute_id=?', $attribute['attribute_id']);
+
+            if ($attribute['is_global']) {
+                $this->_select->where('t1_'.$attributeCode.'.value'.$conditionRule, $value);
+            } else {
+                $ifCase = $this->_select->getAdapter()->getCheckSql('t2_'.$attributeCode.'.value_id > 0', 't2_'.$attributeCode.'.value', 't1_'.$attributeCode.'.value');
+                $this->_select->joinLeft(
+                    array('t2_'.$attributeCode => $attribute['table']),
+                    $this->_getWriteAdapter()->quoteInto('t1_'.$attributeCode.'.entity_id = t2_'.$attributeCode.'.entity_id AND t1_'.$attributeCode.'.attribute_id = t2_'.$attributeCode.'.attribute_id AND t2_'.$attributeCode.'.store_id=?', $storeId),
+                    array()
+                )
+                ->where('('.$ifCase.')'.$conditionRule, $value);
+            }
+        }
+
+        return $this->_select;
     }
 }

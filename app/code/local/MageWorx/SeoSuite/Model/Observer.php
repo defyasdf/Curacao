@@ -100,7 +100,8 @@ class MageWorx_SeoSuite_Model_Observer {
         $front = $observer->getEvent()->getFront();
         $origUri = $front->getRequest()->getRequestUri();
         $origUri = explode('?', $origUri, 2);
-        $uri = preg_replace('~(?:index\.php/+home/*|index\.php/*|home/*)$~i', '', $origUri[0]);
+        //$uri = preg_replace('~(?:index\.php/+home/*|index\.php/*|home/*)$~i', '', $origUri[0]);
+        $uri = $origUri[0];
         if (strpos($origUri[0], '/downloader/index.php') !== false) {
             return;
         }

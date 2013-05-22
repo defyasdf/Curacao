@@ -20,7 +20,7 @@
  *
  * @category    Mage
  * @package     Mage_Tag
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
@@ -250,7 +250,7 @@ class Mage_Tag_Model_Resource_Customer_Collection extends Mage_Customer_Model_Re
         ->join(
             array('tr' => $tagRelationTable),
             'tr.customer_id = e.entity_id',
-            array('tag_relation_id', 'product_id', 'active', 'added_in' => 'store_id')
+            array('tag_relation_id', 'product_id', 'active')
         )
         ->join(array('t' => $tagTable), 't.tag_id = tr.tag_id', array('*'));
     }
@@ -273,13 +273,13 @@ class Mage_Tag_Model_Resource_Customer_Collection extends Mage_Customer_Model_Re
     }
 
     /**
-     * Adds Product names to item
+     * Adds Product names to select
      *
      * @return Mage_Tag_Model_Resource_Customer_Collection
      */
     public function addProductName()
     {
-        $productsId   = array();
+        $productsId = array();
         $productsData = array();
 
         foreach ($this->getItems() as $item) {
@@ -313,31 +313,23 @@ class Mage_Tag_Model_Resource_Customer_Collection extends Mage_Customer_Model_Re
     }
 
     /**
-     * Adds Product names to select
+     * Sets order by attribute
      *
+     * @param string $attribute
+     * @param string $dir
      * @return Mage_Tag_Model_Resource_Customer_Collection
      */
-    public function addProductToSelect()
+    public function setOrder($attribute, $dir = 'desc')
     {
-        $resource = Mage::getModel('catalog/product')->getResource();
+        switch( $attribute ) {
+            case 'name':
+            case 'status':
+                $this->getSelect()->order($attribute . ' ' . $dir);
+                break;
 
-        // add product attributes to select
-        foreach (array('name' => 'value') as $field => $fieldName) {
-            $attr = $resource->getAttribute($field);
-            $this->_select->joinLeft(
-                array($field => $attr->getBackend()->getTable()),
-                'tr.product_id = ' . $field . '.entity_id AND ' . $field . '.attribute_id = ' . $attr->getId(),
-                array('product_' . $field => $fieldName)
-            );
+            default:
+                parent::setOrder($attribute, $dir);
         }
-
-        // add product fields
-        $this->_select->joinLeft(
-            array('p' => $this->getTable('catalog/product')),
-            'tr.product_id = p.entity_id',
-            array('product_sku' => 'sku')
-        );
-
         return $this;
     }
 
@@ -381,30 +373,4 @@ class Mage_Tag_Model_Resource_Customer_Collection extends Mage_Customer_Model_Re
         }
     }
 
-    /**
-     * Treat "order by" items as attributes to sort
-     *
-     * @return Mage_Tag_Model_Resource_Customer_Collection
-     */
-    protected function _renderOrders()
-    {
-        if (!$this->_isOrdersRendered) {
-            parent::_renderOrders();
-
-            $orders = $this->getSelect()
-                ->getPart(Zend_Db_Select::ORDER);
-
-            $appliedOrders = array();
-            foreach ($orders as $order) {
-                $appliedOrders[$order[0]] = true;
-            }
-
-            foreach ($this->_orders as $field => $direction) {
-                if (empty($appliedOrders[$field])) {
-                    $this->_select->order(new Zend_Db_Expr($field . ' ' . $direction));
-                }
-            }
-        }
-        return $this;
-    }
 }

@@ -20,7 +20,7 @@
  *
  * @category    Enterprise
  * @package     Enterprise_Rma
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 
@@ -31,7 +31,7 @@ class Enterprise_Rma_Block_Return_Tracking extends Mage_Core_Block_Template
      *
      * @var bool|null
      */
-    protected $_isRmaAvailableForPrintLabel;
+    protected $_isRmaAvailableForPrintLabel = null;
 
     /**
      * Class constructor
@@ -46,11 +46,11 @@ class Enterprise_Rma_Block_Return_Tracking extends Mage_Core_Block_Template
     /**
      * Get collection of tracking numbers of RMA
      *
-     * @return Enterprise_Rma_Model_Resource_Shipping_Collection|array
+     * @return Enterprise_Rma_Model_Resource_Shipping_Collection
      */
     public function getTrackingNumbers()
     {
-        return $this->getRma() ? $this->getRma()->getTrackingNumbers() : array();
+        return $this->getRma()->getTrackingNumbers();
     }
 
     /**
@@ -60,9 +60,7 @@ class Enterprise_Rma_Block_Return_Tracking extends Mage_Core_Block_Template
      */
     public function getDeleteLabelUrl()
     {
-        return $this->getRma()
-            ? $this->getUrl('*/*/delLabel/', array('entity_id' => $this->getRma()->getEntityId()))
-            : '';
+        return $this->getUrl('*/*/delLabel/', array('entity_id' => $this->getRma()->getEntityId()));
     }
 
     /**
@@ -84,8 +82,8 @@ class Enterprise_Rma_Block_Return_Tracking extends Mage_Core_Block_Template
      */
     public function isPrintShippingLabelAllowed()
     {
-        if ($this->_isRmaAvailableForPrintLabel === null) {
-            $this->_isRmaAvailableForPrintLabel = $this->getRma() && $this->getRma()->isAvailableForPrintLabel();
+        if (is_null($this->_isRmaAvailableForPrintLabel)) {
+            $this->_isRmaAvailableForPrintLabel = $this->getRma()->isAvailableForPrintLabel();
         }
         return $this->_isRmaAvailableForPrintLabel;
     }
