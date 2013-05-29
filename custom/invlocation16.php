@@ -38,6 +38,7 @@ $h = $proxy->__setSoapHeaders($header);
 $collection = Mage::getModel('catalog/product')->getCollection()
 		->addAttributeToSelect('*') // select all attributes
 		->addAttributeToFilter('vendorid', '2139')
+		->addAttributeToFilter('shprate', array('neq' => 'Domestic'))
 		->setCurPage(4); // set the offset (useful for pagination)
 		
 		// we iterate through the list of products to get attribute values
