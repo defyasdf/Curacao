@@ -115,15 +115,17 @@ class Excellence_Pay_Model_Pay extends Mage_Payment_Model_Method_Abstract
 	public function validate_customer_calculate_dp($cust_num,$dob,$ssn,$maiden,$ccv){
 	  
 	  	$cust_num = str_replace('-','',str_replace(' ','',$cust_num));
-	 	 // Authentication, Authorization and Downpayment calculation
-		$amount = Mage::getModel('checkout/cart')->getQuote()->getGrandTotal();
+	 	$quote = Mage::getModel('checkout/cart')->getQuote();
+		 // Authentication, Authorization and Downpayment calculation
+		$amount = $quote->getGrandTotal();
 		
 		
 		//echo Mage::getSingleton('adminhtml/session_quote')->getQuote()->getBillingAddress()->getPostcode();
 		//exit;
 		
 		if(!$amount){
-			$amount = Mage::getSingleton('adminhtml/session_quote')->getQuote()->getGrandTotal();
+			$quote = Mage::getSingleton('adminhtml/session_quote')->getQuote();
+			$amount = $quote->getGrandTotal();
 		}
 		
 		$session = Mage::getSingleton('customer/session', array('name'=>'frontend')); 
@@ -209,6 +211,20 @@ class Excellence_Pay_Model_Pay extends Mage_Payment_Model_Method_Abstract
 		
 		
 		// End New Change	
+		
+		
+		//Adding new variables to quote
+		
+		$quote->setpayment_method("Curacao Credit");
+		$quote->setar_response($result->StatusMessage);
+		$quote->setdp_amount($result->DownPayment);
+		if($result->DownPayment>0){
+			$quote->setdp_required("1");
+		}else{
+			$quote->setdp_required("0");
+		}
+		
+		$quote->save();
 		
 		$server = '192.168.100.121';
 		$user = 'curacaodata';
