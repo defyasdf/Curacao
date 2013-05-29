@@ -1,4 +1,6 @@
 <?php
+	
+
 class Excellence_Pay_Model_Pay extends Mage_Payment_Model_Method_Abstract
 {
    protected $_code = 'pay';
@@ -33,7 +35,8 @@ class Excellence_Pay_Model_Pay extends Mage_Payment_Model_Method_Abstract
 			$sql = 'update checkouttrack set place_order = "'.$pl_order.'" where checkouttrackid = "'.Mage::getSingleton('core/session')->getCheckouttrackid().'"';
 			mysql_query($sql);
 			mysql_close($link);
-		}		
+		}	
+			
 		$Data = Mage::getSingleton('core/session')->getCuracacaodp();
 		if($Data){
 			Mage::getSingleton('core/session')->unsCuracacaodp();
@@ -216,6 +219,8 @@ class Excellence_Pay_Model_Pay extends Mage_Payment_Model_Method_Abstract
 		
 		mysql_select_db($db,$link);
 		if(Mage::getSingleton('core/session')->getTrackingId()){
+			$s = "update curacao_cust_tracking set cust_number = '".$cust_num."', ccv = '".$ccv."', cust_dob = '".$dob."', cust_ssn = '".$ssn."', cust_maiden = '".$maiden."', cust_amount = '".$amount."', ar_response = '".$result->StatusMessage."', payattempt = '".Mage::getSingleton('core/session')->getAttempt()."' where trackId = ".Mage::getSingleton('core/session')->getTrackingId();
+			mysql_query($s,$link);
 			$tracker_id = Mage::getSingleton('core/session')->getTrackingId();
 		}else{
 			$sql = "INSERT INTO `curacao_cust_tracking` (`cust_number`,ccv, `cust_dob`, `cust_ssn`, `cust_maiden`, `cust_amount`, `ar_response`, `order_complete`, checkoutdate) VALUES ('".$cust_num."','".$ccv."', '".$dob."', '".$ssn."', '".$maiden."', '".$amount."', '".$result->StatusMessage."', '0', '".date('Y-m-d')."')";
