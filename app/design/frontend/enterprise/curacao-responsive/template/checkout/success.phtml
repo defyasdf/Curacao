@@ -480,3 +480,47 @@ var google_conversion_value = 0;
 <?php 
 	mysql_close($link);
 ?>
+<!--Bronto Conversion-->
+<!--Load JavaScript (TOP of the page after the opening BODY tag) -->
+
+
+<!--Open Body Tag -->
+<script type="text/javascript">
+	document.write(unescape("%3Cscript src='"
+		+ ((document.location.protocol == "https:") ? "https:" : "http:")
+		+ "//p.bm23.com/bta.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+	var bta = new __bta('acxhzmypejmnhsowqaqxwyyhyesgbcd');
+	bta.setHost("app.bronto.com");
+</script>
+
+
+
+
+<!--Track conversion (BOTTOM of the page before the closing BODY tag)-->
+
+<script type="text/javascript">
+	// Uncomment one of the following to track conversions
+
+	// 1) Legacy conversion tracking
+	 bta.addConversionLegacy("$", "sale", "<?php echo $grandTotal;?>");
+
+	// 2) New, more detailed conversion tracking
+	// In most cases, values in the cookie are used to associate an order
+	// with a contact and a delivery, so there is no need to pass in email or
+	// contact_id. If you do pass in email or contact_id and these values do not
+	// match what is in the cookie (or the cookie does not exist), then the order
+	// will only be associated with the email or contact_id passed in. If you pass
+	// in email or contact_id and these values match what is in the cookie, then the
+	// order will be associated with the email or contact_id passed in, and the delivery
+	// from the cookie.
+	/*
+	bta.addOrder({ "order_id": "", "email": "", "contact_id": "", "date": "", "items": [
+		{ "item_id":"item1", "desc":"description", "amount":"$123.33", "quantity":"1", "name":"name", "category":"category", "image":"http://imageUrl", "url":"http://itemUrl" },
+		{ "item_id":"item2", "desc":"description 2", "amount":"$10.25", "quantity":"1", "name":"name", "category":"category", "image":"http://imageUrl", "url":"http://itemUrl" }
+	]});
+	*/
+</script>
+<!--Close Body Tag -->
+<!--End Bronto Conversion-->
