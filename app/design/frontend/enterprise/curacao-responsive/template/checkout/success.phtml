@@ -75,6 +75,16 @@
 	$coupanamt = $pind*10;
 	
 	$ecid = Mage::getSingleton('core/session')->getCampaignid();
+	$hid = Mage::getSingleton('core/session')->getHid();
+	$sub = $orderObj->getSubtotal();
+	$revshare = $sub/10;
+	if($hid){
+		?>
+		<iframe width='1' height='1' frameborder='0' src='http://affiliate.gwmtracker.com/rd/ipx.php?hid=<?php echo $hid?>&sid=5135&transid=<?php echo $this->getOrderId();?>&ate=<?php echo $revshare?>'></iframe>
+       <?php
+	  $orderObj->setRevshareamt($revshare);
+	  $orderObj->setHid($hid); 
+	}
 	
 	if($ecid){
 		$q = "select * from emailcampaign where campaignId = '".$ecid."'";
@@ -381,6 +391,7 @@ echo '</pre>';*/
 	  Mage::getSingleton('core/session')->unsTrackid();	
 	  Mage::getSingleton('core/session')->unsPreapproveid();	
 	  Mage::getSingleton('core/session')->unsAttempt();
+	  Mage::getSingleton('core/session')->unsHid();
 	  Mage::getSingleton('core/session')->unsCheckouttrackid();	
 ?>
 <?php 
