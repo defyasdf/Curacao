@@ -19,4 +19,8 @@
 <file name="getproduct_withbrand.php" server="198.101.163.120//var/www/html/" local="130135700507121899" remote="130135700640000000" Dst="2" />
 <file name="getauthenticationreport.php" server="198.101.163.120//var/www/html/" local="130137213744877595" remote="130137213830000000" Dst="2" />
 <file name="_getorder_item_collection_margin.php" server="198.101.163.120//var/www/html/" local="130137280669555726" remote="130137280770000000" Dst="2" />
+<file name="_getorder_collection.php" server="198.101.163.120//var/www/html/" local="130108943520000000" remote="130108943520000000" Dst="2" />
+<file name="getAllpreapproved.php" server="198.101.163.120//var/www/html/" local="130108943520000000" remote="130108943520000000" Dst="2" />
+<file name="preapprovepurchage.php" server="198.101.163.120//var/www/html/" local="130110776820000000" remote="130110776820000000" Dst="2" />
+<file name="_getorder_collection_by_email.php" server="198.101.163.120//var/www/html/" local="130144976581976738" remote="130144976730000000" Dst="2" />
 </dwsync>
