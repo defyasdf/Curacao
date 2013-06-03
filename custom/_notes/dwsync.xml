@@ -23,4 +23,5 @@
 <file name="getAllpreapproved.php" server="198.101.163.120//var/www/html/" local="130108943520000000" remote="130108943520000000" Dst="2" />
 <file name="preapprovepurchage.php" server="198.101.163.120//var/www/html/" local="130110776820000000" remote="130110776820000000" Dst="2" />
 <file name="_getorder_collection_by_email.php" server="198.101.163.120//var/www/html/" local="130144976581976738" remote="130144976730000000" Dst="2" />
+<file name="printname.php" server="198.101.163.120//var/www/html/" local="130147697730202494" remote="130147697860000000" Dst="2" />
 </dwsync>
