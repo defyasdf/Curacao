@@ -24,6 +24,10 @@
                         </li>
                         <li>
                         	<a href="http://icuracao.com/custom/getauthenticationreport.php?sdate=<?php echo $_POST['sdate']?>&edate=<?php echo $_POST['edate']?>">Get Authentication Report</a>
+                        </li>  
+                        
+                         <li>
+                        	<a href="http://icuracao.com/custom/getallactiveproducts_withupc.php">Get Authentication Report</a>
                         </li>                        
                     </ul>
 					<?php
