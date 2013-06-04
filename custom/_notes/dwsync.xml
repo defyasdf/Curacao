@@ -2,7 +2,7 @@
 <dwsync>
 <file name="invlocation16.php" server="198.101.163.120//var/www/html/" local="130142363730000000" remote="130142363730000000" Dst="2" />
 <file name="validateinfo.php" server="198.101.163.120//var/www/html/" local="130108943520000000" remote="130108943520000000" Dst="2" />
-<file name="getallactiveproducts_withupc.php" server="198.101.163.120//var/www/html/" local="130126864623307819" remote="130126864700000000" Dst="2" />
+<file name="getallactiveproducts_withupc.php" server="198.101.163.120//var/www/html/" local="130148474907904516" remote="130148475030000000" Dst="2" />
 <file name="getallactiveproducts.php" server="198.101.163.120//var/www/html/" local="130147840816506563" remote="130147841060000000" Dst="2" />
 <file name="allchildren_cat.php" server="198.101.163.120//var/www/html/" local="130126892347703564" remote="130126892420000000" Dst="2" />
 <file name="promo_code_report.php" server="198.101.163.120//var/www/html/" local="130126976751081161" remote="130126977070000000" Dst="2" />
@@ -24,4 +24,5 @@
 <file name="preapprovepurchage.php" server="198.101.163.120//var/www/html/" local="130110776820000000" remote="130110776820000000" Dst="2" />
 <file name="_getorder_collection_by_email.php" server="198.101.163.120//var/www/html/" local="130144976581976738" remote="130144976730000000" Dst="2" />
 <file name="printname.php" server="198.101.163.120//var/www/html/" local="130147697730202494" remote="130147697860000000" Dst="2" />
+<file name="testgetproduct.php" server="198.101.163.120//var/www/html/" local="130148474026034076" remote="130148474150000000" Dst="2" />
 </dwsync>

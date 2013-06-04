@@ -25,6 +25,24 @@
 	$currentStore = Mage::app()->getStore()->getId();
 	Mage::app()->setCurrentStore(Mage_Core_Model_App::ADMIN_STORE_ID);
  	
+	$cat = Mage::getModel('catalog/category')->load(466);
+	$subcatcollection = $cat->getChildren();
+	
+	$subcat = explode(",",$subcatcollection);
+	
+	$cat_collecton = $subcat;
+	$final_list = array();
+	for($i=0;$i<sizeof($cat_collecton);$i++){
+		$scat = $cat = Mage::getModel('catalog/category')->load($cat_collecton[$i]);
+		$scatcollection = $scat->getChildren();
+		if(trim($scatcollection)!=''){
+			$sucat = explode(",",$scatcollection);
+			$final_list = array_merge($cat_collecton,$sucat);
+		}
+	}
+	if(sizeof($final_list)==0){
+		$final_list = $cat_collecton;
+	}
 	
 	
 	$collection = Mage::getModel('catalog/product')->getCollection()
@@ -40,9 +58,27 @@
 			
 			$cat_ids = Mage::getResourceSingleton('catalog/product')->getCategoryIds($product);
 			$cName = array();
-			for($i = 0;$i<(sizeof($cat_ids)-1);$i++){
-				$cName[] = Mage::getModel('catalog/category')->load($cat_ids[$i])->getName();
+			$cid = array();
+			for($i = 0;$i<(sizeof($cat_ids));$i++){
+				if(isset($cat_ids[$i])){
+					$scat = $cat = Mage::getModel('catalog/category')->load($cat_ids[$i]);
+					
+					if(in_array($scat->parent_id,$cat_ids)){
+						$cid[] = $scat->parent_id;
+						$key = array_search($scat->parent_id, $cat_ids); // $key = 2;
+						unset($cat_ids[$key]);
+					}	
+				}
+				//$cName[] = Mage::getModel('catalog/category')->load($cat_ids[$i])->getName();
+				
 			}		
+			$cattree = array_merge($cid,$cat_ids);	
+			for($j=0;$j<sizeof($cattree);$j++){
+				if(!in_array($cattree[$i],$final_list)){
+					$cName[] = Mage::getModel('catalog/category')->load($cattree[$j])->getName();
+				}
+			}
+			
 			$cat = implode('_',$cName);					
 			
 			$url = 'http://www.icuracao.com/'.$product->getUrlPath();
