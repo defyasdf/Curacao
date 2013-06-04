@@ -31,7 +31,7 @@
 	$subcat = explode(",",$subcatcollection);
 	
 	$cat_collecton = $subcat;
-	
+	$final_list = array();
 	for($i=0;$i<sizeof($cat_collecton);$i++){
 		$scat = $cat = Mage::getModel('catalog/category')->load($cat_collecton[$i]);
 		$scatcollection = $scat->getChildren();
@@ -40,7 +40,9 @@
 			$final_list = array_merge($cat_collecton,$sucat);
 		}
 	}
-	
+	if(sizeof($final_list)==0){
+		$final_list = $cat_collecton;
+	}
 	$collection = Mage::getModel('catalog/product')->getCollection()
 		->addAttributeToSelect('*') // select all attributes
 		->addAttributeToFilter('status', 1)
