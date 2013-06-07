@@ -2,15 +2,21 @@
 	ini_set('max_execution_time', 0);
 	ini_set('display_errors', 1);
 	ini_set("memory_limit","1024M");
+	
 	$server = '192.168.100.121';
 	$user = 'curacaodata';
 	$pass = 'curacaodata';
-	$db = 'icuracaoproduct';
+	$db = 'curacao_magento';
+	
 	
 	
 	$link = mysql_connect($server,$user,$pass);
+	$link1 = mysql_connect($server,$user,$pass,true);
 	
-	mysql_select_db($db,$link);	
+	mysql_select_db($db,$link) or die("No DB");	
+	mysql_select_db('icuracaoproduct',$link1) or die("No DB");	
+
+
 	$mageFilename = '../app/Mage.php';
 	
 	require_once $mageFilename;
@@ -55,15 +61,32 @@
 		foreach ($collection as $product) {
 			
 //			echo "(".$j.")".$product->getSku()."<br>";
+			$sql = "SELECT cc . * FROM catalog_category_entity cc JOIN catalog_category_product cp ON cc.entity_id = cp.category_id WHERE cp.product_id = ".$product->getId()." AND cc.path NOT LIKE '1/2/466%' ORDER BY `cc`.`level` DESC";
+			$result = mysql_query($sql,$link);
+			$row = mysql_fetch_array($result);
 			
-			$cat_ids = Mage::getResourceSingleton('catalog/product')->getCategoryIds($product);
+			$cat_id = str_replace('1/2/','',$row['path']);
+			$cattree = explode('/',$cat_id);
 			$cName = array();
+			/*print_r($cattree);
+			exit;
+			
 			$cid = array();
 			for($i = 0;$i<(sizeof($cat_ids));$i++){
 				if(isset($cat_ids[$i])){
-					$scat = $cat = Mage::getModel('catalog/category')->load($cat_ids[$i]);
-					
-					if(in_array($scat->parent_id,$cat_ids)){
+					$scat = Mage::getModel('catalog/category')->load($cat_ids[$i]);
+					$subcat = $scat->getChildren();
+					if(($i+1)<sizeof($cat_ids)){
+						if(in_array($cat_ids[$i+1],$subcat)){
+							$cid[] = $cat_ids[$i];
+							
+							unset($cat_ids[$key]);
+						}elseif(in_array($scat->parent_id,$cat_ids)){
+							$cid[] = $scat->parent_id;
+							$key = array_search($scat->parent_id, $cat_ids); // $key = 2;
+							unset($cat_ids[$key]);
+						}
+					}elseif(in_array($scat->parent_id,$cat_ids)){
 						$cid[] = $scat->parent_id;
 						$key = array_search($scat->parent_id, $cat_ids); // $key = 2;
 						unset($cat_ids[$key]);
@@ -71,10 +94,12 @@
 				}
 				//$cName[] = Mage::getModel('catalog/category')->load($cat_ids[$i])->getName();
 				
-			}		
-			$cattree = array_merge($cid,$cat_ids);	
+			}*/		
+			//$cattree = array_merge($cid,$cat_ids);	
+			/*print_r($cattree);
+			exit;*/
 			for($j=0;$j<sizeof($cattree);$j++){
-				if(!in_array($cattree[$i],$final_list)){
+				if(!in_array($cattree[$j],$final_list)){
 					$cName[] = Mage::getModel('catalog/category')->load($cattree[$j])->getName();
 				}
 			}
@@ -105,7 +130,7 @@
 			}
 			
 			$sql = "SELECT product_upc FROM `masterproducttable` WHERE `product_sku` = '".$sku."' limit 0,1";
-			$result = mysql_query($sql);
+			$result = mysql_query($sql,$link1);
 			$row = mysql_fetch_array($result);
 			
 			$data[] = array( "product_id"=>$product->getId(),"name"=>$product->getName(), "sku"=>$product->getSku(),"UPC"=>$row['product_upc'],"URL"=>$url,"Image_URL"=>$image,"category_tree"=>$cat,"QTY"=>$qtyStock, "price"=>$product->getPrice(), "Special_price"=>$product->getSpecialPrice(),"Special_From_date"=>$product->getspecial_from_date(),"Special_To_date"=>$product->getspecial_to_date(), "Cost_price"=>$product->getCost(),"shipping"=>$product->getShprate(),"Status"=>$product->getStatus());
@@ -136,31 +161,3 @@
 	exit;	
 	
 	
-	$server = '192.168.100.121';
-	$user = 'curacaodata';
-	$pass = 'curacaodata';
-	$db = 'icuracaoproduct';
-	
-	
-	$link = mysql_connect($server,$user,$pass);
-	
-	mysql_select_db($db,$link);
-	$n = 1;
-	$m = 1;
-	$sql = "SELECT * FROM `finalproductlist` WHERE `magento_product_id` != '' AND magento_product_id !=0";
-	$result = mysql_query($sql);
-	while($row=mysql_fetch_array($result)){
-		$product = Mage::getModel('catalog/product');
-		$product->load($row['magento_product_id']);
-		if(sizeof($product->getSmallImage())){
-			//echo sizeof($product->getSmallImage());
-			if($row['product_img_path']!=''){
-				$m++;
-			}	
-			$n++;
-		}
-		
-//		exit;
-	}
-	
-	echo $n .'No Image In Magento'. $m . ' No Image in Database'; ;
