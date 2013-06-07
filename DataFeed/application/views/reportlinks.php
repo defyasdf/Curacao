@@ -27,7 +27,7 @@
                         </li>  
                         
                          <li>
-                        	<a href="http://icuracao.com/custom/getallactiveproducts_withupc.php">Get Authentication Report</a>
+                        	<a href="http://icuracao.com/custom/getallactiveproducts_withupc.php">Get All Active Skus</a>
                         </li>                        
                     </ul>
 					<?php
