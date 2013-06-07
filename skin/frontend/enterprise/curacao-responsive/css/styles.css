@@ -4715,7 +4715,7 @@ input[type="text"].authcode {
 }
 #saleoverlay{
 	margin-left: 285px;
-	margin-top: 250px;
+	margin-top: 150px;
 	position: absolute;
 	z-index: 99;
 }
