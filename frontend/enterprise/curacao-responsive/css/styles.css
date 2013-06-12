@@ -1719,6 +1719,8 @@ a.button.related strong { color: #fff; text-shadow:0 -1px #666666;}
 	}
 	
 	.box-related .block-header {
+		margin:0;
+		padding:0;
 	}
 	
 	.box-related .box-holder {
@@ -2555,7 +2557,7 @@ a.button.related strong { color: #fff; text-shadow:0 -1px #666666;}
 	
 	a.cart-link { font-size: 12px !important; color: #008ECF !important; font-weight: normal !important; }
 	.continue-shop { float: right; margin-right: 20px; margin-top:10px; }
-	.totals-container { padding: 15px; background-color: #f1f1f1; margin: 0 0 20px 40px; }
+	.totals-container { padding: 15px; background-color: #f1f1f1; margin: 0 0 20px 40px; overflow:hidden; }
 	.totals td.grand-title { font-size: 16px; font-weight: bold; color: #444444 !important; }
 	.totals td.grand-price { font-size: 16px; font-weight: bold; color: #d5172f !important; }
 	button.update-button {
@@ -3052,18 +3054,18 @@ p.form-required { font-size: 11px; float: right; }
 /*================================================================================ */
 
 
-.messages { width:100%; text-align:left; margin:10px 0 20px 0 !important; overflow:hidden; }
+.messages { width:100%; text-align:left; margin:10px 0 20px 0 !important; overflow:hidden; clear:both; }
 .catalog-product-view .messages { margin:0 0 20px 0 !important; }
 .messages li { padding:0 !important; margin:0 0 10px; }
 .messages ul { position:relative; padding:10px 10px; margin:0 0 -11px !important;  height: 50px;
 }
 .messages ul li { background:none !important; padding:0 0 3px !important; margin:0; }
-.messages a { text-decoration:underline; }
+.messages a { text-decoration:none; }
 .messages a:hover { text-decoration:none; }
 .messages li.error-msg, .messages li.success-msg, .messages li.note-msg, .messages li.notice-msg { font-size:12px !important; font-style:italic; }
 p.error-msg { font-size:12px !important; padding:10px; margin:10px 0; }
 .messages li.error-msg, p.error-msg { background:#fff5f3 !important; color:#d91a00; }
-.messages li.error-msg a, .messages li.success-msg a, .messages li.note-msg a, .messages li.notice-msg a { color:#fefefe; }
+.messages li.error-msg a, .messages li.success-msg a, .messages li.note-msg a, .messages li.notice-msg a { color:#008ECF; }
 .messages li.success-msg { background:#eff5ea !important; color:#3d6611; border: 1px solid #bacba7; }
 .messages li.note-msg, .messages li.notice-msg { background:#e5eef4 !important; color:#113566; }
 
@@ -4164,7 +4166,7 @@ table.win8 td.bottomborder { border-bottom: 1px solid #d7d7d7; }
 }
 
 .iphonetabs .iphonetab .features  #iphone5-design { 
-	background: url(../../../../../images/iphone5/iphone5-design.jpg) no-repeat scroll right top transparent; 
+	background: url(../../../../../../../images/iphone5/iphone5-design.jpg) no-repeat scroll right top transparent; 
 	height: 315px; 
 	position: relative; 
 	width: 100%; 
@@ -4713,7 +4715,7 @@ input[type="text"].authcode {
 }
 #saleoverlay{
 	margin-left: 285px;
-	margin-top: 250px;
+	margin-top: 150px;
 	position: absolute;
 	z-index: 99;
 }
@@ -4887,4 +4889,9 @@ span.separator {
 
 .rating-box .rating.nobr {
 	text-indent: -999em;
+}
+noscript{
+	color:#F00;
+	font-size:12px;
+	font-weight:bold;
 }
