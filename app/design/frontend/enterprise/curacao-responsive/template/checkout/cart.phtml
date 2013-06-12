@@ -287,3 +287,11 @@
 	}
     //]]>
 </script>
+
+<?php
+	$quote = Mage::getModel('checkout/cart')->getQuote();
+ if(Mage::getSingleton('core/session')->getGwmid()){
+	$quote->setgwmId(Mage::getSingleton('core/session')->getGwmid());
+	$quote->save();	
+ }
+?>
