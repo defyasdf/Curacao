@@ -36,6 +36,8 @@
                      <option <?php if($this->getOrder()->getStatus() == 'processing'){?> selected="selected"<?php }?> value="processing">Processing</option>
                      <option <?php if($this->getOrder()->getStatus() == 'internalfulfillment'){?> selected="selected"<?php }?> value="internalfulfillment">Internal Fulfillment</option>
                      <option <?php if($this->getOrder()->getStatus() == 'senttovendor'){?> selected="selected"<?php }?> value="senttovendor">Sent To Vendor</option>
+                     <option <?php if($this->getOrder()->getStatus() == 'canceled'){?> selected="selected"<?php }?> value="canceled">Cancel</option>
+                     <option <?php if($this->getOrder()->getStatus() == 'complete'){?> selected="selected"<?php }?> value="complete">Complete</option>
             </select>
             <?php }else{?>
             <select name="history[status]" class="select" id="history_status">
