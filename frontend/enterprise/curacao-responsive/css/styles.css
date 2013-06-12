@@ -4148,7 +4148,7 @@ table.win8 td.bottomborder { border-bottom: 1px solid #d7d7d7; }
 .iphonetabs table td.spacer { height: 40px; }
 
 /* Features Tab */
-.iphonetabs .iphonetab .features { width: 100%; padding: 40px 0; }
+.iphonetabs .iphonetab .features { width: 100%; padding: 40px 0 0 0; }
 .iphoneleft { float: left; padding-right: 10px; }
 .iphoneright { float: right; padding-right: 15px; }
 .leftAligned { float: left; }
