@@ -4074,7 +4074,7 @@ p.required { font-size: 12px; }
 #kindle {
 	width: 990px;
 	border: 1px solid #d7d7d7;
-	background: url(../../../../../images/kindle/kindle_gift.jpg) 5% 100% no-repeat;
+	background: url(../../../../../../images/kindle/kindle_gift.jpg) 5% 100% no-repeat;
 	margin: 0 auto;
 }
 
@@ -4166,7 +4166,7 @@ table.win8 td.bottomborder { border-bottom: 1px solid #d7d7d7; }
 }
 
 .iphonetabs .iphonetab .features  #iphone5-design { 
-	background: url(../../../../../../../images/iphone5/iphone5-design.jpg) no-repeat scroll right top transparent; 
+	background: url(../../../../../../images/iphone5/iphone5-design.jpg) no-repeat scroll right top transparent; 
 	height: 315px; 
 	position: relative; 
 	width: 100%; 
@@ -4176,7 +4176,7 @@ table.win8 td.bottomborder { border-bottom: 1px solid #d7d7d7; }
     margin-top: 90px;
 }
 .iphonetabs .iphonetab .features  #iphone5-4-inch-retina {
-    background: url(../../../../../images/iphone5/iphone5-4-inch-retina.jpg) no-repeat scroll 20px 0 transparent;
+    background: url(../../../../../../images/iphone5/iphone5-4-inch-retina.jpg) no-repeat scroll 20px 0 transparent;
     height: 409px;
     margin-top: 20px;
     position: relative;
@@ -4187,7 +4187,7 @@ table.win8 td.bottomborder { border-bottom: 1px solid #d7d7d7; }
     margin-top: 145px;
 }
 .iphonetabs .iphonetab .features  #iphone5-ultrafast-wireless {
-    background: url(../../../../../images/iphone5/iphone5-ultrafast-wireless.jpg) no-repeat scroll right top transparent;
+    background: url(../../../../../../images/iphone5/iphone5-ultrafast-wireless.jpg) no-repeat scroll right top transparent;
     height: 282px;
     margin-top: 40px;
     position: relative;
@@ -4198,7 +4198,7 @@ table.win8 td.bottomborder { border-bottom: 1px solid #d7d7d7; }
     margin-top: 0;
 }
 .iphonetabs .iphonetab .features  #iphone5-a6-chip {
-    background: url(../../../../../images/iphone5/iphone5-a6-chip.jpg) no-repeat scroll 20px 0 transparent;
+    background: url(../../../../../../images/iphone5/iphone5-a6-chip.jpg) no-repeat scroll 20px 0 transparent;
     height: 239px;
     margin: 40px 0;
     position: relative;
@@ -4209,7 +4209,7 @@ table.win8 td.bottomborder { border-bottom: 1px solid #d7d7d7; }
     margin-top: 35px;
 }
 .iphonetabs .iphonetab .features  #iphone5-isight-camera {
-    background: url(../../../../../images/iphone5/iphone5-isight-camera.jpg) no-repeat scroll right top transparent;
+    background: url(../../../../../../images/iphone5/iphone5-isight-camera.jpg) no-repeat scroll right top transparent;
     height: 335px;
     margin-top: 20px;
     position: relative;
@@ -4220,7 +4220,7 @@ table.win8 td.bottomborder { border-bottom: 1px solid #d7d7d7; }
     margin-top: 95px;
 }
 .iphonetabs .iphonetab .features  #iphone5-ios6 {
-    background: url(../../../../../images/iphone5/iphone5-ios6.jpg) no-repeat scroll 20px 0 transparent;
+    background: url(../../../../../../images/iphone5/iphone5-ios6.jpg) no-repeat scroll 20px 0 transparent;
     height: 328px;
     margin-top: 0;
     position: relative;
@@ -4231,7 +4231,7 @@ table.win8 td.bottomborder { border-bottom: 1px solid #d7d7d7; }
     margin-top: 60px;
 }
 .iphonetabs .iphonetab .features  #iphone5-gradient-box-1 {
-    background: url(../../../../../images/iphone5/iphone5-gradient-box-1.jpg) no-repeat scroll 0 0 transparent;
+    background: url(../../../../../../images/iphone5/iphone5-gradient-box-1.jpg) no-repeat scroll 0 0 transparent;
     height: 1303px;
     margin: 40px 0 0 25px;
     padding-left: 30px;
@@ -4240,7 +4240,7 @@ table.win8 td.bottomborder { border-bottom: 1px solid #d7d7d7; }
 }
 
 .iphonetabs .iphonetab .features  #iphone5-gradient-box-2 {
-    background: url(../../../../../images/iphone5/iphone5-gradient-box-2.jpg) no-repeat scroll 0 0 transparent;
+    background: url(../../../../../../images/iphone5/iphone5-gradient-box-2.jpg) no-repeat scroll 0 0 transparent;
     height: 730px;
     margin-left: 25px;
     padding: 20px;
@@ -4249,7 +4249,7 @@ table.win8 td.bottomborder { border-bottom: 1px solid #d7d7d7; }
 }
 
 .iphonetabs .iphonetab .features  #iphone5-gradient-box-3 {
-    background: url(../../../../../images/iphone5/iphone5-gradient-box-3.jpg) no-repeat scroll 0 0 transparent;
+    background: url(../../../../../../images/iphone5/iphone5-gradient-box-3.jpg) no-repeat scroll 0 0 transparent;
     height: 272px;
     margin-left: 25px;
     position: relative;
@@ -4257,7 +4257,7 @@ table.win8 td.bottomborder { border-bottom: 1px solid #d7d7d7; }
 }
 
 .iphonetabs .iphonetab .features  #iphone5-easy-to-use {
-    background: url(../../../../../images/iphone5/iphone5-easy-to-use.png) no-repeat scroll left top transparent;
+    background: url(../../../../../../images/iphone5/iphone5-easy-to-use.png) no-repeat scroll left top transparent;
     height: 198px;
     margin-top: 45px;
     position: relative;
@@ -4268,7 +4268,7 @@ table.win8 td.bottomborder { border-bottom: 1px solid #d7d7d7; }
     margin-top: 65px;
 }
 .iphonetabs .iphonetab .features  #iphone5-hardware {
-    background: url(../../../../../images/iphone5/iphone5-hardware.png) no-repeat scroll left top transparent;
+    background: url(../../../../../../images/iphone5/iphone5-hardware.png) no-repeat scroll left top transparent;
     height: 180px;
     margin-top: 55px;
     position: relative;
@@ -4279,7 +4279,7 @@ table.win8 td.bottomborder { border-bottom: 1px solid #d7d7d7; }
     margin-top: 30px;
 }
 .iphonetabs .iphonetab .features  #iphone5-features {
-    background: url(../../../../../images/iphone5/iphone5-features.png) no-repeat scroll left top transparent;
+    background: url(../../../../../../images/iphone5/iphone5-features.png) no-repeat scroll left top transparent;
     height: 126px;
     margin-top: 55px;
     position: relative;
@@ -4290,7 +4290,7 @@ table.win8 td.bottomborder { border-bottom: 1px solid #d7d7d7; }
     margin-top: 0;
 }
 .iphonetabs .iphonetab .features  #iphone5-app {
-    background: url(../../../../../images/iphone5/iphone5-app.png) no-repeat scroll left top transparent;
+    background: url(../../../../../../images/iphone5/iphone5-app.png) no-repeat scroll left top transparent;
     height: 108px;
     margin-top: 55px;
     position: relative;
@@ -4301,7 +4301,7 @@ table.win8 td.bottomborder { border-bottom: 1px solid #d7d7d7; }
     margin-top: 0;
 }
 .iphonetabs .iphonetab .features  #iphone5-battery {
-    background: url(../../../../../images/iphone5/iphone5-battery.png) no-repeat scroll left top transparent;
+    background: url(../../../../../../images/iphone5/iphone5-battery.png) no-repeat scroll left top transparent;
     height: 87px;
     margin-top: 55px;
     position: relative;
@@ -4312,7 +4312,7 @@ table.win8 td.bottomborder { border-bottom: 1px solid #d7d7d7; }
     margin-top: 0;
 }
 .iphonetabs .iphonetab .features  #iphone5-itunes {
-    background: url(../../../../../images/iphone5/iphone5-itunes.png) no-repeat scroll left top transparent;
+    background: url(../../../../../../images/iphone5/iphone5-itunes.png) no-repeat scroll left top transparent;
     height: 118px;
     margin-top: 55px;
     position: relative;
@@ -4323,7 +4323,7 @@ table.win8 td.bottomborder { border-bottom: 1px solid #d7d7d7; }
     margin-top: 20px;
 }
 .iphonetabs .iphonetab .features  #iphone5-iphone4S {
-    background: url(../../../../../images/iphone5/iphone5-iphone4S.png) no-repeat scroll 5px 0 transparent;
+    background: url(../../../../../../images/iphone5/iphone5-iphone4S.png) no-repeat scroll 5px 0 transparent;
     height: 294px;
     margin-top: 45px;
     position: relative;
@@ -4334,7 +4334,7 @@ table.win8 td.bottomborder { border-bottom: 1px solid #d7d7d7; }
     margin-top: 95px;
 }
 .iphonetabs .iphonetab .features  #iphone5-iphone4 {
-    background: url(../../../../../images/iphone5/iphone5-iphone4.png) no-repeat scroll 10px 0 transparent;
+    background: url(../../../../../../images/iphone5/iphone5-iphone4.png) no-repeat scroll 10px 0 transparent;
     height: 268px;
     margin-top: 45px;
     position: relative;
@@ -4345,7 +4345,7 @@ table.win8 td.bottomborder { border-bottom: 1px solid #d7d7d7; }
     margin-top: 80px;
 }
 .iphonetabs .iphonetab .features  #iphone5-applecare {
-    background: url(../../../../../images/iphone5/iphone5-applecare.png) no-repeat scroll left top transparent;
+    background: url(../../../../../../images/iphone5/iphone5-applecare.png) no-repeat scroll left top transparent;
     height: 170px;
     margin-top: 45px;
     position: relative;
