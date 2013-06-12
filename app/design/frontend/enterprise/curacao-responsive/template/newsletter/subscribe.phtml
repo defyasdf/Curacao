@@ -38,13 +38,24 @@
 
 
 ?>
-<form action="<?php echo $this->getFormActionUrl() ?>" method="post" id="newsletter-validate-detail">
+<!--<form action="<?php echo $this->getFormActionUrl() ?>" method="post" id="newsletter-validate-detail">-->
+<form method="post" action="http://app.bronto.com/public/webform/process/">
+	
+     <input type="hidden" value="d8091pdzekzwt24pbi6ypxd81klna" name="fid">
+    <input type="hidden" value="f8a4bf4664d2cf4b1583ad725e1e8e2c" name="sid">
+    <input type="hidden" value="" name="delid">
+    <input type="hidden" value="" name="subid">
+	<script type="text/javascript">
+		var fieldMaps = {};
+			</script>
+
 	<div class="form-subscribe">
 		<span class="form-subscribe-header">
         	<span class="firstline"><?php echo $firstline;?></span>
 			<label for="newsletter" <?php if($_storeId != 1){?> style="line-height:18px"<?php }?>><?php echo $this->__($_newsTxt) ?></label>
 		</span>
-		<input type="text" name="email" id="newsletter" title="<?php echo $this->__($_newsTxt) ?>" class="input-text required-entry validate-email"  <?php if($_storeId != 1){?> style="width:160px"<?php }?> />
+		<input type="text" name="45767" size="35" id="newsletter" title="<?php echo $this->__($_newsTxt) ?>" class="input-text required-entry validate-email"  <?php if($_storeId != 1){?> style="width:160px"<?php }?> />
+        <input type="hidden" value="true" name="46612[342142]">
 		<button type="submit" title="<?php echo $this->__('Subscribe') ?>" class="button"><span><span><?php echo $this->__('Submit') ?></span></span></button>
 	</div>
 </form>
