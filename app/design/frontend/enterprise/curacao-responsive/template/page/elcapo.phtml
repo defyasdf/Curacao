@@ -13,9 +13,7 @@
 		$email = "Email";
 		$tel = "Telephone";
 		$state = "State";
-		$note1 = "<p>To find out who are the winners, don't miss the following TV segments:</p>
-<p style='font-weight: bold;'>In California: Marcador Final on Telemundo 52 - Sundays at 6PM</p>
-<p style='font-weight: bold;'>In Arizona: Acción Deportiva Extra on Arizona Univision - Saturdays and Sundays at 10:15 PM</p>";
+		$note1 = "<p>Upgrades will be available in exchange for the purchased tickets of any level. Number of winners will be determined by the amount of tickets that the winners hold. Maximum 5 per person. To participate you must fill the form with your information. You must surrender a valid ticket for the Messi and Friends game to be exchanged for the $500 level ticket.</p>";
 		$note = "No purchase necessary. Equip your home promotion is open to residents of Southern California and Arizona only, must be 18 years or older. Odds of winning depend on the number of entries received. A purchase or payment of any kind will not increase your chances of winning. For more details see <a href='http://www.icuracao.com/Equipa_Rules.pdf' target='_blank'>Official Rules</a>";
 		$greetings = "<h2>Thank you for register!</h2>";
 		$select = "Please Select";
@@ -30,7 +28,7 @@
 		$email = "Correo Electr&oacute;nico";
 		$tel = "Tel&eacute;fono";
 		$state = "Estado";
-		$note1 = "<p>Para saber quienes son los ganadores, no se pierda:</p><p style='font-weight: bold;'>En California: Marcador Final en Telemundo 52 los domingos a las 6PM</p><p style='font-weight: bold;'>En Arizona: Acción Deportiva Extra en Univision Arizona  Sábados y Domingos a las 10:15PM</p>";
+		$note1 = "<p>Los boletos preferenciales se darán como intercambio de los boletos que haya comprado de cualquier localidad. El número de boletos ganadores será determinado por la cantidad de entradas que los ganadores tengan. Máximo 5 boletos por persona. Para participar debe de completar la forma anterior con su información. De llegar a ser seleccionado como uno de los afortunados ganadores usted deberá entregar cada boleto válido para el juego de Messi y sus amigos que será canjeado por los boletos preferenciales con valor de $ 500 c/u.</p>";
 		$note = "No compra necesaria. El sorteo de equipa tu casa esta abierto para residentes del Sur de California y Arizona únicamente, debe tener 18 años o más. Las probabilidades de ganar dependen del número de participaciones recibidas. Una compra o pago de cualquier tipo no aumentará sus probabilidades de ganar. Para m&aacute;s informaci&oacute;n Ver  <a href='http://www.icuracao.com/Equipa_Rules.pdf' target='_blank'>Reglas Oficiales</a>";
 		$greetings = "<h2>Gracias por Registrarse!</h2>";
 		$select = "Seleccione";
@@ -114,7 +112,7 @@
                             <?php echo $greetings;?>
                             <p>&nbsp;</p>
                              <div class="clear"></div>
-<?php //echo $note1;?>
+<?php echo $note1;?>
 <div class="clear"></div>
                         <span><?php //echo $note;?></span>
                             	
@@ -146,7 +144,7 @@
                                 <div id="form_input"><input type="text" name="tel" value="<?php echo $_REQUEST['tel']?>"></div>                                
                             </div>
                             <div id="formline">
-								<div id="form_input_label"><input type="checkbox" value="1" name="opt_in">:</div>
+								<div id="form_input_label"><input type="checkbox" value="1" name="opt_in" checked>:</div>
                                 <div id="form_input_label" style="text-align:left; margin-bottom:15px; width:56%; margin-left:15px;">
                                 	<?php
 										echo $opt_in;
@@ -172,7 +170,7 @@
                         <div class="clear"></div><br>
 <br>
 
-<?php //echo $note1;?>
+<?php echo $note1;?>
 <div class="clear"></div>
                         <span><?php //echo $note;?></span>
                        <?php 
@@ -209,7 +207,7 @@
                                 <div id="form_input"><input type="text" name="tel"></div>                                
                             </div>
                              <div id="formline">
-								<div id="form_input_label"><input type="checkbox" value="1" name="opt_in">:</div>
+								<div id="form_input_label"><input type="checkbox" value="1" name="opt_in" checked>:</div>
                                 <div id="form_input_label" style="text-align:left; margin-bottom:15px; margin-left:15px; width:56%;">
                                 	<?php
 										echo $opt_in;
@@ -234,7 +232,7 @@
                         <div class="clear"></div><br>
 <br>
 
-<?php //echo $note1;?>
+<?php echo $note1;?>
 <div class="clear"></div>
                         <span><?php //echo $note;?></span>
 						
