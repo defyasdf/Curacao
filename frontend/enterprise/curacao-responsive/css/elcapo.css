@@ -1,0 +1,98 @@
+.wrapper { width: 990px; margin: 0 auto; }
+.clear { clear: both; height: 1px; }
+.divider { height: 1px; border-bottom: 1px solid #d7d7d7; }
+.clear10 { clear: both; height: 10px; line-height: 10px; }
+.clear20 { clear: both; height: 20px; line-height: 20px; }
+.clear50 { clear: both; height: 50px; line-height: 50px; }
+ul { list-style: none outside none; }
+ul, ol { margin: 0; padding: 0;}
+.left { float: left;}
+.right { float: right;}
+
+.button span span {
+font-family: Arial, Tahoma, sans-serif;
+font-weight: bold;
+font-size: 14px;
+}
+
+h2.legend {
+border-bottom: 1px solid #D7D7D7;
+font-size: 14px;
+font-weight: bold;
+line-height: 18px;
+padding-bottom: 5px;
+text-transform: uppercase;
+color: #444444;
+}
+.copy h2{
+	color:#900;
+}
+/* Page Layout */
+#elcapo_content {
+	width: 100%;
+	background: #fff;
+	color: #000;
+	margin: 0;
+	padding: 0;
+	border:1px #d7d7d7 solid;
+}
+
+#elcapo_banner {
+	width: 330px;
+	height: 620px;
+	background: url(../images/main_banner.jpg) no-repeat;
+	float: left;
+}
+#elcapo_banner_es{
+	width: 330px;
+	height: 620px;
+	background: url(../images/main_banner_es.jpg) no-repeat;
+	float: left;
+}
+#elcapo_content .copy {
+	width: 595px;
+	margin: 30px;
+	float: left;
+	text-transform:none;
+}
+
+#elcapo_content p {
+	font: 13px /16px Arial, Tahoma, sans-serif;
+	margin: 5px 0 20px 0;
+}
+
+#elcapo_content h1 {
+	font-size: 28px;
+	font-weight: bold;
+	margin: 0;
+	color: #444444;
+}
+
+#elcapo_content span {
+	font: 11px/14px Arial, Tahoma, sans-serif;
+}
+#formline{
+	clear:both;
+}
+#form_input{
+	width:50%;
+	float:left;
+}
+#form_input input[type="text"]{
+	height:30px;
+	width:270px;
+}
+#form_input select{
+	height:30px;
+	width:270px;
+}
+
+#form_input_label{
+	width:35%;
+	float:left;
+	text-align:right;
+	font-size:16px;
+}
+#lable_disclamer{
+	font-size:12px;
+}
