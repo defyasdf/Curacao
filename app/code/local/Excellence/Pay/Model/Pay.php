@@ -212,20 +212,6 @@ class Excellence_Pay_Model_Pay extends Mage_Payment_Model_Method_Abstract
 		
 		// End New Change	
 		
-		
-		//Adding new variables to quote
-		
-		$quote->setpayment_method("Curacao Credit");
-		$quote->setar_response($result->StatusMessage);
-		$quote->setdp_amount($result->DownPayment);
-		if($result->DownPayment>0){
-			$quote->setdp_required("1");
-		}else{
-			$quote->setdp_required("0");
-		}
-		
-		$quote->save();
-		
 		$server = '192.168.100.121';
 		$user = 'curacaodata';
 		$pass = 'curacaodata';
@@ -244,6 +230,22 @@ class Excellence_Pay_Model_Pay extends Mage_Payment_Model_Method_Abstract
 			$tracker_id = mysql_insert_id();
 			Mage::getSingleton('core/session')->setTrackingId($tracker_id);		
 		}
+		//Adding new variables to quote
+		
+		$quote->setpayment_method("Curacao Credit");
+		$quote->setar_response($result->StatusMessage);
+		$quote->setdp_amount($result->DownPayment);
+		$quote->setcustomer_acc_no($cust_num);
+		$quote->settrack_id($tracker_id);
+		if($result->DownPayment>0){
+			$quote->setdp_required("1");
+		}else{
+			$quote->setdp_required("0");
+		}
+		
+		$quote->save();
+		
+		
 		if(strtolower($result->StatusMessage) == 'ok'){
 			
 			if(!Mage::getSingleton('core/session')->getCustbalance()){
