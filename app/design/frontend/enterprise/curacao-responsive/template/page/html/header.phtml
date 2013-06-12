@@ -41,6 +41,23 @@ mysql_select_db($db,$link);
  }
  if(isset($_GET['hid'])){
 	Mage::getSingleton('core/session')->setHid($_GET['hid']);
+	$hid = $_GET['hid'];
+	$sub_id = '';
+	$aff_id = '';
+	if(isset($_GET['sub_id'])){
+		Mage::getSingleton('core/session')->setSubid($_GET['sub_id']);	
+		$sub_id = $_GET['sub_id'];
+	}
+	if(isset($_GET['aff_id'])){
+		Mage::getSingleton('core/session')->setAffid($_GET['aff_id']);
+		$aff_id = $_GET['aff_id'];
+	}
+	if(!Mage::getSingleton('core/session')->getGwmid()){
+		$gwm = "insert into gwmtracking (hid,subid,affid, created_date) values('".$hid."','".$sub_id."','".$aff_id."', '".date('Y-m-d')."')";
+		mysql_query($gwm);
+		$gwm_id = mysql_insert_id();		
+		Mage::getSingleton('core/session')->setGwmid($gwm_id);
+	}
  }
  
 $page = Mage::helper('core/url')->getCurrentUrl() ;
