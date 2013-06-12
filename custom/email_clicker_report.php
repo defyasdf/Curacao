@@ -16,6 +16,17 @@ $link1 = mysql_connect($server,$user,$pass,true);
 mysql_select_db($db,$link) or die("No DB");	
 mysql_select_db('icuracaoproduct',$link1) or die("No DB");	
 
+
+$mageFilename = '../app/Mage.php';
+	
+require_once $mageFilename;
+Varien_Profiler::enable();
+Mage::setIsDeveloperMode(true);
+
+
+umask(0);
+Mage::app('admin'); 
+
 $query = "SELECT * FROM email_report";
 $re = mysql_query($query,$link1) or die(mysql_error());
 
@@ -62,7 +73,9 @@ while($row1 = mysql_fetch_array($re)){
 	$on = implode('_',$order_number);
 	$os = implode('_',$status);
 	
-	$data[] = array("Customer_email"=>$row1['email'],"Customer_Account"=>$customer_number,"No_of_order"=>$num,"Total_purchase_add_to_cart"=>$total,"Total_purchase"=>$total_purchase,"Curacao_credit_purchase"=>$curacao_payment_total,"Total_purchase_completed"=>$total_order_finished,"Number_order_completed"=>$ordered, "OrderNumber"=>$on, "Order_Statuses"=>$os);
+	$customer_data = Mage::getModel('customer/customer')->load($r['entity_id']);
+	
+	$data[] = array("Customer_email"=>$row1['email'],"Customer_Account"=>$customer_data->getCuracaocustid(),"No_of_order"=>$num,"Total_purchase_add_to_cart"=>$total,"Total_purchase"=>$total_purchase,"Curacao_credit_purchase"=>$curacao_payment_total,"Total_purchase_completed"=>$total_order_finished,"Number_order_completed"=>$ordered, "OrderNumber"=>$on, "Order_Statuses"=>$os);
 	
 	/*echo '<tr>';
 		echo "<td>".$row1['promo']."</td><td>".$row1['accnumber']."</td><td>".$row['grand_total']."</td><td>".$row['curacaocustomerdiscount']."</td><td></td>";
