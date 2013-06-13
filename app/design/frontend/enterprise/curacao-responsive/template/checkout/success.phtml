@@ -136,7 +136,13 @@
 		mysql_query($sql);	
 		
 	 }
-	 	
+	
+	 if(Mage::getSingleton('core/session')->getGwmid()){
+		$gwm = 'update gwmtracking set order_id = "'.$this->getOrderId().'" where gwmId = '.Mage::getSingleton('core/session')->getGwmid();
+		mysql_query($gwm);
+		
+	 }
+		
 	 if($Data!=''){
 		$curacao_credit = $grandTotal - $Data;
 		$cc_num = Mage::getSingleton('core/session')->getCuracacaonum(); 

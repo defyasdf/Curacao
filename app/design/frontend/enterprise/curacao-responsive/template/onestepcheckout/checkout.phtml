@@ -84,19 +84,12 @@ $helper = Mage::helper('onestepcheckout/checkout');
 	// End logged in 
 	
 	if(Mage::getSingleton('core/session')->getGwmid()){
-		$server = '192.168.100.121';
-		$user = 'curacaodata';
-		$pass = 'curacaodata';
-		$db = 'icuracaoproduct';
-		
-		$link = mysql_connect($server,$user,$pass);
-		
-		mysql_select_db($db,$link);
+				
 		$quote = Mage::getModel('checkout/cart')->getQuote();
 	
 		$gwm = 'update gwmtracking set quote_id = "'.$quote->getId().'" where gwmId = '.Mage::getSingleton('core/session')->getGwmid();
 		mysql_query($gwm);
-		mysql_close($link);
+		
 	 }
 	
 ?>
