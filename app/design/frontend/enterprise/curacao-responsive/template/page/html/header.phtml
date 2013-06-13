@@ -151,7 +151,13 @@ if(!Mage::getSingleton('core/session')->getTrackid()){
 					$key = $more[$i];
 				}
 			}
-			$query = "insert into userActivitytrack(browser,ip,path,created_date,campaign,keyword,googleKeyword)values('".$_SERVER['HTTP_USER_AGENT']."','".$_SERVER['REMOTE_ADDR']."','".$current_page."', '".date('Y-m-d')."', '".$_GET['mintrack']."','".$_GET['keyword']."','".$key."')";	
+			$mintrack = $_GET['mintrack'];
+			
+			if(isset($_GET['hid'])){
+				$mintrack = 'GWM';
+			}
+			
+			$query = "insert into userActivitytrack(browser,ip,path,created_date,campaign,keyword,googleKeyword)values('".$_SERVER['HTTP_USER_AGENT']."','".$_SERVER['REMOTE_ADDR']."','".$current_page."', '".date('Y-m-d')."', '".$mintrack."','".$_GET['keyword']."','".$key."')";	
 		
 		   
 		}else{
