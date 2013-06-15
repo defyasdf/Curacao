@@ -64,40 +64,8 @@ class Mage_Shipping_Model_Carrier_Flatrate
 				$cur_fproduct = Mage::getModel('catalog/product')->load($productId);
 				
 				if($_helper->productAttribute($cur_fproduct, $cur_fproduct->getShprate(), 'shprate')!='Domestic'){
-					$shipRate = 0;
-					// New Free Shipping Code
-						$rule = Mage::getModel('salesrule/rule')->load(5166); 
-						$conditions = $rule->getConditions()->asArray();
-
-						if($rule->getIsActive()){
-							$start_ts = strtotime($rule->getfrom_date());
-							$end_ts = strtotime($rule->getto_date());
-							$user_ts = strtotime(date('Y-m-d'));
-						
-							if((($user_ts >= $start_ts) && ($user_ts <= $end_ts))){		
-								
-								$condistion = $conditions['conditions'][0]['conditions'];
-								$cat = array();
-								for($i = 0; $i<sizeof($condistion);$i++){
-									$cat[] = $condistion[$i]['value'];
-								}
-							}
-						}
-						if(sizeof($cat)>0){
-							$cat_ids = $cur_fproduct->getCategoryIds();
-							$shipRate = ($item->getQty())*($_helper->productAttribute($cur_fproduct, $cur_fproduct->getShprate(), 'shprate'));
-							for($j=0;$j<sizeof($cat);$j++){
-								if(in_array($cat[$j],$cat_ids)){
-									$shipRate = 0;	
-								}
-							}
-						}else{
-							$shipRate = ($item->getQty())*($_helper->productAttribute($cur_fproduct, $cur_fproduct->getShprate(), 'shprate'));
-						}
-					// End Free Shipping Code					
 					
-					$custom_ship +=	$shipRate;		
-					
+					$custom_ship +=($item->getQty())*($_helper->productAttribute($cur_fproduct, $cur_fproduct->getShprate(), 'shprate'));			
 				}else{
 					$custom_ship += 0;	
 				}

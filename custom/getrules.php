@@ -23,16 +23,11 @@
 
         $conditions = $rule->getConditions()->asArray();
 		
+		print_r($conditions);
 		
-		$condistion = $conditions['conditions'][0]['conditions'];
+		echo $conditions['conditions'][0]['conditions'][0]['value'];
+			
 		
-		$cat = array();
-		echo sizeof($cat);	
-		for($i = 0; $i<sizeof($condistion);$i++){
-			$cat[] = $condistion[$i]['value'];
-		}
-		print_r($cat);
-		exit;
 		if($rule->getIsActive()){
 			$start_ts = strtotime($rule->getfrom_date());
 			$end_ts = strtotime($rule->getto_date());
