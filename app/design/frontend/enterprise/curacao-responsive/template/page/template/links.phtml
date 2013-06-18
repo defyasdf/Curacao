@@ -74,8 +74,8 @@
              $customer = Mage::getModel('customer/customer')->load($session->getId());
              if($customer->getcuracaocustid()) :
      ?>
-             <li><a href="/credit/getbalance.php?custnum=<?php echo $customer->getcuracaocustid() ?>&height=381&width=410" title="My Available Balance" class="thickbox">View your available limit</a>
-             </li>
+            <!-- <li><a href="/credit/getbalance.php?custnum=<?php echo $customer->getcuracaocustid() ?>&height=381&width=410" title="My Available Balance" class="thickbox">View your available limit</a>
+             </li> -->
     <?php
           endif;
          }
@@ -99,9 +99,9 @@
                         <label for="email" class="required">Email Address<em>*</em></label>
                         <div class="input-box">
                             <?php
-                            echo  Mage::getSingleton('core/session')->getCustomeremail();
-                            if($session->getCustomeremail()){?>
-                            <input name="login[username]" value="<?php echo $session->getCustomeremail();?>" id="useremail_link" class="input-text required-entry validate-email" title="Email Address" type="text">
+                            //print_r($_COOKIE);
+                            if(isset($_COOKIE['EmailCustomer'])){?>
+                            <input name="login[username]" value="<?php echo $_COOKIE['EmailCustomer'];?>" id="useremail_link" class="input-text required-entry validate-email" title="Email Address" type="text">
                              <?php }else{?>
                                 <input name="login[username]" value="" id="useremail_link" class="input-text required-entry validate-email" title="Email Address" type="text">
                             <?php } ?>
@@ -154,6 +154,7 @@
 		var login_url = '/onestepcheckout/ajax/login/'
 		//alert("I am Clicking login");
 		//alert(jQuery("#userpass").val());
+        jQuery.cookie('EmailCustomer', jQuery("#useremail_link").val(), { expires: 30, path: '/' });
 		jQuery.ajax({ 
 				type: 'post',
 				data: {'onestepcheckout_username':jQuery("#useremail_link").val(),'onestepcheckout_password':jQuery("#userpass_link").val()},
@@ -186,6 +187,7 @@
 				success: function(data) {
 				   var result = jQuery.parseJSON(data); 
 					if(result.success) {
+                        jQuery.cookie('EmailCustomer', result.customeremail, { expires: 30, path: '/' });
 						location.reload();
 					} else {
 		

@@ -680,7 +680,15 @@ class Magify_OneStepCheckout_AjaxController extends Mage_Core_Controller_Front_A
 	public function logoutAction()
     {
         $session = Mage::getSingleton('customer/session');
+        $customer = Mage::getModel('customer/customer')->load($session->getId());
 		$session->logout();
+        $result = array(
+            'success' => true
+        );
+        $result['customeremail'] = $customer->getEmail();
+        //Mage::getSingleton('core/session')->setEmailCustomer("Sanjay");
+        $this->getResponse()->setBody(Zend_Json::encode($result));
+
 	}
 	
 	############################End Log out function #######################################
@@ -693,8 +701,6 @@ class Magify_OneStepCheckout_AjaxController extends Mage_Core_Controller_Front_A
         $password = $this->getRequest()->getPost('onestepcheckout_password', false);
         $session = Mage::getSingleton('customer/session');
 
-        Mage::getSingleton('core/session')->setCustomeremail($username);
-        //$session
 
         $result = array(
             'success' => false

@@ -34,8 +34,7 @@
 <div class="cart">
     
     <?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
-   
-    
+       
     <div class="page-title title-buttons">
         <h1><?php echo $this->__('Shopping Cart') ?></h1>
         <?php if(!$this->hasError()): ?>
@@ -48,7 +47,11 @@
             <?php endif; ?>
         <?php endforeach; ?>
         <?php }else{?>
-        <li><a href="#TB_inline?height=380&width=881&inlineId=login_content" class="thickbox" title="Billing Address"><button class="button btn-proceed-checkout btn-checkout" title="Proceed to Checkout" type="button"><span><span>Proceed to Checkout</span></span></button></a></li>
+	        <li>
+	        	<a href="#TB_inline?height=380&width=881&inlineId=login_content" class="thickbox" title="Billing Address">
+	        		<button class="button btn-proceed-checkout btn-checkout" title="Proceed to Checkout" type="button"><span><span>Proceed to Checkout</span></span></button>
+	        	</a>
+	        </li>
         <?php }?>
         </ul>
         <?php endif; ?>
@@ -164,61 +167,60 @@
                 <?php endif; ?>
             <?php endforeach; ?>
             <?php }else{?>
-            <li><a href="#TB_inline?height=380&width=881&inlineId=login_content" class="thickbox" title="Billing Address"><button class="button btn-proceed-checkout btn-checkout" title="Proceed to Checkout" type="button"><span><span>Proceed to Checkout</span></span></button></a></li>
+        	    <li><a href="#TB_inline?height=380&width=881&inlineId=login_content" class="thickbox" title="Billing Address"><button class="button btn-proceed-checkout btn-checkout" title="Proceed to Checkout" type="button"><span><span>Proceed to Checkout</span></span></button></a></li>
             <?php }?>
             </ul>
             <?php endif; ?>
         </div><!--totals-->
         
-        
-        
-<?php /*
-        <div class="four columns alpha crosssell">
-            <?php echo $this->getChildHtml('crosssell') ?>
-        </div><!--crosssell--> 
-*/ ?>        
         <div class="one column"></div>
         
-
         <div class="five columns  coupon-shipping">
                 <?php echo $this->getChildHtml('checkout.cart.extra') ?>
                 <?php echo $this->getChildHtml('coupon') ?>
                 <?php //if (!$this->getIsVirtual()): echo $this->getChildHtml('shipping'); endif; ?>
-        </div><!--coupon-shipping-->       
-
+        </div>
+        <!--coupon-shipping-->       
     </div>
 </div>
 <div style="clear:both;"></div>
+
 <!--Login Popup-->
-
 <div class="account-login" id="login_content" style="display:none">
-    	<div class="onestepcheckout-error" id="onestepcheckout-login-error" style="display:none;"></div>
-        <div class="eight columns alpha col-1 new-users">
-            <div class="content">
-                <ul class="form-list">
-                <h2 class="legend">New Customers</h2>
-                <p>By creating an account with our store, you will be able to move through the checkout process faster, store multiple shipping addresses, view and track your orders in your account and more.</p>
-               	 <div id="buttons">
-                <button type="button" title="Create an Account" class="button" onclick="window.location='/customer/account/create/';"><span><span>Create an Account</span></span></button>
-                <p id="newOr">- or -</p>
-                <p id="countinueGuest"><a href="/onestepcheckout/">Continue As Guest <span id="arrows">&raquo;</span></a></p>
-                </div>
-               
-                </ul>
-               
-            </div>
-
+	<div class="onestepcheckout-error" id="onestepcheckout-login-error" style="display:none;"></div>
+    <div class="eight columns alpha col-1 new-users">
+        <div class="content">
+            <ul class="form-list">
+            	<li>
+					<h2 class="legend">New Customers</h2>
+					<p>By creating an account with our store, you will be able to move through the checkout process faster, store multiple shipping addresses, view and track your orders in your account and more.</p>
+					<div id="buttons">
+						<button type="button" title="Create an Account" class="button" onclick="window.location='/customer/account/create/';"><span><span>Create an Account</span></span></button>
+						<p id="newOr">- or -</p>
+						<p id="countinueGuest"><a href="/onestepcheckout/">Continue As Guest <span id="arrows">&raquo;</span></a></p>
+					</div>
+            	</li>
+            </ul>
         </div>
-        <div class="eight columns omega col-2 registered-users" id="login-container">
-            <form action="" onsubmit="return create_login()">
+    </div>
+    <div class="eight columns omega col-2 registered-users" id="login-container">
+        <form action="" onsubmit="return create_login()">
             <div class="content" id="login-content">
-                <ul class="form-list">
-                <h2 class="legend">Registered Customers</h2>
-                    <p>If you have an account with us, log in using your email address.</p>
+	            <ul class="form-list">
+	            	<li>
+						<h2 class="legend">Registered Customers</h2>
+						<p>If you have an account with us, log in using your email address.</p>
+	            	</li>
                     <li>
                         <label for="email" class="required">Email Address<em>*</em></label>
                         <div class="input-box">
-                            <input name="login[username]" value="" id="useremail" class="input-text required-entry validate-email" title="Email Address" type="text">
+                            <?php
+                            //print_r($_COOKIE);
+                            if(isset($_COOKIE['EmailCustomer'])){?>
+                                <input name="login[username]" value="<?php echo $_COOKIE['EmailCustomer'];?>" id="useremail" class="input-text required-entry validate-email" title="Email Address" type="text">
+                            <?php }else{?>
+                                <input name="login[username]" value="" id="useremail" class="input-text required-entry validate-email" title="Email Address" type="text">
+                            <?php } ?>
                         </div>
                     </li>
                     <li>
@@ -227,32 +229,28 @@
                             <input name="login[password]" class="input-text required-entry validate-password" id="userpass" title="Password" type="password">
                         </div>
                     </li>
-                                        <li id="remember-me-box" class="control">
-        <div class="input-box">
-        <input name="persistent_remember_me" class="checkbox checkbox-label" id="remember_meZwnY9znjWf" checked="checked" title="Remember Me" type="checkbox">
-    </div>
-    <label for="remember_meZwnY9znjWf" class="checkbox-label">Remember Me</label>
-    <!-- <a class="link-tip" href="#" class="remember">What's this?</a> -->
-</li>
- 
-                    <p class="clear"></p>
-                    <p class="form-required"><em>*</em> Required Fields</p>
-                    <a href="/customer/account/forgotpassword/" class="f-left">Forgot Your Password?</a>
-                     <button type="submit" class="button" title="Login" name="send" id="send2" onclick="return create_login()"><span><span>Login</span></span></button>
-                     <div id="login-loading" style="display:none"><img src="/images/gray_fade_small.gif"></div>
-                </ul>
-                   
-            </div>
-             </form>
-        </div>
-          
- </div>
-		
-  
+                    <li id="remember-me-box" class="control">
+						<div class="input-box">
+							<input name="persistent_remember_me" class="checkbox checkbox-label" id="remember_meZwnY9znjWf" checked="checked" title="Remember Me" type="checkbox">
+						</div>
+						<label for="remember_meZwnY9znjWf" class="checkbox-label">Remember Me</label>
+						<!-- <a class="link-tip" href="#" class="remember">What's this?</a> -->
+					</li>
+					<li> 
+						<p class="clear"></p>
+						<p class="form-required"><em>*</em> Required Fields</p>
+						<a href="/customer/account/forgotpassword/" class="f-left">Forgot Your Password?</a>
+						<button type="submit" class="button" title="Login" name="send" id="send2" onclick="return create_login()"><span><span>Login</span></span></button>
+						<div id="login-loading" style="display:none"><img src="/images/gray_fade_small.gif"></div>
+					</li>
+				</ul>   
+			</div>
+		</form>
+	</div>
+</div>
 <!--end Login Pop up-->
-
- <script type="text/javascript">
-    //<![CDATA[
+<script type="text/javascript">
+//<![CDATA[
     jQuery(document).ready(function() {
         jQuery('.messages .success-msg').fadeIn(400).delay(3000).hide();
 	});
@@ -261,8 +259,7 @@
 		jQuery("#send2").hide('slow');
 		jQuery("#login-loading").show('slow');
 		var login_url = '/onestepcheckout/ajax/login/'
-		//alert("I am Clicking login");
-		//alert(jQuery("#userpass").val());
+
 		jQuery.ajax({ 
 				type: 'post',
 				data: {'onestepcheckout_username':jQuery("#useremail").val(),'onestepcheckout_password':jQuery("#userpass").val()},
@@ -284,5 +281,5 @@
 		
 		return false;
 	}
-    //]]>
+//]]>
 </script>
