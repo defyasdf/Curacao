@@ -691,9 +691,10 @@ class Magify_OneStepCheckout_AjaxController extends Mage_Core_Controller_Front_A
     {
         $username = $this->getRequest()->getPost('onestepcheckout_username', false);
         $password = $this->getRequest()->getPost('onestepcheckout_password', false);
-
         $session = Mage::getSingleton('customer/session');
-        $session->setCustomeremail($username);
+
+        Mage::getSingleton('core/session')->setCustomeremail($username);
+        //$session
 
         $result = array(
             'success' => false

@@ -1,0 +1,201 @@
+<?php
+/**
+ * Magento Enterprise Edition
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Magento Enterprise Edition License
+ * that is bundled with this package in the file LICENSE_EE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.magentocommerce.com/license/enterprise-edition
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://www.magentocommerce.com/license/enterprise-edition
+ */
+?>
+<?php
+/**
+ * @see Mage_Page_Block_Template_Links
+ */
+ $_storeId = Mage::app()->getStore()->getId();
+	if($_storeId == 1){
+		$pay_bill = "Pay My Bill";
+		$our_store = 'Our Stores';
+		$my_acc = 'My Account';
+	}else{
+		$pay_bill = 'Pagar Mi Cuenta';
+		$our_store = 'Nuestras Tiendas';
+		$my_acc = 'Mi Cuenta';
+	}
+?>
+<?php $_links = $this->getLinks(); ?>
+<?php if(count($_links)>0): ?>
+<ul class="links"<?php if($this->getName()): ?> id="<?php echo $this->getName() ?>"<?php endif;?>>
+    <li class="last"><a title="Pay My Bill" href="http://online.icuracao.com" target="_blank"><?php echo $pay_bill;?></a></li> 
+	  <?php 
+			$session = Mage::getSingleton('customer/session', array('name'=>'frontend')); 
+
+		?>
+	<?php foreach($_links as $_link): ?>
+        <?php if ($_link instanceof Mage_Core_Block_Abstract):?>
+            <?php echo $_link->toHtml() ?>
+        <?php else: ?>
+          
+           <li<?php if($_link->getIsFirst()||$_link->getIsLast()): ?> class="<?php if($_link->getIsFirst()): ?>first<?php endif; ?><?php if($_link->getIsLast()): ?> last<?php endif; ?>"<?php endif; ?> <?php echo $_link->getLiParams() ?>  <?php if($_link->getLabel()=='Login'){ ?> style="display:none"<?php }?>><?php echo $_link->getBeforeText() ?>
+           
+           <?php if($_link->getLabel()=='Sign Out'){ ?>
+          	<a href="#" onclick="return signoutAction()"><?php echo $_link->getLabel()?></a> 
+           <?php  }else{?>
+           
+           <a href="<?php if($_link->getLabel()!='Apply Now'){if($_link->getLabel()!='Our Stores'){if($_link->getLabel()!='Aplicar a Crédito'){echo $_link->getUrl();}else{ echo "https://www.icuracao.com/applynow";} }else{echo "http://www.icuracao.com/store-locator";}}else{?>https://www.icuracao.com/applynow<?php }?>" title="<?php echo $_link->getTitle() ?>" <?php echo $_link->getAParams() ?> ><?php if($_link->getLabel()=='Our Stores'){echo $our_store;}elseif($_link->getTitle()=='Mi cuenta'){echo $my_acc;}else{echo $_link->getLabel();} ?></a>
+		   <?php  }?>
+		   
+		   <?php echo $_link->getAfterText() ?>
+           
+           </li>        <?php endif;?>
+    <?php endforeach; ?>
+     <?php if(!$session->isLoggedIn()){ ?>  
+   <!-- <li><a title="Login" href="/customer/account/login/">Login</a></li>-->
+   
+    <li><a href="#TB_inline?height=381&width=410&inlineId=login_content_top" class="thickbox" title="Login">Login</a></li>
+   
+    <?php }else{
+             $customer = Mage::getModel('customer/customer')->load($session->getId());
+             if($customer->getcuracaocustid()) :
+     ?>
+             <li><a href="/credit/getbalance.php?custnum=<?php echo $customer->getcuracaocustid() ?>&height=381&width=410" title="My Available Balance" class="thickbox">View your available limit</a>
+             </li>
+    <?php
+          endif;
+         }
+     ?>
+</ul>
+<?php endif; ?>
+
+<!--Login Popup-->
+
+<div class="account-login" id="login_content_top" style="display:none">
+    	<div class="onestepcheckout-error" id="onestepcheckout-login-error-link" style="display:none;"></div>
+        <div class="eight columns omega registered-users" id="login-container">
+            <form action="" onsubmit="return create_login_link()">
+            <div class="content" id="login-content">
+                <ul class="form-list">
+                <h2 class="legend">Log Into your account</h2>
+                   
+                   <div id="ajax_login_form">
+                    <p>If you have an account with us, log in using your email address.</p>
+                    <li>
+                        <label for="email" class="required">Email Address<em>*</em></label>
+                        <div class="input-box">
+                            <?php
+                            echo  Mage::getSingleton('core/session')->getCustomeremail();
+                            if($session->getCustomeremail()){?>
+                            <input name="login[username]" value="<?php echo $session->getCustomeremail();?>" id="useremail_link" class="input-text required-entry validate-email" title="Email Address" type="text">
+                             <?php }else{?>
+                                <input name="login[username]" value="" id="useremail_link" class="input-text required-entry validate-email" title="Email Address" type="text">
+                            <?php } ?>
+                        </div>
+                    </li>
+                    <li>
+                        <label for="pass" class="required">Password<em>*</em></label>
+                        <div class="input-box">
+                            <input name="login[password]" class="input-text required-entry validate-password" id="userpass_link" title="Password" type="password">
+                        </div>
+                    </li>
+                    
+                    <li id="remember-me-box" class="control">
+        <div class="input-box">
+        <input name="persistent_remember_me" class="checkbox checkbox-label" id="remember_meZwnY9znjWf" checked="checked" title="Remember Me" type="checkbox">
+    </div>
+    <label for="remember_meZwnY9znjWf" class="checkbox-label">Remember Me</label>
+    <!-- <a class="link-tip" href="#" class="remember">What's this?</a> -->
+</li>
+
+
+ 
+                    <p class="clear"></p>
+                    <p class="form-required"><em>*</em> Required Fields</p>
+                    
+                     <button type="submit" class="button" title="Login" name="send" id="send2_top" onclick="return create_login_link()"><span><span>Login</span></span></button>
+                     </div>
+                     <div id="login-loading_link" style="display:none"><img src="/images/gray_fade_small.gif"><br />
+                     <p>Logging In .......</p>
+                     
+</div>
+                </ul>
+                <div class="clear"></div>
+                  <p style="margin-left:25px;">Not Registered? <a href="/customer/account/create/" class="f-left">Create an account</a></p>
+            </div>
+             </form>
+        </div>
+          
+ </div>
+		
+  
+<!--end Login Pop up-->
+
+ <script type="text/javascript">
+    //<![CDATA[
+   
+	function create_login_link(){
+		jQuery("#ajax_login_form").hide('slow');
+		jQuery("#login-loading_link").show('slow');
+		var login_url = '/onestepcheckout/ajax/login/'
+		//alert("I am Clicking login");
+		//alert(jQuery("#userpass").val());
+		jQuery.ajax({ 
+				type: 'post',
+				data: {'onestepcheckout_username':jQuery("#useremail_link").val(),'onestepcheckout_password':jQuery("#userpass_link").val()},
+				url:  login_url,                    
+				success: function(data) {
+				 
+				   var result = jQuery.parseJSON(data); 
+					if(result.success) {
+						location.reload();
+					} else {
+						//alert(result.error);
+						jQuery("#onestepcheckout-login-error-link").html(result.error);
+						jQuery("#onestepcheckout-login-error-link").show('slow')
+						jQuery("#ajax_login_form").show('slow');
+						jQuery("#login-loading_link").hide('slow');
+					}
+				}.bind(this)
+	     });
+		
+		return false;
+	}
+	
+	function signoutAction(){
+		var login_url = '/onestepcheckout/ajax/logout/'
+
+		jQuery.ajax({ 
+				type: 'post',
+				data: {'onestepcheckout_username':jQuery("#useremail_link").val(),'onestepcheckout_password':jQuery("#userpass_link").val()},
+				url:  login_url,                    
+				success: function(data) {
+				   var result = jQuery.parseJSON(data); 
+					if(result.success) {
+						location.reload();
+					} else {
+		
+					}
+				}.bind(this)
+	     });
+		
+		return false;
+	}
+	
+	
+    //]]>
+</script>
