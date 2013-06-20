@@ -245,7 +245,7 @@ div.onestepcheckout-error {
     background-image: url(images/onestepcheckout-error.jpg);
     background-repeat: no-repeat;
     background-position: 5px 5px;
-	font-weight:bold;
+	font-size:12px;
 }
 
 .onestepcheckout-column-left .onestepcheckout-error {
@@ -977,9 +977,10 @@ dl.shipment-methods dt label { float: left; }
 a#onestepcheckout-login-link{
 	font-size:12px;
 }
-.price{
+/*.price{
 	color:#444;
 }
+*/
 .shipment-methods .price{
 	color:#878A8E;
 }
@@ -1044,4 +1045,31 @@ li#shipping_address_list ul{
 
 #shippingmsg{
 	margin-left:10px;
+}
+
+#available_payment{
+    margin-left: 135px;
+    margin-top: -30px;
+    position: absolute;
+	font-size:12px;   
+}
+#available_payment-curacao{
+    margin-left: 50px;
+    margin-top: -30px;
+    position: absolute;
+	font-size:12px;   
+}
+#available_payment-curacao span{
+	color:#FF0000;
+}
+
+#available_payment span{
+	color:#FF0000;
+}
+#over-limit-error{
+	color: #FF0000;
+    font-size: 12px;
+    font-weight: normal;
+    line-height: 16px;
+    text-align: right;
 }

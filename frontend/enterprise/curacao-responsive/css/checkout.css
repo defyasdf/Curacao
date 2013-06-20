@@ -1,0 +1,100 @@
+@charset "utf-8";
+/* CSS Document */
+
+#checkout-progress-wrapper {
+	background: #eaeaea;
+	margin: 0 0 0 10px;
+	padding: 10px;
+	border: 1px solid #d0d0d0;
+}
+
+#checkoutleft{
+	float:left;
+	width:320px;
+	margin-right:10px;
+}
+#checkoutright{
+	float:left;
+	width:320px;
+}
+
+#leftbilling{
+	float:left;
+	width:48%;
+	margin-right:5px;
+}
+#rightbilling{
+	float:left;
+	width:48%;
+}
+#billingform{
+	line-height:2;
+	font-family:helvetica;
+}
+#billingform input[type="text"]{
+	width:90%;
+}
+
+#billingform select{
+	width:90%;
+}
+
+#billingform .control .input-box {
+    left: 0;
+    line-height: 16px;
+    margin-left: 240px;
+    padding-top: 1px;
+    position: absolute;
+}
+#logincredantials{
+	background:#e6e6e6;
+	overflow:hidden;
+	padding:15px;
+	line-height:2;
+}
+#logincredantials label{
+	font-weight:bold;
+}
+#logincredantials input{
+	width:90%;
+	height:27px;
+}
+
+#logincredantials select{
+	width:90%;
+	height:33px;
+}
+.container .sixteen.columns                 { width: 680px; }
+
+.container .four.columns.omega				{ width: 300px; margin-top:112px; }    
+
+#checkout-progress-wrapper a.btn-remove{
+	display:none;
+}
+
+#checkout-progress-wrapper #mini-cart{
+	margin-left:0;
+}
+#checkout-progress-wrapper .product-image{
+	display: none;
+}
+#checkout-progress-wrapper .product-details{
+	float:left;
+	width:238px;
+	margin-left:5px
+}
+#checkout-progress-wrapper ol#mini-cart{
+	list-style:none outside none;
+}
+
+#checkout-progress-wrapper ol#mini-cart li {
+    border-bottom: 1px solid #D0D0D0;
+    clear: both;
+    float: left;
+    margin: 8px 0 0;
+    padding: 0 0 8px;
+    width: 100%;
+}
+#checkout-step-payment label, legend{
+	width:200px;
+}
