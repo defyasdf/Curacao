@@ -94,32 +94,45 @@
 			</div>
 		</div>
 	</footer>
-    
-    
-    <script type="text/javascript">
-	adroll_adv_id = "J5CCTU3JANBNRBUC3OCBQW";
-	adroll_pix_id = "G2NS53NJBFBXFNQRMBLK7Q";
-	(function () {
-	var oldonload = window.onload;
-	window.onload = function(){
-	   __adroll_loaded=true;
-	   var scr = document.createElement("script");
-	   var host = (("https:" == document.location.protocol) ? "https://s.adroll.com" : "http://a.adroll.com");
-	   scr.setAttribute('async', 'true');
-	   scr.type = "text/javascript";
-	   scr.src = host + "/j/roundtrip.js";
-	   ((document.getElementsByTagName('head') || [null])[0] ||
-		document.getElementsByTagName('script')[0].parentNode).appendChild(scr);
-	   if(oldonload){oldonload()}};
-	}());
-	</script>
-    
-    
+
     <script type="text/javascript">
     //<![CDATA[
+    var bloaded = false;
+    
     jQuery(document).ready(function() {
     	
+    	<?php if($this->helper('customer')->isLoggedIn()){ ?>
+	  		jQuery('#customerbalance').parent().append('<div class="balanceblock"><center><img src="/images/loadingAnimation.gif" /></center></div>');
+	  		
+	  		jQuery('#customerbalance').mouseover(function(){
+		  		if(! bloaded ){
+	  		  		jQuery.get("/credit/availablebalance.php", { custId: "<?php echo($cust_id = $this->helper('customer')->getCustomer()->getId()) ?>"} ).done(function(data) {
+		  		  		jQuery('.balanceblock').html(data);
+		  		  		bloaded = true;
+	  		  		});
+		  		}	
+	  		});
+    	<?php } ?>
     
+		/*jQuery("a[title='Sign Out']").click(function(){
+            
+    		var login_url = '/onestepcheckout/ajax/logout/'
+
+			jQuery.ajax({ 
+					type: 'post',
+					url:  login_url,                    
+					success: function(data) {
+					   var result = jQuery.parseJSON(data); 
+						if(result.success) {
+							location.reload();
+						} else {
+			
+						}
+					}.bind(this)
+		     });
+            return false;
+        });*/
+        
         jQuery('header a').each(function(i,z){
 				
 			if( jQuery(this).attr('href').indexOf('credit.php') > 0 ){
@@ -172,11 +185,59 @@
 			}	
         });
 
-        
-        
-        
         jQuery('.tab.specs table').css({'width':'auto'});
+        
     });
+    
+	function create_login_link(){
+		jQuery("#ajax_login_form").hide('slow');
+		jQuery("#login-loading_link").show('slow');
+		var login_url = '/onestepcheckout/ajax/login/'
+		//alert("I am Clicking login");
+		//alert(jQuery("#userpass").val());
+        jQuery.cookie('EmailCustomer', jQuery("#useremail_link").val(), { expires: 30, path: '/' });
+		jQuery.ajax({ 
+				type: 'post',
+				data: {'onestepcheckout_username':jQuery("#useremail_link").val(),'onestepcheckout_password':jQuery("#userpass_link").val()},
+				url:  login_url,                    
+				success: function(data) {
+				 
+				   var result = jQuery.parseJSON(data); 
+					if(result.success) {
+						location.reload();
+					} else {
+						//alert(result.error);
+						jQuery("#onestepcheckout-login-error-link").html(result.error);
+						jQuery("#onestepcheckout-login-error-link").show('slow')
+						jQuery("#ajax_login_form").show('slow');
+						jQuery("#login-loading_link").hide('slow');
+					}
+				}.bind(this)
+	     });
+		
+		return false;
+	}
+	
+	function signoutAction(){
+		var login_url = '/onestepcheckout/ajax/logout/'
+
+		jQuery.ajax({ 
+				type: 'post',
+				data: {'onestepcheckout_username':jQuery("#useremail_link").val(),'onestepcheckout_password':jQuery("#userpass_link").val()},
+				url:  login_url,                    
+				success: function(data) {
+				   var result = jQuery.parseJSON(data); 
+					if(result.success) {
+
+						location.reload();
+					} else {
+		
+					}
+				}.bind(this)
+	     });
+		
+		return false;
+	}
     //]]>
     </script>
 	
@@ -187,7 +248,25 @@ var v24JsProtocol = (("https:" == document.location.protocol) ? "https://" : "ht
 document.write(unescape("%3Cscript src='" + v24JsProtocol + "static.vee24.com/v24/veedesk/v24Embedded.js' type='text/javascript'%3E%3C/script%3E"));
 
 </script> -->
-    
+<!-- Addroll Pixel --> 
+	<script type="text/javascript">
+        adroll_adv_id = "J5CCTU3JANBNRBUC3OCBQW";
+        adroll_pix_id = "G2NS53NJBFBXFNQRMBLK7Q";
+        (function () {
+        var oldonload = window.onload;
+        window.onload = function(){
+           __adroll_loaded=true;
+           var scr = document.createElement("script");
+           var host = (("https:" == document.location.protocol) ? "https://s.adroll.com" : "http://a.adroll.com");
+           scr.setAttribute('async', 'true');
+           scr.type = "text/javascript";
+           scr.src = host + "/j/roundtrip.js";
+           ((document.getElementsByTagName('head') || [null])[0] ||
+            document.getElementsByTagName('script')[0].parentNode).appendChild(scr);
+           if(oldonload){oldonload()}};
+        }());
+    </script>
+<!-- End Addroll Pixel -->     
  <?php 
 	$page = Mage::helper('core/url')->getCurrentUrl() ;
 	$base = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB);

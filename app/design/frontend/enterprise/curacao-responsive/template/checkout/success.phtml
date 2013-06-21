@@ -81,7 +81,7 @@
 	if($hid){
 		?>
 		<!--<iframe width='1' height='1' frameborder='0' src='http://affiliate.gwmtracker.com/rd/ipx.php?hid=<?php //echo $hid?>&sid=5135&transid=<?php //echo $this->getOrderId();?>&ate=<?php //echo $revshare?>'></iframe>-->
-        <iframe width='1' height='1' frameborder='0' src='http://affiliate.gwmtracker.com/rd/ipx.php?hid=<?php echo $hid?>&sid=5717&transid=<?php echo $this->getOrderId();?>&ate=<?php echo $revshare?>'></iframe>
+        <iframe width='1' height='1' frameborder='0' src='http://affiliate.gwmtracker.com/rd/ipx.php?hid=<?php echo $hid?>&sid=5717&transid=<?php echo $this->getOrderId();?>&ate=<?php echo $sub;?>'></iframe>
        <?php
 	  $orderObj->setRevshareamt($revshare);
 	  $orderObj->setHid($hid); 
@@ -545,3 +545,10 @@ var google_conversion_value = 0;
 </script>
 <!--Close Body Tag -->
 <!--End Bronto Conversion-->
+<!-- Addroll Conversion Tracking -->
+<script type=”text/javascript”>
+		adroll_conversion_value_in_dollars = <?php echo $grandTotal;?>; 
+		adroll_custom_data = {“ORDER_ID”: “<?php echo $this->getOrderId()?>”, “USER_ID”:”<?php echo $cust_detail['firstname'].' '.$cust_detail['lastname']?>”}
+</script>
+
+<!-- End Addroll Conversion Tracking -->

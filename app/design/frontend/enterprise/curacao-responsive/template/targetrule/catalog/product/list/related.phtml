@@ -1,0 +1,292 @@
+<?php
+/**
+ * Magento Enterprise Edition
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Magento Enterprise Edition License
+ * that is bundled with this package in the file LICENSE_EE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.magentocommerce.com/license/enterprise-edition
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     enterprise_default
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://www.magentocommerce.com/license/enterprise-edition
+ */
+/* @var $this Enterprise_TargetRule_Block_Catalog_Product_List_Related */
+?>
+<?php
+	$_product = $this->getProduct();  
+	$_id = $_product->getId();
+?>
+
+<?php if ($this->hasItems()):?>
+<div class="box-collateral box-related">
+    <div class="box-title block-header">
+    	<?php echo $this->__('Frequently Bought Together') ?>
+    </div>
+	<div class="box-holder">
+		<div class="twenty columns">
+	        <ul class="box-content image-holder">
+	        	<?php // add parent product to list // ?>
+	        	<li class="image">
+					<img src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(88) ?>" alt="<?php echo $this->escapeHtml($_product->getName()) ?>" title="<?php echo $this->escapeHtml($_product->getName()) ?>" />
+	        	</li>
+		        <li class="plus">+</li>
+	        	<?php // end add parent product to list // ?>
+			<?php 
+				$i=0;
+				foreach($this->getItemCollection() as $_item): 
+					//if( ($_item->isInStock() == 1) && ($_item->getStatus() == 1) ):
+                     if(!$_item->isComposite() && $_item->isSaleable()): 
+			?>
+		        <li class="image">
+		            <?php
+		                $itemBlock = $this->getChild('catalog.product.related.image')->setItem($_item)->setPosition($i);
+		                echo $itemBlock->toHtml();
+		            ?>
+		        </li>
+		        <?php if( ($i + 1) < count( $this->getItemCollection() ) ): ?>
+		        <li class="plus">+</li>
+		        <?php endif; ?>
+			<?php 
+						$i++; 
+						if($i == 3){
+							break;
+						}
+					endif;
+				endforeach;
+			?>
+			
+	        </ul>
+	        
+		    <?php 
+			$i++;
+			
+			if($i == 4){
+				$count = "four";
+			}else if($i == 3){
+				$count = "three";
+			}else if($i == 2){
+				$count = "two";
+			}else if($i == 1){
+				$count = "one";
+			}
+			
+			
+			
+
+
+			$start_ts = strtotime($_product->getSpecialFromDate());
+			$_product->getSpecialToDate();
+			$end_ts = strtotime($_product->getSpecialToDate());
+			$user_ts = strtotime(date('Y-m-d'));
+
+			if((($user_ts >= $start_ts) && ($user_ts <= $end_ts))){		
+				if($_product->getSpecialPrice()== ''){
+					$_price = $this->helper('tax')->getPrice($_product, $_product->getPrice()); 
+				}else{
+					$_price = $this->helper('tax')->getPrice($_product, $_product->getSpecialPrice()); 		
+				}
+			}else{
+				$_price = $this->helper('tax')->getPrice($_product, $_product->getPrice()); 
+			}
+		
+			$_related_total_price = $_price;
+			
+	    	//MONTHLY PRICE TABLE
+	    	$_mo_price = 0; 
+	    	
+	    	if($_related_total_price < 20){
+	    		$_mo_price = 0;
+	    	} else if($_related_total_price < 200) {
+				$_mo_price = 20;
+	    	} else if($_related_total_price < 500) {
+		    	$_mo_price = number_format( ($_related_total_price * .100), 2);
+	    	} else if($_related_total_price < 1000) {
+		    	$_mo_price = number_format( ($_related_total_price * .075), 2);
+	    	} else {
+		    	$_mo_price = number_format( ($_related_total_price * .05), 2);
+	    	}
+	    			
+			?>
+			<div class="eight columns omega related-button-holder right" id="related_button">
+				<p class="total-price"><?php echo $this->__('Price for ')?><span class="cnt">selected</span>: <span class="price-box"><span class="price">$<?php echo($_related_total_price) ?></span></span> <span class="credit-payment"> or <?php echo $this->__('As low as') ?> <span class="credit-price">$<?php echo $_mo_price ?></span><?php echo $this->__('/mo') ?></span></p>
+		    	<p class="note">
+		    		<a class="button related" href="#" onclick="addRelatedProducts(this); return false;"><strong><?php echo $this->__('Add Selected Items to Cart') ?></strong></a>
+		    	</p>
+			</div>    
+		</div>
+		<div class="ten columns">
+	        <ul class="box-content">
+	        	<?php // add parent product to list // ?>
+	        	<li class="item">
+					<input class="checkbox related-checkbox" id="related-checkbox<?php echo($_product->getId())?>" name="related_products[]" value="<?php echo($_product->getId())?>" checked="checked" type="checkbox" disabled="disabled">
+					<div class="item-info">
+						<div class="product-details">
+							<h3 class="product-name"><span>THIS ITEM: </span><?php echo($_product->getName())?></h3>
+							<?php echo($_product->getPriceHtml())?>
+						</div>
+					</div>
+	        	</li>
+	        	<?php // end add parent product to list // ?>	        	
+			<?php 
+				$i=0; 
+				$_total_price = 0;
+				
+				foreach($this->getItemCollection() as $_item): 
+					//if( ($_item->isInStock() == 1) && ($_item->getStatus() == 1) ):
+                     if(!$_item->isComposite() && $_item->isSaleable()):
+						$_total_price += $_item->getPrice();
+			?>
+		        <li class="item">
+		            <?php
+		                $itemBlock = $this->getChild('catalog.product.related.item')->setItem($_item)->setPosition($i);
+		                echo $itemBlock->toHtml();
+		            ?>
+		        </li>
+			<?php 
+						$i++; 
+						if($i == 3){
+							break;
+						}
+					endif;
+				endforeach 
+			?>
+	        </ul>
+		</div>
+		
+		
+    </div>
+    <script type="text/javascript">decorateGeneric($$('.box-related ul.box-content'), ['odd','even','first','last'])</script>
+
+    <script type="text/javascript">
+    //<![CDATA[
+	var total_price = 0;
+		
+    jQuery(document).ready(function() {
+	    jQuery('.related-checkbox').each(function( index ){
+			jQuery(this).click(function(){
+				addRelatedToProduct(this);
+			});
+		});
+	});
+
+    var relatedProductsCheckFlag = false;
+    
+    function addRelatedProducts(txt){
+        addRelatedToProduct();
+        productAddToCartForm.submit( jQuery('button.btn-add-to-cart') );
+    }
+    // Friendly Configuration Text
+    function getConfigurationText(_cnt){
+        if(_cnt == 1){
+	      var _cnt_txt = '<?php echo $this->__('one')?>'; 
+        } else if (_cnt == 2){
+	      var _cnt_txt = '<?php echo $this->__('both')?>';  	        
+        } else if (_cnt == 3){
+	      var _cnt_txt = '<?php echo $this->__('all three')?>';  
+        } else {
+	      var _cnt_txt = '<?php echo $this->__('all four')?>';
+		}
+	    
+	    return _cnt_txt;
+    }
+    
+	// MONTHLY PRICE TABLE    
+    function getMonthlyPrice(totalprice){
+    	
+    	if(totalprice < 20){
+    		mo_price = 0;
+    	} else if(totalprice < 200) {
+			mo_price = 20;
+    	} else if(totalprice < 500) {
+	    	mo_price = totalprice * .100;
+    	} else if( totalprice < 1000) {
+	    	mo_price = totalprice * .075;
+    	} else {
+	    	mo_price = totalprice * .05;
+    	}
+    	    	
+	    return Number(mo_price).toFixed(2);
+    }
+
+    function addRelatedToProduct(obj){
+		total_price = 0;
+		
+        jQuery('.total-price .cnt').html(getConfigurationText(jQuery('.related-checkbox:checked').length));
+
+		jQuery('.related-checkbox:checked').each(function(indx){
+			if(indx > 0){
+				var price_html = jQuery(this).parent().find('.price').html();
+				var price =  Number (  jQuery(this).parent().find('.price').html().substr(1, jQuery(this).parent().find('.price').html().length ).replace(',', '')   );
+				total_price += Number ( price );
+			}
+		});
+		
+		
+		
+		var start_price = Number( jQuery('.price-box .price').html().substr(1, jQuery('.price-box .price').html().length ).replace(',','') );
+		
+		total_price += start_price;
+		total_price = Number(total_price).toFixed(2);
+		
+		var monthly_price = getMonthlyPrice(total_price);
+		
+		jQuery('.total-price .price').html('$'+total_price);
+		jQuery('.total-price .credit-payment .credit-price').html('$'+monthly_price);
+        
+        
+        var checkboxes = $$('.related-checkbox');
+        var base_product_id = '<?php echo($_product->getId()) ?>';
+        var values = [];
+        for(var i=0;i<checkboxes.length;i++){
+        	if(checkboxes[i].value != base_product_id)
+	            if(checkboxes[i].checked) values.push(checkboxes[i].value);        
+        }
+        
+        if($('related-products-field')){
+            $('related-products-field').value = values.join(',');
+        }
+        return;
+    }
+    //]]>
+    </script>
+</div>
+<?php endif;?>
+<style>
+	.box-related .block-header {
+		margin-top:5px;
+	}
+	#related_button{
+		margin-right: 90px;
+	}
+	.box-related {
+		border-bottom:none;
+		margin-bottom:0px;
+	}
+	.related-products h3.product-name .price{
+		color: #D5172F;
+		font-size: 12px;
+		line-height: 15px;
+	}
+	.credit-payment .credit-price{
+		font-size:12px;
+	}
+	@media screen and (-webkit-min-device-pixel-ratio:0) { 
+		a.button.related{
+			padding:5px 20px 5px 20px;		
+		} 
+	}
+	
+</style>

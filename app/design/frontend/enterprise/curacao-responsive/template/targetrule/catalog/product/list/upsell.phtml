@@ -1,0 +1,109 @@
+<?php
+/**
+ * Magento Enterprise Edition
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Magento Enterprise Edition License
+ * that is bundled with this package in the file LICENSE_EE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.magentocommerce.com/license/enterprise-edition
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     enterprise_default
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://www.magentocommerce.com/license/enterprise-edition
+ */
+/** @var $this Enterprise_TargetRule_Block_Catalog_Product_List_Upsell */
+?>
+<?php
+	$_helper = $this->helper('catalog/output');
+	$_category_detail=Mage::registry('current_category');
+	$_storeId = Mage::app()->getStore()->getId();
+
+	$_product = $this->getProduct();  
+	$_id = $_product->getId();
+	$cu_ca = Mage::getModel('catalog/product')->load($_id)->getCategoryIds();
+	$categoryCollection = Mage::getResourceModel('catalog/category_collection')
+                     ->addAttributeToFilter('entity_id', $cu_ca)
+                     ->addIsActiveFilter();
+$ca = array();			
+foreach($categoryCollection as $cat){
+	  $ca[] = $cat->getId();
+}
+ 
+ $category = Mage::getModel('catalog/category')->load(466);
+ $subcategory = $category->getAllChildren(true);
+ array_shift($subcategory);
+ array_push($subcategory,'424');
+ $cat = array();
+ for($i=0;$i<sizeof($ca);$i++){
+	if(!in_array($ca[$i],$subcategory)){
+		$cat[] = $ca[$i];
+	}
+ } 
+ $catid = $cat[(sizeof($cat)-1)];
+/* $currentcat = Mage::getSingleton('catalog/layer')->getCurrentCategory()->getPathIds();
+for($j=(sizeof($cat)-1);$j>=0;$j++){
+
+	 if(in_array($cat[$j], $currentcat)){
+		$catid = $cat[$j];
+		break;
+	 }	
+
+}
+*/	
+ $category = new Mage_Catalog_Model_Category();
+ $category->setStoreId($_storeId)->load($catid); 
+	if($_storeId == 1){
+		$morein = "Related ".$category->getName();
+	}else{
+		$morein = 'Relacionados '.$category->getName();
+	}
+?>
+
+<?php if ($this->hasItems()): ?>
+<div id="upsell_products">
+<ul>
+	<li>
+    	<?php echo $morein?> 
+    </li>
+	  <?php $i=0; foreach ($this->getItemCollection() as $_item): ?>
+                <li class="item<?php if (($i - 1) % $this->getColumnCount() == 0):?> first<?php elseif ($i % $this->getColumnCount() == 0):?> last<?php endif;?>">
+                    <?php
+					    $itemBlock = $this->getChild('catalog.product.upsell.item')->setItem($_item)->setPosition($i);
+                        echo $itemBlock->toHtml();
+                    ?>
+                </li>
+                <?php $i++;?>
+    <?php endforeach; ?>
+    </ul>
+</div>
+
+
+
+<!--<div class="box-title block-header"><?php //echo $this->__('You may also be interested in the following product(s)') ?></div>
+<div class="box-collateral box-up-sell twenty columns alpha omega carousel featured-items" id="featuredSlider">
+	<div id="slider-code">
+		<a class="buttons prev" href="#">left</a>
+		<div class="viewport">
+            
+            
+            <ul class="overview">
+            
+	  
+            </ul>
+		</div>
+		<a class="buttons next" href="#">right</a>
+	</div>
+</div>-->
+<?php endif ?>
