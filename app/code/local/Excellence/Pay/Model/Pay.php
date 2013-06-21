@@ -231,7 +231,6 @@ class Excellence_Pay_Model_Pay extends Mage_Payment_Model_Method_Abstract
 			Mage::getSingleton('core/session')->setTrackingId($tracker_id);		
 		}
 		//Adding new variables to quote
-		
 		$quote->setpayment_method("Curacao Credit");
 		$quote->setar_response($result->StatusMessage);
 		$quote->setdp_amount($result->DownPayment);
