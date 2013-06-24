@@ -20,11 +20,29 @@
  *
  * @category    design
  * @package     default_default
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 ?>
 <?php $_item = $this->getItem() ?>
+<?php 
+//echo $_item->getId();
+	$id = Mage::getModel('catalog/product')->getIdBySku($_item->getSku());
+	//$id = 0;
+	//echo 'hre';
+	if($id){
+		$product = Mage::getModel('catalog/product')->loadByAttribute('sku', $_item->getSku(), array('vendorid')); 
+		$server = '192.168.100.121';
+		$user = 'curacaodata';
+		$pass = 'curacaodata';
+		$db = 'icuracaoproduct';
+		$vid = $product->getVendorid();
+	}else{
+		$vid = '';
+	}
+	
+
+?>
 <?php $this->setPriceDataObject($_item) ?>
 <tr<?php if (!$this->canDisplayGiftmessage()): ?> class="border"<?php endif; ?>>
     <td>
@@ -33,6 +51,27 @@
         <?php endif; ?>
         <div class="item-text">
             <?php echo $this->getColumnHtml($_item, 'name') ?>
+            <?php
+				if($id){
+					if($product->getVendorid()!=''){ 
+					  $link = mysql_connect($server,$user,$pass);
+					  mysql_select_db($db,$link);	
+		
+					  $sql = 'select vendorName from vendormanagement where vendorID = "'.$product->getVendorid().'"';
+					  $result = mysql_query($sql,$link);
+					  $row = mysql_fetch_array($result);
+					  $vname = $row['vendorName'];
+					}else{
+						$vname = '';
+					}
+				}else{
+					$vname = '';
+				}
+				  	
+			?>
+            <?php echo '<strong>Vendor Id:</strong> '.$vid.'('.$vname.')';
+				mysql_close($link);
+			?>
         </div>
         <?php if ($this->canDisplayContainer()): ?>
         </div>
