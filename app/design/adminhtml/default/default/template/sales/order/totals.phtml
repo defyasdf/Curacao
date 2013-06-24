@@ -20,7 +20,7 @@
  *
  * @category    design
  * @package     default_default
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 ?>
@@ -31,7 +31,13 @@
     <?php echo $this->getChildHtml('main'); ?>
     <?php echo $this->getChildHtml('footer'); ?>
 </table>
-<?php endif;*/ ?>
+<?php endif;*/ 
+
+$orderId = Mage::app()->getRequest()->getParam('order_id');
+$order = Mage::getModel('sales/order')->load($orderId);
+$grandTotal = $order->getGrandTotal();
+$dp = $grandTotal - $order->getCuracaocustomerdiscount();
+?>
 <table cellspacing="0" width="100%">
     <col />
     <col width="1" />
@@ -52,6 +58,31 @@
         </tr>
         <?php endif?>
     <?php endforeach?>
+        <tr class="5">
+                <td class="label">
+                    <strong>Curacao Credit Payment</strong>
+                </td>
+                <td class="emph">
+                    <strong><span class="price">$<?php echo $order->getCuracaocustomerdiscount();?></span></strong>
+                </td>
+         </tr>
+         
+          <tr class="6">
+                <td class="label">
+                    <strong><?php if($order->getCuracaocustomerdiscount()>0){?>Down Payment<?php }else{?> Credit Card Payment<?php }?></strong>
+                </td>
+                <td class="emph">
+                    <strong><span class="price">$<?php echo $dp;?></span></strong>
+                </td>
+         </tr>
+         	<tr class="7">
+                <td class="label">
+                    <strong>Estimate Number</strong>
+                </td>
+                <td class="emph">
+                    <strong><span class="price"><?php echo $order->getEstimatenumber();?></span></strong>
+                </td>
+         </tr>
     </tfoot>
     <?php endif?>
 
