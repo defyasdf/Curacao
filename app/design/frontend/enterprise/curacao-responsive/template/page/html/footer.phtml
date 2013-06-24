@@ -304,3 +304,26 @@ document.write(unescape("%3Cscript src='" + v24JsProtocol + "static.vee24.com/v2
 
 */ ?>
 <?php }?>
+<?php
+    $page = Mage::helper('core/url')->getCurrentUrl() ;
+    $base = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB);
+
+    if($page == $base){
+        $current_page = 'Home page';
+    }else{
+        $current_page = str_replace($base,'',$page);
+    }
+
+if($current_page == 'credit-application' || $current_page == 'onestepcheckout/'){
+	
+    ?>
+    <script type="text/javascript">
+
+        var v24JsProtocol = (("https:" == document.location.protocol) ? "https://" : "http://");
+
+        document.write(unescape("%3Cscript src='" + v24JsProtocol + "static.vee24.com/v24/veedesk/v24Embedded.js' type='text/javascript'%3E%3C/script%3E"));
+
+    </script>
+<?php
+}
+?>
