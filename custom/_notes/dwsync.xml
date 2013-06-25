@@ -35,5 +35,6 @@
 <file name="getrules.php" server="198.101.163.120//var/www/html/" local="130157129811335068" remote="130157130430000000" Dst="2" />
 <file name="_getorder_collection_withdate.php" server="198.101.163.120//var/www/m113/" local="130163121539108209" remote="130163121690000000" Dst="2" />
 <file name="_getorder_item_collection_margin.php" server="198.101.163.120//var/www/m113/" local="130163121514336792" remote="130163121710000000" Dst="2" />
-<file name="_getorder_item_collection.php" server="198.101.163.120//var/www/m113/" local="130163121521807219" remote="130163121710000000" Dst="2" />
+<file name="_getorder_item_collection.php" server="198.101.163.120//var/www/m113/" local="130165762370195911" remote="130165762510000000" Dst="2" />
+<file name="getallproducts.php" server="198.101.163.120//var/www/m113/" local="130161579460000000" remote="130161579460000000" Dst="2" />
 </dwsync>
