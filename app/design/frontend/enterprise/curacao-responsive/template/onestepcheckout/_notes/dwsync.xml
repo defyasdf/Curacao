@@ -5,4 +5,5 @@
 <file name="summary.phtml_09272012" server="198.101.163.120//var/www/html/" local="130108943520000000" remote="130108943520000000" Dst="2" />
 <file name="summary.phtml_works" server="198.101.163.120//var/www/html/" local="130108943520000000" remote="130108943520000000" Dst="2" />
 <file name="payment_method.phtml" server="198.101.163.120//var/www/html/" local="130132158941405927" remote="130132158980000000" Dst="2" />
+<file name="checkout.phtml" server="198.101.163.120//var/www/m113/" local="130167664820905888" remote="130167664880000000" Dst="2" />
 </dwsync>
