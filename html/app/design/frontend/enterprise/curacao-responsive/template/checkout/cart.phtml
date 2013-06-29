@@ -1,0 +1,340 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+ 
+?>
+<?php
+/**
+ * Shopping cart template
+ *
+ * @see Mage_Checkout_Block_Cart
+ */
+?>
+<div class="cart">
+    
+    <?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+   
+    
+    <div class="page-title title-buttons">
+        <h1><?php echo $this->__('Shopping Cart') ?></h1>
+        <?php if(!$this->hasError()): ?>
+        
+        <ul class="checkout-types">
+        <?php if ($this->helper('customer')->isLoggedIn() ) {?>
+        <?php foreach ($this->getMethods('top_methods') as $method): ?>
+            <?php if ($methodHtml = $this->getMethodHtml($method)): ?>
+            <li><?php echo $methodHtml; ?></li>
+            <?php endif; ?>
+        <?php endforeach; ?>
+        <?php }else{?>
+        <li><a href="#TB_inline?height=380&width=881&inlineId=login_content" class="thickbox" title="Billing Address"><button class="button btn-proceed-checkout btn-checkout" title="Proceed to Checkout" type="button"><span><span>Proceed to Checkout</span></span></button></a></li>
+        <?php }?>
+        </ul>
+        <?php endif; ?>
+		<div class="continue-shop">
+        <?php if($this->getContinueShoppingUrl()): ?>
+            <a class="cart-link" href="#" onclick="setLocation('<?php echo $this->getContinueShoppingUrl() ?>')">Continue Shopping</a>
+     	<?php endif; ?>
+		</div>
+    </div>
+    <?php echo $this->getChildHtml('form_before') ?>
+    <form action="<?php echo $this->getUrl('checkout/cart/updatePost') ?>" method="post">
+        <fieldset class="cart-fieldset">
+            <table id="shopping-cart-table" class="data-table cart-table">
+                <col width="1" />
+                <col />
+                <col width="1" />
+            <?php if ($this->helper('wishlist')->isAllowInCart()) : ?>
+                <col width="1" />
+            <?php endif ?>
+            <?php if ($this->helper('tax')->displayCartPriceExclTax() || $this->helper('tax')->displayCartBothPrices()): ?>
+                <col width="1" />
+            <?php endif; ?>
+            <?php if ($this->helper('tax')->displayCartPriceInclTax() || $this->helper('tax')->displayCartBothPrices()): ?>
+                <col width="1" />
+            <?php endif; ?>
+                <col width="1" />
+            <?php if ($this->helper('tax')->displayCartPriceExclTax() || $this->helper('tax')->displayCartBothPrices()): ?>
+                <col width="1" />
+            <?php endif; ?>
+            <?php if ($this->helper('tax')->displayCartPriceInclTax() || $this->helper('tax')->displayCartBothPrices()): ?>
+                <col width="1" />
+            <?php endif; ?>
+                <col width="1" />
+
+            <?php $mergedCells = ($this->helper('tax')->displayCartBothPrices() ? 2 : 1); ?>
+                <thead>
+                    <tr>
+                        <th rowspan="<?php echo $mergedCells; ?>">&nbsp;</th>
+                        <th rowspan="<?php echo $mergedCells; ?>"><span class="nobr"><?php echo $this->__('Product Name') ?></span></th>
+                        <th rowspan="<?php echo $mergedCells; ?>"></th>
+                        <?php if ($this->helper('wishlist')->isAllowInCart()) : ?>
+                        <th rowspan="<?php echo $mergedCells; ?>" class="a-center"><span class="nobr"><?php echo $this->__('') ?></span></th>
+                        <?php endif ?>
+                        <th class="a-right" colspan="<?php echo $mergedCells; ?>"><span class="nobr"><?php echo $this->__('Unit Price') ?></span></th>
+                        <th rowspan="<?php echo $mergedCells; ?>" class="a-center">&nbsp;</th>
+                        <th rowspan="<?php echo $mergedCells; ?>" class="a-right"><?php echo $this->__('Qty&nbsp&nbsp') ?></th>
+                        <th class="a-right" colspan="<?php echo $mergedCells; ?>"><?php echo $this->__('Subtotal') ?></th>
+                        <!-- <th rowspan="<?php echo $mergedCells; ?>" class="a-center">&nbsp;</th> -->
+                    </tr>
+                    <?php if ($this->helper('tax')->displayCartBothPrices()): ?>
+                    <tr>
+                        <th class="a-right"><?php echo $this->helper('tax')->getIncExcTaxLabel(false) ?></th>
+                        <th><?php echo $this->helper('tax')->getIncExcTaxLabel(true) ?></th>
+                        <th class="a-right"><?php echo $this->helper('tax')->getIncExcTaxLabel(false) ?></th>
+                        <th><?php echo $this->helper('tax')->getIncExcTaxLabel(true) ?></th>
+                    </tr>
+                    <?php endif; ?>
+                </thead>
+                <!-- 
+                <tfoot>
+                    <tr>
+                        <td colspan="50" class="a-right">
+                            <?php if($this->getContinueShoppingUrl()): ?>
+                                <button type="button" title="<?php echo $this->__('Continue Shopping') ?>" class="button btn-continue" onclick="setLocation('<?php echo $this->getContinueShoppingUrl() ?>')"><span><span><?php echo $this->__('Continue Shopping') ?></span></span></button>
+                            <?php endif; ?>
+                            <button type="submit" name="update_cart_action" value="update_qty" title="<?php echo $this->__('Update Shopping Cart'); ?>" class="button btn-update"><span><span><?php echo $this->__('Update Shopping Cart'); ?></span></span></button>
+                            <button type="submit" name="update_cart_action" value="empty_cart" title="<?php echo $this->__('Clear Shopping Cart'); ?>" class="button btn-empty" id="empty_cart_button"><span><span><?php echo $this->__('Clear Shopping Cart'); ?></span></span></button>
+                            <!--[if lt IE 8]>
+                            <input type="hidden" id="update_cart_action_container" />
+                            <script type="text/javascript">
+                            //<![CDATA[
+                                Event.observe(window, 'load', function()
+                                {
+                                    // Internet Explorer (lt 8) does not support value attribute in button elements
+                                    $emptyCartButton = $('empty_cart_button');
+                                    $cartActionContainer = $('update_cart_action_container');
+                                    if ($emptyCartButton && $cartActionContainer) {
+                                        Event.observe($emptyCartButton, 'click', function()
+                                        {
+                                            $emptyCartButton.setAttribute('name', 'update_cart_action_temp');
+                                            $cartActionContainer.setAttribute('name', 'update_cart_action');
+                                            $cartActionContainer.setValue('empty_cart');
+                                        });
+                                    }
+
+                                });
+                            //]]>
+                            </script>
+                            <![endif]-->
+                 <!--       </td>
+                    </tr>
+                </tfoot>
+                -->
+
+                <tbody>
+                <?php foreach($this->getItems() as $_item): ?>
+                    <?php echo $this->getItemHtml($_item) ?>
+                <?php endforeach ?>
+                </tbody>
+            </table>
+            <script type="text/javascript">decorateTable('shopping-cart-table')</script>
+        </fieldset>
+    </form>
+    <div class="cart-collaterals">
+        <div class="eight columns totals omega">
+            <?php echo $this->getChildHtml('totals'); ?>
+            <?php if(!$this->hasError()): ?>
+            <ul class="checkout-types">
+            <?php if ($this->helper('customer')->isLoggedIn() ) {?>
+			<?php foreach ($this->getMethods('methods') as $method): ?>
+                <?php if ($methodHtml = $this->getMethodHtml($method)): ?>
+                <li><?php echo $methodHtml; ?></li>
+                <?php endif; ?>
+            <?php endforeach; ?>
+            <?php }else{?>
+            <li><a href="#TB_inline?height=380&width=881&inlineId=login_content" class="thickbox" title="Billing Address"><button class="button btn-proceed-checkout btn-checkout" title="Proceed to Checkout" type="button"><span><span>Proceed to Checkout</span></span></button></a></li>
+            <?php }?>
+            </ul>
+            <?php endif; ?>
+        </div><!--totals-->
+        
+        
+        
+<?php /*
+        <div class="four columns alpha crosssell">
+            <?php echo $this->getChildHtml('crosssell') ?>
+        </div><!--crosssell--> 
+*/ ?>        
+        <div class="one column"></div>
+        
+
+        <div class="five columns  coupon-shipping">
+                <?php echo $this->getChildHtml('checkout.cart.extra') ?>
+                <?php echo $this->getChildHtml('coupon') ?>
+                <?php //if (!$this->getIsVirtual()): echo $this->getChildHtml('shipping'); endif; ?>
+        </div><!--coupon-shipping-->       
+
+    </div>
+</div>
+<div style="clear:both;"></div>
+<!--Login Popup-->
+
+<div class="account-login" id="login_content" style="display:none">
+    	<div class="onestepcheckout-error" id="onestepcheckout-login-error" style="display:none;"></div>
+        <div class="eight columns alpha col-1 new-users">
+            <div class="content">
+                <ul class="form-list">
+                <h2 class="legend">New Customers</h2>
+                <p>By creating an account with our store, you will be able to move through the checkout process faster, store multiple shipping addresses, view and track your orders in your account and more.</p>
+               	 <div id="buttons">
+                <button type="button" title="Create an Account" class="button" onclick="window.location='/customer/account/create/';"><span><span>Create an Account</span></span></button>
+                <p id="newOr">- or -</p>
+                <p id="countinueGuest"><a href="/onestepcheckout/">Continue As Guest <span id="arrows">&raquo;</span></a></p>
+                </div>
+               
+                </ul>
+               
+            </div>
+
+        </div>
+        <div class="eight columns omega col-2 registered-users" id="login-container">
+            <form action="" onsubmit="return create_login()">
+            <div class="content" id="login-content">
+                <ul class="form-list">
+                <h2 class="legend">Registered Customers</h2>
+                    <p>If you have an account with us, log in using your email address.</p>
+                    <li>
+                        <label for="email" class="required">Email Address<em>*</em></label>
+                        <div class="input-box">
+                            <input name="login[username]" value="" id="useremail" class="input-text required-entry validate-email" title="Email Address" type="text">
+                        </div>
+                    </li>
+                    <li>
+                        <label for="pass" class="required">Password<em>*</em></label>
+                        <div class="input-box">
+                            <input name="login[password]" class="input-text required-entry validate-password" id="userpass" title="Password" type="password">
+                        </div>
+                    </li>
+                                        <li id="remember-me-box" class="control">
+        <div class="input-box">
+        <input name="persistent_remember_me" class="checkbox checkbox-label" id="remember_meZwnY9znjWf" checked="checked" title="Remember Me" type="checkbox">
+    </div>
+    <label for="remember_meZwnY9znjWf" class="checkbox-label">Remember Me</label>
+    <!-- <a class="link-tip" href="#" class="remember">What's this?</a> -->
+</li>
+ 
+                    <p class="clear"></p>
+                    <p class="form-required"><em>*</em> Required Fields</p>
+                    <a href="/customer/account/forgotpassword/" class="f-left">Forgot Your Password?</a>
+                     <button type="submit" class="button" title="Login" name="send" id="send2" onclick="return create_login()"><span><span>Login</span></span></button>
+                     <div id="login-loading" style="display:none"><img src="/images/gray_fade_small.gif"></div>
+                </ul>
+                   
+            </div>
+             </form>
+        </div>
+          
+ </div>
+		
+  
+<!--end Login Pop up-->
+<?php  
+	$couponcode = Mage::getSingleton('checkout/cart')->getQuote()->getCouponCode();
+	$coupon = explode("_",$couponcode);
+	
+
+	
+?>
+ <script type="text/javascript">
+    //<![CDATA[
+    jQuery(document).ready(function() {
+        jQuery('.messages .success-msg').fadeIn(400).delay(3000).hide();
+		<?php if($coupon[sizeof($coupon)-1] != "BUYONEGETHALF"){?>
+			addautocoupon();
+		<?php }?>
+	});
+	function addautocoupon(){
+		
+		jQuery("#send2").hide('slow');
+		jQuery("#login-loading").show('slow');
+		var login_url = '/onestepcheckout/ajax/createautocoupon/'
+		jQuery.ajax({ 
+				type: 'post',
+				data: {'coupon':'BUYONEGETHALF'},
+				url:  login_url,                    
+				success: function(data) {
+				   alert(data);
+				   return false;
+				   var result = jQuery.parseJSON(data); 
+					if(result.success) {
+						window.location = '/onestepcheckout/';
+					} else {
+						//alert(result.error);
+						jQuery("#onestepcheckout-login-error").html(result.error);
+						jQuery("#onestepcheckout-login-error").show('slow')
+						jQuery("#send2").show('slow');
+						jQuery("#login-loading").hide('slow');
+					}
+				}.bind(this)
+	     });
+	}
+	function create_login(){
+		jQuery("#send2").hide('slow');
+		jQuery("#login-loading").show('slow');
+		var login_url = '/onestepcheckout/ajax/login/'
+		//alert("I am Clicking login");
+		//alert(jQuery("#userpass").val());
+		jQuery.ajax({ 
+				type: 'post',
+				data: {'onestepcheckout_username':jQuery("#useremail").val(),'onestepcheckout_password':jQuery("#userpass").val()},
+				url:  login_url,                    
+				success: function(data) {
+				 
+				   var result = jQuery.parseJSON(data); 
+					if(result.success) {
+						window.location = '/onestepcheckout/';
+					} else {
+						//alert(result.error);
+						jQuery("#onestepcheckout-login-error").html(result.error);
+						jQuery("#onestepcheckout-login-error").show('slow')
+						jQuery("#send2").show('slow');
+						jQuery("#login-loading").hide('slow');
+					}
+				}.bind(this)
+	     });
+		
+		return false;
+	}
+    //]]>
+</script>
+
+<?php
+if(Mage::getSingleton('core/session')->getGwmid()){
+	$server = '192.168.100.121';
+	$user = 'curacaodata';
+	$pass = 'curacaodata';
+	$db = 'icuracaoproduct';
+	
+	$link = mysql_connect($server,$user,$pass);
+	
+	mysql_select_db($db,$link);
+	$quote = Mage::getModel('checkout/cart')->getQuote();
+
+	$gwm = 'update gwmtracking set quote_id = "'.$quote->getId().'" where gwmId = '.Mage::getSingleton('core/session')->getGwmid();
+	mysql_query($gwm);
+	mysql_close($link);
+ }
+?>
