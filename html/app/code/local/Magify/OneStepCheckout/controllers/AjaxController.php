@@ -505,6 +505,155 @@ class Magify_OneStepCheckout_AjaxController extends Mage_Core_Controller_Front_A
         $this->getResponse()->setBody(Zend_Json::encode($response));
 	}
 	################ Add Coupon #################################################
+	public function createautosignupcouponAction(){
+		
+		
+		//Get Products from cart
+		
+		$amt = 100;
+		//Creating Coupon
+		$cc = Mage::helper('core')->getRandomString(7);
+  	    $ccode = strtoupper(strtolower($cc)).'_SIGNUP100';
+		
+		$data = array(
+			'product_ids' => null,
+			'name' => sprintf('Sign up and get $100 off'),
+			'description' => 'CURCR3D1T',
+			'is_active' => 1,
+			'website_ids' => array(1),
+			'customer_group_ids' => array(0,1,2,3),
+			'coupon_type' => 2,
+			'coupon_code' => $ccode,
+			'uses_per_coupon' => 1,
+			'uses_per_customer' => 1,
+			'from_date' => null,
+			'to_date' => null,
+			'sort_order' => null,
+			'is_rss' => 1,
+			'rule' => array(
+				'conditions' => array(
+					array(
+						'type' => 'salesrule/rule_condition_combine',
+						'aggregator' => 'all',
+						'value' => 1,
+						'new_child' => null
+					)
+				)
+			),
+			'simple_action' => 'cart_fixed',
+			'discount_amount' => $amt,
+			'discount_qty' => 0,
+			'discount_step' => null,
+			'apply_to_shipping' => 1,
+			'simple_free_shipping' => 0,
+			'stop_rules_processing' => 0,
+			'rule' => array(
+				'actions' => array(
+					array(
+						'type' => 'salesrule/rule_condition_product_combine',
+						'aggregator' => 'all',
+						'value' => 1,
+						'new_child' => null
+					)
+				)
+			),
+			'store_labels' => array('Buy One Get One 50%')
+		);
+			 
+		$model = Mage::getModel('salesrule/rule');
+		$data = $this->_filterDates($data, array('from_date', 'to_date'));
+		 
+		$validateResult = $model->validateData(new Varien_Object($data));
+			 
+		if ($validateResult == true) {
+			 
+			if (isset($data['simple_action']) && $data['simple_action'] == 'by_percent'
+					&& isset($data['discount_amount'])) {
+				$data['discount_amount'] = min(100, $data['discount_amount']);
+			}
+			 
+			if (isset($data['rule']['conditions'])) {
+				$data['conditions'] = $data['rule']['conditions'];
+			}
+			 
+			if (isset($data['rule']['actions'])) {
+				$data['actions'] = $data['rule']['actions'];
+			}
+			 
+			unset($data['rule']);
+		 
+			$model->loadPost($data);
+			$model->save();
+		}
+			
+		// Apply discount
+		$code = $couponCode = $ccode;
+		
+		/* END This part is my extra, just to load our coupon for this specific customer */ 
+		Mage::getSingleton('checkout/cart')
+			->getQuote()
+			->getShippingAddress()
+			->setCollectShippingRates(true);
+
+			
+		// End Creating coupon
+		//$code = $this->getRequest()->getParam('code', false);
+		// $remove = $this->getRequest()->getParam('remove', false);
+
+		
+		$response = array(
+			'success' => false,
+			'error'=> true,
+			'message' => $this->__('Cannot apply Gift Card, please try again later.'),
+		);
+		
+        if (!empty($couponCode)) {
+            try {
+                
+				Mage::getSingleton('checkout/cart')
+					->getQuote()
+					->setCouponCode(strlen($couponCode) ? $couponCode : '')
+					->collectTotals()
+					->save();
+
+                $response['success'] = true;
+                $response['error'] = false;
+                $response['message'] = $this->__('Coupon code applied successfully.', Mage::helper('core')->htmlEscape($code));
+                $response['curc'] = true;
+
+            } catch (Mage_Core_Exception $e) {
+                Mage::dispatchEvent('enterprise_giftcardaccount_add', array('status' => 'fail', 'code' => $code));
+
+                $response['success'] = false;
+                $response['error'] = true;
+                $response['message'] = $e->getMessage();
+                $response['curc'] = true;
+
+            } catch (Exception $e) {
+                Mage::getSingleton('checkout/session')->addException(
+                    $e,
+                    $this->__('Can not add coupon code, please try again later.')
+                );
+
+                $response['success'] = false;
+                $response['error'] = true;
+                $response['message'] = $this->__('Can not generate coupon code, please try again later.');
+                $response['curc'] = true;
+            }
+        } else {
+            $response['success'] = false;
+
+            $response['error'] = true;
+            $response['message'] = $this->__('Can not generate coupon code, please try again later.');        	
+        }
+        //End Coupon thing
+	
+        $this->getResponse()->setBody(Zend_Json::encode($response));
+	}
+	################ End Add Coupon #############################################
+	
+	
+	################ Add Coupon #################################################
 	public function createautocouponAction(){
 		
 		//Check the condition
@@ -532,6 +681,10 @@ class Magify_OneStepCheckout_AjaxController extends Mage_Core_Controller_Front_A
 		$output = "";
 		$price = array();
 		
+		$totalQuantity = Mage::getModel('checkout/cart')->getQuote()->getItemsQty();
+		
+		Mage::getSingleton('core/session')->setTotalqty($totalQuantity);
+		
 		foreach ($session->getQuote()->getAllItems() as $item) {
 			//$product[$item->getProductId()] = $item->getQty();
 			$product = Mage::getModel('catalog/product')->load($item->getProductId());
@@ -539,10 +692,11 @@ class Magify_OneStepCheckout_AjaxController extends Mage_Core_Controller_Front_A
 			
 			if(in_array($cat[0],$pcat)){
 				//echo 'I m here';
-				$price[] = number_format($product->getPrice(), 2);
+				for($j=0;$j<$item->getQty();$j++){
+					$price[] = number_format($product->getPrice(), 2);
+				}
 			}
 		}
-
 		//End getting products in the cart
 	if(sizeof($price)>1){	
 		$amt = min($price)/2;
@@ -552,11 +706,11 @@ class Magify_OneStepCheckout_AjaxController extends Mage_Core_Controller_Front_A
 		
 		$data = array(
 			'product_ids' => null,
-			'name' => sprintf('AUTO_GENERATION CUSTOMER_%s - By One Get one 50%_', Mage::getSingleton('customer/session')->getCustomerId()),
+			'name' => sprintf('Buy One Get Half Off'),
 			'description' => 'CURCR3D1T',
 			'is_active' => 1,
 			'website_ids' => array(1),
-			'customer_group_ids' => array(1),
+			'customer_group_ids' => array(0,1,2,3),
 			'coupon_type' => 2,
 			'coupon_code' => $ccode,
 			'uses_per_coupon' => 1,

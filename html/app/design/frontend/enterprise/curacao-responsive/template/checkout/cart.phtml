@@ -255,14 +255,15 @@
 	$couponcode = Mage::getSingleton('checkout/cart')->getQuote()->getCouponCode();
 	$coupon = explode("_",$couponcode);
 	
-
-	
+	$totalQuantity = Mage::getModel('checkout/cart')->getQuote()->getItemsQty();
+	$qtycoupon = Mage::getSingleton('core/session')->getTotalqty();
 ?>
  <script type="text/javascript">
     //<![CDATA[
     jQuery(document).ready(function() {
         jQuery('.messages .success-msg').fadeIn(400).delay(3000).hide();
-		<?php if($coupon[sizeof($coupon)-1] != "BUYONEGETHALF"){?>
+		
+		<?php if($coupon[sizeof($coupon)-1] != "BUYONEGETHALF" || $totalQuantity != $qtycoupon){?>
 			addautocoupon();
 		<?php }?>
 	});
