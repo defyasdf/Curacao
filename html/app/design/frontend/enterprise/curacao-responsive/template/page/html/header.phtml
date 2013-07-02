@@ -1,0 +1,310 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+/**
+ * @var Mage_Page_Block_Html_Header $this
+ */
+
+$server = '192.168.100.121';
+$user = 'curacaodata';
+$pass = 'curacaodata';
+$db = 'icuracaoproduct';
+
+$link = mysql_connect($server,$user,$pass);
+
+mysql_select_db($db,$link);
+ 
+ if(isset($_GET['sid'])){
+ 	Mage::getSingleton('core/session')->setSid($_GET['sid']);
+ }
+ if(isset($_GET['hid'])){
+	Mage::getSingleton('core/session')->setHid($_GET['hid']);
+	$hid = $_GET['hid'];
+	$sub_id = '';
+	$aff_id = '';
+	if(isset($_GET['sub_id'])){
+		Mage::getSingleton('core/session')->setSubid($_GET['sub_id']);	
+		$sub_id = $_GET['sub_id'];
+	}
+	if(isset($_GET['aff_id'])){
+		Mage::getSingleton('core/session')->setAffid($_GET['aff_id']);
+		$aff_id = $_GET['aff_id'];
+	}
+	if(!Mage::getSingleton('core/session')->getGwmid()){
+		$gwm = "insert into gwmtracking (hid,subid,affid, created_date) values('".$hid."','".$sub_id."','".$aff_id."', '".date('Y-m-d')."')";
+		mysql_query($gwm);
+		$gwm_id = mysql_insert_id();		
+		Mage::getSingleton('core/session')->setGwmid($gwm_id);
+	}
+ }
+ 
+$page = Mage::helper('core/url')->getCurrentUrl() ;
+$base = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB);
+
+if($page == $base){
+	$current_page = 'Home page';	
+}else{
+	$current_page = str_replace($base,'',$page);
+}
+
+if(isset($_GET['utm_campaign'])){
+
+	Mage::getSingleton('core/session')->setCampaignid($_GET['utm_campaign']);
+
+	$q = "select * from emailcampaign where campaignId = '".$_GET['utm_campaign']."'";
+	$resu = mysql_query($q);
+	if(mysql_num_rows($resu)>0){
+		$ro = mysql_fetch_array($resu);
+		$click = (int)$ro['clicks'];
+		$click++;
+		$sq = "update emailcampaign set clicks = ".$click." where ecId = ".$ro['ecId'];
+		mysql_query($sq);
+		
+		if($current_page == 'checkout/cart/'){
+			$cart = Mage::helper('checkout/cart')->getCart()->getItemsCount();
+			$total = $this->helper('checkout/cart')->getQuote()->getGrandTotal();
+			$total = $total + $ro['amount'];
+			$shop = (int)$ro['shop'];
+			$shop++;
+			$sq = "update emailcampaign set shop = ".$shop.", amount = '".$total."' where ecId = ".$ro['ecId'];
+			mysql_query($sq);
+			
+		}
+	  if($current_page=='onestepcheckout/'){
+		$checkout = (int)$ro['checkout'];
+		$checkout++;
+	  	$sq = "update emailcampaign set checkout = ".$checkout." where ecId = ".$ro['ecId'];
+		mysql_query($sq);
+	  }
+	
+	}else{
+		$q = "insert into emailcampaign (campaignId, clicks) values ('".$_GET['utm_campaign']."',1)";
+		mysql_query($q);
+	}
+}elseif(trim(Mage::getSingleton('core/session')->getCampaignid())!=''){
+	
+	$q = "select * from emailcampaign where campaignId = '".Mage::getSingleton('core/session')->getCampaignid()."'";
+	$resu = mysql_query($q,$link) ;
+	if(mysql_num_rows($resu)>0){
+		
+		$ro = mysql_fetch_array($resu);
+		
+		
+		if($current_page == 'checkout/cart/'){
+			$cart = Mage::helper('checkout/cart')->getCart()->getItemsCount();
+			$total = $this->helper('checkout/cart')->getQuote()->getGrandTotal();
+			
+			$total = $total + $ro['amount'];
+			$shop = (int)$ro['shop'];
+			$shop++;
+			$sq = "update emailcampaign set shop = ".$shop.", amount = '".$total."' where ecId = ".$ro['ecId'];
+			mysql_query($sq);
+			
+			
+		}
+	  if($current_page=='onestepcheckout/'){
+		$checkout = (int)$ro['checkout'];
+		$checkout++;
+	  	$sq = "update emailcampaign set checkout = ".$checkout." where ecId = ".$ro['ecId'];
+		mysql_query($sq);
+	  }
+	
+	}
+}
+
+//print_r($_REQUEST);
+if(!Mage::getSingleton('core/session')->getTrackid()){
+	if(!isset($_GET['trackid'])){
+	if(isset($_GET['mintrack'])){
+		$string = $_SERVER["HTTP_REFERER"];	
+		$parse = explode('?',$string);
+		
+		if(isset($_GET['keyword'])){
+		
+		if (strpos($parse[0],'google.com') !== false) {
+			$more = explode('&',$parse[1]);
+			$key = '';
+			for($i=0;$i<sizeof($more);$i++){
+				if(substr($more[$i],0,2)=='q='){
+					$key = $more[$i];
+				}
+			}
+			$mintrack = $_GET['mintrack'];
+			
+			if(isset($_GET['hid'])){
+				$mintrack = 'GWM';
+			}
+			
+			$query = "insert into userActivitytrack(browser,ip,path,created_date,campaign,keyword,googleKeyword)values('".$_SERVER['HTTP_USER_AGENT']."','".$_SERVER['REMOTE_ADDR']."','".$current_page."', '".date('Y-m-d')."', '".$mintrack."','".$_GET['keyword']."','".$key."')";	
+		
+		   
+		}else{
+	
+		
+			$query = "insert into userActivitytrack(browser,ip,path,created_date,campaign,keyword)values('".$_SERVER['HTTP_USER_AGENT']."','".$_SERVER['REMOTE_ADDR']."','".$current_page."', '".date('Y-m-d')."', '".$_GET['mintrack']."','".$_GET['keyword']."')";
+		}
+		}else{
+		
+		if (strpos($parse[0],'google.com') !== false) {
+			$more = explode('&',$parse[1]);
+			$key = '';
+			for($i=0;$i<sizeof($more);$i++){
+				if(substr($more[$i],0,2)=='q='){
+					$key = $more[$i];
+				}
+			}
+			
+		$query = "insert into userActivitytrack(browser,ip,path,created_date,campaign,googleKeyword)values('".$_SERVER['HTTP_USER_AGENT']."','".$_SERVER['REMOTE_ADDR']."','".$current_page."', '".date('Y-m-d')."', '".$_GET['mintrack']."','".$key."')";	
+		   
+		}else{
+	
+		$query = "insert into userActivitytrack(browser,ip,path,created_date,campaign)values('".$_SERVER['HTTP_USER_AGENT']."','".$_SERVER['REMOTE_ADDR']."','".$current_page."', '".date('Y-m-d')."', '".$_GET['mintrack']."')";
+		}
+		}
+	}else{
+		$query = "insert into userActivitytrack(browser,ip,path,created_date)values('".$_SERVER['HTTP_USER_AGENT']."','".$_SERVER['REMOTE_ADDR']."','".$current_page."', '".date('Y-m-d')."')";
+	}
+	
+	mysql_query($query);
+	$inserted_id = mysql_insert_id();
+	}else{
+		$inserted_id = $_GET['trackid'];
+	}
+	Mage::getSingleton('core/session')->setTrackid($inserted_id);
+}else{
+	
+	if(isset($_GET['trackid'])){
+		Mage::getSingleton('core/session')->setTrackid($_GET['trackid']);
+	}
+	
+	$q = 'select * from userActivitytrack where uaId = '.Mage::getSingleton('core/session')->getTrackid();
+	$re = mysql_query($q);
+	$row = mysql_fetch_array($re);
+	$p = $row['path'].','.$current_page;
+	$sql = 'update userActivitytrack set path = "'.$p.'" where uaId = '.$row['uaId'];
+	mysql_query($sql);
+	if($current_page == 'checkout/cart/'){
+		$cart = Mage::helper('checkout/cart')->getCart()->getItemsCount();
+		$total = $this->helper('checkout/cart')->getQuote()->getGrandTotal();
+		$pretotal = $total;
+		if($row['finishcheckout']=='1'){
+			$total = $total + $row['amount'];
+		}
+		
+		
+		if($cart>0){
+			$sql = "update userActivitytrack set shop = 1, amount = '".$total."' where uaId = ".Mage::getSingleton('core/session')->getTrackid();
+			mysql_query($sql);
+			$paid = 0;
+			if(isset($_COOKIE['preapprove_promo_id'])){
+				$paid = $_COOKIE['preapprove_promo_id'];
+			}else{
+				$paid = Mage::getSingleton('core/session')->getPreapproveid();
+			}
+			if($paid > 0){
+				$q = "update preapproved set shop = '1', amount = '".$pretotal."' where paID = ".$paid;
+				mysql_query($q);
+			}
+		}
+	}
+	if($current_page=='onestepcheckout/'){
+		$sql = "update userActivitytrack set checkout = 1, shop = 1 where uaId = ".Mage::getSingleton('core/session')->getTrackid();
+		mysql_query($sql);
+		
+		$paid = 0;
+			if(isset($_COOKIE['preapprove_promo_id'])){
+				$paid = $_COOKIE['preapprove_promo_id'];
+			}else{
+				$paid = Mage::getSingleton('core/session')->getPreapproveid();
+			}
+			if($paid > 0){
+				$q = "update preapproved set checkout = '1' where paID = ".$paid;
+				mysql_query($q);
+			}
+	}
+	
+	$session = Mage::getSingleton('customer/session', array('name'=>'frontend')); 
+
+	if($session->isLoggedIn()){
+		$sql = "update userActivitytrack set userloggedin = 1 where uaId = ".Mage::getSingleton('core/session')->getTrackid();
+		mysql_query($sql);
+	}
+	
+	mysql_close($link);
+	
+}
+
+
+
+//print_r($_SERVER); 
+ 
+?>
+
+		<div class="twenty columns alpha omega">
+			<div class="right">
+	            <div class="switches right">
+            		<?php echo $this->getChildHtml('store_language') ?>
+				</div>
+				<?php echo $this->getChildHtml('accountLinks') ?>
+    	        
+				<?php echo $this->getChildHtml('topLinks','left') ?>
+            	
+	            <!--<div class="header_customer_service right"><?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('customer_service_tel')->toHtml() ?></div>-->
+            </div>
+		</div>
+        
+        <div class="seven columns">    
+	        <h1 class="logo"><a href="<?php echo $this->getUrl('') ?>" title="<?php echo $this->getLogoAlt() ?>" class="logo"><?php echo $this->getLogoAlt() ?></a></h1>
+        </div><!--logo-->
+        
+        <div class="five columns topsearch right omega">
+        	<?php echo $this->getChildHtml('topSearch') ?>
+        </div><!--topsearch-->
+        <div class="six columns toplinks right">
+        <nav class="social-links right">
+				<ul class="social-icons" style="padding:0">
+					<li class="social-icon facebook" style="margin:0"><a href="https://www.facebook.com/CuracaoUSA" target="_blank" title="Curacao (La Curacao) - Follow us on Facebook"><img src="/skin/frontend/enterprise/curacao-responsive/images/social_images/facebook_grey.png" alt="Curacao (La Curacao) - Follow us on Facebook" /></a></li>
+					<li class="social-icon twitter" style="margin-right:2px"><a href="https://twitter.com/lacuracao" target="_blank" title="Curacao (La Curacao) - Follow us on Twitter"><img src="/skin/frontend/enterprise/curacao-responsive/images/social_images/twitter_grey.png" alt="Curacao (La Curacao) - Follow us on Twitter" /></a></li>
+					<li class="social-icon gplus" style="margin-left:2px"><a href="https://plus.google.com/107858241391949634093/posts" target="_blank" title="Curacao (La Curacao) - Follow us on Google +"><img src="/skin/frontend/enterprise/curacao-responsive/images/social_images/google_plus_grey.png" alt="Curacao (La Curacao) - Follow us on Google +" /></a></li>
+				</ul>        
+				<?php //echo $this->getLayout()->createBlock('cms/block')->setBlockId('social_icons')->toHtml() ?>
+        	</nav>
+            </div>
+
+        
+        <div class="twenty columns navigation alpha omega">
+        	<nav class="primary">
+        		<?php echo $this->getChildHtml('topMenu') ?>
+        	</nav>
+        	<nav class="user">
+        		<ul>
+        			<li class="topcart"><?php echo $this->getChildHtml('cart_header') ?></li>
+        		</ul>
+        	</nav>
+        </div><!--navigation-->
+        
+
+        
+        <?php echo $this->getChildHtml('topContainer'); ?>
