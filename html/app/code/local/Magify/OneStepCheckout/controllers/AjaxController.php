@@ -506,15 +506,12 @@ class Magify_OneStepCheckout_AjaxController extends Mage_Core_Controller_Front_A
 	}
 	################ Add Coupon #################################################
 	public function createautosignupcouponAction(){
-		
-		
-		//Get Products from cart
-		
+	
 		$amt = 100;
 		//Creating Coupon
-		$cc = Mage::helper('core')->getRandomString(7);
-  	    $ccode = strtoupper(strtolower($cc)).'_SIGNUP100';
-		
+		$cc = Mage::helper('core')->getRandomString(8);
+  	    $ccode = strtoupper(strtolower($cc));
+
 		$data = array(
 			'product_ids' => null,
 			'name' => sprintf('Sign up and get $100 off'),
@@ -583,63 +580,29 @@ class Magify_OneStepCheckout_AjaxController extends Mage_Core_Controller_Front_A
 			unset($data['rule']);
 		 
 			$model->loadPost($data);
+			$conditions = Mage::getModel('salesrule/rule_condition_product_combine')
+						  ->setType('salesrule/rule_condition_address')
+						  ->setAttribute('base_subtotal')
+						  ->setOperator('>=')
+						  ->setValue('499');
+			$model->getConditions()->addCondition($conditions);			  
 			$model->save();
 		}
 			
 		// Apply discount
 		$code = $couponCode = $ccode;
 		
-		/* END This part is my extra, just to load our coupon for this specific customer */ 
-		Mage::getSingleton('checkout/cart')
-			->getQuote()
-			->getShippingAddress()
-			->setCollectShippingRates(true);
-
-			
-		// End Creating coupon
-		//$code = $this->getRequest()->getParam('code', false);
-		// $remove = $this->getRequest()->getParam('remove', false);
-
-		
+				
 		$response = array(
 			'success' => false,
 			'error'=> true,
-			'message' => $this->__('Cannot apply Gift Card, please try again later.'),
 		);
 		
         if (!empty($couponCode)) {
-            try {
-                
-				Mage::getSingleton('checkout/cart')
-					->getQuote()
-					->setCouponCode(strlen($couponCode) ? $couponCode : '')
-					->collectTotals()
-					->save();
-
                 $response['success'] = true;
                 $response['error'] = false;
-                $response['message'] = $this->__('Coupon code applied successfully.', Mage::helper('core')->htmlEscape($code));
-                $response['curc'] = true;
+                $response['code'] = $code;
 
-            } catch (Mage_Core_Exception $e) {
-                Mage::dispatchEvent('enterprise_giftcardaccount_add', array('status' => 'fail', 'code' => $code));
-
-                $response['success'] = false;
-                $response['error'] = true;
-                $response['message'] = $e->getMessage();
-                $response['curc'] = true;
-
-            } catch (Exception $e) {
-                Mage::getSingleton('checkout/session')->addException(
-                    $e,
-                    $this->__('Can not add coupon code, please try again later.')
-                );
-
-                $response['success'] = false;
-                $response['error'] = true;
-                $response['message'] = $this->__('Can not generate coupon code, please try again later.');
-                $response['curc'] = true;
-            }
         } else {
             $response['success'] = false;
 
@@ -647,7 +610,6 @@ class Magify_OneStepCheckout_AjaxController extends Mage_Core_Controller_Front_A
             $response['message'] = $this->__('Can not generate coupon code, please try again later.');        	
         }
         //End Coupon thing
-	
         $this->getResponse()->setBody(Zend_Json::encode($response));
 	}
 	################ End Add Coupon #############################################
@@ -962,6 +924,72 @@ class Magify_OneStepCheckout_AjaxController extends Mage_Core_Controller_Front_A
 	}
 	
 	####################### End Registration Function ########################## 
+	
+	####################### New Signup Function ###############################
+	public function newsignupAction(){
+		
+		$firstname = $this->getRequest()->getPost('firstname', false);
+        $lastname = $this->getRequest()->getPost('lastname', false);
+		$email = $this->getRequest()->getPost('email', false);
+        $password = $this->getRequest()->getPost('password', false);
+
+		$session = Mage::getSingleton('customer/session');
+				
+		$result = array(
+            'success' => false
+        );
+		
+		$customer = Mage::getModel('customer/customer');
+		$customer->setWebsiteId(Mage::app()->getWebsite()->getId());
+		$customer->loadByEmail($email);
+		
+				
+		// -----------------------------------------------------------------------------------------------
+		// Check if the email exist on the system.
+		// -----------------------------------------------------------------------------------------------
+		if($customer->getId()) {
+			$result['error'] = 'Our record shows that customer with the email already registered';
+		}
+		
+		 if(!isset($result['error'])) {
+			// Get Current Quote Item and append to login
+				
+			$customer->setEmail($email); 			//set user data
+			$customer->setFirstname($firstname);
+			$customer->setLastname($lastname);
+			$customer->setPassword($password);
+			$customer->setSubscription($signup);
+			$customerReg = 0;
+			try {
+			  $customer->save();
+			  $customer->setConfirmation(null);
+			  $customer->save(); 
+			  $customer->sendNewAccountEmail();
+			  $session = $this->_getSession();	
+			 // $session->login($email, $psswd);  
+			 
+			 $customerReg = 1;
+			 $customerLogin = 0;
+					 
+			  try {
+				$session->login($email, $password);
+				$customerLogin = 1;
+								
+			  } catch(Exception $e)   {
+				$result['error'] = $e->getMessage();
+			  } 
+			} catch(Exception $ex){
+		  		$result['error'] = $ex->getMessage();
+		   }			
+		}
+		if(!isset($result['error'])) {
+			$result['success'] = true;
+		}
+       $this->getResponse()->setBody(Zend_Json::encode($result));
+	}
+	
+	####################### End New Signup Function ########################## 
+	
 	
    	//--------------------------------------------------------------------------------------------------------------------------------
     public function add_giftcardAction(){
