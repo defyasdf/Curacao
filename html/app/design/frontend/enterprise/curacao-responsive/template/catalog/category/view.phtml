@@ -196,8 +196,12 @@
 			//			data: {'email':em,'hid':'1234','sid':'45689','affid':'amdsid'},
 						url:  login_url,                    
 						success: function(data) {
+							if(data==2){
+								alert("Email already exist");
+							}else{
 						     jQuery("#lighboxsignupform").hide('slow');
   						 	 jQuery("#lighboxsignupthanks").show('slow');
+							}
 						}.bind(this)
 				 });
 			

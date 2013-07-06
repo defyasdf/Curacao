@@ -615,6 +615,117 @@ class Magify_OneStepCheckout_AjaxController extends Mage_Core_Controller_Front_A
 	################ End Add Coupon #############################################
 	
 	
+	################ Add buy 42 Coupon #################################################
+	public function createbuy42couponAction(){
+	
+		$amt = 100;
+		//Creating Coupon
+		$cc = Mage::helper('core')->getRandomString(8);
+  	    $ccode = strtoupper(strtolower($cc));
+
+		$data = array(
+			'product_ids' => null,
+			'name' => sprintf('Buy 42 TV,Get $100 off'),
+			'description' => 'Buy 42 TV, Get $100 off next purchase',
+			'is_active' => 1,
+			'website_ids' => array(1),
+			'customer_group_ids' => array(0,1,2,3),
+			'coupon_type' => 2,
+			'coupon_code' => $ccode,
+			'uses_per_coupon' => 1,
+			'uses_per_customer' => 1,
+			'from_date' => null,
+			'to_date' => null,
+			'sort_order' => null,
+			'is_rss' => 1,
+			'rule' => array(
+				'conditions' => array(
+					array(
+						'type' => 'salesrule/rule_condition_combine',
+						'aggregator' => 'all',
+						'value' => 1,
+						'new_child' => null
+					)
+				)
+			),
+			'simple_action' => 'cart_fixed',
+			'discount_amount' => $amt,
+			'discount_qty' => 0,
+			'discount_step' => null,
+			'apply_to_shipping' => 1,
+			'simple_free_shipping' => 0,
+			'stop_rules_processing' => 0,
+			'rule' => array(
+				'actions' => array(
+					array(
+						'type' => 'salesrule/rule_condition_product_combine',
+						'aggregator' => 'all',
+						'value' => 1,
+						'new_child' => null
+					)
+				)
+			),
+			'store_labels' => array('Buy One Get One 50%')
+		);
+			 
+		$model = Mage::getModel('salesrule/rule');
+		$data = $this->_filterDates($data, array('from_date', 'to_date'));
+		 
+		$validateResult = $model->validateData(new Varien_Object($data));
+			 
+		if ($validateResult == true) {
+			 
+			if (isset($data['simple_action']) && $data['simple_action'] == 'by_percent'
+					&& isset($data['discount_amount'])) {
+				$data['discount_amount'] = min(100, $data['discount_amount']);
+			}
+			 
+			if (isset($data['rule']['conditions'])) {
+				$data['conditions'] = $data['rule']['conditions'];
+			}
+			 
+			if (isset($data['rule']['actions'])) {
+				$data['actions'] = $data['rule']['actions'];
+			}
+			 
+			unset($data['rule']);
+		 
+			$model->loadPost($data);
+			/*$conditions = Mage::getModel('salesrule/rule_condition_product_combine')
+						  ->setType('salesrule/rule_condition_address')
+						  ->setAttribute('base_subtotal')
+						  ->setOperator('>=')
+						  ->setValue('499');
+			$model->getConditions()->addCondition($conditions);	*/		  
+			$model->save();
+		}
+			
+		// Apply discount
+		$code = $couponCode = $ccode;
+		
+				
+		$response = array(
+			'success' => false,
+			'error'=> true,
+		);
+		
+        if (!empty($couponCode)) {
+                $response['success'] = true;
+                $response['error'] = false;
+                $response['code'] = $code;
+
+        } else {
+            $response['success'] = false;
+
+            $response['error'] = true;
+            $response['message'] = $this->__('Can not generate coupon code, please try again later.');        	
+        }
+        //End Coupon thing
+        $this->getResponse()->setBody(Zend_Json::encode($response));
+	}
+	################ End buy 42 Coupon #############################################
+	
+	
 	################ Add Coupon #################################################
 	public function createautocouponAction(){
 		

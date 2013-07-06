@@ -12,6 +12,7 @@
 	$link = mysql_connect($server,$user,$pass);
 	mysql_select_db($db,$link);	
 	
+		
 	$sql = 'insert into dellofferemail (email,hid,sid,affid) values ("'.$_POST['email'].'","'.$_POST['hid'].'","'.$_POST['sid'].'","'.$_POST['affid'].'")';
 	if(mysql_query($sql)){
 		echo '1';
