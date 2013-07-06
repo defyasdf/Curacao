@@ -9,14 +9,14 @@
 	$server = '192.168.100.121';
 	$user = 'curacaodata';
 	$pass = 'curacaodata';
-	$db = 'curacao_magento';
+	$db = 'curacao_production';
 	$link = mysql_connect($server,$user,$pass);
 	$link1 = mysql_connect($server,$user,$pass,true);
 	mysql_select_db($db,$link) or die("No DB");	
 	mysql_select_db('icuracaoproduct',$link1) or die("No DB");
 // End Server DB settings
 // Mage Class setting	
-	$mageFilename = '/var/www/html/app/Mage.php';	
+	$mageFilename = '/var/www/m113/app/Mage.php';	
 	require_once $mageFilename;
 	Varien_Profiler::enable();
 	Mage::setIsDeveloperMode(true);
@@ -28,8 +28,8 @@
 // Checking the 	
 	$sql = "select * from addbuy42email where sendpromotion = 0";
 	$re = mysql_query($sql,$link1);
+	$send = 0;
 	while($row = mysql_fetch_array($re)){
-
 		$query = "select * from sales_flat_order where customer_email = '".$row['email']."' and created_at >= '".$row['created_date']."'";
 		$result = mysql_query($query,$link) or die(mysql_error());
 		if(mysql_num_rows($result)>0){
@@ -61,12 +61,17 @@
 
 	if($send == 1){
 	
-	$coupon = file_get_contents('http://m113.icuracao.com/onestepcheckout/ajax/createbuy42coupon/');
+	$coupon = file_get_contents('http://www.icuracao.com/onestepcheckout/ajax/createbuy42coupon/');
 	
 	$code = json_decode($coupon);
+	$CustomerEmail = $email; 
+	$Customer = Mage::getModel("customer/customer"); 
+	$Customer->setWebsiteId(1); 
+	$Customer->loadByEmail($CustomerEmail); //load customer by email id //use 
+	$cust = $Customer->getData(); //to find all the available elements.
 	
 	?>
-	<img src="http://app.bronto.com/public/?q=direct_add&fn=Public_DirectAddForm&id=acxhzmypejmnhsowqaqxwyyhyesgbcd&email=<?php echo $email;?>&field1=firstname,set,Sanjay&field2=lastname,set,Prajapati&field3=Registered_in_Magento,set,True&field4=GWM_TV_Promo,set,<?php echo $code->code;?>&list5=0bc603ec00000000000000000000000540e4" width="0" height="0" border="0" alt=""/>
+	<img src="http://app.bronto.com/public/?q=direct_add&fn=Public_DirectAddForm&id=acxhzmypejmnhsowqaqxwyyhyesgbcd&email=<?php echo $email;?>&field1=firstname,set,<?php 	echo $cust['firstname'];?>&field2=lastname,set,<?php echo $cust['lastname'];	?>&field3=Registered_in_Magento,set,True&field4=GWM_TV_Promo,set,<?php echo $code->code;?>&list5=0bc603ec00000000000000000000000540e4" width="0" height="0" border="0" alt=""/>
 	<?php
 	}
 	
