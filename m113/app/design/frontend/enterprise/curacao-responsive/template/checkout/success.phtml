@@ -60,6 +60,11 @@
 	 $Data = Mage::getSingleton('core/session')->getCuracacaodp();
 	 $track = Mage::getSingleton('core/session')->getTrackingId();	
 	 $grandTotal = $orderObj->getGrandTotal();
+	 
+	 $_totalData =$orderObj->getData(); 
+	
+	 $_tax = $_totalData['base_tax_amount'];		
+	 
 	 $cd = 0.00;
 	 $cc_num = Mage::getSingleton('core/session')->getCuracacaonum(); 
 	 
@@ -76,12 +81,19 @@
 	
 	$ecid = Mage::getSingleton('core/session')->getCampaignid();
 	$hid = Mage::getSingleton('core/session')->getHid();
-	$sub = $orderObj->getSubtotal();
-	$revshare = $sub/10;
+	//$sub = $orderObj->getSubtotal();
+	$sub = $grandTotal - $_tax - $_totalData['shipping_amount'];
+	if($sub>0){
+	$revs = $sub/10;
+	$revshare = number_format($revs,2);
+	}else{
+		$revshare = 0;
+	}
+	
 	if($hid){
 		?>
 		<!--<iframe width='1' height='1' frameborder='0' src='http://affiliate.gwmtracker.com/rd/ipx.php?hid=<?php //echo $hid?>&sid=5135&transid=<?php //echo $this->getOrderId();?>&ate=<?php //echo $revshare?>'></iframe>-->
-        <iframe width='1' height='1' frameborder='0' src='http://affiliate.gwmtracker.com/rd/ipx.php?hid=<?php echo $hid?>&sid=5717&transid=<?php echo $this->getOrderId();?>&ate=<?php echo $sub;?>'></iframe>
+        <iframe width='1' height='1' frameborder='0' src='http://affiliate.gwmtracker.com/rd/ipx.php?hid=<?php echo $hid?>&sid=5717&transid=<?php echo $this->getOrderId();?>&ate=<?php echo $revshare;?>'></iframe>
        <?php
 	  $orderObj->setRevshareamt($revshare);
 	  $orderObj->setHid($hid); 
@@ -347,7 +359,7 @@ echo '</pre>';*/
 		//do a loop to get the sku of each item
 	
 ?>
-
+<input type="hidden" value="<?php echo $revshare?>" />
 <!--End Custom Code-->
 
 <?php if ($this->getOrderId()):?>

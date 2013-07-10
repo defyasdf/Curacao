@@ -1492,5 +1492,269 @@ class Reports extends CI_Model {
 		$data = $q->result_array();
 		return $data;
 	}
+	
+	function getgwmreportbreakdown(){
+		$data = array();
+		$data['addtocart']=$this->getgwmaddtocartbreakdown();
+		$data['checkout']=$this->getgwmcheckoutbreakdown();
+		$data['completedwithcookie']=$this->getgwmcompletewithcookiebreakdown();
+		$data['gwmpayment'] = $this->getgwmpayment();
+		return $data;
+	}
+	function getgwmaddtocartbreakdown(){
+		$data = array();
+		$aff = '';
+		$data['count'] = $this->getgwmaddtocart($aff);
+		$this->db->select('quote_id');
+		$this->db->from('gwmtracking');
+		if(trim($_REQUEST['edate'])!=''){
+			$dT = explode('/',$_REQUEST['edate']);
+			$to = $dT[2].'-'.$dT[0].'-'.$dT[1];
+			$this->db->where('created_date <= ', $to); 
+		}
+		if(trim($_REQUEST['sdate'])!=''){
+			$dF = explode('/',$_REQUEST['sdate']);
+			$from = $dF[2].'-'.$dF[0].'-'.$dF[1];
+			$this->db->where('created_date >= ', $from);
+		}
+		$q = $this->db->get();			
+		$quote = array();
+		$quote = $q->result_array();
+		$subtotal = 0;
+		$grandTotal = 0;
+		$sht = 0;
+		
+		$overall = 0; 
+		$overallsubtotal = 0;
+		$overallshipptax = 0;
+		$overalldiscount = 0;
+		$overallcount = 0;
+		$otherdb = $this->load->database('otherdb', TRUE); // the TRUE paramater tells CI that you'd like to return the database object.
+		foreach($quote as $q=>$v){	
+			$qid = explode(',',$v['quote_id']);
+			for($i=0;$i<sizeof($qid);$i++){
+				$otherdb->select('grand_total,subtotal,reserved_order_id');
+				$otherdb->from('sales_flat_quote');
+				$otherdb->where('entity_id', $qid[$i]);
+				$q = $otherdb->get();			
+				$quot = $q->result_array();
+				$subtotal += (float)$quot[0]['subtotal']; 
+				$grandTotal += (float)$quot[0]['grand_total'];
+				$sht += (float)((float)$quot[0]['grand_total']-(float)$quot[0]['subtotal']);
+				if($quot[0]['reserved_order_id']){
+					$otherdb->select('grand_total,subtotal,shipping_amount,tax_amount,discount_amount');
+					$otherdb->from('sales_flat_order');
+					$otherdb->where('increment_id', $quot[0]['reserved_order_id']);
+					$oq = $otherdb->get();
+					if($oq->num_rows()>0){
+						$order = $oq->result_array();
+						$overall += $order[0]['grand_total'];
+						$overallsubtotal += $order[0]['subtotal'];
+						$overallshipptax += ($order[0]['shipping_amount']+$order[0]['tax_amount']);
+						$overalldiscount += $order[0]['discount_amount'];
+						$overallcount++;
+					}			
+				}
+			}
+			
+		}
+		$data['addtocartsubtotal'] = $subtotal;
+	    $data['addtocarttotal'] = $grandTotal;
+		$data['addtocartshiptax'] = $sht;
+		$data['overallcount'] = $overallcount;
+		$data['overalltotal'] = $overall;
+		$data['overalldiscount'] = $overalldiscount;
+		$data['overallsubtotal'] = $overallsubtotal;
+		$data['overallshippingtax'] = $overallshipptax;
+		return $data;
+	}
+	function getgwmcheckoutbreakdown(){
+		$data = array();
+		$aff = '';
+		$data['count'] = $this->getgwmcheckout($aff);
+		
+		$this->db->select('quote_id');
+		$this->db->from('gwmtracking');
+		if(trim($_REQUEST['edate'])!=''){
+			$dT = explode('/',$_REQUEST['edate']);
+			$to = $dT[2].'-'.$dT[0].'-'.$dT[1];
+			$this->db->where('created_date <= ', $to); 
+		}
+		if(trim($_REQUEST['sdate'])!=''){
+			$dF = explode('/',$_REQUEST['sdate']);
+			$from = $dF[2].'-'.$dF[0].'-'.$dF[1];
+			$this->db->where('created_date >= ', $from);
+		}
+		$this->db->where('checkout', '1'); 
+		$q = $this->db->get();			
+		$quote = array();
+		$quote = $q->result_array();
+		$subtotal = 0;
+		$grandTotal = 0;
+		$sht = 0;
+		$otherdb = $this->load->database('otherdb', TRUE); // the TRUE paramater tells CI that you'd like to return the database object.
+
+		foreach($quote as $q=>$v){	
+			$qid = explode(',',$v['quote_id']);
+			for($i=0;$i<sizeof($qid);$i++){
+				$otherdb->select('grand_total,subtotal,reserved_order_id');
+				$otherdb->from('sales_flat_quote');
+				$otherdb->where('entity_id', $qid[$i]);
+				$q = $otherdb->get();			
+				$quot = $q->result_array();
+				$subtotal += (float)$quot[0]['subtotal']; 
+				$grandTotal += (float)$quot[0]['grand_total'];
+				$sht += (float)((float)$quot[0]['grand_total']-(float)$quot[0]['subtotal']);
+			}
+		
+		}
+		$data['checkoutsubtotal'] = $subtotal;
+	    $data['checkouttotal'] = $grandTotal;
+		$data['checkoutshiptax'] = $sht;
+		
+		return $data;
+		
+	}
+	function getgwmcompletewithcookiebreakdown(){
+		$data = array();
+		$aff = '';
+		$data['count'] = $this->getgwmcomplete($aff);
+		
+		$this->db->select('order_id');
+		$this->db->from('gwmtracking');
+		if(trim($_REQUEST['edate'])!=''){
+			$dT = explode('/',$_REQUEST['edate']);
+			$to = $dT[2].'-'.$dT[0].'-'.$dT[1];
+			$this->db->where('created_date <= ', $to); 
+		}
+		if(trim($_REQUEST['sdate'])!=''){
+			$dF = explode('/',$_REQUEST['sdate']);
+			$from = $dF[2].'-'.$dF[0].'-'.$dF[1];
+			$this->db->where('created_date >= ', $from);
+		}
+		$this->db->where('order_id !=', ''); 
+		$q = $this->db->get();			
+		$quote = array();
+		$quote = $q->result_array();
+	
+		$subtotal = 0;
+		$grandTotal = 0;
+		$sht = 0;
+		$discount = 0;
+
+		//Cancel
+		$csubtotal = 0;
+		$cgrandTotal = 0;
+		$csht = 0;
+		$cdiscount = 0;
+		$ccount = 0;
+		
+		//Complete
+		$cosubtotal = 0;
+		$cograndTotal = 0;
+		$cosht = 0;
+		$codiscount = 0;
+		$cocount = 0;
+				
+		//Noncancel
+		$ncsubtotal = 0;
+		$ncgrandTotal = 0;
+		$ncsht = 0;
+		$ncdiscount = 0;
+		$nccount = 0;
+		
+		$otherdb = $this->load->database('otherdb', TRUE); // the TRUE paramater tells CI that you'd like to return the database object.
+
+		foreach($quote as $q=>$v){
+			$otherdb->select('status,grand_total,subtotal,shipping_amount,tax_amount,discount_amount');
+			$otherdb->from('sales_flat_order');
+			$otherdb->where('increment_id', $v['order_id']);
+			$q = $otherdb->get();			
+			$quot = $q->result_array();
+			$subtotal += (float)$quot[0]['subtotal']; 
+			$grandTotal += (float)$quot[0]['grand_total'];
+			$sht += (float)((float)$quot[0]['grand_total']-(float)$quot[0]['subtotal']);
+			$discount += $quot[0]['discount_amount'];
+			if($quot[0]['status']=='canceled'){
+				$csubtotal += (float)$quot[0]['subtotal']; 
+				$cgrandTotal += (float)$quot[0]['grand_total'];
+				$csht += (float)((float)$quot[0]['grand_total']-(float)$quot[0]['subtotal']);
+				$cdiscount += $quot[0]['discount_amount'];
+				$ccount++;
+			}elseif($quot[0]['status']=='complete'){
+				$cosubtotal += (float)$quot[0]['subtotal']; 
+				$cograndTotal += (float)$quot[0]['grand_total'];
+				$cosht += (float)((float)$quot[0]['grand_total']-(float)$quot[0]['subtotal']);
+				$codiscount += $quot[0]['discount_amount'];
+				$cocount++;
+			}else{
+				$ncsubtotal += (float)$quot[0]['subtotal']; 
+				$ncgrandTotal += (float)$quot[0]['grand_total'];
+				$ncsht += (float)((float)$quot[0]['grand_total']-(float)$quot[0]['subtotal']);
+				$ncdiscount += $quot[0]['discount_amount'];
+				$nccount++;
+			}
+		}
+		
+		$data['orderwithcookiesubtotal'] = $subtotal;
+	    $data['orderwithcookietotal'] = $grandTotal;
+		$data['orderwithcookieshiptax'] = $sht;
+		$data['orderwithcookiediscount'] = $discount;
+		//cancel
+		$data['orderwithcookiesubtotalcancel'] = $csubtotal;
+	    $data['orderwithcookietotalcancel'] = $cgrandTotal;
+		$data['orderwithcookieshiptaxcancel'] = $csht;
+		$data['orderwithcookiediscountcancel'] = $cdiscount;
+		$data['cancelcount'] = $ccount;
+		//Complete
+		//cancel
+		$data['orderwithcookiesubtotalcomplete'] = $cosubtotal;
+	    $data['orderwithcookietotalcomplete'] = $cograndTotal;
+		$data['orderwithcookieshiptaxcomplete'] = $cosht;
+		$data['orderwithcookiediscountcomplete'] = $codiscount;
+		$data['completecount'] = $cocount;		
+		//Noncancel
+		$data['noncancelcount'] = $nccount;
+		$data['orderwithcookiesubtotalnoncancel'] = $ncsubtotal;
+	    $data['orderwithcookietotalnoncancel'] = $ncgrandTotal;
+		$data['orderwithcookieshiptaxnoncancel'] = $ncsht;
+		$data['orderwithcookiediscountnoncancel'] = $ncdiscount;
+		
+		return $data;	
+	}
+	
+	function getgwmpayment(){
+		$data = array();
+		$this->db->select('order_id');
+		$this->db->from('gwmtracking');
+		if(trim($_REQUEST['edate'])!=''){
+			$dT = explode('/',$_REQUEST['edate']);
+			$to = $dT[2].'-'.$dT[0].'-'.$dT[1];
+			$this->db->where('created_date <= ', $to); 
+		}
+		if(trim($_REQUEST['sdate'])!=''){
+			$dF = explode('/',$_REQUEST['sdate']);
+			$from = $dF[2].'-'.$dF[0].'-'.$dF[1];
+			$this->db->where('created_date >= ', $from);
+		}
+		$this->db->where('checkout', '1'); 
+		$q = $this->db->get();			
+		$quote = array();
+		$quote = $q->result_array();
+		$revshare = 0;
+		$otherdb = $this->load->database('otherdb', TRUE); // the TRUE paramater tells CI that you'd like to return the database object.
+
+		foreach($quote as $q=>$v){	
+			$otherdb->select('revshareamt');
+			$otherdb->from('sales_flat_order');
+			$otherdb->where('increment_id', $v['order_id']);
+			$q = $otherdb->get();			
+			$quot = $q->result_array();
+			$revshare += $quot[0]['revshareamt'];
+		}
+		$data['gwmrevshareamt'] = $revshare;
+		return $data;	
+	}
+	
 }
 

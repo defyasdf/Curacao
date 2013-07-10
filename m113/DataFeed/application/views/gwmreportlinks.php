@@ -16,11 +16,12 @@
                                                     <tr>
                                                         <th>Waterfall</th>
                                                         <th>values</th>
+                                                        <th>Percentile</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                  <tr>
-                                                    <td colspan="2">
+                                                    <td colspan="3">
                                                        <hr>
                                                     </td>
                                                 </tr>	
@@ -31,6 +32,9 @@
                                                     <td>
                                                         <?php echo $content['count']?>
                                                     </td>
+                                                    <td>
+                                                    	100%
+                                                    </td>
                                                 </tr>
                                                 
                                                 <tr>
@@ -40,6 +44,14 @@
                                                     <td>
                                                         <?php echo $content['addtocart']?>
                                                     </td>
+                                                    <td>
+                                                        <?php 
+															$add = number_format((float)$content['addtocart']/(float)$content['count'],2);
+															echo (float)$add*100;
+															echo '%';
+														?>
+                                                    </td>
+                                                    
                                                 </tr>
                                                 <tr>
                                                     <td>
@@ -49,6 +61,15 @@
                                                     <td>
                                                         <?php echo $content['checkout']?>
                                                     </td>
+                                                    
+                                                     <td>
+                                                        <?php 
+															$add = number_format((float)$content['checkout']/(float)$content['addtocart'],2);
+															echo (float)$add*100;
+															echo '%';
+														?>
+                                                    </td>
+                                                    
                                                 </tr>
                                                
                                                 <tr>
@@ -58,9 +79,27 @@
                                                     <td>
                                                         <?php echo $content['completed']?>
                                                     </td>
+                                                    <td>
+                                                        <?php 
+															$add = number_format((float)$content['completed']/(float)$content['checkout'],2);
+															echo (float)$add*100;
+															echo '%';
+														?>
+                                                    </td>
+                                                    
                                                 </tr>
                                                 <tr>
-                                                    <td colspan="2">
+                                                    <td colspan="3">
+                                                       <hr>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="3">
+                                                      <a href="#" onclick="return breakdown()">Show Breakdown</a>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="3">
                                                        <hr>
                                                     </td>
                                                 </tr>
@@ -76,8 +115,14 @@
 				</div>
 			
 		</article><!-- end of post new article -->
+       <article class="module width_full" id="breakdownContainer" style="display:none;">
+			<header><h3>GWM Report Break down</h3></header>
+       		<div class="module_content" id="breakdown">
+            	<img src="/images/loadingAnimation.gif">
+            </div>
+       </article>
        <article class="module width_full">
-			<header><h3>Curacao Report</h3></header>
+			<header><h3>GWM Break down</h3></header>
        		<div class="module_content">
                     <div class="tab_container">
 						<?php 
@@ -123,5 +168,20 @@
 		 });
 		 
 		 return false;
+	}
+	
+	function breakdown(){
+		$("#breakdownContainer").show('slow');
+		var login_url = 'index.php/gwmbreakdown'
+		jQuery.ajax({ 
+				type: 'post',
+				data: {'sdate':'<?php echo $_REQUEST['sdate']?>','edate':'<?php echo $_REQUEST['edate']?>'},
+				url:  login_url,                    
+				success: function(data) {
+					jQuery("#breakdown").html(data);
+				}.bind(this)
+		 });
+		
+		return false;
 	}
  </script>

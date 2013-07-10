@@ -89,6 +89,15 @@ $helper = Mage::helper('onestepcheckout/checkout');
 		$gwm = 'update gwmtracking set checkout = "1" where gwmId = '.Mage::getSingleton('core/session')->getGwmid();
 		mysql_query($gwm);
 		
+		$quote = Mage::getModel('checkout/cart')->getQuote();
+		$q = '';
+		$sql = 'select * from gwmtracking where gwmId = '.Mage::getSingleton('core/session')->getGwmid();
+		$re = mysql_query($sql);
+		$row = mysql_fetch_array($row);
+		if(trim($row['quote_id'])==''){
+			$gwm1 = 'update gwmtracking set quote_id = "'.$quote->getId().'" where gwmId = '.Mage::getSingleton('core/session')->getGwmid();
+			mysql_query($gwm1);
+		}
 	 }
 	//End GWM Tracking
 	if(Mage::getSingleton('core/session')->getGwmid()){

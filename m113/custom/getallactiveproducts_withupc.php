@@ -133,7 +133,13 @@
 			$result = mysql_query($sql,$link1);
 			$row = mysql_fetch_array($result);
 			
-			$data[] = array( "product_id"=>$product->getId(),"name"=>$product->getName(), "sku"=>$product->getSku(),"UPC"=>$row['product_upc'],"URL"=>$url,"Image_URL"=>$image,"category_tree"=>$cat,"QTY"=>$qtyStock, "price"=>$product->getPrice(), "Special_price"=>$product->getSpecialPrice(),"Special_From_date"=>$product->getspecial_from_date(),"Special_To_date"=>$product->getspecial_to_date(), "Cost_price"=>$product->getCost(),"shipping"=>$product->getShprate(),"Status"=>$product->getStatus());
+			if($product->getVendorid()!=''){
+				$vsql = "SELECT vendorName FROM `vendormanagement` WHERE `vendorID` = '".$product->getVendorid()."'";
+				$vresult = mysql_query($vsql,$link1);
+				$vrow = mysql_fetch_array($vresult);
+			}
+			
+			$data[] = array( "product_id"=>$product->getId(),"name"=>$product->getName(), "sku"=>$product->getSku(),"UPC"=>$row['product_upc'],"URL"=>$url,"Image_URL"=>$image,"category_tree"=>$cat,"QTY"=>$qtyStock, "price"=>$product->getPrice(), "Special_price"=>$product->getSpecialPrice(),"Special_From_date"=>$product->getspecial_from_date(),"Special_To_date"=>$product->getspecial_to_date(), "Cost_price"=>$product->getCost(),"shipping"=>$product->getShprate(),"Status"=>$product->getStatus(),"Vendor"=>$vrow['vendorName']);
 			
 			  $j++;
 
