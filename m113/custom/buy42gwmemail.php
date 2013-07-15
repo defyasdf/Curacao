@@ -48,6 +48,9 @@
 								if(mysql_query($q)){
 									$send = 1;							
 									$email = $row['email'];
+									$ordernumber = $order->getIncrementId();
+									$fname = $orow['customer_firstname'];
+									$lname = $orow['customer_lastname'];
 								}
 								break;
 							}
@@ -61,17 +64,11 @@
 
 	if($send == 1){
 	
-	$coupon = file_get_contents('http://www.icuracao.com/onestepcheckout/ajax/createbuy42coupon/');
+	$coupon = file_get_contents('http://www.icuracao.com/onestepcheckout/ajax/createbuy42coupon/?onumber='.$ordernumber);
 	
 	$code = json_decode($coupon);
-	$CustomerEmail = $email; 
-	$Customer = Mage::getModel("customer/customer"); 
-	$Customer->setWebsiteId(1); 
-	$Customer->loadByEmail($CustomerEmail); //load customer by email id //use 
-	$cust = $Customer->getData(); //to find all the available elements.
 	
-	?>
-	<img src="http://app.bronto.com/public/?q=direct_add&fn=Public_DirectAddForm&id=acxhzmypejmnhsowqaqxwyyhyesgbcd&email=<?php echo $email;?>&field1=firstname,set,<?php 	echo $cust['firstname'];?>&field2=lastname,set,<?php echo $cust['lastname'];	?>&field3=Registered_in_Magento,set,True&field4=GWM_TV_Promo,set,<?php echo $code->code;?>&list5=0bc603ec00000000000000000000000540e4" width="0" height="0" border="0" alt=""/>
-	<?php
+	file_get_contents('http://app.bronto.com/public/?q=direct_add&fn=Public_DirectAddForm&id=acxhzmypejmnhsowqaqxwyyhyesgbcd&email='.$email.'&field1=firstname,set,'.$fname.'&field2=lastname,set,'.$lname.'&field3=Registered_in_Magento,set,True&field4=GWM_TV_Promo,set,'.$code->code.'&list5=0bc603ec00000000000000000000000540e4');
+	
 	}
 	

@@ -196,28 +196,16 @@ div.validation-advice{
 </style>
 </head>
 <body>
-	<div class="lightbox" id="lighboxsignupform">
+	<div class="lightbox">
 		<div id="lb_dell">
         	<span class="restrictions" onClick="countinueShop()" style="float:right;margin:5px; cursor:pointer;">Close [X]</span>
 			<img src="/lighbox_html/dell_offer.png" />
-			<form id="delloffer">
-				<span>To redeem this exclusive offer please enter your email address:</span>
-				<input type="text" name="email" class="fat input-text validate-email required-entry" id="dellofferemail" />
+			<form>
+				<span>$100 rebate is valid with Dell XPS Tablet.</span>
 				<div class="clear10"></div>
-				<div class="clear10"></div>
-				<a href="#" onClick="return delloffer()"><button class="right"><span>SUBMIT</span></button></a>
+				<a href="#" onClick="countinueShop()"><button class="right"><span>SHOP NOW</span></button></a>
 				<div class="clear10"></div>
 			</form>
-		</div>
-	</div>
-    
-    <div class="lightbox" id="lighboxsignupthanks" style="display:none;">
-		<div id="lb_dell">
-			<div class="thankyou">
-				<h1>Thanks for signing up!</h1>
-				<span>You will now be redirected to the Dell XPS Tablet with instant savings applied.</span><br /><br />
-				<a href="#" onClick="countinueShop()"><button><span>CONTINUE</span></button></a>
-			</div>
 		</div>
 	</div>
 </body>

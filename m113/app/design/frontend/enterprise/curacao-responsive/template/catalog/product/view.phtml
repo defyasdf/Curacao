@@ -337,15 +337,13 @@ function delloffer(){
 			//			data: {'email':em,'hid':'1234','sid':'45689','affid':'amdsid'},
 						url:  login_url,                    
 						success: function(data) {
-						  
-						  jQuery("#lighboxsignupform").hide('slow');
-  						  jQuery("#lighboxsignupthanks").show('slow');
-						  
-						   //if(data == '1'){
-//									  
-//						    }else{
-//							
-//							}
+						 if(data==2){
+								alert("Email already exist");
+						   }else{ 
+							  jQuery("#lighboxsignupform").hide('slow');
+							  jQuery("#lighboxsignupthanks").show('slow');
+						   }
+	
 						}.bind(this)
 				 });
 			

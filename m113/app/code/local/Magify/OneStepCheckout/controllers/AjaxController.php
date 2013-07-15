@@ -945,12 +945,17 @@ class Magify_OneStepCheckout_AjaxController extends Mage_Core_Controller_Front_A
 	
 	################ Add buy 42 Coupon #################################################
 	public function createbuy42couponAction(){
-	
+		
+		//Get Order Updated Date
+		$order = Mage::getModel('sales/order')->loadByIncrementId($_REQUEST['onumber']);
+
+		$time =  strtotime($order->getUpdatedAt()." +15 days");
+		
 		$amt = 100;
 		//Creating Coupon
 		$cc = Mage::helper('core')->getRandomString(8);
   	    $ccode = strtoupper(strtolower($cc));
-
+		
 		$data = array(
 			'product_ids' => null,
 			'name' => sprintf('Buy 42 TV,Get $100 off'),
@@ -962,8 +967,8 @@ class Magify_OneStepCheckout_AjaxController extends Mage_Core_Controller_Front_A
 			'coupon_code' => $ccode,
 			'uses_per_coupon' => 1,
 			'uses_per_customer' => 1,
-			'from_date' => null,
-			'to_date' => null,
+			'from_date' => date('Y-m-d',$time),
+			'to_date' => '2013-12-31',
 			'sort_order' => null,
 			'is_rss' => 1,
 			'rule' => array(
@@ -993,7 +998,7 @@ class Magify_OneStepCheckout_AjaxController extends Mage_Core_Controller_Front_A
 					)
 				)
 			),
-			'store_labels' => array('Buy One Get One 50%')
+			'store_labels' => array('Buy 42 TV,Get $100 off')
 		);
 			 
 		$model = Mage::getModel('salesrule/rule');

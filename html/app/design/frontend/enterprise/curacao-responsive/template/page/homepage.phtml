@@ -147,7 +147,7 @@
 	if(!$session->isLoggedIn()){
 		if(isset($_GET['hid'])){
 			if(!$_COOKIE["signup"]){?>	
-				var url = "/lighbox_html/joinget100.html?width=620&height=405";
+				var url = "/lighbox_html/joinget100.php?width=620&height=405";
 				tb_show("Sign Up and Get $100 Off", url);
 				jQuery("#TB_overlay").unbind("click",tb_remove);
 		<?php 
@@ -205,7 +205,6 @@
 	
 	function countinueShop(){
 		 tb_remove();
-		 location.reload();
 	}
 	
 </script>

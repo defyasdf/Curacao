@@ -36,6 +36,7 @@
 	box-shadow: 0 1px 1px #555555;
 	-webkit-box-shadow: 0 1px 1px #555555;
 	-moz-box-shadow: 0 1px 1px #555555;
+	float:none;
 }
 
 .lightbox button.blue {
@@ -60,6 +61,7 @@ span.restrictions {
 	font-family: Arial, sans-serif;
 	color: #ffffff;
 	float: left;
+	line-height:12px;
 }	
 
 form .labels {
@@ -106,13 +108,13 @@ form input.fat {
 }
 
 #lb_tv {
-	background: url(/lighbox_html/lb_tv_bg.jpg) no-repeat;
+	background: url(lb_tv_bg.jpg) no-repeat;
 	width: 630px;
 	height: 380px;
 }
 
 #lb_dell {
-	background: url(/lighbox_html/lb_dell_bg.jpg) no-repeat;
+	background: url(lb_dell_bg.jpg) no-repeat;
 	width: 630px;
 	height: 380px;
 }
@@ -122,7 +124,7 @@ form input.fat {
 }
 
 #lb_tv img {
-	margin: 10px 0 0 320px;
+	margin: 40px 0 0 320px;
 }
 
 #lb_dell img {
@@ -130,8 +132,9 @@ form input.fat {
 }
 
 #lb_joinnow form {
-	margin: 20px 0 0 200px;
-	width: 390px;
+	margin: 15px 0 0 250px;
+	width: 280px;
+	text-align: center;
 }
 
 #lb_tv form {
@@ -146,17 +149,17 @@ form input.fat {
 
 #lb_joinnow .thankyou {
 	padding: 20px 0 0 200px;
-	width: 390px;
+
 }
 
 #lb_tv .thankyou {
 	padding: 20px 0 0 325px;
-	
+	width: 280px;
 }
 
 #lb_dell .thankyou {
 	padding: 20px 0 0 325px;
-	
+	width: 280px;
 }
 
 #lb_joinnow h1 {
@@ -192,35 +195,28 @@ div.validation-advice{
 	overflow: hidden;
 	position: absolute;
 }
-
 </style>
 </head>
 <body>
-<div class="lightbox" id="lighboxsignupform">
-		<div id="lb_tv">
+	<div class="lightbox">
+		<div id="lb_joinnow">
         	<span class="restrictions" onClick="countinueShop()" style="float:right;margin:5px; cursor:pointer;">Close [X]</span>
-			<img src="/lighbox_html/tv_offer.png" />
-			<form id="buy42offer">
-				<span>To redeem this exclusive offer please enter your email address:</span>
-				<input type="text" name="email" class="fat input-text validate-email required-entry" id="buy42email" />
+			<img src="/lighbox_html/joinnow_offer.png" /><br />
+				<form>
+                <span class="restrictions">*$100 store credit will apply to same day purchases of $499 or more. To redeem your store credit, enter the coupon code below at checkout.</span>
+                <div class="clear10"></div><span>Coupon Code:</span>
+                <div class="clear10"></div>
+				<span class="code">
+                	<?php 
+						$coupon = file_get_contents('https://www.icuracao.com/onestepcheckout/ajax/createautosignupcoupon/');
+						$code = json_decode($coupon);
+						echo $code->code;
+					?>
+                </span>
 				<div class="clear10"></div>
-				<div class="clear10"></div>
-				<span class="restrictions">*100 store credit will apply to your<br />next purchase.</span>
-				<a href="#" onClick="return buy42offer()"><button class="blue right"><span>SHOP NOW</span></button></a>
-				<div class="clear10"></div>
-			</form>
+				<a href="#" onClick="countinueShop()"><button><span>SHOP NOW</span></button></a>
+                </form>
 		</div>
-	</div>
-    
- <div class="lightbox" id="lighboxsignupthanks" style="display:none;">
-		<div id="lb_tv">
-			<div class="thankyou">
-				<h1>Thanks for signing up!</h1>
-				<span>A unique coupon code will be sent to you via email after your purchase of any 42” TV or larger.</span><br /><br />
-				<a href="#" onClick="countinueShop()"><button class="blue"><span>CONTINUE</span></button></a>
-			</div>
-		</div>
-	</div>
     
 </body>
 <html>

@@ -9,4 +9,6 @@
 <file name="preapprovedetail.php" server="198.101.163.120//var/www/" local="130161579440000000" remote="130161579440000000" Dst="2" />
 <file name="gwmreportaffilietereport.php" server="198.101.163.120//var/www/" local="130175394397084136" remote="130175401890000000" Dst="2" />
 <file name="gwmreportbreakdown.php" server="198.101.163.120//var/www/" local="130178876109916719" remote="130178876190000000" Dst="2" />
+<file name="sidebar_full.php" server="198.101.163.120//var/www/" local="130179790523812429" remote="130179790590000000" Dst="2" />
+<file name="sidebar_full_home.php" server="198.101.163.120//var/www/" local="130179790408655843" remote="130179790490000000" Dst="2" />
 </dwsync>
