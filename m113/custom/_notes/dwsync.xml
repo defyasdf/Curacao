@@ -11,4 +11,5 @@
 <file name="artest.php" server="198.101.163.120//var/www/" local="130181447791602725" remote="130181447870000000" Dst="2" />
 <file name="_add_curacao_price.php" server="198.101.163.120//var/www/" local="130181447414181138" remote="130181447490000000" Dst="2" />
 <file name="getinventory.php" server="198.101.163.120//var/www/" local="130181474410000000" remote="130181474500000000" Dst="2" />
+<file name="_getqtylessthan3fromorder.php" server="198.101.163.120//var/www/" local="130184977725623904" remote="130184977880000000" Dst="2" />
 </dwsync>
