@@ -29,10 +29,6 @@
 	umask(0);
 	Mage::app('admin'); 
 	
-	$collection = Mage::getModel('catalog/product')->getCollection()
-		->addAttributeToSelect('*') // select all attributes
-		->addAttributeToFilter('status', 1)
-		->setCurPage(4); // set the offset (useful for pagination)
 	// Proxy 
 	
 	$proxy = new SoapClient('https://exchangeweb.lacuracao.com:2007/ws1/eCommerce/Main.asmx?WSDL');
@@ -46,7 +42,7 @@
 	date_default_timezone_set('America/Los_Angeles');
 	$time1 =  strtotime(date('Y-m-d')." +1 days");
 	$time2 =  strtotime(date('Y-m-d')." -1 days");
-	
+
 	$sql = "SELECT `increment_id`, created_at FROM `sales_flat_order` WHERE `created_at` < '".date('Y-m-d',$time1)."' and `created_at` > '".date('Y-m-d',$time2)."' and status = 'complete'";
 	$re = mysql_query($sql);
 	while($ro = mysql_fetch_array($re)){
@@ -62,7 +58,7 @@
 	
 	//foreach ($collection as $product) {
 		$qtyStock = Mage::getModel('cataloginventory/stock_item')->loadByProduct($product)->getQty();	
-	//	if($qtyStock<4){
+		if($product->getVendorid()=='2139'){
 			$credit = $proxy->InventoryLevel(array('cItem_ID'=>$product->getSku(),'cLocations'=>'16,33'));
 			$result = $credit->InventoryLevelResult;
 			$s = explode("\\",$result);
@@ -80,8 +76,8 @@
 				}
 			}
 			
-			$data[] = array( "product_id"=>$product->getId(),"name"=>$product->getName(), "sku"=>$product->getSku(),"UPC"=>$product->getUpc(),"Magento_Active_QTY"=>$qtyStock, "Location_16_Inventory"=>$inv16,"Location_33_Inventory"=>$inv33,"Total_Inventory"=>$invtotal,"Order_date"=>$ro['created_at']);	
-		//	}	
+			$data[] = array( "Order_number"=>$ro['increment_id'],"product_id"=>$product->getId(),"name"=>$product->getName(), "sku"=>$product->getSku(),"UPC"=>$product->getUpc(),"Magento_Active_QTY"=>$qtyStock, "Location_16_Inventory"=>$inv16,"Location_33_Inventory"=>$inv33,"Total_Inventory"=>$invtotal,"Order_date"=>$ro['created_at']);	
+			}	
 		}
 	}
 	

@@ -949,7 +949,7 @@ class Magify_OneStepCheckout_AjaxController extends Mage_Core_Controller_Front_A
 		//Get Order Updated Date
 		$order = Mage::getModel('sales/order')->loadByIncrementId($_REQUEST['onumber']);
 
-		$time =  strtotime($order->getUpdatedAt()." +15 days");
+		$time =  strtotime($order->getUpdatedAt()." +30 days");
 		
 		$amt = 100;
 		//Creating Coupon

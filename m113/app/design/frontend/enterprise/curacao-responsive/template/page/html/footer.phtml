@@ -100,7 +100,11 @@
     var bloaded = false;
     
     jQuery(document).ready(function() {
-    	
+    	jQuery("#customerLogin").click(function(){
+			var url = "/credit/login.php?width=410";
+			tb_show("Please Login", url);
+			return false;
+		})
     	<?php if($this->helper('customer')->isLoggedIn()){ ?>
 			jQuery('#customerbalance').attr('class','');
 			jQuery('#customerbalance').click(function(){
@@ -302,3 +306,4 @@
 
 */ ?>
 <?php }?>
+
