@@ -839,7 +839,9 @@ class Magify_OneStepCheckout_AjaxController extends Mage_Core_Controller_Front_A
 		//Creating Coupon
 		$cc = Mage::helper('core')->getRandomString(8);
   	    $ccode = strtoupper(strtolower($cc));
-
+		$time1 =  strtotime(date('Y-m-d')." -1 days");
+		$time2 =  strtotime(date('Y-m-d')." +1 days");
+		
 		$data = array(
 			'product_ids' => null,
 			'name' => sprintf('Sign up and get $100 off'),
@@ -851,8 +853,8 @@ class Magify_OneStepCheckout_AjaxController extends Mage_Core_Controller_Front_A
 			'coupon_code' => $ccode,
 			'uses_per_coupon' => 1,
 			'uses_per_customer' => 1,
-			'from_date' => null,
-			'to_date' => null,
+			'from_date' => date('Y-m-d',$time1),
+			'to_date' => date('Y-m-d',$time2),
 			'sort_order' => null,
 			'is_rss' => 1,
 			'rule' => array(

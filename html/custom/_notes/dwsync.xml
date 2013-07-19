@@ -14,4 +14,8 @@
 <file name="coupontest.php" server="198.101.163.120//var/www/" local="130175409391231752" remote="130175409450000000" Dst="2" />
 <file name="artest.php" server="198.101.163.120//var/www/" local="130161361030000000" remote="130161361030000000" Dst="2" />
 <file name="invlocation16.php" server="198.101.163.120//var/www/" local="130161361640000000" remote="130161361640000000" Dst="2" />
+<file name="_testCredit.php" server="198.101.163.120//var/www/" local="130108943520000000" remote="130108943520000000" Dst="2" />
+<file name="unloack_customer.php" server="198.101.163.120//var/www/" local="130108943520000000" remote="130108943520000000" Dst="2" />
+<file name="unloack_customer_soap.php" server="198.101.163.120//var/www/" local="130186565765386609" remote="130186565870000000" Dst="2" />
+<file name="rest_api.php" server="198.101.163.120//var/www/" local="130186576286158363" remote="130186576420000000" Dst="2" />
 </dwsync>

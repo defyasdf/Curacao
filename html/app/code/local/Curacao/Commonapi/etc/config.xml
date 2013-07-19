@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <modules>
+        <Curacao_Commonapi>
+            <version>0.0.1</version>
+        </Curacao_Commonapi>
+    </modules>
+	<frontend>
+        <routers>
+            <commonapi>
+                <use>standard</use>
+                <args>
+                    <module>Curacao_Commonapi</module>
+                    <frontName>commonapi</frontName>
+                </args>
+            </commonapi>
+        </routers>   
+    </frontend>
+</config>
+<!--<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <modules>
+        <Curacao_Commonapi>
+            <version>0.1.0</version>
+        </Curacao_Commonapi>
+    </modules>
+     <frontend>
+        <secure_url>
+          <commonapi>/commonapi</commonapi>
+        </secure_url>
+         <routers>
+            <commonapi>
+                <use>standard</use>
+                <args>
+                    <module>Curacao_Commonapi</module>
+                    <frontName>commonapi</frontName>
+                </args>
+            </commonapi>
+        </routers>
+    </frontend>
+</config>
+-->

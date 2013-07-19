@@ -93,7 +93,7 @@ class Excellence_Pay_Model_Pay extends Mage_Payment_Model_Method_Abstract
 			Mage::getSingleton('core/session')->setDobm($data->getCc_dob_month());
 			Mage::getSingleton('core/session')->setDomd($data->getCc_dob_day());							
 		} else {
-			$dob = '00-00-2013';
+			$dob = '';
 		}
 		$ssn = $data->getSsn();
 		Mage::getSingleton('core/session')->setSsn($ssn);
@@ -143,7 +143,7 @@ class Excellence_Pay_Model_Pay extends Mage_Payment_Model_Method_Abstract
 		// Originally this
 		
 		
-	/*	$proxy = new SoapClient('https://exchangeweb.lacuracao.com:2007/ws1/eCommerce/Main.asmx?WSDL');
+		$proxy = new SoapClient('https://exchangeweb.lacuracao.com:2007/ws1/eCommerce/Main.asmx?WSDL');
 		$ns = 'http://lacuracao.com/WebServices/eCommerce/';
 		
 		$headerbody = array('UserName' => 'mike', 
@@ -153,7 +153,7 @@ class Excellence_Pay_Model_Pay extends Mage_Payment_Model_Method_Abstract
 				
 		//set the Headers of Soap Client. 
 		$h = $proxy->__setSoapHeaders($header); 
-		/*$arr = array(
+		$arr = array(
 											'CustID' => $cust_num,
 											'DOB' => $dob,
 											'SSN' => $ssn,
@@ -161,8 +161,8 @@ class Excellence_Pay_Model_Pay extends Mage_Payment_Model_Method_Abstract
 											'Amount' => $amount,
 											'CCV' => $ccv
 											);
-		print_r($arr);
-		exit;
+	//	print_r($arr);
+		//exit;
 		
 		$credit = $proxy->ValidateDP(array(
 											'CustID' => $cust_num,
@@ -177,7 +177,7 @@ class Excellence_Pay_Model_Pay extends Mage_Payment_Model_Method_Abstract
 										 false, null , 'rpc', 'literal');  
 		
 		
-		$result =  $credit->ValidateDPResult;*/
+		$result =  $credit->ValidateDPResult;
 		//echo '<pre>';
 		//	print_r($result);	
 		//echo '</pre>';
@@ -186,7 +186,7 @@ class Excellence_Pay_Model_Pay extends Mage_Payment_Model_Method_Abstract
 		
 		// New change
 		
-			$url = 'http://108.171.160.207/SOAP/authenticate_user.php';
+			/*$url = 'http://108.171.160.207/SOAP/authenticate_user.php';
 			$fields = array(	
 								'CustID' => $cust_num,
 								'DOB' => $dob,
@@ -216,7 +216,7 @@ class Excellence_Pay_Model_Pay extends Mage_Payment_Model_Method_Abstract
 		//	print_r(unserialize($result));
 		
 			//close connection
-			curl_close($ch);
+			curl_close($ch);*/
 		
 		
 		// End New Change	
