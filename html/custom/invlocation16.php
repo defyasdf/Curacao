@@ -61,23 +61,27 @@ foreach ($collection as $products) {
 	$s = explode("\\",$result);
 	$tot = 0;
 	$storeinv = 0;
+	$threshold = 0;
 	if($num>0){
 		$row = mysql_fetch_array($res);
+		$threshold = $row['thrashold'];
+		
+	}
 		for($i=0;$i<(sizeof($s)-1);$i++){
 			
 			$inv = explode("|",$s[$i]);
 
 			$storeinv += $inv[1];
-			if($row['thrashold'] == 'no' || trim($row['thrashold']) == ''){
+			if($threshold == 'no' || trim($threshold) == ''){
 				$tot = 0;
 			}else{
-				$thr = (int)$row['thrashold'];
+				$thr = (int)$threshold;
 				if($inv[1]-$thr>=1){
 					$tot += $inv[1]-$thr;
 				}
 			}
 		}
-	}
+	
 	
 /*	$sq = 'insert into inventory16(product_id, product_sku, storeinv, trashold, ecominv, department, skubeenasked) values("'.$products->getId().'","'.$products->getSku().'","'.$storeinv.'","'.$row['thrashold'].'","'.$tot.'", "'.$sku[0].'", "'.$fullsku.'")';
 	mysql_query($sq);
