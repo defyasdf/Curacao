@@ -96,7 +96,7 @@ $mageRunCode = isset($_SERVER['MAGE_RUN_CODE']) ? $_SERVER['MAGE_RUN_CODE'] : 'd
 /* Run store or run website */
 $mageRunType = isset($_SERVER['MAGE_RUN_TYPE']) ? $_SERVER['MAGE_RUN_TYPE'] : 'store';
 
-if($_SERVER['REMOTE_ADDR']=='206.170.79.99' || $_SERVER['REMOTE_ADDR']=='206.170.79.5'){
+if($_SERVER['REMOTE_ADDR']=='206.170.79.99' || $_SERVER['REMOTE_ADDR']=='206.170.79.5' || $_SERVER['REMOTE_ADDR']== '198.72.211.115'){
 Mage::run($mageRunCode, $mageRunType);
 }else{
 	header("Location: http://www.icuracao.com/");

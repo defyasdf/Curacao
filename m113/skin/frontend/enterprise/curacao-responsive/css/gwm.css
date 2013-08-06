@@ -1,0 +1,146 @@
+body { 
+	color: #878a8e;
+	line-height: 18px;
+	font-family: Arial, Tahoma, sans-serif;
+	font-size: 14px;
+}
+
+h1 {
+	font-size: 28px;
+	color: #444444;
+	line-height: 28px;
+	font-weight: bold;
+	margin: 0;
+	padding: 0;
+	font-family: Arial, Tahoma, sans-serif;
+}
+
+.clear { height: 0; clear: both; }
+.clear25 { height: 25px; clear: both; }
+
+.firstcol {
+	margin-left: 0 !important;
+}
+
+.gray {
+	background-color: #666666;
+	width: 100%;
+	padding: 10px 15px;
+	margin-top: -5px;
+}
+
+.green {
+	background-color: #92c039;
+}
+
+.orange {
+	background-color: #f26722;
+}
+
+.red {
+	background-color: #d5172f;
+}
+
+#flashHero {
+	width: 990px;
+	height: 260px;
+	margin: 0 auto;
+	background: url(../images/shoptoday.jpg);
+	text-align: left;
+	color: #fff;
+	font-size: 16px;
+	font-family: Arial, Tahoma, sans-serif;
+}
+#flashHeroES {
+	width: 990px;
+	height: 260px;
+	margin: 0 auto;
+	background: url(../images/shoptoday_es.jpg);
+	text-align: left;
+	color: #fff;
+	font-size: 16px;
+	font-family: Arial, Tahoma, sans-serif;
+}
+
+.coupon {
+	padding: 187px 0 0 176px;
+	font-size: 28px;
+	font-weight: bold;
+	color: #ffffff;
+}
+
+#event {
+	width: 990px;
+}
+
+#event ul.products {
+	margin: 7px 0;
+	padding: 0;
+}
+
+#event ul.products  li {
+	float: left;
+	width: 326px;
+	margin-left: 6px;
+	margin-bottom: 7px;
+	list-style: none;
+	font-size: 14px;
+	color: #92c039;
+	font-weight: bold;
+}	
+
+#event ul.products li img {
+	border-top: 1px solid #cccccc;
+	border-left: 1px solid #cccccc;
+	border-right: 1px solid #cccccc;
+}
+
+#event ul.products li p {
+	font-family: Arial, Tahoma, sans-serif;
+	color: #fff;
+	font-size: 14px;
+	font-weight: bold;
+	float: left;
+	margin: 8px 15px 8px;
+}
+
+a.buynow {
+	color: #fff;
+	font-family: Arial, Tahoma, sans-serif;
+	font-size: 14px;
+	float: right;
+	text-decoration: none;
+	background-color: #666;
+	font-weight: normal;
+}
+
+a.buynow:hover, a.buynow:active {
+	text-decoration: underline;
+}
+
+a.buynow span {
+	font-family: Arial, Tahoma, sans-serif;
+	font-size: 16px;
+}
+
+.eventInfo {
+	padding: 10px 10px 0 10px;
+}
+
+.eventInfo a.title {
+	color: #f26722;
+	font-family: Arial, Tahoma, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+.eventInfo span {
+	font-size: 12px;
+}
+
+
+
+
+	
+	

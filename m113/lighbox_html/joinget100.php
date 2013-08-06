@@ -202,11 +202,11 @@ div.validation-advice{
 		<div id="lb_joinnow">
         	<span class="restrictions" onClick="countinueShop()" style="float:right;margin:5px; cursor:pointer;">Close [X]</span>
 			<img src="/lighbox_html/joinnow_offer.png" /><br />
-				<form>
+				<form onSubmit="return false">
                 <span class="restrictions">*$100 store credit will apply to same day purchases of $499 or more. To redeem your store credit, enter the coupon code below at checkout.</span>
                 <div class="clear10"></div><span>Coupon Code:</span>
                 <div class="clear10"></div>
-				<span class="code">
+				<span class="code" id="couponjoin100">
                 	<?php 
 						$coupon = file_get_contents('https://www.icuracao.com/onestepcheckout/ajax/createautosignupcoupon/');
 						$code = json_decode($coupon);
@@ -214,7 +214,7 @@ div.validation-advice{
 					?>
                 </span>
 				<div class="clear10"></div>
-				<a href="#" onClick="countinueShop()"><button><span>SHOP NOW</span></button></a>
+				<button  onClick="countinueShop()"><span>SHOP NOW</span></button>
                 </form>
 		</div>
     

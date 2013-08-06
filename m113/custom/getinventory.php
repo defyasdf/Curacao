@@ -45,10 +45,5 @@
 	$result = $credit->InventoryLevelResult;
 	
 	$s = explode("\\",$result);
-	$inv16 = 0;
-	$inv33 = 0;
-	$invtotal = 0; 
-	for($i=0;$i<sizeof($s);$i++){
-		
-	}
+	
 	print_r($s);

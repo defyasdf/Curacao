@@ -651,10 +651,39 @@ class Magify_OneStepCheckout_AjaxController extends Mage_Core_Controller_Front_A
 		$result = array(
             'success' => false
         );
+		
 		$cart = Mage::getSingleton('checkout/cart');
+		$quote = Mage::getModel('sales/quote');
+		
+/*		$items = $cartHelper->getCart()->getItems();
+		
+		foreach ($items as $item) {
+			if ($item->getProduct()->getId() == $_GET['pro_id']) {
+				if( $_GET['qty'] == 0 ){
+					$cartHelper->getCart()->removeItem($item->getItemId())->save();
+				}
+				else{
+					$item->setQty($_GET['qty']);
+					$cartHelper->getCart()->save();
+				}
+				break;
+			}
+		}
+*/		
         foreach($pdata as $pid=>$qty){
-			$product = Mage::getModel('catalog/product')->load($pid);
-			$cart->addProduct($product, array('qty' => $qty, 'product_id' => $product->getId()));  
+			if($quote->hasProductId($pid)){
+			$result['hasitem'] = 'yes';	
+				$product = Mage::getModel('catalog/product')->load($pid);
+				//get Item
+				$item = $quote->getItemByProduct($product);
+				
+				$quote->getCart()->updateItem(array($item->getId()=>array('qty'=>$qty)));
+				$quote->getCart()->save();
+			}else{
+				$result['hasitem'] = 'yes';
+				$product = Mage::getModel('catalog/product')->load($pid);
+				$cart->addProduct($product, array('qty' => $qty, 'product_id' => $product->getId()));  
+			}
 		}
 		try{
 	    	$cart->save();
@@ -752,6 +781,15 @@ class Magify_OneStepCheckout_AjaxController extends Mage_Core_Controller_Front_A
 		   }			
 		}
 		if(!isset($result['error'])) {
+			if(!Mage::getSingleton('core/session')->getGwmid()){
+
+				$tenoff = file_get_contents('http://www.icuracao.com/commonapi/api/createCoupon10off');
+				$tenoffcode = json_decode($tenoff);
+				$freeship = file_get_contents('http://www.icuracao.com/commonapi/api/createCouponfreeship');
+				$freeshipcode = json_decode($freeship);
+				file_get_contents('http://app.bronto.com/public/?q=direct_add&fn=Public_DirectAddForm&id=acxhzmypejmnhsowqaqxwyyhyesgbcd&email='.$email.'&field1=firstname,set,'.$firstname.'&field2=lastname,set,'.$lastname.'&field3=Registered_in_Magento,set,True&field4=Register_Coupon_Desc_Off,set,'.$tenoffcode->code.'&field5=Register_Coupon_FS,set,'.$freeshipcode->code.'&list6=0bc603ec0000000000000000000000053c77');
+				
+			}
 			$result['success'] = true;
 			$result['product'] = serialize($product);
 		}
@@ -830,14 +868,21 @@ class Magify_OneStepCheckout_AjaxController extends Mage_Core_Controller_Front_A
 	}
 	
 	####################### End New Signup Function ########################## 
-	
-	
+	####################### Save Coupon ######################################
+	public function savecouponAction(){
+		Mage::getSingleton('core/session')->setCouponjoin100($_REQUEST['coupon']);
+		$result = array(
+            'success' => true
+        );
+		$this->getResponse()->setBody(Zend_Json::encode($result));
+	}
+	####################### End Save Coupon ###################################
 	################ Add Coupon #################################################
 	public function createautosignupcouponAction(){
 	
 		$amt = 100;
 		//Creating Coupon
-		$cc = Mage::helper('core')->getRandomString(8);
+		$cc = Mage::helper('core')->getRandomString(7);
   	    $ccode = strtoupper(strtolower($cc));
 		$time1 =  strtotime(date('Y-m-d')." -1 days");
 		$time2 =  strtotime(date('Y-m-d')." +1 days");
@@ -853,8 +898,8 @@ class Magify_OneStepCheckout_AjaxController extends Mage_Core_Controller_Front_A
 			'coupon_code' => $ccode,
 			'uses_per_coupon' => 1,
 			'uses_per_customer' => 1,
-			'from_date' => date('Y-m-d',$time1),
-			'to_date' => date('Y-m-d',$time2),
+			'from_date' => '',
+			'to_date' => '',
 			'sort_order' => null,
 			'is_rss' => 1,
 			'rule' => array(
@@ -871,9 +916,9 @@ class Magify_OneStepCheckout_AjaxController extends Mage_Core_Controller_Front_A
 			'discount_amount' => $amt,
 			'discount_qty' => 0,
 			'discount_step' => null,
-			'apply_to_shipping' => 1,
+			'apply_to_shipping' => 0,
 			'simple_free_shipping' => 0,
-			'stop_rules_processing' => 0,
+			'stop_rules_processing' => 1,
 			'rule' => array(
 				'actions' => array(
 					array(
@@ -910,12 +955,12 @@ class Magify_OneStepCheckout_AjaxController extends Mage_Core_Controller_Front_A
 			unset($data['rule']);
 		 
 			$model->loadPost($data);
-			$conditions = Mage::getModel('salesrule/rule_condition_product_combine')
+			/*$conditions = Mage::getModel('salesrule/rule_condition_product_combine')
 						  ->setType('salesrule/rule_condition_address')
 						  ->setAttribute('base_subtotal')
 						  ->setOperator('>=')
 						  ->setValue('499');
-			$model->getConditions()->addCondition($conditions);			  
+			$model->getConditions()->addCondition($conditions);	*/		  
 			$model->save();
 		}
 			
@@ -987,9 +1032,9 @@ class Magify_OneStepCheckout_AjaxController extends Mage_Core_Controller_Front_A
 			'discount_amount' => $amt,
 			'discount_qty' => 0,
 			'discount_step' => null,
-			'apply_to_shipping' => 1,
+			'apply_to_shipping' => 0,
 			'simple_free_shipping' => 0,
-			'stop_rules_processing' => 0,
+			'stop_rules_processing' => 1,
 			'rule' => array(
 				'actions' => array(
 					array(

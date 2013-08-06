@@ -1,0 +1,269 @@
+<?php
+/**
+ * Template for Mage_Page_Block_Html
+ 
+ */
+?>
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
+
+<head>
+	<?php
+		if(!isset($_GET['hid'])){
+		?>
+			<script type="text/javascript">
+            	window.location.replace("http://www.icuracao.com");
+            </script>
+		<?php
+		}
+	?>
+	<?php echo $this->getChildHtml('head') ?>
+	
+    <style type="text/css">
+    	p{
+			text-transform:none;
+			font-size:14px;
+		}
+		h1{
+			text-transform:none;
+		}
+    </style>
+
+    <link href="/skin/frontend/enterprise/curacao-responsive/css/gwm.css" rel="stylesheet">
+    
+</head>
+
+<body<?php echo $this->getBodyClass()?' class="'.$this->getBodyClass().'"':'' ?>>
+
+	<?php //echo $this->getChildHtml('after_body_start') ?>
+	<!-- ClickTale Top part -->
+<script type="text/javascript">
+var WRInitTime=(new Date()).getTime();
+</script>
+<!-- ClickTale end of Top part -->
+
+	<header>
+		
+		<div class="container">
+			<?php echo $this->getChildHtml('header') ?>
+		</div><!--container-->
+		
+	</header>
+	
+	<div class="container">
+	
+		<div class="twenty columns breadcrumbs alpha">
+			<?php echo $this->getChildHtml('breadcrumbs') ?>
+		</div><!--breadcrumbs-->
+
+		<div class="twenty columns breadcrumbs alpha">
+			<div class="wrapper">
+              
+        			<!-- GWM Landing Page Code -->
+                    <div id="event">
+                    <?php
+						$_storeId = Mage::app()->getStore()->getId();
+						if($_storeId == 1){
+					 ?>
+                            <div id="flashHero">
+                                <div class="coupon">
+								<?php 
+									if(Mage::getSingleton('core/session')->getCouponjoin100()){
+										echo Mage::getSingleton('core/session')->getCouponjoin100();
+									}else{
+										$coupon = file_get_contents('https://www.icuracao.com/onestepcheckout/ajax/createautosignupcoupon/');
+										$code = json_decode($coupon);
+										echo $code->code;
+										Mage::getSingleton('core/session')->setCouponjoin100($code->code);
+									}
+								?>
+                                </div>
+                            </div>
+                            <ul class="products">
+                                <li class="firstcol">
+                                    <a href="http://www.icuracao.com/pendants-necklaces-441"><img src="images/necklaces.jpg" border="0" /></a>
+                                    <div class="gray">
+                                        Save up to 30% <a href="http://www.icuracao.com/pendants-necklaces-441" class="buynow">NECKLACES <span>&raquo;</span></a>
+                                        <div class="clear"></div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <a href="http://www.icuracao.com/watches"><img src="images/watches.jpg" border="0" /></a>
+                                    <div class="gray">
+                                        Free Shipping <a href="http://www.icuracao.com/watches" class="buynow">WATCHES <span>&raquo;</span></a>
+                                        <div class="clear"></div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <a href="http://www.icuracao.com/all-tv-s"><img src="images/televisions.jpg" border="0" /></a>
+                                    <div class="gray">
+                                        Save up to 20% <a href="http://www.icuracao.com/all-tv-s" class="buynow">TELEVISIONS <span>&raquo;</span></a>
+                                        <div class="clear"></div>
+                                    </div>
+                                </li>
+                                <li class="firstcol">
+                                    <a href="http://www.icuracao.com/home-theater-system"><img src="images/hometheater.jpg" border="0" /></a>
+                                    <div class="gray">
+                                        Save up to 35% <a href="http://www.icuracao.com/home-theater-system" class="buynow">HOME THEATER <span>&raquo;</span></a>
+                                        <div class="clear"></div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <a href="http://www.icuracao.com/washer-dryers"><img src="images/washerdryer.jpg" border="0" /></a>
+                                    <div class="gray">
+                                        Save up to 60% <a href="http://www.icuracao.com/washer-dryers" class="buynow">WASHER / DRYER <span>&raquo;</span></a>
+                                        <div class="clear"></div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <a href="http://www.icuracao.com/refrigerators"><img src="images/refridgerators.jpg" border="0" /></a>
+                                    <div class="gray">
+                                        Save up to 20% <a href="http://www.icuracao.com/refrigerators" class="buynow">REFRIDGERATORS <span>&raquo;</span></a>
+                                        <div class="clear"></div>
+                                    </div>
+                                </li>
+                                <li class="firstcol">
+                                    <a href="http://www.icuracao.com/dining-room-sets"><img src="images/diningroom.jpg" border="0" /></a>
+                                    <div class="gray">
+                                        Save up to 25% <a href="http://www.icuracao.com/dining-room-sets" class="buynow">DINING ROOM <span>&raquo;</span></a>
+                                        <div class="clear"></div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <a href="http://www.icuracao.com/collections"><img src="images/bedroomsets.jpg" border="0" /></a>
+                                    <div class="gray">
+                                        Free Shipping <a href="http://www.icuracao.com/collections" class="buynow">BEDROOM SETS <span>&raquo;</span></a>
+                                        <div class="clear"></div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <a href="http://www.icuracao.com/mattress"><img src="images/mattresses.jpg" border="0" /></a>
+                                    <div class="gray">
+                                        Save up to 25% <a href="http://www.icuracao.com/mattress" class="buynow">MATTRESSES <span>&raquo;</span></a>
+                                        <div class="clear"></div>
+                                    </div>
+                                </li>
+                            </ul>
+                       
+                        <?php }else{?>
+							 <div id="flashHeroES">
+                                <div class="coupon">
+								<?php 
+									if(Mage::getSingleton('core/session')->getCouponjoin100()){
+										echo Mage::getSingleton('core/session')->getCouponjoin100();
+									}else{
+										$coupon = file_get_contents('https://www.icuracao.com/onestepcheckout/ajax/createautosignupcoupon/');
+										$code = json_decode($coupon);
+										echo $code->code;
+										Mage::getSingleton('core/session')->setCouponjoin100($code->code);
+									}
+								?>
+                                </div>
+                            </div>
+                           <ul class="products">
+                            <li class="firstcol">
+                                <a href="http://www.icuracao.com/collares"><img src="images/necklaces.jpg" border="0" /></a>
+                                <div class="gray">
+                                    Ahorre hasta 30% <a href="http://www.icuracao.com/collares" class="buynow">COLLARES <span>&raquo;</span></a>
+                                    <div class="clear"></div>
+                                </div>
+                            </li>
+                            <li>
+                                <a href="http://www.icuracao.com/relojes"><img src="images/watches.jpg" border="0" /></a>
+                                <div class="gray">
+                                    Envio Gratis <a href="http://www.icuracao.com/relojes" class="buynow">RELOJES <span>&raquo;</span></a>
+                                    <div class="clear"></div>
+                                </div>
+                            </li>
+                            <li>
+                                <a href="http://www.icuracao.com/televisores"><img src="images/televisions.jpg" border="0" /></a>
+                                <div class="gray">
+                                    Ahorre hasta 20% <a href="http://www.icuracao.com/televisores" class="buynow">TELEVISORES <span>&raquo;</span></a>
+                                    <div class="clear"></div>
+                                </div>
+                            </li>
+                            <li class="firstcol">
+                                <a href="http://www.icuracao.com/sistemas-de-teatro-en-casa"><img src="images/hometheater.jpg" border="0" /></a>
+                                <div class="gray">
+                                    Ahorre hasta 35% <a href="http://www.icuracao.com/sistemas-de-teatro-en-casa" class="buynow">TEATRO EN CASA <span>&raquo;</span></a>
+                                    <div class="clear"></div>
+                                </div>
+                            </li>
+                            <li>
+                                <a href="http://www.icuracao.com/estufas"><img src="images/washerdryer.jpg" border="0" /></a>
+                                <div class="gray">
+                                    Ahorre hasta 60% <a href="http://www.icuracao.com/estufas" class="buynow">ESTUFAS <span>&raquo;</span></a>
+                                    <div class="clear"></div>
+                                </div>
+                            </li>
+                            <li>
+                                <a href="http://www.icuracao.com/refrigeradores"><img src="images/refridgerators.jpg" border="0" /></a>
+                                <div class="gray">
+                                    Ahorre hasta 20% <a href="http://www.icuracao.com/refrigeradores" class="buynow">REFRIGERADORES <span>&raquo;</span></a>
+                                    <div class="clear"></div>
+                                </div>
+                            </li>
+                            <li class="firstcol">
+                                <a href="http://www.icuracao.com/comedores-1"><img src="images/diningroom.jpg" border="0" /></a>
+                                <div class="gray">
+                                    Ahorre hasta 25% <a href="http://www.icuracao.com/comedores-1" class="buynow">COMDEORES <span>&raquo;</span></a>
+                                    <div class="clear"></div>
+                                </div>
+                            </li>
+                            <li>
+                                <a href="http://www.icuracao.com/colecciones-1"><img src="images/bedroomsets.jpg" border="0" /></a>
+                                <div class="gray">
+                                    Envio Gratis <a href="http://www.icuracao.com/colecciones-1" class="buynow">RECAMARAS <span>&raquo;</span></a>
+                                    <div class="clear"></div>
+                                </div>
+                            </li>
+                            <li>
+                                <a href="http://www.icuracao.com/colchones"><img src="images/mattresses.jpg" border="0" /></a>
+                                <div class="gray">
+                                    Ahorre hasta 25% <a href="http://www.icuracao.com/colchones" class="buynow">COLCHONES <span>&raquo;</span></a>
+                                    <div class="clear"></div>
+                                </div>
+                            </li>
+                        </ul>
+						<?php }?>
+                         </div>
+                    <!-- End GWM Landing Page Code -->        
+                     
+                <div class="clear">&nbsp;</div>
+                
+              
+            </div>
+		</div>
+	
+      <?php echo $this->getChildHtml('footer') ?>
+    <?php echo $this->getChildHtml('before_body_end') ?>
+        <?php echo $this->getAbsoluteFooter() ?>
+	</div>        
+
+		
+
+</body>
+</html>
+<?php
+	if(isset($_GET['hid'])){
+		if(Mage::getSingleton('core/session')->getGwmid()){
+			$server = '192.168.100.121';
+			$user = 'curacaodata';
+			$pass = 'curacaodata';
+			$db = 'icuracaoproduct';
+			
+			
+			$link = mysql_connect($server,$user,$pass);
+			
+			mysql_select_db($db,$link);
+			
+			$gwm = 'update gwmtracking set landingpage = "Home_Signup_Promo" where gwmId = '.Mage::getSingleton('core/session')->getGwmid();
+			mysql_query($gwm);
+			
+			mysql_close($link);
+		}
+	}
+?>

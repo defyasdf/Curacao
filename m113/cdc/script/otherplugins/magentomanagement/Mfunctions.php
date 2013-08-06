@@ -65,7 +65,7 @@ return mysql_fetch_object($query);
 function get_img_name($fplid)
 {
 $imgname = array();
-$query_result = mysql_query("select * from product_images where finalproductlist_fpl_id=$fplid");
+$query_result = mysql_query("select * from product_images where finalproductlist_fpl_id=$fplid ORDER BY `image_position` DESC");
 if(mysql_num_rows($query_result) > 0 )
 {
 while($imagedatarow = mysql_fetch_object($query_result))
@@ -142,6 +142,7 @@ function copy_cat_image($imagename)
 {
 $imagelocation = PLUGINS_URL.'/cropping/categories/'.$imagename;
 $targeturl = IMAGES_MAGENTO_CAT_LOCATION_URL.''.$imagename;
+
 $realwebpath = IMAGES_MAGENTO_CAT_WEB_LOCATION_URL.''.$imagename;
 if(!@copy($imagelocation,$targeturl))
 							{
@@ -149,6 +150,7 @@ if(!@copy($imagelocation,$targeturl))
 								echo $errors['message'];
 								exit;
 							}
+$imagerealurl = IMAGES_MAGENTO_CAT_WEB_LOCATION_URL.''.$imagename;
 return $imagename;
 }
 
@@ -201,4 +203,38 @@ function productaddons($value)
 	}
 return $skus;
 }
+
+
+function cleaningdata($string) {
+   $string = str_replace(" ", "-", $string); 
+   $string = preg_replace('/[^A-Za-z0-9\-]/', '', $string);
+
+   return preg_replace('/-+/', ' ', $string);
+}
+
+function get_parentcategories($id)
+{
+$categoryrow = array();
+$category_final_row = array();
+$query_result = mysql_query("select * from `categories` WHERE `id`='$id' LIMIT 1");
+$category = mysql_fetch_object($query_result);
+$ids = get_parentmagentoid($category->parent_id);
+return $ids;
+}
+
+function get_parentmagentoid($id)
+{
+$categoryrow = array();
+$category_final_row = array();
+$query_result = mysql_query("select * from `categories` WHERE `id`='$id' LIMIT 1");
+$category = mysql_fetch_object($query_result);
+return $category->magento_category_id;
+}
+
+function get_cosmetices_data()
+{
+$myquery = mysql_query("select * from directmagentotable where product_category=38");
+return $myquery;
+}
+
 ?>

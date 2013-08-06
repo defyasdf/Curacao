@@ -128,6 +128,7 @@
 					}
 				//$sku = $product->getSku();
 			}
+			$margin = $product->getPrice()-$product->getCost();
 			
 			$sql = "SELECT product_upc FROM `masterproducttable` WHERE `product_sku` = '".$sku."' limit 0,1";
 			$result = mysql_query($sql,$link1);

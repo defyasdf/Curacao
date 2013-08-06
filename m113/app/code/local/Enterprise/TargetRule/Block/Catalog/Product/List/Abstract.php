@@ -284,12 +284,15 @@ abstract class Enterprise_TargetRule_Block_Catalog_Product_List_Abstract extends
 		$category = Mage::getModel('catalog/category')->load(466);	//Catalog Specials
 		$subcategory = $category->getAllChildren(true);
 		array_shift($subcategory);
-		array_push($subcategory,'424');								//Top 
+		array_push($subcategory,'424');								//Top Sellers
 		$cat = array();
 		for($i=0;$i<sizeof($ca);$i++){
 			if(!in_array($ca[$i],$subcategory)){
 				$cat[] = $ca[$i];
 			}
+		}
+		if( sizeof($cat) == 0){
+			return;
 		}
 		$catid = $cat[(sizeof($cat)-1)];
 		$category = new Mage_Catalog_Model_Category();
@@ -300,7 +303,9 @@ abstract class Enterprise_TargetRule_Block_Catalog_Product_List_Abstract extends
 						->addIdFilter($excludeProductIds,true)
 						->addAttributeToSort('position')
 						->addAttributeToFilter('status', 1);
-						
+		
+		$prdIds = array();
+					
 		foreach ($prodCollection as $product) {
 			$prdIds[] = $product->getId();
 		}

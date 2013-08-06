@@ -87,7 +87,7 @@ Default layout, loads most of the pages
             
 			<action method="addLink">
             	<label>Login</label>
-            	<url>/</url>
+            	<url>/customer/account/login/</url>
             	<title>Login</title>
             	<prepare/>
             	<urlParams/>

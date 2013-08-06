@@ -110,7 +110,20 @@ class Excellence_Pay_Model_Pay extends Mage_Payment_Model_Method_Abstract
 			$d = $this->validate_customer_calculate_dp($no, $dob, $ssn, $maiden, $ccv);
 			if($d!=0){
 				Mage::getSingleton('core/session')->setCuracacaodp($d);
-				Mage::throwException('Initial Down Payment Require $'.$d); 			
+				//Mage::throwException('Initial Down Payment Require $'.$d); 			
+				// Authentication, Authorization and Downpayment calculation
+				$quote = Mage::getModel('checkout/cart')->getQuote();
+				$amount = $quote->getGrandTotal();	
+				$balance = file_get_contents('http://108.171.160.207/SOAP/getbalance.php?custnum='.$no);
+				if(!$amount){
+					Mage::throwException('Initial Down Payment Require $'.$d); 		
+				}elseif(Mage::getSingleton('core/session')->getAuthrecord()){
+						//Mage::throwException('Initial Down Payment Require $'.$d); 			
+				}elseif($balance>$amount){
+						Mage::getSingleton('core/session')->setAuthrecord("Downpayment");
+				}else{
+					Mage::throwException('Initial Down Payment Require $'.$d); 		
+				}
 			}		
 		}else{
 			Mage::throwException('Curacao Credit'); 		
@@ -277,7 +290,51 @@ class Excellence_Pay_Model_Pay extends Mage_Payment_Model_Method_Abstract
 		}else{
 			$dp = $amount;
 			$response = explode('[',$result->StatusMessage);
-			if(strtolower($response[0]) == 'authentication error'){
+			
+			$chargeoff = 'charge off';
+			$pos = strpos(strtolower($result->StatusMessage), strtolower($chargeoff));
+			if ($pos === false) {
+				$inactive = 'is not active';
+				$iapos = strpos(strtolower($result->StatusMessage), strtolower($inactive));
+				$onhold = 'has been held';
+				$ohpos = strpos(strtolower($result->StatusMessage), strtolower($onhold));
+				if ($iapos !== false) {
+					Mage::getSingleton('core/session')->setAuthrecord("Not_Active");
+				}elseif ($ohpos !== false) {
+					Mage::getSingleton('core/session')->setAuthrecord("On_Hold");
+				}else{
+					if(strtolower($response[0]) == 'authentication error'){
+						$auth = str_replace(']','',$response[1]);
+					}else{
+						$auth = 'credit_error';
+					}
+					Mage::getSingleton('core/session')->setAuthenticationerror($auth);
+					Mage::getSingleton('core/session')->setAuthentication(0);
+					
+					if(strtolower($result->StatusMessage) == 'authentication error'){
+						Mage::throwException('Authentication Failed');
+					}else{
+						Mage::throwException('Credit Related issue Please contact credit : '.$result->StatusMessage);
+					}
+				}
+			
+			}else{
+					if(strtolower($response[0]) == 'authentication error'){
+						$auth = str_replace(']','',$response[1]);
+					}else{
+						$auth = 'credit_error';
+					}
+					Mage::getSingleton('core/session')->setAuthenticationerror($auth);
+					Mage::getSingleton('core/session')->setAuthentication(0);
+					
+					if(strtolower($result->StatusMessage) == 'authentication error'){
+						Mage::throwException('Authentication Failed');
+					}else{
+						Mage::throwException('Credit Related issue Please contact credit : '.$result->StatusMessage);
+					}
+			}
+			// Original Code
+			/*if(strtolower($response[0]) == 'authentication error'){
 				$auth = str_replace(']','',$response[1]);
 				
 			}else{
@@ -290,7 +347,7 @@ class Excellence_Pay_Model_Pay extends Mage_Payment_Model_Method_Abstract
 				Mage::throwException('Authentication Failed');
 			}else{
 				Mage::throwException('Credit Related issue Please contact credit : '.$result->StatusMessage);
-			}
+			}*/
 			
 		}	
 		$sql_query = "update userActivitytrack set payattempt = '1', ar_response = '".$result->StatusMessage."' where uaId = ".Mage::getSingleton('core/session')->getTrackid();

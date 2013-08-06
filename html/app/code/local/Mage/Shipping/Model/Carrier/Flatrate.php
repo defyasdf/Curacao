@@ -99,6 +99,21 @@ class Mage_Shipping_Model_Carrier_Flatrate
 							}else{
 								$shipRate = ($item->getQty())*($_helper->productAttribute($cur_fproduct, $cur_fproduct->getShprate(), 'shprate'));
 							}
+							$coupon_code = Mage::getSingleton('checkout/session')->getQuote()->getCouponCode();
+							if($coupon_code){
+								$oCoupon = Mage::getModel('salesrule/coupon')->load($coupon_code, 'code');
+								$oRule = Mage::getModel('salesrule/rule')->load($oCoupon->getRuleId());
+								$cData = $oRule->getData();
+								if($cData['name']=='Signup_FreeShipping'){
+									$sstart_ts = strtotime($oRule->getfrom_date());
+									$send_ts = strtotime($oRule->getto_date());
+									$suser_ts = strtotime(date('Y-m-d'));
+									if((($user_ts >= $start_ts) && ($user_ts <= $end_ts))){		
+										$shipRate = 0;
+									}
+								}
+							}
+							
 						// End Free Shipping Code					
 						
 						$custom_ship +=	$shipRate;		

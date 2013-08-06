@@ -86,6 +86,9 @@
 			}else{
 				$product->setSpecialPrice('');
 			}
+				$cost = $price_info[6];
+				$product->setCost($cost);
+				
 				try {
 					$product->save();
 					echo $product->getId().' Product added Price at '.$price;

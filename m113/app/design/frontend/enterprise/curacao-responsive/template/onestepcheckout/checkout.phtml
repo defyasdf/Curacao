@@ -331,6 +331,11 @@ $helper = Mage::helper('onestepcheckout/checkout');
 			                
 			                <div id="shippingmsg">Same as billing address</div>
 			                	 <?php if($this->differentShippingAvailable()): ?>
+			                	 <?php
+			                	 	if(! isset($uncheck) ): 
+			                	 		$uncheck = 0; 
+			                	 	endif;
+			                	 ?>
 			        <div id="shipping_address" style="display:none" <?php  echo (($this->sameAsBilling() && !$uncheck) ? 'style="display: none"': false);?>>
 			            <script type="text/javascript">
 			                var shipping = new Shipping();
@@ -1524,7 +1529,8 @@ function removebillingadd(id){
 </script>
 <script type="text/javascript">
 
-        var v24JsProtocol = (("https:" == document.location.protocol) ? "https://" : "http://");
+      //  var v24JsProtocol = (("https:" == document.location.protocol) ? "https://" : "http://");
+	   var v24JsProtocol = "https://";
 
         document.write(unescape("%3Cscript src='" + v24JsProtocol + "static.vee24.com/v24/veedesk/v24Embedded.js' type='text/javascript'%3E%3C/script%3E"));
 

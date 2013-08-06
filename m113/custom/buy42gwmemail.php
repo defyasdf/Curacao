@@ -71,4 +71,4 @@
 	file_get_contents('http://app.bronto.com/public/?q=direct_add&fn=Public_DirectAddForm&id=acxhzmypejmnhsowqaqxwyyhyesgbcd&email='.$email.'&field1=firstname,set,'.$fname.'&field2=lastname,set,'.$lname.'&field3=Registered_in_Magento,set,True&field4=GWM_TV_Promo,set,'.$code->code.'&list5=0bc603ec00000000000000000000000540e4');
 	
 	}
-	
+	?>

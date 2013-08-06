@@ -144,7 +144,7 @@
 
 	if(!$session->isLoggedIn()){
 		if(isset($_GET['hid'])){
-			if(!$_COOKIE["signup"]){?>	
+			if(!isset($_COOKIE["signup"])){?>	
 				var url = "/lighbox_html/joinget100.php?width=620&height=405";
 				tb_show("Sign Up and Get $100 Off", url);
 				jQuery("#TB_overlay").unbind("click",tb_remove);
@@ -202,8 +202,18 @@
 	}
 	
 	function countinueShop(){
-		 tb_remove();
-		 location.reload();
+		 var coupon_url = '/onestepcheckout/ajax/savecoupon/'
+		 jQuery.ajax({ 
+				type: 'post',
+				data: {'coupon':jQuery("#couponjoin100").html()},
+				url:  coupon_url,                    
+				success: function(data) {
+				   	var result = jQuery.parseJSON(data); 
+					tb_remove();
+				}.bind(this)
+		 });
+		 return false;
+		// location.reload();
 	}
 	
 </script>
@@ -212,3 +222,24 @@
 
 </body>
 </html>
+
+<?php
+	if(isset($_GET['hid'])){
+		if(Mage::getSingleton('core/session')->getGwmid()){
+			$server = '192.168.100.121';
+			$user = 'curacaodata';
+			$pass = 'curacaodata';
+			$db = 'icuracaoproduct';
+			
+			
+			$link = mysql_connect($server,$user,$pass);
+			
+			mysql_select_db($db,$link);
+			
+			$gwm = 'update gwmtracking set landingpage = "Home_Signup_Promo" where gwmId = '.Mage::getSingleton('core/session')->getGwmid();
+			mysql_query($gwm);
+			
+			mysql_close($link);
+		}
+	}
+?>

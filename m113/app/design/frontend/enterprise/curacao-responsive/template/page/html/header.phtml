@@ -39,7 +39,7 @@
 
 
 
-	if(isset($_GET['sid'])){
+if(isset($_GET['sid'])){
  	Mage::getSingleton('core/session')->setSid($_GET['sid']);
  }
  if(isset($_GET['hid'])){
@@ -141,7 +141,12 @@
 	if(!Mage::getSingleton('core/session')->getTrackid()){
 		if(!isset($_GET['trackid'])){
 			if(isset($_GET['mintrack'])){
-				$string = $_SERVER["HTTP_REFERER"];	
+				if( isset($_SERVER["HTTP_REFERER"])):
+					$string = $_SERVER["HTTP_REFERER"];	
+				else:
+					$string = 'unknown';	
+				endif;
+				
 				$parse = explode('?',$string);
 		
 				if(isset($_GET['keyword'])){
@@ -253,7 +258,10 @@
 	
 	}
 ?>
-		<div class="twenty columns alpha omega">
+
+
+	
+    	<div class="twenty columns alpha omega">
 			<div class="right">
 	            <div class="switches right">
             		<?php echo $this->getChildHtml('store_language') ?>

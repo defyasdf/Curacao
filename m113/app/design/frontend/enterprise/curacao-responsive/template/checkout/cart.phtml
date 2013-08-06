@@ -51,6 +51,8 @@
 		$row = mysql_fetch_array($row);
 		if(trim($row['quote_id'])!=''){
 			$q = $row['quote_id'].','.$quote->getId();
+		}else{
+			$q = $quote->getId();
 		}
 		$gwm = 'update gwmtracking set quote_id = "'.$q.'" where gwmId = '.Mage::getSingleton('core/session')->getGwmid();
 		mysql_query($gwm);

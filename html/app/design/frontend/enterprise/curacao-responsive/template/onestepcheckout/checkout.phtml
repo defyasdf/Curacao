@@ -1572,7 +1572,36 @@ jQuery(document).ready(function() {
 	});
 	
 
+	function getcitystate(method){
+		var postalcode = '';
+		if(method == 'billing'){
+			postalcode = jQuery('input[name="billing[postcode]"]').val();
+		}else{
+			postalcode = jQuery('input[name="shipping[postcode]"]').val();
+		}
+		jQuery.ajax({
+			        type: "POST",
+			        url: "../GeoData/ex2.php",
+			        data: {'zip':postalcode},
+			        success: function (data) {
+						//alert(data);
+						if(data == '0'){
+							alert('Coudnt find zip code');
+						}else{
+							var address = data.split('|');
+							if(method == 'billing'){	
+								jQuery('select[name="billing[region_id]"]').val(address[3])
+								jQuery('input[name="billing[city]"]').val(address[0])
+							}else{
+								jQuery('select[name="shipping[region_id]"]').val(address[3])
+								jQuery('input[name="shipping[city]"]').val(address[0])
+							}
+						}
+						
+			        }
+			    })
 
+	}
 	/*jQuery(document).scroll(function(){
 		var scroll_top = jQuery(document).scrollTop();
 		var _top = jQuery('.checkout-left').height() - jQuery('.checkout-right').height();

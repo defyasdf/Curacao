@@ -1,0 +1,339 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php
+/**
+ * Create account form template
+ *
+ * @see app/design/frontend/base/default/template/customer/form/register.phtml
+ */
+/** @var $this Mage_Customer_Block_Form_Register */
+
+ 	$_storeId = Mage::app()->getStore()->getId();
+
+	if($_storeId == 1 ){
+		$newsletter = 'Sign Up for Newsletter';	
+	} else {
+		$newsletter = 'Suscríbase para recibir nuestro Boletín de  Especiales';
+	}
+?>
+<div class="account-create">
+    <div class="page-title">
+        <h1><?php echo $this->__('Create an Account') ?></h1>
+    </div>
+        <div class="onestepcheckout-error" id="register-error" style="display:none;"></div>
+
+    <?php echo $this->getChildHtml('form_fields_before')?>
+    <?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+    <form action="<?php echo $this->getPostActionUrl() ?>" method="post" id="form-validate" enctype="multipart/form-data">
+        <div class="fieldset fifteen columns alpha">
+            <input type="hidden" name="success_url" value="<?php echo $this->getSuccessUrl() ?>" />
+            <input type="hidden" name="error_url" value="<?php echo $this->getErrorUrl() ?>" />
+            <!-- Personal Information -->
+           	
+    
+            
+            
+            <ul class="form-list">
+            	<h2 class="legend"><?php echo $this->__('Personal Information') ?></h2>	
+                
+                <li class="fields login-fields">
+   	             	<?php echo $this->getLayout()->createBlock('customer/widget_name')->setObject($this->getFormData())->setForceUseCustomerAttributes(true)->toHtml() ?>		             
+                </li>
+                <li class="login-fields">
+                    <div class="input-box subline column">
+                    <label for="email_address" class="required"><?php echo $this->__('Email Address') ?><em>*</em></label>
+                    
+                        <input type="text" name="email" id="email_address" value="<?php echo $this->escapeHtml($this->getFormData()->getEmail()) ?>" title="<?php echo $this->__('Email Address') ?>" class="input-text validate-email required-entry" />
+                    </div>
+                </li>
+                <li class="login-fields">
+                	<div id="login-clear-both"></div>
+                 </li>
+                <?php if ($this->isNewsletterEnabled()): ?>
+                <li class="control login-fields">
+                    <div class="input-box">
+                        <input type="checkbox" name="is_subscribed" title="<?php echo $newsletter ?>" value="1" id="is_subscribed"<?php if($this->getFormData()->getIsSubscribed()): ?> checked="checked"<?php endif; ?> class="checkbox checkbox-label" />
+                    </div>
+                    <label for="is_subscribed" class="checkbox-label"><?php echo $this->__('Sign Up for Newsletter') ?></label>
+                </li>
+                <?php endif ?>
+                <!-- End Personal Information -->
+                
+            <?php $_dob = $this->getLayout()->createBlock('customer/widget_dob') ?>
+            <?php if ($_dob->isEnabled()): ?>
+                <li><?php echo $_dob->setDate($this->getFormData()->getDob())->toHtml() ?></li>
+            <?php endif ?>
+            <?php $_taxvat = $this->getLayout()->createBlock('customer/widget_taxvat') ?>
+            <?php if ($_taxvat->isEnabled()): ?>
+                <li><?php echo $_taxvat->setTaxvat($this->getFormData()->getTaxvat())->toHtml() ?></li>
+            <?php endif ?>
+            <?php $_gender = $this->getLayout()->createBlock('customer/widget_gender') ?>
+            <?php if ($_gender->isEnabled()): ?>
+                <li><?php echo $_gender->setGender($this->getFormData()->getGender())->toHtml() ?></li>
+            <?php endif ?>
+            <!--
+            <?php $customerAttributes = $this->getChild('customer_form_user_attributes');?>
+            <?php if ($customerAttributes): ?>
+                <?php $customerAttributes->setShowContainer(false);?>
+                <?php $this->restoreSessionData($customerAttributes->getForm());?>
+                <?php echo $customerAttributes->toHtml()?>
+            <?php endif;?>
+            -->
+            <p>&nbsp;</p>
+            <!-- Login Information -->
+             <h2 class="legend"><?php echo $this->__('Login Information') ?></h2>
+                <li class="fields">
+                    <div class="field subline column">
+                        <label for="password" class="required"><?php echo $this->__('Password') ?><em>*</em></label>
+                        <div class="input-box login-fields">
+                            <input type="password" name="password" id="password" title="<?php echo $this->__('Password') ?>" class="input-text required-entry validate-password login-password" />
+                        </div>
+                    </div>
+                    <div class="field subline column">
+                        <label for="confirmation" class="required"><?php echo $this->__('Confirm Password') ?><em>*</em></label>
+                        <div class="input-box login-fields">
+                            <input type="password" name="confirmation" title="<?php echo $this->__('Confirm Password') ?>" id="confirmation" class="input-text required-entry validate-cpassword login-password" />
+                        </div>
+                    </div>
+                </li>
+                <div class="login-fields">
+					<?php echo $this->getChildHtml('form.additional.info'); ?>
+                    <?php echo $this->getChildHtml('persistent.remember.me'); ?>
+               	</div>
+                <p class="form-required"><?php echo $this->__('<em>*</em> Required Fields') ?></p>
+                <div class="clear"></div>
+                <!-- End Login Information -->
+                
+            </ul>
+        <div class="buttons-set form-buttons">
+            <p class="back-link"><a href="<?php echo $this->escapeUrl($this->getBackUrl()) ?>"><small>&laquo; </small><?php echo $this->__('Back') ?></a></p>
+            <button type="submit" id="createuser" class="button" title="<?php echo $this->__('Submit') ?>"><span><span><?php echo $this->__('Submit') ?></span></span></button>
+             <div id="register_link" style="display:none"><img src="/images/gray_fade_small.gif"></div>
+        </div>
+        </div>
+
+    <?php if($this->getShowAddressFields()): ?>
+        <div class="fieldset ten columns omega">
+            <input type="hidden" name="create_address" value="1" />
+            <h2 class="legend"><?php echo $this->__('Address Information') ?></h2>
+            <ul class="form-list">
+                <li class="fields">
+                    <div class="field">
+                        <label for="company"><?php echo $this->__('Company') ?></label>
+                        <div class="input-box">
+                            <input type="text" name="company" id="company" value="<?php echo $this->escapeHtml($this->getFormData()->getCompany()) ?>" title="<?php echo $this->__('Company') ?>" class="input-text <?php echo $this->helper('customer/address')->getAttributeValidationClass('company') ?>" />
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="telephone" class="required"><?php echo $this->__('Telephone') ?><em>*</em></label>
+                        <div class="input-box">
+                            <input type="text" name="telephone" id="telephone" value="<?php echo $this->escapeHtml($this->getFormData()->getTelephone()) ?>" title="<?php echo $this->__('Telephone') ?>" class="input-text <?php echo $this->helper('customer/address')->getAttributeValidationClass('telephone') ?>" />
+                        </div>
+                    </div>
+                </li>
+            <?php $_streetValidationClass = $this->helper('customer/address')->getAttributeValidationClass('street'); ?>
+                <li class="wide">
+                    <label for="street_1" class="required"><?php echo $this->__('Street Address') ?><em>*</em></label>
+                    <div class="input-box">
+                        <input type="text" name="street[]" value="<?php echo $this->escapeHtml($this->getFormData()->getStreet(0)) ?>" title="<?php echo $this->__('Street Address') ?>" id="street_1" class="input-text <?php echo $_streetValidationClass ?>" />
+                    </div>
+                </li>
+            <?php $_streetValidationClass = trim(str_replace('required-entry', '', $_streetValidationClass)); ?>
+            <?php for ($_i = 2, $_n = $this->helper('customer/address')->getStreetLines(); $_i <= $_n; $_i++): ?>
+                <li class="add-field">
+                    <div class="input-box">
+                        <input type="text" name="street[]" value="<?php echo $this->escapeHtml($this->getFormData()->getStreet($_i - 1)) ?>" title="<?php echo $this->__('Street Address %s', $_i) ?>" id="street_<?php echo $_i ?>" class="input-text <?php echo $_streetValidationClass ?>" />
+                    </div>
+                </li>
+            <?php endfor; ?>
+                <li class="fields">
+                    <div class="field">
+                        <label for="city" class="required"><?php echo $this->__('City') ?><em>*</em></label>
+                        <div class="input-box">
+                            <input type="text" name="city" value="<?php echo $this->escapeHtml($this->getFormData()->getCity()) ?>" title="<?php echo $this->__('City') ?>" class="input-text <?php echo $this->helper('customer/address')->getAttributeValidationClass('city') ?>" id="city" />
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="region_id" class="required"><?php echo $this->__('State/Province') ?><em>*</em></label>
+                        <div class="input-box">
+                            <select id="region_id" name="region_id" title="<?php echo $this->__('State/Province') ?>" class="validate-select" style="display:none;">
+                                <option value=""><?php echo $this->__('Please select region, state or province') ?></option>
+                            </select>
+                            <script type="text/javascript">
+                            //<![CDATA[
+                                $('region_id').setAttribute('defaultValue',  "<?php echo $this->getFormData()->getRegionId() ?>");
+                            //]]>
+                            </script>
+                            <input type="text" id="region" name="region" value="<?php echo $this->escapeHtml($this->getRegion()) ?>" title="<?php echo $this->__('State/Province') ?>" class="input-text <?php echo $this->helper('customer/address')->getAttributeValidationClass('region') ?>" style="display:none;" />
+                        </div>
+                    </div>
+                </li>
+                <li class="fields">
+                    <div class="field">
+                        <label for="zip" class="required"><?php echo $this->__('Zip/Postal Code') ?><em>*</em></label>
+                        <div class="input-box">
+                            <input type="text" name="postcode" value="<?php echo $this->escapeHtml($this->getFormData()->getPostcode()) ?>" title="<?php echo $this->__('Zip/Postal Code') ?>" id="zip" class="input-text validate-zip-international <?php echo $this->helper('customer/address')->getAttributeValidationClass('postcode') ?>" />
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="country" class="required"><?php echo $this->__('Country') ?><em>*</em></label>
+                        <div class="input-box">
+                            <?php echo $this->getCountryHtmlSelect() ?>
+                        </div>
+                    </div>
+                </li>
+                <?php $addressAttributes = $this->getChild('customer_form_address_user_attributes');?>
+                <?php if ($addressAttributes): ?>
+                    <?php $addressAttributes->setEntity($this->getAddress());?>
+                    <?php $addressAttributes->setFieldIdFormat('address:%1$s')->setFieldNameFormat('address[%1$s]');?>
+                    <?php $this->restoreSessionData($addressAttributes->getForm(), 'address');?>
+                    <?php echo $addressAttributes->setShowContainer(false)->toHtml()?>
+                <?php endif;?>
+            </ul>
+            <input type="hidden" name="default_billing" value="1" />
+            <input type="hidden" name="default_shipping" value="1" />
+        </div>
+    <?php endif; ?>
+    	
+        <!--
+        <div class="fieldset ten columns omega">
+            <ul class="form-list">
+            
+            </ul>
+            <?php echo $this->getChildHtml('persistent.remember.me.tooltip'); ?>
+        </div>
+       	-->
+        
+        <?php if (Mage::helper('checkout')->isContextCheckout()): ?>
+            <input name="context" type="hidden" value="checkout" />
+        <?php endif; ?>
+        <input type="hidden" id="referURL" value="<?php if( isset($_SERVER["HTTP_REFERER"]) ): echo $_SERVER["HTTP_REFERER"]; endif;?>" />
+    </form>
+    
+    <style>
+    	#register_link{
+		   top:0;
+		   right:0;
+		   width:100%;
+		   height:100%;
+		   position:fixed;
+		   text-align:center;
+		   /* IE filter */
+		   filter: progid:DXImageTransform.Microsoft.Alpha(opacity=50);
+		   -moz-opacity:0.5;    /* Mozilla extension */
+		   -khtml-opacity:0.5;  /* Safari/Conqueror extension */
+		   opacity:0.5; /* CSS3 */
+		   z-index:1000;
+		   background-color:white;
+
+		}
+		#register_link img {
+		   margin-top:175px;
+		 }
+    </style>
+    
+    <script type="text/javascript">
+    //<![CDATA[
+        var dataForm = new VarienForm('form-validate', true);
+        <?php if($this->getShowAddressFields()): ?>
+        new RegionUpdater('country', 'region', 'region_id', <?php echo $this->helper('directory')->getRegionJson() ?>, undefined, 'zip');
+        <?php endif; ?>
+
+        Form.getElements('form-validate').each(function(element) {
+            element.setAttribute('autocomplete', 'off');
+        });
+    //]]>
+    </script>
+    
+    <script type="text/javascript">
+    	jQuery("#form-validate").submit(function(){
+			var valid = jQuery('.validation-failed').map( function(){return jQuery(this).val(); }).get();
+			if(valid.length == 0){
+				
+				jQuery("#createuser").hide('slow');
+				jQuery("#register_link").show();
+				
+				var login_url = '/onestepcheckout/ajax/newcustomer/'
+				//alert(jQuery("#form-validate").serializeArray());
+				//return false;
+				jQuery.ajax({ 
+						type: 'post',
+						data: jQuery("#form-validate").serializeArray(),
+						url:  login_url,                    
+						success: function(data) {
+						 
+						   var result = jQuery.parseJSON(data); 
+							if(result.success) {
+								//location.reload();
+								//window.location.replace(jQuery("#referURL").val());
+								
+								var login_url = '/onestepcheckout/ajax/getcartcontent/'
+								//alert(jQuery("#form-validate").serializeArray());
+								//return false;
+								jQuery.ajax({ 
+										type: 'post',
+										data: {pdata:result.product},
+										url:  login_url,                    
+										success: function(data) {
+										 
+										   var result = jQuery.parseJSON(data); 
+											if(result.success) {
+												//location.reload();
+												if(jQuery("#referURL").val() == 'http://www.icuracao.com/checkout/cart/' || jQuery("#referURL").val() == 'https://www.icuracao.com/checkout/cart/'){
+													window.location.replace('https://www.icuracao.com/onestepcheckout/');
+												}else{
+													window.location.replace(jQuery("#referURL").val());
+												}
+												//alert(result.product);
+											} else {
+												//alert(result.error);
+												jQuery("#register-error").html(result.error);
+												jQuery("#register-error").show('slow')
+												jQuery("#createuser").show('slow');
+												jQuery("#register_link").hide('slow');
+											}
+										}.bind(this)
+								 });
+								
+								
+							} else {
+								//alert(result.error);
+								jQuery("#register-error").html(result.error);
+								jQuery("#register-error").show('slow')
+								jQuery("#createuser").show('slow');
+								jQuery("#register_link").hide('slow');
+							}
+						}.bind(this)
+				 });
+				
+
+			}
+			return false;
+		})
+    </script>
+    
+</div>

@@ -86,12 +86,16 @@
 			}else{
 				$product->setSpecialPrice('');
 			}
-				try {
-					$product->save();
-					echo $product->getId().' Product added Price at '.$price;
-					$cnt++;
-					
-				}
+			$product->setCost($price_info[6]);
+			$product->setMsrp($price_info[7]);
+			$product->setRecyclingprice($price_info[4]);
+			$product->setRecyclingdescription(trim($price_info[5]));
+			try {
+				$product->save();
+				echo $product->getId().' Product added Price at '.$price;
+				$cnt++;
+				
+			}
 				catch (Exception $ex) {
 					echo $ex->getMessage();
 					$cnt1++;

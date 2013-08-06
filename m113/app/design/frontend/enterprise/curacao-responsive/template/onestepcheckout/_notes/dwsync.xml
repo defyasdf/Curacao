@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <dwsync>
-<file name="checkout.phtml" server="198.101.163.120//var/www/" local="130177953820984809" remote="130177953970000000" Dst="2" />
+<file name="checkout.phtml" server="198.101.163.120//var/www/" local="130193396264386340" remote="130193396450000000" Dst="2" />
+<file name="billing.phtml" server="198.101.163.120//var/www/" local="130161579460000000" remote="130161579460000000" Dst="2" />
+<file name="billing_fields.phtml" server="198.101.163.120//var/www/" local="130184150440000000" remote="130184150440000000" Dst="2" />
+<file name="shipping_fields.phtml" server="198.101.163.120//var/www/" local="130161579460000000" remote="130161579460000000" Dst="2" />
 </dwsync>

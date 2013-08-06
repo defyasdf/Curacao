@@ -61,6 +61,7 @@
                                                         $<?php echo $content['checkout']['checkouttotal']?>
                                                     </td>
                                                 </tr>
+                                              <?php if($_SERVER['REMOTE_ADDR']=='206.170.79.99' || $_SERVER['REMOTE_ADDR']=='206.170.79.5' || $_SERVER['REMOTE_ADDR']== '198.72.211.115'){?>
                                                 
                                                 <tr>	
                                                     <td>
@@ -83,12 +84,16 @@
                                                         $<?php echo $content['addtocart']['overalltotal']?>
                                                     </td>
                                                 </tr>
+                                              
+                                              <?php }?>
+                                              
                                                 
                                                 <tr>
                                                     <td colspan="6">
                                                        <hr>
                                                     </td>
                                                 </tr>
+                                              
                                                 
                                                  <tr>	
                                                     <td>

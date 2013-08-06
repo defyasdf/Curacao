@@ -164,7 +164,7 @@
 <?php
 	if(isset($_GET['hid'])){
 		if(!$_COOKIE["buy42"]){	
-            if($_category->getId() == '608'){
+            if($_category->getId() == '569'){
         ?>
 				<script type="text/javascript">
                     jQuery(document).ready(function() {
@@ -179,36 +179,60 @@
 		}
 	}
 ?>
-
-<script type="text/javascript">
-	function buy42offer(){
-		var valid = new Validation('buy42offer', {onSubmit:false});
-			valid.reset();
-		var result = valid.validate();
-			if(result){
-				var em = jQuery("#buy42email").val();
-				var login_url = '/custom/addbuy42email.php'
-				jQuery.ajax({ 
-						type: 'post',
-						data: {'email':em,'hid':'<?php echo $_GET['hid']?>','sid':'<?php echo $_GET['sub_id']?>','affid':'<?php echo $_GET['aff_id']?>'},
-			//			data: {'email':em,'hid':'1234','sid':'45689','affid':'amdsid'},
-						url:  login_url,                    
-						success: function(data) {
-							if(data==2){
-								alert("Email already exist");
-							}else{
-						     jQuery("#lighboxsignupform").hide('slow');
-  						 	 jQuery("#lighboxsignupthanks").show('slow');
-							}
-						}.bind(this)
-				 });
+<?php if(  isset($_GET['hid']) && isset($_GET['sub_id']) && isset($_GET['aff_id']) ):?>
+	<script type="text/javascript">
+		function buy42offer(){
+			var valid = new Validation('buy42offer', {onSubmit:false});
+				valid.reset();
+			var result = valid.validate();
+				if(result){
+					var em = jQuery("#buy42email").val();
+					var login_url = '/custom/addbuy42email.php'
+					jQuery.ajax({ 
+							type: 'post',
+							data: {'email':em,'hid':'<?php if(isset($_GET['hid'])): echo $_GET['hid']; endif;?>','sid':'<?php if(isset($_GET['sub_id'])): echo $_GET['sub_id']; endif;?>','affid':'<?php if(isset($_GET['aff_id'])): echo $_GET['aff_id']; endif;?>'},
+				//			data: {'email':em,'hid':'1234','sid':'45689','affid':'amdsid'},
+							url:  login_url,                    
+							success: function(data) {
+								if(data==2){
+									alert("Email already exist");
+								}else{
+							     jQuery("#lighboxsignupform").hide('slow');
+	  						 	 jQuery("#lighboxsignupthanks").show('slow');
+								}
+							}.bind(this)
+					 });
+				
+				}
+				return false;
 			
-			}
-			return false;
+		}
 		
+		function countinueShop(){
+			 tb_remove();
+		}
+	</script>
+<?php endif;?>
+
+<?php
+	if(isset($_GET['hid'])){
+		 if($_category->getId() == '569'){
+			if(Mage::getSingleton('core/session')->getGwmid()){
+				$server = '192.168.100.121';
+				$user = 'curacaodata';
+				$pass = 'curacaodata';
+				$db = 'icuracaoproduct';
+				
+				
+				$link = mysql_connect($server,$user,$pass);
+				
+				mysql_select_db($db,$link);
+				
+				$gwm = 'update gwmtracking set landingpage = "ALL_TV_PROMO" where gwmId = '.Mage::getSingleton('core/session')->getGwmid();
+				mysql_query($gwm);
+				
+				mysql_close($link);
+			}
+		 }
 	}
-	
-	function countinueShop(){
-		 tb_remove();
-	}
-</script>
+?>

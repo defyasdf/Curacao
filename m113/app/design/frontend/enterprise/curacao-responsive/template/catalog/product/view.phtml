@@ -224,10 +224,16 @@
     <?php $i = 0; ?>
 	<?php if( count($_product->getDescription()) > 0): ?>
         		<li class="tab active">
-        		<?php if($_product->getLg_webcollage()&&$_storeId == 1){ ?>
+        		<?php if($_storeId == 1){ ?>
 					<script>var wcCpi = "<?php echo $_product->getId();?>";</script>
 					<script src="http://content.webcollage.net/icuracao/smart-button"></script>
-	                <span id="wc-power-page"></span>
+	                <span id="wc-power-page"><?php echo( (($_product->getDescription() ) )) ?>
+                    	<?php if( count($_product->getSpec001()) > 0 ): ?>
+                            <p style="margin-bottom:0;">&nbsp;</p>
+                            <dt><label class="required"><span id="warrenty_title"><?php echo $this->__('Specification')?>:</span></label></dt>
+                            <?php echo(($_product->getSpec001())) ?>
+                            <?php  endif;  ?> 
+                    </span>
 				<?php }else{ ?>
 			   		<?php echo( (($_product->getDescription() ) )) ?>
 			   		<?php if( count($_product->getSpec001()) > 0 ): ?>
@@ -322,41 +328,45 @@
         }
     }.bind(productAddToCartForm);
 //]]>
-function delloffer(){
-		
-		var valid = new Validation('delloffer', {onSubmit:false});
-			valid.reset();
-		var result = valid.validate();
-			if(result){
-				var em = jQuery("#dellofferemail").val();
-				jQuery("#delloffer").html('<img src="http://m113.icuracao.com/images/gray_fade_small.gif">');
-				var login_url = '/custom/adddelloffer.php'
-				jQuery.ajax({ 
-						type: 'post',
-						data: {'email':em,'hid':'<?php echo $_GET['hid']?>','sid':'<?php echo $_GET['sub_id']?>','affid':'<?php echo $_GET['aff_id']?>'},
-			//			data: {'email':em,'hid':'1234','sid':'45689','affid':'amdsid'},
-						url:  login_url,                    
-						success: function(data) {
-						 if(data==2){
-								alert("Email already exist");
-						   }else{ 
-							  jQuery("#lighboxsignupform").hide('slow');
-							  jQuery("#lighboxsignupthanks").show('slow');
-						   }
-	
-						}.bind(this)
-				 });
-			
-			}
-			return false;
-		
-	}
-	
-	function countinueShop(){
-		 tb_remove();
-	}
 </script>
 
+<?php if( isset($_GET['hid']) && isset($_GET['sub_id']) &&  isset($_GET['aff_id']) ):?>
+	<script type="text/javascript">
+		function delloffer(){
+			
+			var valid = new Validation('delloffer', {onSubmit:false});
+				valid.reset();
+			var result = valid.validate();
+				if(result){
+					var em = jQuery("#dellofferemail").val();
+					jQuery("#delloffer").html('<img src="http://m113.icuracao.com/images/gray_fade_small.gif">');
+					var login_url = '/custom/adddelloffer.php'
+					jQuery.ajax({ 
+							type: 'post',
+							data: {'email':em,'hid':'<?php if(isset($_GET['hid'])): echo $_GET['hid']; endif; ?>','sid':'<?php if(isset($_GET['sub_id'])): echo $_GET['sub_id']; endif;?>','affid':'<?php if( isset($_GET['aff_id'])): echo $_GET['aff_id']; endif;?>'},
+				//			data: {'email':em,'hid':'1234','sid':'45689','affid':'amdsid'},
+							url:  login_url,                    
+							success: function(data) {
+							 if(data==2){
+									alert("Email already exist");
+							   }else{ 
+								  jQuery("#lighboxsignupform").hide('slow');
+								  jQuery("#lighboxsignupthanks").show('slow');
+							   }
+		
+							}.bind(this)
+					 });
+				
+				}
+				return false;
+			
+		}
+		
+		function countinueShop(){
+			 tb_remove();
+		}
+	</script>
+<?php endif; ?>
 <?php
 	if(isset($_GET['hid'])){
 		if(!$_COOKIE["delloffer"]){	
@@ -373,5 +383,28 @@ function delloffer(){
 			$expire=time()+60*60*24*30;
 			setcookie("delloffer", "delloffer", $expire);
 		}
+	}
+?>
+
+<?php
+	if(isset($_GET['hid'])){
+		 if($_product->getId() == '7704'){
+			if(Mage::getSingleton('core/session')->getGwmid()){
+				$server = '192.168.100.121';
+				$user = 'curacaodata';
+				$pass = 'curacaodata';
+				$db = 'icuracaoproduct';
+				
+				
+				$link = mysql_connect($server,$user,$pass);
+				
+				mysql_select_db($db,$link);
+				
+				$gwm = 'update gwmtracking set landingpage = "DELL_PROMO" where gwmId = '.Mage::getSingleton('core/session')->getGwmid();
+				mysql_query($gwm);
+				
+				mysql_close($link);
+			}
+		 }
 	}
 ?>

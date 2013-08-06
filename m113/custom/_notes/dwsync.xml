@@ -9,8 +9,17 @@
 <file name="_getqtylessthan3.php" server="198.101.163.120//var/www/" local="130181487351845441" remote="130181487690000000" Dst="2" />
 <file name="getallactiveproducts.php" server="198.101.163.120//var/www/" local="130161579460000000" remote="130161579460000000" Dst="2" />
 <file name="artest.php" server="198.101.163.120//var/www/" local="130181447791602725" remote="130181447870000000" Dst="2" />
-<file name="_add_curacao_price.php" server="198.101.163.120//var/www/" local="130181447414181138" remote="130181447490000000" Dst="2" />
-<file name="getinventory.php" server="198.101.163.120//var/www/" local="130181474410000000" remote="130181474500000000" Dst="2" />
+<file name="_add_curacao_price.php" server="198.101.163.120//var/www/" local="130199579887599622" remote="130199579950000000" Dst="2" />
+<file name="getinventory.php" server="198.101.163.120//var/www/" local="130181474500000000" remote="130181474500000000" Dst="2" />
 <file name="_getqtylessthan3fromorder.php" server="198.101.163.120//var/www/" local="130185646210000000" remote="130185646310000000" Dst="2" />
 <file name="_addproduct.php" server="198.101.163.120//var/www/" local="130185850163576527" remote="130185850360000000" Dst="2" />
+<file name="_getshipping_collection.php" server="198.101.163.120//var/www/" local="130161579460000000" remote="130161579460000000" Dst="2" />
+<file name="getcustomer_info_forgwm.php" server="198.101.163.120//var/www/" local="130190911640513984" remote="130190911850000000" Dst="2" />
+<file name="getallactiveproducts_withmargin.php" server="198.101.163.120//var/www/" local="130192739707113412" remote="130192739860000000" Dst="2" />
+<file name="test_inventory.php" server="198.101.163.120//var/www/" local="130161579460000000" remote="130161579460000000" Dst="2" />
+<file name="test_ar_asis.php" server="198.101.163.120//var/www/" local="130191908884203060" remote="130191909030000000" Dst="2" />
+<file name="getcategory.php" server="198.101.163.120//var/www/" local="130198782315621114" remote="130198782370000000" Dst="2" />
+<file name="invlocation16.php" server="198.101.163.120//var/www/" local="130161579460000000" remote="130161579460000000" Dst="2" />
+<file name="_addproduct4000.php" server="198.101.163.120//var/www/" local="130202028610000000" remote="130202028680000000" Dst="2" />
+<file name="_addproduct9116.php" server="198.101.163.120//var/www/" local="130202270696145857" remote="130202272370000000" Dst="2" />
 </dwsync>

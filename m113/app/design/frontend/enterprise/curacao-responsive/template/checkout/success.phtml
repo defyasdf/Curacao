@@ -51,12 +51,8 @@
     $orderObj = Mage::getModel('sales/order')->loadByIncrementId($this->getOrderId());
    // get all the items included on the order. 
 	 $custId = $orderObj->getCouponCode();
-     /*$coupon = Mage::getModel('salesrule/coupon');	
-	 $coupon->load($custId, 'code');
-	 $couponObj = Mage::getModel('salesrule/rule')->load($coupon->getRuleId());
-	 $coupan =  $couponObj->getName();	
-	 $cName = explode('-',$coupan);
-	 $cna = explode(' ',trim($cName[1]));*/
+    
+	
 	 $Data = Mage::getSingleton('core/session')->getCuracacaodp();
 	 $track = Mage::getSingleton('core/session')->getTrackingId();	
 	 $grandTotal = $orderObj->getGrandTotal();
@@ -91,9 +87,17 @@
 	}
 	
 	if($hid){
+		
+		$_storeId = Mage::app()->getStore()->getId();
+		$sid = '5851';
+		
+		if(Mage::getSingleton('core/session')->getSid()){
+			$sid = Mage::getSingleton('core/session')->getSid();
+		}
 		?>
 		<!--<iframe width='1' height='1' frameborder='0' src='http://affiliate.gwmtracker.com/rd/ipx.php?hid=<?php //echo $hid?>&sid=5135&transid=<?php //echo $this->getOrderId();?>&ate=<?php //echo $revshare?>'></iframe>-->
-        <iframe width='1' height='1' frameborder='0' src='http://affiliate.gwmtracker.com/rd/ipx.php?hid=<?php echo $hid?>&sid=5717&transid=<?php echo $this->getOrderId();?>&ate=<?php echo $revshare;?>'></iframe>
+        
+        <iframe width='1' height='1' frameborder='0' src='https://affiliate.gwmtracker.com/rd/ipx.php?hid=<?php echo $hid?>&sid=<?php echo $sid;?>&transid=<?php echo $this->getOrderId();?>&ate=<?php echo $revshare;?>'></iframe>
        <?php
 	  $orderObj->setRevshareamt($revshare);
 	  $orderObj->setHid($hid); 
@@ -183,7 +187,16 @@
 	
 	$orderObj->save();
 	
-	
+	if(Mage::getSingleton('core/session')->getAuthrecord()){
+		if(Mage::getSingleton('core/session')->getAuthrecord() == 'Not_Active'){
+			$orderObj->addStatusToHistory('acountnotactive', "Please review the order for the account number".$cc_num, false);
+		}elseif(Mage::getSingleton('core/session')->getAuthrecord() == 'On_Hold'){
+			$orderObj->addStatusToHistory('acconhold', "Please review the order for the account number".$cc_num, false);
+		}elseif(Mage::getSingleton('core/session')->getAuthrecord() == 'Downpayment'){
+			$orderObj->addStatusToHistory('downpaymentrequired', "Please review the order for the account number".$cc_num." For downpayment requirement $".$Data, false);
+		}
+		$orderObj->save();
+	}
 	
 	//echo $shipping_address_data['base_tax_amount'];
 	/*
@@ -334,10 +347,12 @@ echo '</pre>';*/
 		$orderObj->setEstimatenumber($final[1]);
 
 		if($Data != ''){
-			$creditDP = $proxy->WebDownPayment(array('CustID'=>$cust_id,"Amount"=>$Data,"InvNo"=>$final[1],"ReferID"=>$this->getOrderId()));
-			$crdp = $creditDP->WebDownPaymentResult;
-			$orderObj->addStatusToHistory($orderObj->getStatus(), 'Posted $'.$Data.' '.$crdp->ErrorInfo, false);
-			$orderObj->save();
+			if(!Mage::getSingleton('core/session')->getAuthrecord()){
+				$creditDP = $proxy->WebDownPayment(array('CustID'=>$cust_id,"Amount"=>$Data,"InvNo"=>$final[1],"ReferID"=>$this->getOrderId()));
+				$crdp = $creditDP->WebDownPaymentResult;
+				$orderObj->addStatusToHistory($orderObj->getStatus(), 'Posted $'.$Data.' '.$crdp->ErrorInfo, false);
+				$orderObj->save();
+			}
 		}
 		
 	}else{
@@ -350,6 +365,18 @@ echo '</pre>';*/
 	$orderObj->addStatusToHistory($orderObj->getStatus(), $est, false);
 	$orderObj->save();	
 	
+	// Get Coupon Code
+	 $coupon = Mage::getModel('salesrule/coupon');	
+	 $coupon->load($custId, 'code');
+	 $couponObj = Mage::getModel('salesrule/rule')->load($coupon->getRuleId());
+	 $coupan =  $couponObj->getName();	
+	 /*$cName = explode('-',$coupan);
+	 $cna = explode(' ',trim($cName[1]));*/
+	if($coupan == 'Sign up and get $100 off'){
+		$orderObj->addStatusToHistory('gwmpromo', "Please Review order for the fraud", false);
+		$orderObj->save();
+	}
+	// End Coupon code
 	
 	//}else{
 		//echo 'No Need to Create an estimate';
@@ -369,6 +396,37 @@ echo '</pre>';*/
     <p><?php echo $this->__('Your order # is: %s.', $this->escapeHtml($this->getOrderId())) ?></p>
 <?php endif;?>
     <p><?php echo $this->__('You will receive an order confirmation email with details of your order and a link to track its progress.') ?></p>
+    
+   <?php
+	if(Mage::getSingleton('core/session')->getAuthrecord()){
+		echo '<p>&nbsp;</p>';
+	$_storeId = Mage::app()->getStore()->getId();
+	if($_storeId == 1){
+		$notactive = '<p><strong>NOTE : </strong>Your order has been received however your account is inactive.  We usually can resolve this matter automatically however we may need to reach out to you for verification purposes. </p><p>We may contact you shortly or to expedite your order, you may contact our customer service team at <strong>1(866) 410-1611</strong>.</p>';
+		$onhold = '<p><strong>NOTE : </strong>Your order has been received however your account is on hold.  We usually can resolve this matter automatically however we may need to reach out to you for verification purposes. </p><p>We may contact you shortly or to expedite your order, you may contact our customer service team at <strong>1(866) 410-1611</strong>.</p>';
+		$dprequired = '<p><strong>NOTE : </strong>Your order has been received and an initial payment may be required of up to $'.$Data.'. </p><p>We may contact you shortly or to expedite your order, you may contact our customer service team at <strong>1(866) 410-1611</strong>.</p>';
+	}else{
+		$notactive = '<p><strong>NOTA : </strong>Su orden ha sido recibida sin embargo, su cuenta se encuentra Inactiva. Por lo general se puede resolver este problema de forma automática pero es posible que necesitemos contactarle por motivos de verificación.</p><p>Para acelerar el proceso de su pedido, por favor comuníquese con nuestro departamento de servicio al cliente al <strong>1(866) 410-1611</strong> lo más pronto posible.</p>';
+		$onhold = '<p><strong>NOTA : </strong>Su orden ha sido recibida sin embargo, su cuenta muestra alguna información pendiente. Por lo general se puede resolver este problema de forma automática pero es posible que necesitemos contactarle por motivos de verificación.</p><p>Para acelerar el proceso de su pedido, por favor comuníquese con nuestro departamento de servicio al cliente al <strong>1(866) 410-1611</strong> lo más pronto posible.</p>';
+		$dprequired = '<p><strong>NOTA : </strong>Su orden ha sido recibida sin embargo un pago inicial de hasta $'.$Data.' podría ser requerido para poder procesar su orden</p><p>Para acelerar el proceso de su pedido, por favor comuníquese con nuestro departamento de servicio al cliente al <strong>1(866) 410-1611</strong> lo más pronto posible y así poder ayudarle con el pago inicial requerido.</p>';
+	
+	}
+		
+		
+		if(Mage::getSingleton('core/session')->getAuthrecord() == 'Not_Active'){
+			echo $notactive;
+		}elseif(Mage::getSingleton('core/session')->getAuthrecord() == 'On_Hold'){
+			echo $onhold;
+		}elseif(Mage::getSingleton('core/session')->getAuthrecord() == 'Downpayment'){
+			echo $dprequired;
+		}
+		
+		echo '<p>&nbsp;</p>';
+	}
+?>
+ 
+    
+    
 <?php if ($this->getCanViewOrder() && $this->getCanPrintOrder()) :?>
     <p>
         <?php echo $this->__('Click <a href="%s" onclick="this.target=\'_blank\'">here to print</a> a copy of your order confirmation.', $this->getPrintUrl()) ?>
@@ -416,6 +474,10 @@ echo '</pre>';*/
 	  Mage::getSingleton('core/session')->unsSubid();	
 	  Mage::getSingleton('core/session')->unsAffid();	
 	  Mage::getSingleton('core/session')->unsGwmid();	
+	  Mage::getSingleton('core/session')->unsAuthrecord();
+	  if(Mage::getSingleton('core/session')->getCouponjoin100()){
+	  	Mage::getSingleton('core/session')->unsCouponjoin100();	
+	  }
 ?>
 <?php 
 	// Google Track
