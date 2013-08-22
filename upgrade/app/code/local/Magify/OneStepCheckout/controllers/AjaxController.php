@@ -959,7 +959,7 @@ class Magify_OneStepCheckout_AjaxController extends Mage_Core_Controller_Front_A
 						  ->setType('salesrule/rule_condition_address')
 						  ->setAttribute('base_subtotal')
 						  ->setOperator('>=')
-						  ->setValue('399');
+						  ->setValue('499');
 			$model->getConditions()->addCondition($conditions);			  
 			$model->save();
 		}

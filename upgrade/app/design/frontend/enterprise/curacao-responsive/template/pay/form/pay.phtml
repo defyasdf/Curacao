@@ -1,0 +1,394 @@
+<?php $_code=$this->getMethodCode() ?>
+
+<?php 
+$_storeId = Mage::app()->getStore()->getId();
+if($_storeId == 1 || $_storeId == 4){
+	$month = 'Month';
+	$year = 'Year';
+	$day = 'DD';
+	
+}else{
+	$month = 'Mes';
+	$year = 'Año';
+	$day = 'Día';
+}
+?>
+ <?php 
+	 if ($this->helper('customer')->isLoggedIn() ) {
+ 
+		 $session = Mage::getSingleton('customer/session', array('name'=>'frontend')); 
+		 $customer_data = Mage::getModel('customer/customer')->load($session->id);
+
+		 if($customer_data->isauthenticate){
+	?>
+<ul class="form-list" id="payment_form_<?php echo $_code ?>" style="display:none;">
+	<li>
+		<div id="curacao_pay_line">
+			<div id="curacao_pay_number">
+				<ul>
+                    <li>
+						<label for="<?php echo $_code ?>_check_no" class="required"><?php echo $this->__('Curacao Credit Card Number') ?><em>*</em></label>
+                        <span class="input-box">   
+							<input type="hidden" value="<?php echo $customer_data->curacaocustid?>" name="payment[check_no]" />
+	                         <strong>  XXXX<?php echo substr($customer_data->curacaocustid,4)?></strong>                            
+                        </span>
+                    </li>
+	            </ul>
+            </div>
+            <div id="curacao_pay_ccv">
+            	<ul>
+                    <li>
+						<label for="ccv" class="required"><?php echo $this->__('CCV') ?><em>*</em></label>
+                        <div class="input-box">
+                            <div class="v-fix" id="curacao_ccv_number">
+                            <?php if(Mage::getSingleton('core/session')->getCcv()){
+								?>
+								<input type="password" maxlength="4" title="<?php echo $this->__('CCV') ?>" class="input-text required-entry input-text validate-digits validate-length maximum-length-4" id="<?php echo $_code ?>_cc_cid" name="payment[ccv]" value="<?php echo Mage::getSingleton('core/session')->getCcv()?>" />
+								<?php
+								}?>
+                                <input type="password" maxlength="4" title="<?php echo $this->__('CCV') ?>" class="input-text required-entry input-text validate-digits validate-length maximum-length-4" id="<?php echo $_code ?>_cc_cid" name="payment[ccv]" value="" />
+                            </div>
+                            <a href="#" class="cvv-what-is-this-curacao"><?php echo $this->__('What is this?') ?></a>
+                        </div>
+                    </li>
+	            </ul>
+            </div>
+		</div>
+    </li>
+</ul>
+    	
+<?php 
+		} else {
+?>
+<ul class="form-list" id="payment_form_<?php echo $_code ?>" style="display:none;">
+    <li>
+         <div id="curacao_pay_line">
+            <div id="curacao_pay_number">
+                <ul>
+                    <li>
+                        <label for="<?php echo $_code ?>_check_no" class="required"><?php echo $this->__('Curacao Credit Card Number') ?><em>*</em></label>
+                        <span class="input-box">
+                        <?php 
+							if(Mage::getSingleton('core/session')->getCuracacaonum()){
+								$ccnum = Mage::getSingleton('core/session')->getCuracacaonum();
+								?>
+								<input type="text" title="<?php echo $this->__('Curacao Credit Card Number') ?>" class="input-text required-entry input-text validate-digits validate-length maximum-length-8" id="curacao_cust_num" onchange="return checkssn()" name="payment[check_no]" value="<?php echo $ccnum; ?>" maxlength="8" />
+								<?php
+							}elseif(trim($customer_data->curacaocustid) != ''){
+							
+							?>
+							<input type="text" title="<?php echo $this->__('Curacao Credit Card Number') ?>" class="input-text required-entry input-text validate-digits validate-length maximum-length-8" id="curacao_cust_num" onchange="return checkssn()" name="payment[check_no]" value="<?php echo $customer_data->curacaocustid ?>" maxlength="8" />
+							<?php
+							}else{?>
+                            <input type="text" title="<?php echo $this->__('Curacao Credit Card Number') ?>" class="input-text required-entry input-text validate-digits validate-length maximum-length-8" id="curacao_cust_num" onchange="return checkssn()" name="payment[check_no]" value="<?php echo $this->htmlEscape($this->getInfoData('check_no')) ?>" maxlength="8" />
+                            <?php }?>
+                        </span>
+                    </li>
+	            </ul>
+            </div>
+            <div id="curacao_pay_ccv">
+            	<ul>
+                    <li>
+						<label for="ccv" class="required"><?php echo $this->__('CCV') ?><em>*</em></label>
+                        <div class="input-box">
+                            <div class="v-fix" id="curacao_ccv_number">
+                                <input type="password" maxlength="4" title="<?php echo $this->__('CCV') ?>" class="input-text input-text required-entry validate-number validate-length maximum-length-4" id="<?php echo $_code ?>_cc_cid" name="payment[ccv]" value="" onfocus="return checkssn()" />
+                            </div>
+                            <a href="#" class="cvv-what-is-this-curacao"><?php echo $this->__('What is this?') ?></a>
+                        </div>
+                    </li>
+	            </ul>
+            </div>
+         </div>
+         <div id="curacao_pay_line" class="curacao_pay_loading"  style="display:none;"></div>
+         
+         <div id="curacao_pay_line" class="curacao_pay_with_maiden"  style="display:none;">   
+         	<div id="curacao_dob_month">
+            	<label for="<?php echo $_code ?>_dob" class="required"><?php echo $this->__('Date Of Birth') ?><em>*</em></label>
+				<select class="required-entry" name="payment[cc_dob_month]" id="dobM">
+                <?php if(Mage::getSingleton('core/session')->getDobm()){
+										$dobm = Mage::getSingleton('core/session')->getDobm();
+									}else{
+										$dobm = 0;
+									}
+									
+									?>
+					<option selected="selected" value=""><?php echo $month?></option>
+					<option value="01" <?php if($dobm == '01'){?> selected="selected"<?php }?>>01 - January</option>
+					<option value="02" <?php if($dobm == '02'){?> selected="selected"<?php }?>>02 - February</option>
+					<option value="03" <?php if($dobm == '03'){?> selected="selected"<?php }?>>03 - March</option>
+					<option value="04" <?php if($dobm == '04'){?> selected="selected"<?php }?>>04 - April</option>
+					<option value="05" <?php if($dobm == '05'){?> selected="selected"<?php }?>>05 - May</option>
+					<option value="06" <?php if($dobm == '06'){?> selected="selected"<?php }?>>06 - June</option>
+					<option value="07" <?php if($dobm == '07'){?> selected="selected"<?php }?>>07 - July</option>
+					<option value="08" <?php if($dobm == '08'){?> selected="selected"<?php }?>>08 - August</option>
+					<option value="09" <?php if($dobm == '09'){?> selected="selected"<?php }?>>09 - September</option>
+					<option value="10" <?php if($dobm == '10'){?> selected="selected"<?php }?>>10 - October</option>
+					<option value="11" <?php if($dobm == '11'){?> selected="selected"<?php }?>>11 - November</option>
+					<option value="12" <?php if($dobm == '12'){?> selected="selected"<?php }?>>12 - December</option>
+				</select>
+            </div>
+			<div id="curacao_dob_day">
+	            <label for="<?php echo $_code ?>_dob" class="required">&nbsp;</label>
+            	 <select class="required-entry" name="payment[cc_dob_day]" id="dobD">
+                 				<?php if(Mage::getSingleton('core/session')->getDobd()){
+										$dobd = Mage::getSingleton('core/session')->getDobd();
+									}else{
+										$dobd = 0;
+									}
+									
+									?>
+                                <option value=""><?php echo $day?></option>
+                                <?php for($i=1;$i<32;$i++){ ?>
+                                <?php if($i<10){?>
+                                <option value="<?php echo '0'.$i?>" <?php if($i==$dobd){?> selected="selected"<?php }?>><?php echo '0'.$i?></option>
+                                <?php }else{?>
+                                <option value="<?php echo $i?>"  <?php if($i==$dobd){?> selected="selected"<?php }?>><?php echo $i?></option>
+                                <?php }} ?>
+				</select>
+	        </div>
+			<div id="curacao_dob_year">
+	            <label for="<?php echo $_code ?>_dob" class="required">&nbsp;</label>
+            	 <select class="year required-entry" name="payment[cc_dob_year]" id="dobY">
+                                    <option selected="selected" value=""><?php echo $year?></option>
+                                    <?php if(Mage::getSingleton('core/session')->getDoby()){
+										$doby = Mage::getSingleton('core/session')->getDoby();
+									}else{
+										$doby = 0;
+									}
+									
+									?>
+                                   <?php for($i=(date("Y")-18);$i>1900;$i--){ ?>
+                                    <option value="<?php echo $i?>" <?php if($i==$doby){?> selected="selected"<?php }?>><?php echo $i?></option>
+                                    <?php } ?>
+                </select>
+            </div>
+			<div id="curacao_pay_ssn_maiden">
+            	<ul>
+                	<li>
+                        <label for="<?php echo $_code ?>_check_date" class="required"><?php echo $this->__('Mother&acute;s Maiden Name') ?><em>*</em></label>
+                        <span class="input-box">
+                        <?php
+							if(Mage::getSingleton('core/session')->getMaiden()){
+							?>
+							<input type="text" title="<?php echo $this->__('Check Date:') ?>" class="input-text required-entry" id="<?php echo $_code ?>_check_date" name="payment[maiden]" value="<?php echo Mage::getSingleton('core/session')->getMaiden() ?>" />
+							<?php
+							}else{ 
+						?>
+                            <input type="text" title="<?php echo $this->__('Check Date:') ?>" class="input-text required-entry" id="<?php echo $_code ?>_check_date" name="payment[maiden]" value="<?php echo $this->htmlEscape($this->getInfoData('maiden')) ?>" />
+                            <?php }?>
+                        </span>
+                    </li>
+                </ul>
+            </div>
+         </div>	
+         
+         <div id="curacao_pay_line" class="curacao_pay_with_ssn" style="display:none;">
+         	<div id="curacao_dob_month">
+            	<label for="<?php echo $_code ?>_dob" class="required"><?php echo $this->__('Date Of Birth') ?><em>*</em></label>
+				<select class="required-entry" name="payment[cc_dob_month]" id="dobM">
+					<?php if(Mage::getSingleton('core/session')->getDobm()){
+										$dobm = Mage::getSingleton('core/session')->getDobm();
+									}else{
+										$dobm = 0;
+									}
+									
+									?>
+					<option selected="selected" value=""><?php echo $month?></option>
+					<option value="01" <?php if($dobm == '01'){?> selected="selected"<?php }?>>01 - January</option>
+					<option value="02" <?php if($dobm == '02'){?> selected="selected"<?php }?>>02 - February</option>
+					<option value="03" <?php if($dobm == '03'){?> selected="selected"<?php }?>>03 - March</option>
+					<option value="04" <?php if($dobm == '04'){?> selected="selected"<?php }?>>04 - April</option>
+					<option value="05" <?php if($dobm == '05'){?> selected="selected"<?php }?>>05 - May</option>
+					<option value="06" <?php if($dobm == '06'){?> selected="selected"<?php }?>>06 - June</option>
+					<option value="07" <?php if($dobm == '07'){?> selected="selected"<?php }?>>07 - July</option>
+					<option value="08" <?php if($dobm == '08'){?> selected="selected"<?php }?>>08 - August</option>
+					<option value="09" <?php if($dobm == '09'){?> selected="selected"<?php }?>>09 - September</option>
+					<option value="10" <?php if($dobm == '10'){?> selected="selected"<?php }?>>10 - October</option>
+					<option value="11" <?php if($dobm == '11'){?> selected="selected"<?php }?>>11 - November</option>
+					<option value="12" <?php if($dobm == '12'){?> selected="selected"<?php }?>>12 - December</option>
+				</select>
+				</select>
+            </div>
+			<div id="curacao_dob_day">
+	            <label for="<?php echo $_code ?>_dob" class="required">&nbsp;</label>
+            	<select class="required-entry" name="payment[cc_dob_day]" id="dobD">
+                                <?php if(Mage::getSingleton('core/session')->getDobd()){
+										$dobd = Mage::getSingleton('core/session')->getDobd();
+									}else{
+										$dobd = 0;
+									}
+									
+									?>
+                                <option value=""><?php echo $day?></option>
+                                <?php for($i=1;$i<32;$i++){ ?>
+                                <?php if($i<10){?>
+                                <option value="<?php echo '0'.$i?>" <?php if($i==$dobd){?> selected="selected"<?php }?>><?php echo '0'.$i?></option>
+                                <?php }else{?>
+                                <option value="<?php echo $i?>"  <?php if($i==$dobd){?> selected="selected"<?php }?>><?php echo $i?></option>
+                                <?php }} ?>
+				</select>
+	        </div>
+			<div id="curacao_dob_year">
+	            <label for="<?php echo $_code ?>_dob" class="required">&nbsp;</label>
+            	 <select class="year required-entry" name="payment[cc_dob_year]" id="dobY">
+                                    <option selected="selected" value=""><?php echo $year?></option>
+                                    <?php if(Mage::getSingleton('core/session')->getDoby()){
+										$doby = Mage::getSingleton('core/session')->getDoby();
+									}else{
+										$doby = 0;
+									}
+									
+									?>
+                                   <?php for($i=(date("Y")-18);$i>1900;$i--){ ?>
+                                    <option value="<?php echo $i?>" <?php if($i==$doby){?> selected="selected"<?php }?>><?php echo $i?></option>
+                                    <?php } ?>
+				</select>
+            </div>
+			<div id="curacao_pay_ssn_maiden">
+            	<ul>
+                	<li>
+                        <label for="<?php echo $_code ?>_check_date" class="required"><?php echo $this->__('Last 4 Digit of SSN') ?><em>*</em></label>
+                        <span class="input-box">
+                        <?php if(Mage::getSingleton('core/session')->getSsn()){?>
+                        <input type="password" maxlength="4" title="<?php echo $this->__('SSN:') ?>" class="input-text required-entry validate-digits validate-length maximum-length-4" id="<?php echo $_code ?>_check_date" name="payment[ssn]" value="<?php echo Mage::getSingleton('core/session')->getSsn()?>" />
+                        <?php }else{?>
+                            <input type="password" maxlength="4" title="<?php echo $this->__('SSN:') ?>" class="input-text required-entry validate-digits validate-length maximum-length-4" id="<?php echo $_code ?>_check_date" name="payment[ssn]" value="" />
+                            <?php }?>
+                        </span>
+                    </li>
+                </ul>
+            </div>
+         </div>	
+     </li>
+</ul> 
+
+<?php 	}
+?>
+<div><?php echo $this->getMethod()->getConfigData('message');?></div>
+<?php }else{?>
+	Please  <a href="#TB_inline?height=380&width=881&inlineId=login_content" class="thickbox" title="Billing Address">login/register</a> to use Curacao Credit
+    <style>#req_field{ display:none; } </style>
+<?php }?>
+
+
+<!--Login Popup-->
+<div class="account-login" id="login_content" style="display:none">
+	<div class="onestepcheckout-error" id="snponestepcheckout-login-error" style="display:none;"></div>
+    <div class="eight columns alpha col-1 new-users">
+        <div class="content">
+            <ul class="form-list">
+            	<li>
+					<h2 class="legend">New Customers</h2>
+					<p>By creating an account with our store, you will be able to move through the checkout process faster, store multiple shipping addresses, view and track your orders in your account and more.</p>
+					<div id="buttons">
+						<button type="button" title="Create an Account" class="button" onclick="window.location='/customer/account/create/';"><span><span>Create an Account</span></span></button>
+					</div>
+            	</li>
+            </ul>
+        </div>
+    </div>
+    <div class="eight columns omega col-2 registered-users" id="login-container">
+        <div class="content" id="login-content">
+            <ul class="form-list">
+            	<li>
+					<h2 class="legend">Registered Customers</h2>
+					<p>If you have an account with us, log in using your email address.</p>
+            	</li>
+                <li>
+                    <label for="email" class="required">Email Address<em>*</em></label>
+                    <div class="input-box">
+                        <?php
+                        //print_r($_COOKIE);
+                        if(isset($_COOKIE['EmailCustomer'])){?>
+                            <input name="login[username]" value="<?php echo $_COOKIE['EmailCustomer'];?>" id="useremail" class="input-text required-entry validate-email" title="Email Address" type="text">
+                        <?php }else{?>
+                            <input name="login[username]" value="" id="useremail" class="input-text required-entry validate-email" title="Email Address" type="text">
+                        <?php } ?>
+                    </div>
+                </li>
+                <li>
+                    <label for="pass" class="required">Password<em>*</em></label>
+                    <div class="input-box">
+                        <input name="login[password]" class="input-text required-entry validate-password" id="userpass" title="Password" type="password">
+                    </div>
+                </li>
+                <li id="remember-me-box" class="control">
+					<div class="input-box">
+						<input name="persistent_remember_me" class="checkbox checkbox-label" id="remember_meZwnY9znjWf" checked="checked" title="Remember Me" type="checkbox">
+					</div>
+					<label for="remember_meZwnY9znjWf" class="checkbox-label">Remember Me</label>
+					<!-- <a class="link-tip" href="#" class="remember">What's this?</a> -->
+				</li>
+				<li>
+                    <p class="clear"></p>
+					<p class="form-required"><em>*</em> Required Fields</p>
+					<a href="/customer/account/forgotpassword/" class="f-left">Forgot Your Password?</a>
+					<button type="submit" class="button" title="Login" name="send" id="send2" onclick="return create_login()"><span><span>Login</span></span></button>
+					<div id="login-loading" style="display:none"><img src="/images/gray_fade_small.gif"></div>
+				</li>
+            </ul>
+        </div>
+    </div>      
+</div>
+<!--end Login Pop up-->
+<script type="text/javascript">
+	function checkssn(){
+	
+		var cid = jQuery("#curacao_cust_num").val();
+		
+		if(jQuery.isNumeric(cid)){	
+			jQuery(".curacao_pay_loading").html('<div class="loading-ajax">&nbsp;</div>');	
+			jQuery(".curacao_pay_loading").show('slow');
+	
+			jQuery(".curacao_pay_with_maiden").hide('slow');
+			jQuery(".curacao_pay_with_ssn").hide('slow');
+	
+			jQuery.get('/custom/checkssn.php?custid='+cid, function(data) {
+	
+				jQuery(".curacao_pay_loading").html('&nbsp;');
+					
+				jQuery(".curacao_pay_loading").hide('slow');
+				
+				if(data=='1'){
+					jQuery(".curacao_pay_with_maiden").hide('slow');
+					jQuery(".curacao_pay_with_ssn").show('slow');
+				}else{
+					jQuery(".curacao_pay_with_ssn").hide('slow');
+					jQuery(".curacao_pay_with_maiden").show('slow');
+				}
+				//alert('Load was performed.');
+			});		
+		}
+		
+		return false;	
+	}
+	
+	function create_login(){
+		jQuery("#send2").hide('slow');
+		jQuery("#login-loading").show('slow');
+		var login_url = '/onestepcheckout/ajax/login/'
+		//alert("I am Clicking login");
+        jQuery.cookie('EmailCustomer', jQuery("#useremail_link").val(), { expires: 30, path: '/' });
+		jQuery.ajax({ 
+				type: 'post',
+				data: {'onestepcheckout_username':jQuery("#useremail").val(),'onestepcheckout_password':jQuery("#userpass").val()},
+				url:  login_url,                    
+				success: function(data) {
+				 
+				   var result = jQuery.parseJSON(data); 
+					if(result.success) {
+						window.location = '/onestepcheckout/';
+					} else {
+						//alert(result.error);
+						jQuery("#snponestepcheckout-login-error").html(result.error);
+						jQuery("#snponestepcheckout-login-error").show('slow')
+						jQuery("#send2").show('slow');
+						jQuery("#login-loading").hide('slow');
+					}
+				}.bind(this)
+	     });
+		
+		return false;
+	}
+</script>
