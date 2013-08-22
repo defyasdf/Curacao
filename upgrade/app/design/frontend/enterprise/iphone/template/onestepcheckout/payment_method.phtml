@@ -138,8 +138,9 @@ $_storeId = Mage::app()->getStore()->getId();
                 </div>
                 
                 <div style="clear:both"></div>
-                
+            	<?php //echo $this->getChildHtml('payment.method.'.$_code);?>    
             </dt>
+            
             <?php if($html = $this->getChildHtml('payment.method.'.$_code)): ?>
             <dd id="container_payment_method_<?php echo $_code; ?>" class="payment-method" style="display:none">
                 <?php echo $html; ?>
