@@ -1,0 +1,410 @@
+<?php $_helper = $this->helper('catalog/output'); ?>
+<?php $_product = $this->getProduct(); ?>
+
+<?php	
+	$_storeId = Mage::app()->getStore()->getId();
+	if($_storeId == 1){
+		$ship = 'Shipping';
+		$online = 'Online Only';
+		$instock = 'This item is in stock';
+		$outstock = 'This item is out of stock';
+		$freeshipping = 'Free Shipping';
+		$shippinginfo = 'Usually ships within 24 hours. Estimated delivery within 3-5 business days.';
+		$shipmsg = 'Local Delivery is available in the following areas only from $99.99 to $139.99 - California: Los Angeles County, San Bernardino County, Orange County. Arizona: Phoenix, Tucson.';
+	} else {
+		$ship = 'env&iacute;o';
+		$online = 'Solo en línea';
+		$instock = 'Este artículo esta disponible';
+		$outstock = 'Este artículo no esta disponible';
+		$freeshipping = 'Envío Gratis';
+		$shippinginfo = 'Regularmente se envía en un tiempo estimado de 24 horas. La entrega estimada es alrededor de 3-5 días hábiles.';
+		$shipmsg = 'Entrega local est&aacute; disponible en las siguientes &aacute;reas s&oacute;lo de $99.99 a $139.99 – California: Los Angeles County, San Bernardino County, Orange County. Arizona: Phoenix, Tucson.';
+	}
+?>	
+<?php		
+	//------------------------------------------------------------------------------------------------
+	// the product	
+	//------------------------------------------------------------------------------------------------
+?>
+<div id="main-detail-container" class="container">
+	<div class="twenty columns alpha omega">
+		<script type="text/javascript">
+		    var optionsPrice = new Product.OptionsPrice(<?php echo $this->getJsonConfig() ?>);
+		</script>
+		<div id="messages_product_view"><?php echo $this->getMessagesBlock()->getGroupedHtml() ?></div>
+		<!-- Hidden form part-->
+		<form action="<?php echo $this->getSubmitUrl($_product) ?>" method="post" id="product_addtocart_form"<?php if($_product->getOptions()): ?> enctype="multipart/form-data"<?php endif; ?>>
+			<div class="no-display">
+				<input type="hidden" name="product" value="<?php echo $_product->getId() ?>" />
+				<input type="hidden" name="related_product" id="related-products-field" value="" />
+		    </div>
+		
+		
+			<!--left part-->
+			<div class="ten columns leftpart alpha">
+		    <?php 
+				
+				$start_ts = strtotime($_product->getSpecialFromDate());
+				
+				$end_ts = strtotime($_product->getSpecialToDate());
+				$user_ts = strtotime(date('Y-m-d'));
+						
+				if((($user_ts >= $start_ts) && ($user_ts <= $end_ts))){		
+					$diff = $_product->getPrice()- $_product->getSpecialPrice();
+					$pd = $diff/$_product->getPrice();
+						
+					if($_product->getSpecialPrice()!= ''){
+						if(($pd*100)>=5){
+						?>
+				<div id="saleoverlay">
+					<img src="/images/sale_sticker.png" />
+				</div>
+                <?php 
+						}
+					}
+				}
+?>
+            	<?php echo $this->getChildHtml('media') ?>
+			</div>
+			<!--left part-->
+		
+			<!--right part-->
+			<div class="columns rightpart ten pr-de product-detail">
+			
+				<!-- Product Title -->
+				<h1 class="product-name"><?php echo $_helper->productAttribute($_product, $_product->getName(), 'name') ?></h1>
+				<div class="rating">
+			        <?php echo $this->getReviewsSummaryHtml($_product, false, true)?>  
+				</div>
+		        <div id="viewsaperator">|</div>
+		        <div id="wishlist">
+				<?php if( $this->helper('wishlist')->isAllow() || $_compareUrl=$this->helper('catalog/product_compare')->getAddUrl($_product)): ?><?php echo $this->getChildHtml('addto') ?><?php endif; ?>	
+		        </div>
+				<div class="clear"></div>
+		        
+		         <!--<h4 class="product-sku">SKU: <?php //echo($_product->getSku()) ?></h4> -->
+		        <h4 class="product-sku">Model: <?php 
+					if($_product->getVendorid()!= '2139'){
+						echo($_product->getSku());
+					}else{
+						$sku = explode('-',$_product->getSku());
+						echo $sku[2];
+					} 
+				?>
+		        </h4>
+				
+		        <div class="clear"></div>
+		
+				<!-- Add to cart & Compare & Wishlist & Email -->			    
+			    <?php if (!$this->hasOptions()):?>
+					<?php if( $_product->getAttributeSetId() != '10'):?>
+			    
+		        <div class="add-to-box clearfix">
+					<div class="pricecontainer"><span class="price-label">Price:</span> <?php echo $this->getChildHtml('product_type_data')?></div>
+					<div class="clear"></div>
+		               		
+					<?php 
+						$shipfrom = strtotime($_product->getnews_from_date());
+						$shipto = strtotime($_product->getnews_to_date());
+						$user_ts = strtotime(date('Y-m-d'));
+		
+						if((($user_ts >= $shipfrom) && ($user_ts <= $shipto))){ ?>
+					<div id="customwidgetimg"><img src="/images/icn_check.png" /></div>
+					<div id="customwidget"> <?php echo $freeshipping?></div>
+		<?php			}
+		
+						if($_product->getonlineonly()){ ?>
+					<div id="customwidgetimg"><img src="/images/icn_check.png" /></div>
+					<div id="customwidget"> <?php echo $online?></div>			
+		<?php			} ?>                
+		         
+			            <?php //if($_product->isSaleable()): ?>
+			            <?php echo $this->getChildHtml('addtocart') ?>
+						<?php if($_product->isSaleable()): ?>		
+	                <div id="instock"><?php echo $instock;?></div>
+		            <!--Sold Out Block-->                
+						<?php else:?>
+	            	<div id="instock"><?php echo $outstock?></div>
+					 	<?php endif; ?>
+				 	<div class="clear"></div>
+					<div id="detail_shipping">
+						<?php echo $shippinginfo;?>
+					</div>                
+		        </div>
+		        <?php echo $this->getChildHtml('extra_buttons') ?>
+
+				<?php if($_product->getShprate()){?>
+					<?php if($_product->getShprate()=='Domestic'){?>
+		        <div  id="shipping_div">
+		        	<span class="shipping_heading"><?php echo $ship;?>:</span>
+		        	<span class="shipmsg"><?php echo $shipmsg;?></span>
+		        </div>
+		            <?php }elseif($_product->getShprate()=='0'){?>
+		        <div  id="shipping_div"><span class="shipping_heading"><?php echo $ship;?>:</span> <span class="shipmsg">Free Shipping</span></div>
+		    		<?php }?>
+				<div class="clear"></div>
+					<?php } else {?>
+		 	   <div  id="shipping_div"><span class="shipping_heading"><?php echo $ship;?>:</span> <span class="shipmsg">Free Shipping</span></div>
+		 	   <div class="clear"></div>
+					<?php } ?>
+				<?php else: ?>
+		        <div class="add-to-box clearfix">
+		            <div class="pricecontainer">
+						<span class="price-label">Price:</span>From<br/> <?php echo $this->getChildHtml('product_type_data')?>
+						<div class="clearfix">Call 1-800-784-5103 to Book today.</div>
+		            </div>
+					<div class="clearfix">One of our agents is waiting for your phone call with the best or today’s travel deals.</div>
+		        </div>
+		        <?php endif; ?>
+		    <?php else:?>
+				<div class="clear"></div>
+				<div class="pricecontainer"><span class="price-label">Price:</span> <?php echo $this->getChildHtml('product_type_data')?></div>
+				<div class="clear"></div>
+						<?php 
+							$shipfrom = strtotime($_product->getnews_from_date());
+							$shipto = strtotime($_product->getnews_to_date());
+							$user_ts = strtotime(date('Y-m-d'));
+							if((($user_ts >= $shipfrom) && ($user_ts <= $shipto))){		
+								?>
+				<div id="customwidgetimg"><img src="/images/icn_check.png" /></div>
+				<div id="customwidget"> <?php echo $freeshipping?></div>			
+							<?php
+							}
+							
+							if($_product->getonlineonly()){
+								?>
+				<div id="customwidgetimg"><img src="/images/icn_check.png" /></div>
+				<div id="customwidget"> <?php echo $online?></div>			
+							<?php
+							}
+						?>			                
+			<?php endif; ?>
+			    <!-- End add to cart-->
+		       
+			    
+		        <div class="clearer"></div>
+		        <?php if ($_product->isSaleable() && $this->hasOptions() && $this->getChildChildHtml('container2') ):?>
+		            <div class="options-container-big">
+		                <?php echo $this->getChildChildHtml('container2', '', true, true) ?>
+		            </div>
+		        <?php endif;?>
+		
+		        <?php echo $this->getChildHtml('extrahint') ?>	
+		        <?php echo $this->getChildHtml('other');?>
+		
+		        <?php if ($_product->isSaleable() && $this->hasOptions()):?>
+		            <style type="text/css">
+		            	.product-options-bottom .wishlist{display:none;}
+		            </style>
+					<?php echo $this->getChildChildHtml('container1', '', true, true) ?>
+					<div class="clear"></div>
+					<div id="detail_shipping"><?php echo $shippinginfo?></div>  
+		        <?php endif;?>
+			</div><!--right part-->
+		</form>
+		
+		<?php if( count($_product->getRelatedProductIds()) > 1): ?>
+		<div class="related-products twenty columns alpha omega">
+			<?php echo $this->getChildHtml('relatedProducts') ?>
+		</div>
+		<?php endif; ?>
+
+		<div class="sixteen columns alpha omega">
+        	<ul class="tab-nav">
+				<?php $i=0; ?>
+				<?php if( count($_product->getDescription()) > 0): ?>
+        		<li <?php if($i==0) echo('class="active"') ?>><h4 class="tab-title"><?php echo $this->__('Description');?></h4></li>
+				<?php  $i++; endif; ?>
+				<?php if( count($_product->getProductvideo()) > 0 ): ?>
+				<li <?php if($i==0) echo('class="active"')?>><h4 class="tab-title"><?php echo $this->__('Video')?></h4></li>
+				<?php $i++; endif;  ?>
+				<li <?php if($i==0) echo('class="active"')?>><h4 class="tab-title"><?php echo $this->__('Reviews')?></h4></li>
+			</ul>
+			<ul class="tab-content">
+    <?php $i = 0; ?>
+	<?php if( count($_product->getDescription()) > 0): ?>
+        		<li class="tab active">
+        		<?php if($_storeId == 1){ ?>
+					<script>var wcCpi = "<?php echo $_product->getId();?>";</script>
+					<script src="http://content.webcollage.net/icuracao/smart-button"></script>
+	                <span id="wc-power-page"><?php echo( (($_product->getDescription() ) )) ?>
+                    	<?php if( count($_product->getSpec001()) > 0 ): ?>
+                            <p style="margin-bottom:0;">&nbsp;</p>
+                            <dt><label class="required"><span id="warrenty_title"><?php echo $this->__('Specification')?>:</span></label></dt>
+                            <?php echo(($_product->getSpec001())) ?>
+                            <?php  endif;  ?> 
+                    </span>
+				<?php }else{ ?>
+			   		<?php echo( (($_product->getDescription() ) )) ?>
+			   		<?php if( count($_product->getSpec001()) > 0 ): ?>
+			   		<p style="margin-bottom:0;">&nbsp;</p>
+			   		<dt><label class="required"><span id="warrenty_title"><?php echo $this->__('Specification')?>:</span></label></dt>
+			   		<?php echo(($_product->getSpec001())) ?>
+			   		<?php  endif;  ?> 
+                <?php }?>
+				</li>
+				<?php $i++; endif; ?>
+				<?php if( count($_product->getProductvideo()) > 0 ): ?>
+                <li class="tab specs"><?php echo $_product->getProductvideo()?></li>
+				<?php $i++; endif;  ?>
+				<li class="tab <?php if($i==0) echo('active') ?>"><?php echo $this->getReviewsSummaryHtml($_product, false, true)?></li>
+			</ul>
+		</div>
+		<div class="right four columns omega view-right-column">	
+		  <?php echo $this->getChildHtml('upsell_products') ?>
+		</div>
+	</div>
+</div>
+<div class="clear"></div>
+<!-- Extra information part -->
+<div class="sixteen columns alpha omega reviews">
+	<?php echo $this->getChildHtml('product_additional_data') ?>
+</div>
+<div class="clear"></div>
+<script type="text/javascript">
+//<![CDATA[
+    jQuery('.tab-nav li').each(function(i,z){
+    	jQuery(z).click(function(){
+    		jQuery('.tab-content li.tab.active').removeClass('active');
+    		var my_tab = jQuery('.tab-content li.tab:eq('+i+')').addClass('active');
+    		jQuery('.tab-nav li.active').removeClass('active');
+    		jQuery(this).addClass('active');
+    	});
+    });
+    
+    jQuery('.tab.specs table').css({'width':'auto'});
+    
+//]]>
+</script>	
+
+<!--======== Scripts ==========-->
+<script type="text/javascript">
+//<![CDATA[
+    var productAddToCartForm = new VarienForm('product_addtocart_form');
+    productAddToCartForm.submit = function(button, url) {
+        if (this.validator.validate()) {
+            var form = this.form;
+            var oldUrl = form.action;
+
+            if (url) {
+               form.action = url;
+            }
+            var e = null;
+            try {
+                this.form.submit();
+            } catch (e) {
+            }
+            this.form.action = oldUrl;
+            if (e) {
+                throw e;
+            }
+
+            if (button && button != 'undefined') {
+                button.disabled = true;
+            }
+        }
+    }.bind(productAddToCartForm);
+
+    productAddToCartForm.submitLight = function(button, url){
+        if(this.validator) {
+            var nv = Validation.methods;
+            delete Validation.methods['required-entry'];
+            delete Validation.methods['validate-one-required'];
+            delete Validation.methods['validate-one-required-by-name'];
+            // Remove custom datetime validators
+            for (var methodName in Validation.methods) {
+                if (methodName.match(/^validate-datetime-.*/i)) {
+                    delete Validation.methods[methodName];
+                }
+            }
+
+            if (this.validator.validate()) {
+                if (url) {
+                    this.form.action = url;
+                }
+                this.form.submit();
+            }
+            Object.extend(Validation.methods, nv);
+        }
+    }.bind(productAddToCartForm);
+//]]>
+</script>
+
+<?php if( isset($_GET['hid']) && isset($_GET['sub_id']) &&  isset($_GET['aff_id']) ):?>
+	<script type="text/javascript">
+		function delloffer(){
+			
+			var valid = new Validation('delloffer', {onSubmit:false});
+				valid.reset();
+			var result = valid.validate();
+				if(result){
+					var em = jQuery("#dellofferemail").val();
+					jQuery("#delloffer").html('<img src="http://m113.icuracao.com/images/gray_fade_small.gif">');
+					var login_url = '/custom/adddelloffer.php'
+					jQuery.ajax({ 
+							type: 'post',
+							data: {'email':em,'hid':'<?php if(isset($_GET['hid'])): echo $_GET['hid']; endif; ?>','sid':'<?php if(isset($_GET['sub_id'])): echo $_GET['sub_id']; endif;?>','affid':'<?php if( isset($_GET['aff_id'])): echo $_GET['aff_id']; endif;?>'},
+				//			data: {'email':em,'hid':'1234','sid':'45689','affid':'amdsid'},
+							url:  login_url,                    
+							success: function(data) {
+							 if(data==2){
+									alert("Email already exist");
+							   }else{ 
+								  jQuery("#lighboxsignupform").hide('slow');
+								  jQuery("#lighboxsignupthanks").show('slow');
+							   }
+		
+							}.bind(this)
+					 });
+				
+				}
+				return false;
+			
+		}
+		
+		function countinueShop(){
+			 tb_remove();
+		}
+	</script>
+<?php endif; ?>
+<?php
+	if(isset($_GET['hid'])){
+		if(!$_COOKIE["delloffer"]){	
+            if($_product->getId() == '7704'){
+        ?>
+				<script type="text/javascript">
+                    jQuery(document).ready(function() {
+                        var url = "/lighbox_html/delloffer.html?width=620&height=405";
+                        tb_show("Sign Up and Get $100 Off", url);
+                        jQuery("#TB_overlay").unbind("click",tb_remove);    
+                    });
+                </script>
+<?php 		}
+			$expire=time()+60*60*24*30;
+			setcookie("delloffer", "delloffer", $expire);
+		}
+	}
+?>
+
+<?php
+	if(isset($_GET['hid'])){
+		 if($_product->getId() == '7704'){
+			if(Mage::getSingleton('core/session')->getGwmid()){
+				$server = '192.168.100.121';
+				$user = 'curacaodata';
+				$pass = 'curacaodata';
+				$db = 'icuracaoproduct';
+				
+				
+				$link = mysql_connect($server,$user,$pass);
+				
+				mysql_select_db($db,$link);
+				
+				$gwm = 'update gwmtracking set landingpage = "DELL_PROMO" where gwmId = '.Mage::getSingleton('core/session')->getGwmid();
+				mysql_query($gwm);
+				
+				mysql_close($link);
+			}
+		 }
+	}
+?>

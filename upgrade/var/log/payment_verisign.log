@@ -1,0 +1,965 @@
+2013-08-13T04:24:31+00:00 DEBUG (7): Array
+(
+    [request] => Array
+        (
+            [user] => ****
+            [vendor] => lacecom
+            [partner] => VeriSign
+            [pwd] => ****
+            [verbosity] => MEDIUM
+            [tender] => C
+            [request_id] => f446d363662e091ec6a203257562ef29
+            [amt] => 2064.73
+            [acct] => ****
+            [expdate] => ****
+            [cvv2] => ****
+            [currency] => USD
+            [custref] => 100003598
+            [comment1] => 100003598
+            [firstname] => lori 
+            [lastname] => wynn
+            [street] => 2069 slauson ave.
+            [city] => Los Angeles
+            [state] => CA
+            [zip] => 90047
+            [country] => US
+            [email] => dionfranco.33@gmail.com
+            [shiptofirstname] => dionicio
+            [shiptolastname] => franco
+            [shiptostreet] => 2537 strathmore ave.
+            [shiptocity] => rosemead
+            [shiptostate] => CA
+            [shiptozip] => 91770
+            [shiptocountry] => US
+            [trxtype] => A
+        )
+
+    [result] => Array
+        (
+            [result] => 1
+            [respmsg] => User authentication failed
+            [request_id] => f446d363662e091ec6a203257562ef29
+            [result_code] => 1
+        )
+
+    [__pid] => 32569
+)
+
+2013-08-13T16:48:14+00:00 DEBUG (7): Array
+(
+    [request] => Array
+        (
+            [user] => ****
+            [vendor] => lacecom
+            [partner] => VeriSign
+            [pwd] => ****
+            [verbosity] => MEDIUM
+            [tender] => C
+            [request_id] => 237f19da018698cefad7e597626ebdf9
+            [amt] => 627.98
+            [acct] => ****
+            [expdate] => ****
+            [cvv2] => ****
+            [currency] => USD
+            [custref] => 100003605
+            [comment1] => 100003605
+            [firstname] => dsads
+            [lastname] => adasds
+            [street] => 3123 dsadasdsadas
+            [city] => dasdas
+            [state] => FL
+            [zip] => 32323
+            [country] => US
+            [email] => shit100@yahoo.com
+            [shiptofirstname] => dsads
+            [shiptolastname] => adasds
+            [shiptostreet] => 3123 dsadasdsadas
+            [shiptocity] => dasdas
+            [shiptostate] => FL
+            [shiptozip] => 32323
+            [shiptocountry] => US
+            [trxtype] => A
+        )
+
+    [result] => Array
+        (
+            [result] => 1
+            [respmsg] => User authentication failed
+            [request_id] => 237f19da018698cefad7e597626ebdf9
+            [result_code] => 1
+        )
+
+    [__pid] => 2515
+)
+
+2013-08-13T21:26:50+00:00 DEBUG (7): Array
+(
+    [request] => Array
+        (
+            [user] => ****
+            [vendor] => lacecom
+            [partner] => VeriSign
+            [pwd] => ****
+            [verbosity] => MEDIUM
+            [tender] => C
+            [request_id] => 6df8ffa471e9f20f1be4ab020be1ea75
+            [amt] => 442.79
+            [acct] => ****
+            [expdate] => ****
+            [cvv2] => ****
+            [currency] => USD
+            [custref] => 100003609
+            [comment1] => 100003609
+            [firstname] => Juan
+            [lastname] => zamora
+            [street] => 12661 morningside ave apt 6
+            [city] => garden grove
+            [state] => CA
+            [zip] => 92843
+            [country] => US
+            [email] => 
+            [shiptofirstname] => geni
+            [shiptolastname] => dzul
+            [shiptostreet] => 321 e orangewood ave apt a15
+            [shiptocity] => anaheim
+            [shiptostate] => CA
+            [shiptozip] => 92802
+            [shiptocountry] => US
+            [trxtype] => A
+        )
+
+    [result] => Array
+        (
+            [result] => 1
+            [respmsg] => User authentication failed
+            [request_id] => 6df8ffa471e9f20f1be4ab020be1ea75
+            [result_code] => 1
+        )
+
+    [__pid] => 4305
+)
+
+2013-08-13T21:35:21+00:00 DEBUG (7): Array
+(
+    [request] => Array
+        (
+            [user] => ****
+            [vendor] => lacecom
+            [partner] => VeriSign
+            [pwd] => ****
+            [verbosity] => MEDIUM
+            [tender] => C
+            [request_id] => 7343e216a8655e235b9592c72ca3d6a8
+            [amt] => 190
+            [acct] => ****
+            [expdate] => ****
+            [cvv2] => ****
+            [currency] => USD
+            [custref] => 100003609
+            [comment1] => 100003609
+            [firstname] => Juan
+            [lastname] => Zamora
+            [street] => 12661 morningside ave apt 6
+            [city] => garden grove
+            [state] => CA
+            [zip] => 92843
+            [country] => US
+            [email] => zamora.metrop@gmail.com
+            [shiptofirstname] => Juan
+            [shiptolastname] => Zamora
+            [shiptostreet] => 321 e orangewood ave apt a15
+            [shiptocity] => anaheim
+            [shiptostate] => CA
+            [shiptozip] => 92802
+            [shiptocountry] => US
+            [trxtype] => A
+        )
+
+    [result] => Array
+        (
+            [result] => 1
+            [respmsg] => User authentication failed
+            [request_id] => 7343e216a8655e235b9592c72ca3d6a8
+            [result_code] => 1
+        )
+
+    [__pid] => 4384
+)
+
+2013-08-13T23:32:39+00:00 DEBUG (7): Array
+(
+    [request] => Array
+        (
+            [user] => ****
+            [vendor] => lacecom
+            [partner] => VeriSign
+            [pwd] => ****
+            [verbosity] => MEDIUM
+            [tender] => C
+            [request_id] => 384a80235a44adbfe8fabe13de15fe34
+            [amt] => 25.98
+            [acct] => ****
+            [expdate] => ****
+            [cvv2] => ****
+            [currency] => USD
+            [custref] => 100003611
+            [comment1] => 100003611
+            [firstname] => Jennifer
+            [lastname] => Wall
+            [street] => 500 Wentworth Dr.
+            [city] => Richardson
+            [state] => TX
+            [zip] => 75081
+            [country] => US
+            [email] => jenmoeh@yahoo.com
+            [shiptofirstname] => Jennifer
+            [shiptolastname] => Wall
+            [shiptostreet] => 500 Wentworth Dr.
+            [shiptocity] => Richardson
+            [shiptostate] => TX
+            [shiptozip] => 75081
+            [shiptocountry] => US
+            [trxtype] => A
+        )
+
+    [result] => Array
+        (
+            [result] => 1
+            [respmsg] => User authentication failed
+            [request_id] => 384a80235a44adbfe8fabe13de15fe34
+            [result_code] => 1
+        )
+
+    [__pid] => 16775
+)
+
+2013-08-13T23:33:35+00:00 DEBUG (7): Array
+(
+    [request] => Array
+        (
+            [user] => ****
+            [vendor] => lacecom
+            [partner] => VeriSign
+            [pwd] => ****
+            [verbosity] => MEDIUM
+            [tender] => C
+            [request_id] => 5fef0f14cd21bd19cd39483244e1190c
+            [amt] => 25.98
+            [acct] => ****
+            [expdate] => ****
+            [cvv2] => ****
+            [currency] => USD
+            [custref] => 100003611
+            [comment1] => 100003611
+            [firstname] => Jennifer
+            [lastname] => Wall
+            [street] => 500 Wentworth Dr
+            [city] => Richardson
+            [state] => TX
+            [zip] => 75081
+            [country] => US
+            [email] => jenmoeh@yahoo.com
+            [shiptofirstname] => Jennifer
+            [shiptolastname] => Wall
+            [shiptostreet] => 500 Wentworth Dr
+            [shiptocity] => Richardson
+            [shiptostate] => TX
+            [shiptozip] => 75081
+            [shiptocountry] => US
+            [trxtype] => A
+        )
+
+    [result] => Array
+        (
+            [result] => 1
+            [respmsg] => User authentication failed
+            [request_id] => 5fef0f14cd21bd19cd39483244e1190c
+            [result_code] => 1
+        )
+
+    [__pid] => 15821
+)
+
+2013-08-13T23:37:05+00:00 DEBUG (7): Array
+(
+    [request] => Array
+        (
+            [user] => ****
+            [vendor] => lacecom
+            [partner] => VeriSign
+            [pwd] => ****
+            [verbosity] => MEDIUM
+            [tender] => C
+            [request_id] => 7da5cc6cd9aa583ee845d482855cd9a6
+            [amt] => 25.98
+            [acct] => ****
+            [expdate] => ****
+            [cvv2] => ****
+            [currency] => USD
+            [custref] => 100003612
+            [comment1] => 100003612
+            [firstname] => Gary
+            [lastname] => Wall
+            [street] => 500 Wentworth Dr
+            [city] => Richardsone
+            [state] => TX
+            [zip] => 75081
+            [country] => US
+            [email] => gary.wall@att.net
+            [shiptofirstname] => Gary
+            [shiptolastname] => Wall
+            [shiptostreet] => 500 Wentworth Dr
+            [shiptocity] => Richardsone
+            [shiptostate] => TX
+            [shiptozip] => 75081
+            [shiptocountry] => US
+            [trxtype] => A
+        )
+
+    [result] => Array
+        (
+            [result] => 1
+            [respmsg] => User authentication failed
+            [request_id] => 7da5cc6cd9aa583ee845d482855cd9a6
+            [result_code] => 1
+        )
+
+    [__pid] => 17339
+)
+
+2013-08-13T23:55:50+00:00 DEBUG (7): Array
+(
+    [request] => Array
+        (
+            [user] => ****
+            [vendor] => lacecom
+            [partner] => VeriSign
+            [pwd] => ****
+            [verbosity] => MEDIUM
+            [tender] => C
+            [request_id] => 3a7f5158ad882457be228f88865b2189
+            [amt] => 25.98
+            [acct] => ****
+            [expdate] => ****
+            [cvv2] => ****
+            [currency] => USD
+            [custref] => 100003613
+            [comment1] => 100003613
+            [firstname] => Gary
+            [lastname] => Wall
+            [street] => 500 Wentworth Dr
+            [city] => Richardson 
+            [state] => TX
+            [zip] => 75081
+            [country] => US
+            [email] => gary.wall@att.net
+            [shiptofirstname] => Gary
+            [shiptolastname] => Wall
+            [shiptostreet] => 500 Wentworth Dr
+            [shiptocity] => Richardson 
+            [shiptostate] => TX
+            [shiptozip] => 75081
+            [shiptocountry] => US
+            [trxtype] => A
+        )
+
+    [result] => Array
+        (
+            [result] => 1
+            [respmsg] => User authentication failed
+            [request_id] => 3a7f5158ad882457be228f88865b2189
+            [result_code] => 1
+        )
+
+    [__pid] => 18509
+)
+
+2013-08-14T00:04:34+00:00 DEBUG (7): Array
+(
+    [request] => Array
+        (
+            [user] => ****
+            [vendor] => lacecom
+            [partner] => VeriSign
+            [pwd] => ****
+            [verbosity] => MEDIUM
+            [tender] => C
+            [request_id] => d6aa29e3ada3d00005990e69d5a036f6
+            [amt] => 25.98
+            [acct] => ****
+            [expdate] => ****
+            [cvv2] => ****
+            [currency] => USD
+            [custref] => 100003613
+            [comment1] => 100003613
+            [firstname] => Gary
+            [lastname] => Wall
+            [street] => 500 Wentworth Dr
+            [city] => Richardson 
+            [state] => TX
+            [zip] => 75081
+            [country] => US
+            [email] => gary.wall@att.net
+            [shiptofirstname] => Gary
+            [shiptolastname] => Wall
+            [shiptostreet] => 500 Wentworth Dr
+            [shiptocity] => Richardson 
+            [shiptostate] => TX
+            [shiptozip] => 75081
+            [shiptocountry] => US
+            [trxtype] => A
+        )
+
+    [result] => Array
+        (
+            [result] => 1
+            [respmsg] => User authentication failed
+            [request_id] => d6aa29e3ada3d00005990e69d5a036f6
+            [result_code] => 1
+        )
+
+    [__pid] => 20302
+)
+
+2013-08-14T00:14:58+00:00 DEBUG (7): Array
+(
+    [request] => Array
+        (
+            [user] => ****
+            [vendor] => lacecom
+            [partner] => VeriSign
+            [pwd] => ****
+            [verbosity] => MEDIUM
+            [tender] => C
+            [request_id] => 294e6a59b97879cfe59bc908ff905263
+            [amt] => 179
+            [acct] => ****
+            [expdate] => ****
+            [cvv2] => ****
+            [currency] => USD
+            [custref] => 100003609
+            [comment1] => 100003609
+            [firstname] => Juan
+            [lastname] => Zamora
+            [street] => 12661 Morningside Ave Apt 6
+            [city] => garden grove
+            [state] => CA
+            [zip] => 92843
+            [country] => US
+            [email] => zamora.metrop@gmail.com
+            [shiptofirstname] => Geni
+            [shiptolastname] => Dzul
+            [shiptostreet] => 321 e orangewood ave apt a15
+            [shiptocity] => anaheim
+            [shiptostate] => CA
+            [shiptozip] => 92802
+            [shiptocountry] => US
+            [trxtype] => A
+        )
+
+    [result] => Array
+        (
+            [result] => 1
+            [respmsg] => User authentication failed
+            [request_id] => 294e6a59b97879cfe59bc908ff905263
+            [result_code] => 1
+        )
+
+    [__pid] => 20302
+)
+
+2013-08-14T00:17:35+00:00 DEBUG (7): Array
+(
+    [request] => Array
+        (
+            [user] => ****
+            [vendor] => lacecom
+            [partner] => VeriSign
+            [pwd] => ****
+            [verbosity] => MEDIUM
+            [tender] => C
+            [request_id] => b1aba8661b7cb5e3b363d64bb00a70c2
+            [amt] => 25.98
+            [acct] => ****
+            [expdate] => ****
+            [cvv2] => ****
+            [currency] => USD
+            [custref] => 100003613
+            [comment1] => 100003613
+            [firstname] => Gary
+            [lastname] => Wall
+            [street] => 500 Wentworth Dr
+            [city] => Richardson 
+            [state] => TX
+            [zip] => 75081
+            [country] => US
+            [email] => gary.wall@att.net
+            [shiptofirstname] => Gary
+            [shiptolastname] => Wall
+            [shiptostreet] => 500 Wentworth Dr
+            [shiptocity] => Richardson 
+            [shiptostate] => TX
+            [shiptozip] => 75081
+            [shiptocountry] => US
+            [trxtype] => A
+        )
+
+    [result] => Array
+        (
+            [result] => 1
+            [respmsg] => User authentication failed
+            [request_id] => b1aba8661b7cb5e3b363d64bb00a70c2
+            [result_code] => 1
+        )
+
+    [__pid] => 21629
+)
+
+2013-08-14T00:22:03+00:00 DEBUG (7): Array
+(
+    [request] => Array
+        (
+            [user] => ****
+            [vendor] => lacecom
+            [partner] => VeriSign
+            [pwd] => ****
+            [verbosity] => MEDIUM
+            [tender] => C
+            [request_id] => 4e7140e8372d4a43d64bcf5bc8afcf96
+            [amt] => 25.98
+            [acct] => ****
+            [expdate] => ****
+            [cvv2] => ****
+            [currency] => USD
+            [custref] => 100003613
+            [comment1] => 100003613
+            [firstname] => gary
+            [lastname] => wall
+            [street] => 972 308 6547
+            [city] => Richardson
+            [state] => TX
+            [zip] => 75081
+            [country] => US
+            [email] => gary.wall@att.net
+            [shiptofirstname] => gary
+            [shiptolastname] => wall
+            [shiptostreet] => 972 308 6547
+            [shiptocity] => Richardson
+            [shiptostate] => TX
+            [shiptozip] => 75081
+            [shiptocountry] => US
+            [trxtype] => A
+        )
+
+    [result] => Array
+        (
+            [result] => 1
+            [respmsg] => User authentication failed
+            [request_id] => 4e7140e8372d4a43d64bcf5bc8afcf96
+            [result_code] => 1
+        )
+
+    [__pid] => 21676
+)
+
+2013-08-14T01:35:54+00:00 DEBUG (7): Array
+(
+    [request] => Array
+        (
+            [user] => ****
+            [vendor] => lacecom
+            [partner] => VeriSign
+            [pwd] => ****
+            [verbosity] => MEDIUM
+            [tender] => C
+            [request_id] => 61a0125f3043592b90894d54c79a2195
+            [amt] => 209.18
+            [acct] => ****
+            [expdate] => ****
+            [cvv2] => ****
+            [currency] => USD
+            [custref] => 100003615
+            [comment1] => 100003615
+            [firstname] => GUILLERMO 
+            [lastname] =>  RODRIGUEZ
+            [street] => 6127 1/2 VINEVALE AVE
+            [city] => 	MAYWOOD
+            [state] => CA
+            [zip] => 90270
+            [country] => US
+            [email] => blancamero1@gmail.com
+            [shiptofirstname] => GUILLERMO 
+            [shiptolastname] =>  RODRIGUEZ
+            [shiptostreet] => 14027 ROCKWAY DR
+            [shiptocity] => BALDWIN PARK
+            [shiptostate] => CA
+            [shiptozip] => 91706
+            [shiptocountry] => US
+            [trxtype] => A
+        )
+
+    [result] => Array
+        (
+            [result] => 1
+            [respmsg] => User authentication failed
+            [request_id] => 61a0125f3043592b90894d54c79a2195
+            [result_code] => 1
+        )
+
+    [__pid] => 31783
+)
+
+2013-08-14T05:43:53+00:00 DEBUG (7): Array
+(
+    [request] => Array
+        (
+            [user] => ****
+            [vendor] => lacecom
+            [partner] => VeriSign
+            [pwd] => ****
+            [verbosity] => MEDIUM
+            [tender] => C
+            [request_id] => 05e08fde5bfbdaec698b0e5fd2d391f6
+            [amt] => 25.98
+            [acct] => ****
+            [expdate] => ****
+            [cvv2] => ****
+            [currency] => USD
+            [custref] => 100003622
+            [comment1] => 100003622
+            [firstname] => Gary
+            [lastname] => Wall
+            [street] => 500 Wentworth Dr.
+            [city] => Richardson
+            [state] => TX
+            [zip] => 75081
+            [country] => US
+            [email] => gary.wall@att.net
+            [shiptofirstname] => Gary
+            [shiptolastname] => Wall
+            [shiptostreet] => 500 Wentworth Dr.
+            [shiptocity] => Richardson
+            [shiptostate] => TX
+            [shiptozip] => 75081
+            [shiptocountry] => US
+            [trxtype] => A
+        )
+
+    [result] => Array
+        (
+            [result] => 1
+            [respmsg] => User authentication failed
+            [request_id] => 05e08fde5bfbdaec698b0e5fd2d391f6
+            [result_code] => 1
+        )
+
+    [__pid] => 29635
+)
+
+2013-08-14T05:44:50+00:00 DEBUG (7): Array
+(
+    [request] => Array
+        (
+            [user] => ****
+            [vendor] => lacecom
+            [partner] => VeriSign
+            [pwd] => ****
+            [verbosity] => MEDIUM
+            [tender] => C
+            [request_id] => d0da3e50b05dfbc4aefc82d8a7305a37
+            [amt] => 25.98
+            [acct] => ****
+            [expdate] => ****
+            [cvv2] => ****
+            [currency] => USD
+            [custref] => 100003622
+            [comment1] => 100003622
+            [firstname] => Gary
+            [lastname] => Wall
+            [street] => 500 Wentworth Dr
+            [city] => Richardson
+            [state] => TX
+            [zip] => 75081
+            [country] => US
+            [email] => gary.wall@att.net
+            [shiptofirstname] => Gary
+            [shiptolastname] => Wall
+            [shiptostreet] => 500 Wentworth Dr
+            [shiptocity] => Richardson
+            [shiptostate] => TX
+            [shiptozip] => 75081
+            [shiptocountry] => US
+            [trxtype] => A
+        )
+
+    [result] => Array
+        (
+            [result] => 1
+            [respmsg] => User authentication failed
+            [request_id] => d0da3e50b05dfbc4aefc82d8a7305a37
+            [result_code] => 1
+        )
+
+    [__pid] => 30327
+)
+
+2013-08-14T16:36:39+00:00 DEBUG (7): Array
+(
+    [request] => Array
+        (
+            [user] => ****
+            [vendor] => lacecom
+            [partner] => VeriSign
+            [pwd] => ****
+            [verbosity] => MEDIUM
+            [tender] => C
+            [request_id] => 1c6a0393980da96d48145eee6a5207bf
+            [trxtype] => D
+            [origid] => VQEE9C849DD1
+        )
+
+    [result] => Array
+        (
+            [result] => 1
+            [respmsg] => User authentication failed
+            [request_id] => 1c6a0393980da96d48145eee6a5207bf
+            [result_code] => 1
+        )
+
+    [__pid] => 15637
+)
+
+2013-08-14T16:37:01+00:00 DEBUG (7): Array
+(
+    [request] => Array
+        (
+            [user] => ****
+            [vendor] => lacecom
+            [partner] => VeriSign
+            [pwd] => ****
+            [verbosity] => MEDIUM
+            [tender] => C
+            [request_id] => ae6954cc38382f2117d7d6cd55f56f6d
+            [trxtype] => D
+            [origid] => VQEE9C849DD1
+        )
+
+    [result] => Array
+        (
+            [result] => 1
+            [respmsg] => User authentication failed
+            [request_id] => ae6954cc38382f2117d7d6cd55f56f6d
+            [result_code] => 1
+        )
+
+    [__pid] => 15899
+)
+
+2013-08-14T16:37:31+00:00 DEBUG (7): Array
+(
+    [request] => Array
+        (
+            [user] => ****
+            [vendor] => lacecom
+            [partner] => VeriSign
+            [pwd] => ****
+            [verbosity] => MEDIUM
+            [tender] => C
+            [request_id] => 1c72ffdb2d8d7cef748e595e945dd9da
+            [trxtype] => D
+            [origid] => VQEE9C849DD1
+        )
+
+    [result] => Array
+        (
+            [result] => 1
+            [respmsg] => User authentication failed
+            [request_id] => 1c72ffdb2d8d7cef748e595e945dd9da
+            [result_code] => 1
+        )
+
+    [__pid] => 14549
+)
+
+2013-08-14T16:48:49+00:00 DEBUG (7): Array
+(
+    [request] => Array
+        (
+            [user] => ****
+            [vendor] => lacecom
+            [partner] => VeriSign
+            [pwd] => ****
+            [verbosity] => MEDIUM
+            [tender] => C
+            [request_id] => 7e899cf9d3c905934c197fab76beba80
+            [trxtype] => D
+            [origid] => VPEE9C0AC464
+        )
+
+    [result] => Array
+        (
+            [result] => 1
+            [respmsg] => User authentication failed
+            [request_id] => 7e899cf9d3c905934c197fab76beba80
+            [result_code] => 1
+        )
+
+    [__pid] => 16921
+)
+
+2013-08-14T16:49:23+00:00 DEBUG (7): Array
+(
+    [request] => Array
+        (
+            [user] => ****
+            [vendor] => lacecom
+            [partner] => VeriSign
+            [pwd] => ****
+            [verbosity] => MEDIUM
+            [tender] => C
+            [request_id] => 8aa67797ab46938415fb154ea56c764d
+            [trxtype] => D
+            [origid] => VPEE9C0AC464
+        )
+
+    [result] => Array
+        (
+            [result] => 1
+            [respmsg] => User authentication failed
+            [request_id] => 8aa67797ab46938415fb154ea56c764d
+            [result_code] => 1
+        )
+
+    [__pid] => 16904
+)
+
+2013-08-14T17:01:48+00:00 DEBUG (7): Array
+(
+    [request] => Array
+        (
+            [user] => ****
+            [vendor] => lacecom
+            [partner] => VeriSign
+            [pwd] => ****
+            [verbosity] => MEDIUM
+            [tender] => C
+            [request_id] => 49d968a11539b8a2223fffb503d87ca6
+            [trxtype] => D
+            [origid] => VQEE9C849DD1
+        )
+
+    [result] => Array
+        (
+            [result] => 1
+            [respmsg] => User authentication failed
+            [request_id] => 49d968a11539b8a2223fffb503d87ca6
+            [result_code] => 1
+        )
+
+    [__pid] => 18567
+)
+
+2013-08-14T17:52:35+00:00 DEBUG (7): Array
+(
+    [request] => Array
+        (
+            [user] => ****
+            [vendor] => lacecom
+            [partner] => VeriSign
+            [pwd] => ****
+            [verbosity] => MEDIUM
+            [tender] => C
+            [request_id] => b9d409ee886eae5c3059d37a5f0bef16
+            [trxtype] => D
+            [origid] => VQEE9C849DD1
+        )
+
+    [result] => Array
+        (
+            [result] => 1
+            [respmsg] => User authentication failed
+            [request_id] => b9d409ee886eae5c3059d37a5f0bef16
+            [result_code] => 1
+        )
+
+    [__pid] => 23071
+)
+
+2013-08-14T17:53:53+00:00 DEBUG (7): Array
+(
+    [request] => Array
+        (
+            [user] => ****
+            [vendor] => lacecom
+            [partner] => VeriSign
+            [pwd] => ****
+            [verbosity] => MEDIUM
+            [tender] => C
+            [request_id] => b8436af9d28f72695468f03ee5bdbafc
+            [trxtype] => D
+            [origid] => VQEE9C849DD1
+        )
+
+    [result] => Array
+        (
+            [result] => 1
+            [respmsg] => User authentication failed
+            [request_id] => b8436af9d28f72695468f03ee5bdbafc
+            [result_code] => 1
+        )
+
+    [__pid] => 22987
+)
+
+2013-08-14T17:54:02+00:00 DEBUG (7): Array
+(
+    [request] => Array
+        (
+            [user] => ****
+            [vendor] => lacecom
+            [partner] => VeriSign
+            [pwd] => ****
+            [verbosity] => MEDIUM
+            [tender] => C
+            [request_id] => 86065b8b2bf038952a8eef67404ccf81
+            [trxtype] => D
+            [origid] => VQEE9C849DD1
+        )
+
+    [result] => Array
+        (
+            [result] => 1
+            [respmsg] => User authentication failed
+            [request_id] => 86065b8b2bf038952a8eef67404ccf81
+            [result_code] => 1
+        )
+
+    [__pid] => 23114
+)
+
+2013-08-14T17:55:39+00:00 DEBUG (7): Array
+(
+    [request] => Array
+        (
+            [user] => ****
+            [vendor] => lacecom
+            [partner] => VeriSign
+            [pwd] => ****
+            [verbosity] => MEDIUM
+            [tender] => C
+            [request_id] => de1cd604025ed7e4aeae8597062ecf25
+            [trxtype] => D
+            [origid] => VQEE9C849DD1
+        )
+
+    [result] => Array
+        (
+            [result] => 1
+            [respmsg] => User authentication failed
+            [request_id] => de1cd604025ed7e4aeae8597062ecf25
+            [result_code] => 1
+        )
+
+    [__pid] => 23114
+)
+

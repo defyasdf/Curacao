@@ -10,7 +10,7 @@
 	
 	mysql_select_db($db,$link);	
 	
-	$mageFilename = '/var/www/m113/app/Mage.php';
+	$mageFilename = '/var/www/upgrade/app/Mage.php';
 	
 	require_once $mageFilename;
 	Varien_Profiler::enable();
@@ -43,7 +43,7 @@
 	$collection = Mage::getModel('catalog/product')->getCollection()
 		->addAttributeToSelect('*') // select all attributes
 		->addAttributeToFilter('status', 1)
-		->addAttributeToFilter('tv_brand', array('in' => array(325,76,472,178,237,25,171,136,85,75,180,140,84,60,642,20,470,35,108,207,28,27,109,694,693,691,690,689,687,695,686,685,684,692)))
+		->addAttributeToFilter('tv_brand', array('in' => array(325,76,472,178,237,25,171,136,85,75,180,140,84,60,642,20,470,35,108,207,28,27,109,694,693,691,690,689,687,695,686,685,684,692,108,791,813)))
 		->setCurPage(4); // set the offset (useful for pagination)
 		
 		// we iterate through the list of products to get attribute values

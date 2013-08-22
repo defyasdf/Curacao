@@ -1,0 +1,126 @@
+<config>
+
+	<modules>
+		<Curacao_Credit>
+			<version>0.0.1</version>
+		</Curacao_Credit>
+	</modules>
+
+	<global>
+
+		<models>
+			<curacao_credit>
+				<class>Curacao_Credit_Model</class>
+			</curacao_credit>
+			
+			<checkout>
+				<rewrite>
+					<type_onepage>Curacao_Credit_Model_Type_Onepage</type_onepage>
+				</rewrite>
+			</checkout>   
+			
+			<curacaoadminthemecontroller>
+				<class>Curacao_Credit_Controller</class>
+			</curacaoadminthemecontroller>
+		</models>
+	    
+		<helpers>
+			<credit>
+				<class>Curacao_Credit_Helper</class>
+			</credit>
+		</helpers>
+	
+		<blocks>	
+			<checkout>
+				<rewrite>
+					<onepage>Curacao_Credit_Block_Onepage</onepage>
+				</rewrite>
+			</checkout>        
+		
+			<credit>
+				<class>Curacao_Credit_Block</class>
+			</credit>  
+			
+			<creditonepage>
+				<class>Curacao_Credit_Block_Onepage</class>
+			</creditonepage>
+		</blocks>
+	
+		<!--rewrite>
+			<curacao_credit_onepage>
+				<from><![CDATA[#^/checkout/onepage/#]]></from>
+				<to>/credit/onepage/</to>
+			</curacao_credit_onepage>
+		</rewrite-->
+		
+		<resources>
+			<credit_setup>
+				<setup>
+				   <module>Curacao_Credit</module>
+					<class>Mage_Catalog_Model_Resource_Eav_Mysql4_Setup</class>
+				</setup>
+				<connection>
+				   <use>core_setup</use>
+				</connection>
+			</credit_setup>
+		</resources>
+	
+		<events>
+			<checkout_type_onepage_save_order_after>
+			    <observers>
+			        <scic_sales_shipping_observer>
+			            <type>singleton</type>
+			            <class>Curacao_Credit_Model_Observer</class>
+			            <method>hookToOrderSaveEvent</method>
+			        </scic_sales_shipping_observer>
+			    </observers>
+			</checkout_type_onepage_save_order_after>
+		
+			<!-- START Adds the Admin theme switcher, enables to avoid modify admin themes -->
+			<adminhtml_controller_action_predispatch_start>
+				<observers>
+					<curacao_themeoverride_observer>
+						<type>singleton</type>
+						<!-- curacaoadminthemecontroller/observer  -->
+						<class>Curacao_Credit_Controller_Observer</class>
+						<method>overrideTheme</method>
+					</curacao_themeoverride_observer>
+				</observers>
+			</adminhtml_controller_action_predispatch_start> 
+			<!-- END Adds the Admin theme switcher, enables to avoid modify admin themes -->  
+		</events>
+		
+	</global>
+	
+	<admin>
+		<routers>
+			<adminhtml>
+				<args>
+					<modules>
+						<Curacao_Credit before="Mage_Adminhtml">Curacao_Credit</Curacao_Credit>
+					</modules>
+				</args>
+			</adminhtml>
+		</routers>
+	</admin>
+
+	<frontend>    
+		<routers>
+			<curacao_credit>
+			<use>standard</use>
+				<args>
+					<module>Curacao_Credit</module>
+					<frontName>credit</frontName>
+				</args>
+			</curacao_credit>
+		</routers>
+		<layout>
+			<updates>
+				<credit>
+					<file>credit.xml</file>
+				</credit>
+			</updates>
+		</layout>        
+	</frontend>
+	
+</config>

@@ -236,7 +236,7 @@
 		$_sub = $_totalData['subtotal']+ $_totalData['shipping_amount']+$_totalData['discount_amount'];
 		$_tax = $_totalData['base_tax_amount'];
 		$_shipping = $_totalData['shipping_amount'];
-		
+		$rebate = 0;
 		foreach($orderItems as $item)
 		{
 		  //you can either echo each sku of the order / you can use array variable to pass items skubs
@@ -273,7 +273,7 @@
 			$product = Mage::getModel('catalog/product');
 			$productId = $product->getIdBySku($item->getSku());
 			$product->load($productId);
-			
+			$rebate += ($product->getRebate()*(int)$item->getQtyOrdered());
 			if($product->getSet()=='1'){
 				$set = 'Y';
 			}else{
@@ -351,6 +351,7 @@ echo '</pre>';*/
 				$creditDP = $proxy->WebDownPayment(array('CustID'=>$cust_id,"Amount"=>$Data,"InvNo"=>$final[1],"ReferID"=>$this->getOrderId()));
 				$crdp = $creditDP->WebDownPaymentResult;
 				$orderObj->addStatusToHistory($orderObj->getStatus(), 'Posted $'.$Data.' '.$crdp->ErrorInfo, false);
+				
 				$orderObj->save();
 			}
 		}
@@ -363,6 +364,7 @@ echo '</pre>';*/
 	//End Creating Estimate
 
 	$orderObj->addStatusToHistory($orderObj->getStatus(), $est, false);
+	$orderObj->setRebate($rebate);
 	$orderObj->save();	
 	
 	// Get Coupon Code

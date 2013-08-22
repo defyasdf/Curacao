@@ -14,7 +14,7 @@
 	mysql_select_db($db,$link);	
 	//Magento Mage connection
 	
-	$mageFilename = '/var/www/m113/app/Mage.php';
+	$mageFilename = '/var/www/upgrade/app/Mage.php';
 	require_once $mageFilename;
 	Varien_Profiler::enable();
 	Mage::setIsDeveloperMode(true);
@@ -86,6 +86,7 @@
 			}else{
 				$product->setSpecialPrice('');
 			}
+			$product->setRebate($price_info[3]);
 			$product->setCost($price_info[6]);
 			$product->setMsrp($price_info[7]);
 			$product->setRecyclingprice($price_info[4]);

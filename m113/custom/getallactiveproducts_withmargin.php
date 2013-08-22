@@ -17,7 +17,7 @@
 	mysql_select_db('icuracaoproduct',$link1) or die("No DB");	
 
 
-	$mageFilename = '/var/www/m113/app/Mage.php';
+	$mageFilename = '/var/www/upgrade/app/Mage.php';
 	
 	require_once $mageFilename;
 	Varien_Profiler::enable();

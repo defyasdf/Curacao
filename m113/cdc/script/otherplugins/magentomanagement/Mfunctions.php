@@ -237,4 +237,77 @@ $myquery = mysql_query("select * from directmagentotable where product_category=
 return $myquery;
 }
 
+function get_qty_data()
+{
+$myquery = mysql_query("select * from directmagento_quantity");
+return $myquery;
+}
+
+function get_qty_data_real()
+{
+$myquery = mysql_query("select * from directmagento_inventory_real");
+return $myquery;
+}
+
+function getfilename($id)
+{
+$myquery = mysql_query("SELECT * FROM `files_foraddproduct` WHERE `id`=$id");
+return mysql_fetch_object($myquery);
+}
+
+function get_price_from_table($sku)
+{
+$myquery = mysql_query("SELECT * FROM `directmagentotable_jewellery` WHERE `product_sku`='$sku' LIMIT 1");
+return mysql_fetch_object($myquery);
+}
+
+function get_rosetta_data()
+{
+$myquery = mysql_query("select * from directmagento_rosetta");
+return $myquery;	
+}
+
+function get_price_data()
+{
+$myquery = mysql_query("select * from direct_price");
+return $myquery;
+}
+
+function get_jewellery_from_table()
+{
+$myquery = mysql_query("SELECT * FROM `directmagentotable_jewellery`");
+return $myquery;
+}
+
+function get_quantity($sku)
+{
+$myquery = mysql_query("SELECT * FROM `directmagento_quantity` WHERE `sku`='$sku'");
+if(mysql_num_rows($myquery) > 0)
+{
+$data = mysql_fetch_object($myquery);
+return $data->qty;
+}
+else
+return 0;
+}
+
+function get_jewellery_from_table_data()
+{
+$myquery = mysql_query("SELECT * FROM `directmagentotable_jewellery`");
+return $myquery;
+}
+
+function insert_data_status($sku,$status)
+{
+$myquery = mysql_query("SELECT * FROM `magentoproduct_status` where `sku`='$sku'");
+if(mysql_num_rows($myquery) > 0)
+{
+$updatedata = mysql_query("UPDATE `magentoproduct_status` SET `status`='$status' WHERE `sku`='$sku'");	
+}
+else
+{
+$insertdata = mysql_query("INSERT INTO `magentoproduct_status` (`sku`, `status`) VALUES ('$sku', '$status')");
+}
+}
+
 ?>

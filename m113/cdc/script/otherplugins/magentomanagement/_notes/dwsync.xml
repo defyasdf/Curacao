@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <dwsync>
 <file name="savedatatomagento.php" server="198.101.163.120//var/www/" local="130185836380000000" remote="130185836380000000" Dst="2" />
-<file name="Mfunctions.php" server="198.101.163.120//var/www/" local="130202112870000000" remote="130202112870000000" Dst="2" />
+<file name="Mfunctions.php" server="198.101.163.120//var/www/" local="130205472800000000" remote="130205472800000000" Dst="2" />
 <file name="checkskuputspace.php" server="198.101.163.120//var/www/" local="130202113080000000" remote="130202113080000000" Dst="2" />
+<file name="verifydata.php" server="198.101.163.120//var/www/" local="130203070240000000" remote="130203070240000000" Dst="2" />
+<file name="rosetta_savedatatomagento.php" server="198.101.163.120//var/www/" local="130203891850000000" remote="130203891850000000" Dst="2" />
+<file name="updateprice.php" server="198.101.163.120//var/www/" local="130203809530000000" remote="130203809530000000" Dst="2" />
+<file name="updateqty.php" server="198.101.163.120//var/www/" local="130204716890000000" remote="130204716890000000" Dst="2" />
+<file name="updatejewellerydata.php" server="198.101.163.120//var/www/" local="130204772260000000" remote="130204772260000000" Dst="2" />
 </dwsync>

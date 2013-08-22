@@ -27,7 +27,7 @@
 
 <?php
 /**
- * Template for displaying product price in different places (products grid, product view page etc)
+ * Template for displaying product price in different places (products grid, product view  page etc)
  *
  * @see Mage_Catalog_Block_Product_Abstract
  */
@@ -75,6 +75,7 @@
 	$interval = $datetime1->diff($datetime2);
 	echo $interval->format('%R%a days');
 	echo '<br>';*/
+	date_default_timezone_set('America/Los_Angeles');
 	$start_ts = strtotime($_product->getSpecialFromDate());
 	$_product->getSpecialToDate();
 	$end_ts = strtotime($_product->getSpecialToDate());

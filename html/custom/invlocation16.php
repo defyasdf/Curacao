@@ -11,7 +11,7 @@ $db = 'icuracaoproduct';
 $link = mysql_connect($server,$user,$pass);
 mysql_select_db($db,$link);	
 
-$mageFilename = '/var/www/m113/app/Mage.php';
+$mageFilename = '/var/www/upgrade/app/Mage.php';
 require_once $mageFilename;
 Varien_Profiler::enable();
 Mage::setIsDeveloperMode(true);

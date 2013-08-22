@@ -1,0 +1,248 @@
+2013-08-13T05:43:42+00:00 DEBUG (7): Array
+(
+    [url] => https://payflowpro.paypal.com/transaction
+    [SetExpressCheckout] => Array
+        (
+            [TENDER] => P
+            [AMT] => 159.97
+            [CURRENCY] => USD
+            [RETURNURL] => https://www.icuracao.com/paypaluk/express/return/
+            [CANCELURL] => https://www.icuracao.com/paypaluk/express/cancel/
+            [INVNUM] => 100003599
+            [LOCALECODE] => en_US
+            [TAXAMT] => 0.00
+            [FREIGHTAMT] => 0.00
+            [L_NAME0] => Sofa Bed Leather Pu Espresso
+            [L_QTY0] => 1
+            [L_COST0] => 159.97
+            [BUSINESS] => 
+            [NOTETEXT] => 
+            [EMAIL] => guy12@verizon.net
+            [FIRSTNAME] => guy
+            [LASTNAME] => smilovich
+            [MIDDLENAME] => 
+            [SALUTATION] => 
+            [SUFFIX] => 
+            [COUNTRY] => US
+            [STATE] => NY
+            [CITY] => sands point
+            [STREET] => 20 shorewood drive
+            [ZIP] => 11050
+            [PHONENUM] => 2127598989
+            [SHIPTOCOUNTRY] => US
+            [SHIPTOSTATE] => NY
+            [SHIPTOCITY] => sands point
+            [SHIPTOSTREET] => 20 shorewood drive
+            [SHIPTOZIP] => 11050
+            [SHIPTOPHONENUM] => 2127598989
+            [SHIPTOSTREET2] => 
+            [STREET2] => 
+            [SHIPTONAME] => guy smilovich
+            [ADDROVERRIDE] => 1
+            [TRXTYPE] => A
+            [ACTION] => S
+            [PARTNER] => ****
+            [USER] => ****
+            [VENDOR] => ****
+            [PWD] => ****
+            [BUTTONSOURCE] => Varien_Cart_EC_US
+        )
+
+    [response] => Array
+        (
+            [RESULT] => 1
+            [RESPMSG] => User authentication failed
+        )
+
+    [__pid] => 11120
+)
+
+2013-08-13T09:30:49+00:00 DEBUG (7): Array
+(
+    [url] => https://payflowpro.paypal.com/transaction
+    [SetExpressCheckout] => Array
+        (
+            [TENDER] => P
+            [AMT] => 407.25
+            [CURRENCY] => USD
+            [RETURNURL] => https://www.icuracao.com/paypaluk/express/return/
+            [CANCELURL] => https://www.icuracao.com/paypaluk/express/cancel/
+            [INVNUM] => 100003554
+            [LOCALECODE] => en_US
+            [TAXAMT] => 32.30
+            [FREIGHTAMT] => 34.95
+            [L_NAME0] => Aniise 15 Shade Eye Shadow Palette Neutral
+            [L_QTY0] => 1
+            [L_COST0] => 45.00
+            [L_NAME1] => Aniise Professional 7 Piece Brush Set
+            [L_QTY1] => 1
+            [L_COST1] => 85.00
+            [L_NAME2] => Aniise 3 Shade Blush Palette - Pink Tones
+            [L_QTY2] => 1
+            [L_COST2] => 30.00
+            [L_NAME3] => Proliss Trio Black Curling Iron Set - Black
+            [L_QTY3] => 1
+            [L_COST3] => 90.00
+            [L_NAME4] => Jenni Rivera Ceramic Tourmaline Infused Flat Iron - Black
+            [L_QTY4] => 1
+            [L_COST4] => 90.00
+            [BUSINESS] => 
+            [NOTETEXT] => 
+            [EMAIL] => dianapadilla43@gmail.com
+            [FIRSTNAME] => Diana
+            [LASTNAME] => Alcaraz
+            [MIDDLENAME] => 
+            [SALUTATION] => 
+            [SUFFIX] => 
+            [COUNTRY] => US
+            [STATE] => CA
+            [CITY] => el monte
+            [STREET] => 3705 Penn mar ave apt #c
+            [ZIP] => 91732
+            [PHONENUM] => 6264484809
+            [SHIPTOCOUNTRY] => US
+            [SHIPTOSTATE] => CA
+            [SHIPTOCITY] => el monte
+            [SHIPTOSTREET] => 3705 Penn mar ave apt #c
+            [SHIPTOZIP] => 91732
+            [SHIPTOPHONENUM] => 6264484809
+            [SHIPTOSTREET2] => 
+            [STREET2] => 
+            [SHIPTONAME] => Diana Alcaraz
+            [ADDROVERRIDE] => 1
+            [TRXTYPE] => A
+            [ACTION] => S
+            [PARTNER] => ****
+            [USER] => ****
+            [VENDOR] => ****
+            [PWD] => ****
+            [BUTTONSOURCE] => Varien_Cart_EC_US
+        )
+
+    [response] => Array
+        (
+            [RESULT] => 1
+            [RESPMSG] => User authentication failed
+        )
+
+    [__pid] => 32257
+)
+
+2013-08-13T23:30:28+00:00 DEBUG (7): Array
+(
+    [url] => https://payflowpro.paypal.com/transaction
+    [SetExpressCheckout] => Array
+        (
+            [TENDER] => P
+            [AMT] => 25.98
+            [CURRENCY] => USD
+            [RETURNURL] => https://www.icuracao.com/paypaluk/express/return/
+            [CANCELURL] => https://www.icuracao.com/paypaluk/express/cancel/
+            [INVNUM] => 100003611
+            [LOCALECODE] => en_US
+            [TAXAMT] => 0.00
+            [FREIGHTAMT] => 5.99
+            [L_NAME0] => LG AGF310DP Cinema 3D Dual-Play Gaming Glasses (2 Pair)
+            [L_QTY0] => 1
+            [L_COST0] => 19.99
+            [BUSINESS] => 
+            [NOTETEXT] => 
+            [EMAIL] => jenmoeh@yahoo.com
+            [FIRSTNAME] => Jennifer
+            [LASTNAME] => Wall
+            [MIDDLENAME] => 
+            [SALUTATION] => 
+            [SUFFIX] => 
+            [COUNTRY] => US
+            [STATE] => TX
+            [CITY] => Richardson
+            [STREET] => 500 Wentworth Dr.
+            [ZIP] => 75081
+            [PHONENUM] => 9723086547
+            [SHIPTOCOUNTRY] => US
+            [SHIPTOSTATE] => TX
+            [SHIPTOCITY] => Richardson
+            [SHIPTOSTREET] => 500 Wentworth Dr.
+            [SHIPTOZIP] => 75081
+            [SHIPTOPHONENUM] => 9723086547
+            [SHIPTOSTREET2] => 
+            [STREET2] => 
+            [SHIPTONAME] => Jennifer Wall
+            [ADDROVERRIDE] => 1
+            [TRXTYPE] => A
+            [ACTION] => S
+            [PARTNER] => ****
+            [USER] => ****
+            [VENDOR] => ****
+            [PWD] => ****
+            [BUTTONSOURCE] => Varien_Cart_EC_US
+        )
+
+    [response] => Array
+        (
+            [RESULT] => 1
+            [RESPMSG] => User authentication failed
+        )
+
+    [__pid] => 16198
+)
+
+2013-08-13T23:31:39+00:00 DEBUG (7): Array
+(
+    [url] => https://payflowpro.paypal.com/transaction
+    [SetExpressCheckout] => Array
+        (
+            [TENDER] => P
+            [AMT] => 25.98
+            [CURRENCY] => USD
+            [RETURNURL] => https://www.icuracao.com/paypaluk/express/return/
+            [CANCELURL] => https://www.icuracao.com/paypaluk/express/cancel/
+            [INVNUM] => 100003611
+            [LOCALECODE] => en_US
+            [TAXAMT] => 0.00
+            [FREIGHTAMT] => 5.99
+            [L_NAME0] => LG AGF310DP Cinema 3D Dual-Play Gaming Glasses (2 Pair)
+            [L_QTY0] => 1
+            [L_COST0] => 19.99
+            [BUSINESS] => 
+            [NOTETEXT] => 
+            [EMAIL] => jenmoeh@yahoo.com
+            [FIRSTNAME] => Jennifer
+            [LASTNAME] => Wall
+            [MIDDLENAME] => 
+            [SALUTATION] => 
+            [SUFFIX] => 
+            [COUNTRY] => US
+            [STATE] => TX
+            [CITY] => Richardson
+            [STREET] => 500 Wentworth Dr.
+            [ZIP] => 75081
+            [PHONENUM] => 9723086547
+            [SHIPTOCOUNTRY] => US
+            [SHIPTOSTATE] => TX
+            [SHIPTOCITY] => Richardson
+            [SHIPTOSTREET] => 500 Wentworth Dr.
+            [SHIPTOZIP] => 75081
+            [SHIPTOPHONENUM] => 9723086547
+            [SHIPTOSTREET2] => 
+            [STREET2] => 
+            [SHIPTONAME] => Jennifer Wall
+            [ADDROVERRIDE] => 1
+            [TRXTYPE] => A
+            [ACTION] => S
+            [PARTNER] => ****
+            [USER] => ****
+            [VENDOR] => ****
+            [PWD] => ****
+            [BUTTONSOURCE] => Varien_Cart_EC_US
+        )
+
+    [response] => Array
+        (
+            [RESULT] => 1
+            [RESPMSG] => User authentication failed
+        )
+
+    [__pid] => 15921
+)
+

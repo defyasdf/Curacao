@@ -3,7 +3,7 @@
 	ini_set('display_errors', 1);
 	ini_set("memory_limit","1024M");
 	
-	$mageFilename = '/var/www/html/app/Mage.php';
+	$mageFilename = '/var/www/dev/app/Mage.php';
 		
 	require_once $mageFilename;
 	Varien_Profiler::enable();

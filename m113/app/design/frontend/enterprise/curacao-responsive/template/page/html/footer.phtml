@@ -95,6 +95,9 @@
 		</div>
 	</footer>
 
+  
+
+
     <script type="text/javascript">
     //<![CDATA[
     var bloaded = false;
@@ -106,6 +109,7 @@
 			return false;
 		})
     	<?php if($this->helper('customer')->isLoggedIn()){ ?>
+			jQuery("#customerLogin").hide();
 			jQuery('#customerbalance').attr('class','');
 			jQuery('#customerbalance').click(function(){
 				tb_remove();

@@ -3,7 +3,7 @@
 <file name="getallactiveproducts_withupc.php" server="198.101.163.120//var/www/" local="130177782424531493" remote="130177782500000000" Dst="2" />
 <file name="addbuy42email.php" server="198.101.163.120//var/www/" local="130175270311906870" remote="130175425080000000" Dst="2" />
 <file name="adddelloffer.php" server="198.101.163.120//var/www/" local="130179584053182985" remote="130179584260000000" Dst="2" />
-<file name="buy42gwmemail.php" server="198.101.163.120//var/www/" local="130179756492495949" remote="130179756570000000" Dst="2" />
+<file name="buy42gwmemail.php" server="198.101.163.120//var/www/" local="130209026293317922" remote="130209026350000000" Dst="2" />
 <file name="getallproducts.php" server="198.101.163.120//var/www/" local="130161579460000000" remote="130161579460000000" Dst="2" />
 <file name="_getorder_item_collection_margin.php" server="198.101.163.120//var/www/" local="130180467251209022" remote="130180467330000000" Dst="2" />
 <file name="_getqtylessthan3.php" server="198.101.163.120//var/www/" local="130181487351845441" remote="130181487690000000" Dst="2" />
@@ -15,11 +15,20 @@
 <file name="_addproduct.php" server="198.101.163.120//var/www/" local="130185850163576527" remote="130185850360000000" Dst="2" />
 <file name="_getshipping_collection.php" server="198.101.163.120//var/www/" local="130161579460000000" remote="130161579460000000" Dst="2" />
 <file name="getcustomer_info_forgwm.php" server="198.101.163.120//var/www/" local="130190911640513984" remote="130190911850000000" Dst="2" />
-<file name="getallactiveproducts_withmargin.php" server="198.101.163.120//var/www/" local="130192739707113412" remote="130192739860000000" Dst="2" />
+<file name="getallactiveproducts_withmargin.php" server="198.101.163.120//var/www/" local="130209026567683614" remote="130209026600000000" Dst="2" />
 <file name="test_inventory.php" server="198.101.163.120//var/www/" local="130161579460000000" remote="130161579460000000" Dst="2" />
-<file name="test_ar_asis.php" server="198.101.163.120//var/www/" local="130191908884203060" remote="130191909030000000" Dst="2" />
-<file name="getcategory.php" server="198.101.163.120//var/www/" local="130198782315621114" remote="130198782370000000" Dst="2" />
+<file name="test_ar_asis.php" server="198.101.163.120//var/www/" local="130214318726498466" remote="130214318840000000" Dst="2" />
+<file name="getcategory.php" server="198.101.163.120//var/www/" local="130203871890015234" remote="130203871930000000" Dst="2" />
 <file name="invlocation16.php" server="198.101.163.120//var/www/" local="130161579460000000" remote="130161579460000000" Dst="2" />
 <file name="_addproduct4000.php" server="198.101.163.120//var/www/" local="130202028610000000" remote="130202028680000000" Dst="2" />
 <file name="_addproduct9116.php" server="198.101.163.120//var/www/" local="130202270696145857" remote="130202272370000000" Dst="2" />
+<file name="getitemwithoutprice.php" server="198.101.163.120//var/www/" local="130203747014412758" remote="130203747420000000" Dst="2" />
+<file name="_add_position.php" server="198.101.163.120//var/www/" local="130161579460000000" remote="130161579460000000" Dst="2" />
+<file name="_add_shipping_cost.php" server="198.101.163.120//var/www/" local="130161579460000000" remote="130161579460000000" Dst="2" />
+<file name="getActionData.php" server="198.101.163.120//var/www/" local="130203884749210738" remote="130203884790000000" Dst="2" />
+<file name="_addproductrosetta.php" server="198.101.163.120//var/www/" local="130203905051401956" remote="130203905100000000" Dst="2" />
+<file name="inventorycheck.php" server="198.101.163.120//var/www/" local="130161579460000000" remote="130161579460000000" Dst="2" />
+<file name="updateqty.php" server="198.101.163.120//var/www/" local="130205512774868479" remote="130205512830000000" Dst="2" />
+<file name="addequipo.php" server="198.101.163.120//var/www/" local="130205661680405388" remote="130205661740000000" Dst="2" />
+<file name="_add_curacao_price_bysku.php" server="198.101.163.120//var/www/" local="130205696240562116" remote="130205696310000000" Dst="2" />
 </dwsync>

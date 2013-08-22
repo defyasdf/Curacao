@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <dwsync>
-<file name="homepage.phtml" server="198.101.163.120//var/www/" local="130187575420423109" remote="130187575620000000" Dst="2" />
-<file name="creditapplication.phtml" server="198.101.163.120//var/www/" local="130196154860000000" remote="130196154860000000" Dst="2" />
-<file name="newcustomerpromo.phtml" server="198.101.163.120//var/www/" local="130196154950000000" remote="130196154950000000" Dst="2" />
+<file name="homepage.phtml" server="198.101.163.120//var/www/" local="130204629165718926" remote="130204629220000000" Dst="2" />
+<file name="creditapplication.phtml" server="198.101.163.120//var/www/" local="130204626747160593" remote="130204626800000000" Dst="2" />
+<file name="newcustomerpromo.phtml" server="198.101.163.120//var/www/" local="130211720608304606" remote="130211720660000000" Dst="2" />
 <file name="newcustomerpromospanish.phtml" server="198.101.163.120//var/www/" local="130192711787876523" remote="130192713660000000" Dst="2" />
+<file name="1column.phtml" server="198.101.163.120//var/www/" local="130204627048187811" remote="130204627090000000" Dst="2" />
+<file name="2columns-left.phtml" server="198.101.163.120//var/www/" local="130204626959072713" remote="130204627010000000" Dst="2" />
+<file name="2columns-right.phtml" server="198.101.163.120//var/www/" local="130204626877318037" remote="130204626930000000" Dst="2" />
+<file name="3columns.phtml" server="198.101.163.120//var/www/" local="130161579460000000" remote="130161579460000000" Dst="2" />
+<file name="elcapo.phtml" server="198.101.163.120//var/www/" local="130205683021576034" remote="130205683080000000" Dst="2" />
+<file name="equipo.phtml" server="198.101.163.120//var/www/" local="130205648726744481" remote="130205648790000000" Dst="2" />
+<file name="preapprove.phtml" server="198.101.163.120//var/www/" local="130204626142786024" remote="130204626220000000" Dst="2" />
 </dwsync>

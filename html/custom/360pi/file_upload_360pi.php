@@ -11,7 +11,7 @@
 	$link = mysql_connect($server,$user,$pass);
 	
 	mysql_select_db($db,$link);	
-	$mageFilename = '/var/www/m113/app/Mage.php';
+	$mageFilename = '/var/www/upgrade/app/Mage.php';
 	include('/var/www/html/custom/360pi/Net/SFTP.php');
 	require_once $mageFilename;
 	Varien_Profiler::enable();
@@ -110,7 +110,7 @@
 			
 			//$data[] = array( "product_id"=>$product->getId(),"name"=>$product->getName(),"Model"=>$model, "sku"=>$product->getSku(),"UPC"=>$product->getUpc(),"URL"=>$url,"Image_URL"=>$image,"category_tree"=>$cat,"QTY"=>$qtyStock, "price"=>$product->getPrice(), "Special_price"=>$product->getSpecialPrice(), "Cost_price"=>$product->getCost(),"shipping"=>$product->getShprate(),"Status"=>$product->getStatus());
 			
-			$data[] = array( '"product_id"'=>'"'.$product->getId().'"','"name"'=>'"'.str_replace('"','',$product->getName()).'"','"Model"'=>'"'.$model.'"', "Brand"=>$product->getAttributeText('tv_brand'), '"sku"'=>'"'.$product->getSku().'"','"UPC"'=>'"'.$product->getUpc().'"','"URL"'=>'"'.$url.'"','"Image_URL"'=>'"'.$image.'"','"category_tree"'=>'"'.$cat.'"','"Category_1"'=>'"'.$cat0.'"','"Category_2"'=>'"'.$cat1.'"','"Category_3"'=>'"'.$cat2.'"','"Category_4"'=>'"'.$cat3.'"','"Category_5"'=>'"'.$cat4.'"','"QTY"'=>'"'.$qtyStock.'"', '"price"'=>'"'.$product->getPrice().'"', '"Special_price"'=>'"'.$product->getSpecialPrice().'"', '"Cost_price"'=>'"'.$product->getCost().'"','"shipping"'=>'"'.$product->getShprate().'"','"Status"'=>'"'.$product->getStatus().'"');
+			$data[] = array( '"product_id"'=>'"'.$product->getId().'"','"name"'=>'"'.str_replace("\0", "",str_replace('"','',$product->getName())).'"','"Model"'=>'"'.$model.'"', "Brand"=>$product->getAttributeText('tv_brand'), '"sku"'=>'"'.$product->getSku().'"','"UPC"'=>'"'.$product->getUpc().'"','"URL"'=>'"'.$url.'"','"Image_URL"'=>'"'.$image.'"','"category_tree"'=>'"'.$cat.'"','"Category_1"'=>'"'.$cat0.'"','"Category_2"'=>'"'.$cat1.'"','"Category_3"'=>'"'.$cat2.'"','"Category_4"'=>'"'.$cat3.'"','"Category_5"'=>'"'.$cat4.'"','"QTY"'=>'"'.$qtyStock.'"', '"price"'=>'"'.$product->getPrice().'"', '"Special_price"'=>'"'.$product->getSpecialPrice().'"', '"Cost_price"'=>'"'.$product->getCost().'"','"shipping"'=>'"'.$product->getShprate().'"','"Status"'=>'"'.$product->getStatus().'"');
 			
 			  $j++;
 

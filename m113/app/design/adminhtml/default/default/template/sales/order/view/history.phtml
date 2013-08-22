@@ -39,6 +39,9 @@
                      <option <?php if($this->getOrder()->getStatus() == 'canceled'){?> selected="selected"<?php }?> value="canceled">Cancel</option>
                      <option <?php if($this->getOrder()->getStatus() == 'complete'){?> selected="selected"<?php }?> value="complete">Complete</option>
                      <option <?php if($this->getOrder()->getStatus() == 'gwmpromo'){?> selected="selected"<?php }?> value="gwmpromo">GWM-promo</option>
+                     <option <?php if($this->getOrder()->getStatus() == 'acountnotactive'){?> selected="selected"<?php }?> value="acountnotactive">Account Not Active</option>
+                     <option <?php if($this->getOrder()->getStatus() == 'acconhold'){?> selected="selected"<?php }?> value="acconhold">Account Been Held</option>
+                     <option <?php if($this->getOrder()->getStatus() == 'downpaymentrequired'){?> selected="selected"<?php }?> value="downpaymentrequired">Down Payment Required</option>
             </select>
             <?php }else{?>
             <select name="history[status]" class="select" id="history_status">

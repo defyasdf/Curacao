@@ -97,6 +97,8 @@ class Mage_Shipping_Model_Carrier_Flatrate
 						}else{
 							$shipRate = ($item->getQty())*($_helper->productAttribute($cur_fproduct, $cur_fproduct->getShprate(), 'shprate'));
 						}
+						
+						
 						$coupon_code = Mage::getSingleton('checkout/session')->getQuote()->getCouponCode();
 						if($coupon_code){
 							$oCoupon = Mage::getModel('salesrule/coupon')->load($coupon_code, 'code');
@@ -110,6 +112,43 @@ class Mage_Shipping_Model_Carrier_Flatrate
 									$shipRate = 0;
 								}
 							}
+							
+							
+							// For Free Shipping comdition
+							
+							
+							$conditions = $oRule->getConditions()->asArray();
+							if($oRule->getIsActive()&&$oRule->getsimple_free_shipping()){
+								$start_ts = strtotime($oRule->getfrom_date());
+								$end_ts = strtotime($oRule->getto_date());
+								$user_ts = strtotime(date('Y-m-d'));
+							
+								if((($user_ts >= $start_ts) && ($user_ts <= $end_ts))){		
+									
+									$condistion = $conditions['conditions'][0]['conditions'];
+									
+									for($i = 0; $i<sizeof($condistion);$i++){
+										$cat[] = $condistion[$i]['value'];
+									}
+								}
+							}
+	
+							if(sizeof($cat)>0){
+								$cat_ids = $cur_fproduct->getCategoryIds();
+								$shipRate = ($item->getQty())*($_helper->productAttribute($cur_fproduct, $cur_fproduct->getShprate(), 'shprate'));
+								for($j=0;$j<sizeof($cat);$j++){
+									if(in_array($cat[$j],$cat_ids)){
+										$shipRate = 0;	
+									}
+								}
+							
+							}else{
+								$shipRate = ($item->getQty())*($_helper->productAttribute($cur_fproduct, $cur_fproduct->getShprate(), 'shprate'));
+							}
+							
+							
+							
+							
 						}
 						// End Free Shipping Code					
 

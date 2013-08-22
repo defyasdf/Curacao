@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<scripts>
+  <script name="Top" DoNotReplaceCondition = "&lt;!-- ClickTale Top part --&gt;">
+    <![CDATA[
+<!-- ClickTale Integration module. Please follow the accompanying documentation to properly configure it. -->
+<script type="text/javascript">
+var WRInitTime=(new Date()).getTime();
+</script>
+]]>
+  </script>
+  <script name="Bottom" DoNotReplaceCondition="&lt;!-- No ClickTale --&gt;|&lt;!-- ClickTale Bottom part --&gt;" InsertBefore="&lt;!-- ClickTale Bottom part Here --&gt;|&lt;/body&gt;">
+    <![CDATA[
+<!-- ClickTale Integration module. Please follow the accompanying documentation to properly configure it. -->
+<script type='text/javascript'>
+// The ClickTale Balkan Tracking Code may be programmatically customized using hooks:
+// 
+//   function ClickTalePreRecordingHook() { /* place your customized code here */  }
+//
+// For details about ClickTale hooks, please consult the wiki page http://wiki.clicktale.com/Article/Customizing_code_version_2
+var ClickTaleFetchFrom="%FetchFromUrl%";
+document.write(unescape("%3Cscript%20src='"+
+(document.location.protocol=='https:'?
+"https://clicktalecdn.sslcs.cdngc.net/www08/ptc/15c2b8fd-0c71-4360-900a-5ccc2efd8fc9.js":
+"http://cdn.clicktale.net/www08/ptc/15c2b8fd-0c71-4360-900a-5ccc2efd8fc9.js")+"'%20type='text/javascript'%3E%3C/script%3E"));
+</script>
+]]>
+  </script>
+</scripts>
