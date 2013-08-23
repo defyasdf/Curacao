@@ -1,0 +1,275 @@
+<?php
+/**
+ * Template for Mage_Page_Block_Html
+ */
+ 
+ print_r($_REQUEST);
+ 
+?>
+<?php 
+	$_storeId = Mage::app()->getStore()->getId();
+	if($_storeId == 1){
+		$header = "<h1>We are giving away 4 LG refrigerators!</h1>";
+		$dis = '<p>Buy your tickets for the game in Curacao Ticketmaster.</p>';
+		$fname = "First Name";
+		$lname = "Last Name";
+		$email = "Email";
+		$tel = "Telephone";
+		$state = "State";
+		$note1 = "<p>Upgrades will be available in exchange for the purchased tickets of any level. Number of winners will be determined by the amount of tickets that the winners hold. Maximum 5 per person. To participate you must fill the form with your information. You must surrender a valid ticket for the Messi and Friends game to be exchanged for the $500 level ticket.</p>";
+		$note = "No purchase necessary. Equip your home promotion is open to residents of Southern California and Arizona only, must be 18 years or older. Odds of winning depend on the number of entries received. A purchase or payment of any kind will not increase your chances of winning. For more details see <a href='http://www.icuracao.com/Equipa_Rules.pdf' target='_blank'>Official Rules</a>";
+		$greetings = "<h2>Thank you for register!</h2>";
+		$select = "Please Select";
+		$error = "Required fields";
+		$opt_in = "Sign me up to receive promotional emails.";
+	}else{
+		$header = "<h1>Estamos regalando 4 refrigeradoras LG</h1>";
+		$dis = '<p>Para registrarte debes completar la siguiente informaci&oacute;n.</p>
+						';
+		$fname = "Nombre";
+		$lname = "Apellido";
+		$email = "Correo Electr&oacute;nico";
+		$tel = "Tel&eacute;fono";
+		$state = "Estado";
+		$note1 = "<p>No Compra necesaria. Para participar debe tener 18 a&ntilde;os o m&aacute;s. El concierto se realizar&aacute; en el Nokia Theatre el s&aacute;bado 31 de Agosto de 2013.</p>";
+		$note = "No compra necesaria. El sorteo de equipa tu casa esta abierto para residentes del Sur de California y Arizona únicamente, debe tener 18 años o más. Las probabilidades de ganar dependen del número de participaciones recibidas. Una compra o pago de cualquier tipo no aumentará sus probabilidades de ganar. Para m&aacute;s informaci&oacute;n Ver  <a href='http://www.icuracao.com/Equipa_Rules.pdf' target='_blank'>Reglas Oficiales</a>";
+		$greetings = "<h2>Gracias por Registrarse!</h2>";
+		$select = "Seleccione";
+		$error = "Campos requeridos";
+		$opt_in = "Inscribirme para recibir promociones por email";
+	}
+?>
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
+<head>
+	<?php echo $this->getChildHtml('head') ?>
+    <link media="all" href="/skin/frontend/enterprise/curacao-responsive/css/elcapo.css" type="text/css" rel="stylesheet">
+    <?php
+		
+		if($_storeId != 1){
+		?>
+		<style type="text/css">
+        	#elcapo_banner {
+                background: url("./images/main_banner_es.jpg") no-repeat scroll 0 0 transparent;
+                
+            }
+			#elcapo_banner_es{
+				height:660px !important;
+			}
+			#bottom_note{
+				margin-top: 194px; padding-bottom: 0px; margin-bottom: -40px;
+			}
+		</style>
+        <?php
+		}
+	?>
+</head>
+
+<body<?php echo $this->getBodyClass()?' class="'.$this->getBodyClass().'"':'' ?>>
+
+	<?php //echo $this->getChildHtml('after_body_start') ?>
+	<!-- ClickTale Top part 
+<script type="text/javascript">
+var WRInitTime=(new Date()).getTime();
+</script>
+<!-- ClickTale end of Top part -->
+
+	<header>
+		
+		<div class="container">
+			<?php echo $this->getChildHtml('header') ?>
+		</div><!--container-->
+		
+	</header>
+	
+	<div class="container">
+	
+		<div class="twenty columns breadcrumbs alpha">
+			<?php echo $this->getChildHtml('breadcrumbs') ?>
+		</div><!--breadcrumbs-->
+
+		<div class="twenty columns breadcrumbs alpha">
+			<div class="wrapper">
+                <div id="elcapo_content">
+                	<?php if($_storeId == 1){?>
+                    <div id="elcapo_banner"></div>
+                    <?php }else{?>
+                    <div id="elcapo_banner_es"></div>
+                    <?php }?>
+                    <div class="copy">
+                    <?php 
+					if(isset($_REQUEST['fname'])){
+							if(trim($_REQUEST['fname'])!='' && trim($_REQUEST['lname'])!='' && trim($_REQUEST['email'])!='' && trim($_REQUEST['tel'])!=''){
+								
+								$server = '192.168.100.121';
+								$user = 'curacaodata';
+								$pass = 'curacaodata';
+								$db = 'icuracaoproduct';
+								
+								$link = mysql_connect($server,$user,$pass);
+								
+								mysql_select_db($db,$link) or die(mysql_error());
+								
+								$sql = "INSERT INTO `elkomander` (`fname`, `lname`, `email`, `telephone`,`opt_in`) VALUES ('".$_REQUEST['fname']."', '".$_REQUEST['lname']."', '".$_REQUEST['email']."', '".$_REQUEST['tel']."','".$_REQUEST['opt_in']."')";	
+								
+								if(mysql_query($sql)){
+									
+								
+								?>
+								 <?php //echo $header;?>
+                                 <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('equipa-promo')->toHtml() ?>
+                       
+							<p>&nbsp;</p>
+                            <?php echo $greetings;?>
+                            <p>&nbsp;</p>
+                             <div class="clear"></div>
+<?php echo $note1;?>
+<div class="clear"></div>
+                        <span><?php //echo $note;?></span>
+                            	
+								<?php
+								}
+							}else{
+								
+							
+						?>
+                        <ul class="messages"><li class="error-msg"><ul><li><span><em>*</em> <?php echo $error?></span></li></ul></li></ul>
+                         <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('equipa-promo')->toHtml() ?>
+						<?php //echo $dis;?>
+                        <form action="<?php echo $this->helper('core/url')->getCurrentUrl()?>" method="post">
+                        <div align="center">
+                            <div id="formline">
+								<div id="form_input_label"><?php echo $fname;?><em>*</em> :</div>
+                                <div id="form_input"><input type="text" name="fname" value="<?php echo $_REQUEST['fname']?>"></div>                                
+                            </div>
+                            <div id="formline">
+								<div id="form_input_label"><?php echo $lname;?><em>*</em> :</div>
+                                <div id="form_input"><input type="text" name="lname" value="<?php echo $_REQUEST['lname']?>"></div>                                
+                            </div>
+                            <div id="formline">
+								<div id="form_input_label"><?php echo $email;?><em>*</em> :</div>
+                                <div id="form_input"><input type="text" name="email" value="<?php echo $_REQUEST['email']?>"></div>                                
+                            </div>
+                            <div id="formline">
+								<div id="form_input_label"><?php echo $tel;?><em>*</em> :</div>
+                                <div id="form_input"><input type="text" name="tel" value="<?php echo $_REQUEST['tel']?>"></div>                                
+                            </div>
+                            <div id="formline">
+								<div id="form_input_label"><input type="checkbox" value="1" name="opt_in" checked>:</div>
+                                <div id="form_input_label" style="text-align:left; margin-bottom:15px; width:56%; margin-left:15px;">
+                                	<?php
+										echo $opt_in;
+									?>
+                                </div>                                
+                            </div> 
+                                            
+                            <div id="formline">
+								<div id="form_input_label"><span id="lable_disclamer"><em>*</em> <?php echo $error?></span></div>
+                                <div id="form_input">
+                                <?php 
+									if($_storeId == 1){
+								?>
+                                <input type="image" src="images/btn_register_en.png">
+                                <?php }else{?>
+                                <input type="image" src="images/btn_register_es.png">
+                                <?php }?>
+                                
+                                </div>                                
+                            </div>
+                        </div>
+                        </form>
+                        <div class="clear"></div><br>
+<br>
+<div id="bottom_note">
+<?php echo $note1;?>
+</div>
+<div class="clear"></div>
+                        <span><?php //echo $note;?></span>
+                       <?php 
+                        }}else{
+						
+						?>
+                        <?php 
+							if($_storeId == 1){
+						?>
+                        <div align="right">
+                        	<a href="http://www.icuracao.com/messi-friends?___store=espn&___from_store=default">Ver en Espa&ntilde;ol</a>    </div>
+                         <?php
+							
+							}
+						?>
+						 <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('equipa-promo')->toHtml() ?>
+						<?php //echo $dis;?>
+                        <form action="/el-komander-post" method="post" name="elcapoform" id="elcapoform">
+                        <div align="center">
+                            <div id="formline">
+								<div id="form_input_label"><?php echo $fname;?><em>*</em> :</div>
+                                <div id="form_input"><input type="text" name="fname"></div>                                
+                            </div>
+                            <div id="formline">
+								<div id="form_input_label"><?php echo $lname;?><em>*</em> :</div>
+                                <div id="form_input"><input type="text" name="lname"></div>                                
+                            </div>
+                            <div id="formline">
+								<div id="form_input_label"><?php echo $email;?><em>*</em> :</div>
+                                <div id="form_input"><input type="text" name="email"></div>                                
+                            </div>
+                            <div id="formline">
+								<div id="form_input_label"><?php echo $tel;?><em>*</em> :</div>
+                                <div id="form_input"><input type="text" name="tel"></div>                                
+                            </div>
+                             <div id="formline">
+								<div id="form_input_label"><input type="checkbox" value="1" name="opt_in" checked>:</div>
+                                <div id="form_input_label" style="text-align:left; margin-bottom:15px; margin-left:15px; width:56%;">
+                                	<?php
+										echo $opt_in;
+									?>
+                                </div>                                
+                            </div> 
+
+                            <div id="formline">
+								<div id="form_input_label"><span id="lable_disclamer"><em>*</em> <?php echo $error?></span></div>
+                                <div id="form_input">
+								<?php 
+									if($_storeId == 1){
+								?>
+                                <input type="image" src="images/btn_register_en.png">
+                                <?php }else{?>
+                                <input type="image" src="images/btn_register_es.png">
+                                <?php }?>
+                                </div>                                
+                            </div>
+                        </div>
+                        </form>
+                        <div class="clear"></div><br>
+<br>
+
+<div id="bottom_note">
+<?php echo $note1;?>
+</div>
+<div class="clear"></div>
+                        <span><?php //echo $note;?></span>
+						
+						<?php 
+						}
+						?>
+                        
+                    </div>
+                    <div class="clear"></div>
+                    <div></div>
+                </div>
+            </div>
+		</div>
+	
+      <?php echo $this->getChildHtml('footer') ?>
+    <?php echo $this->getChildHtml('before_body_end') ?>
+        <?php echo $this->getAbsoluteFooter() ?>
+	</div>        
+
+		
+
+</body>
+</html>

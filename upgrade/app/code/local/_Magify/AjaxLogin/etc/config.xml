@@ -1,0 +1,130 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Magify_AjaxLogin>
+            <version>1.0.0</version>
+            <platform>CE</platform>
+            <id>ajaxlogin</id>
+            <name>Ajax Login</name>
+            <url>http://www.magify.com/ajax-login.html</url>
+        </Magify_AjaxLogin>
+    </modules>
+    <frontend>
+        <routers>
+            <ajaxlogin>
+                <use>standard</use>
+                <args>
+                    <module>Magify_AjaxLogin</module>
+                    <frontName>ajaxlogin</frontName>
+                </args>
+            </ajaxlogin>
+        </routers>
+        <layout>
+            <updates>
+                <ajaxlogin>
+                    <file>ajaxlogin.xml</file>
+                </ajaxlogin>
+            </updates>
+        </layout>
+    </frontend>
+    <global>
+        <models>
+            <ajaxlogin>
+                <class>Magify_AjaxLogin_Model</class>
+            </ajaxlogin>
+        </models>
+        
+        <resources>
+            <ajaxlogin_setup>
+                <setup>
+                    <module>Magify_AjaxLogin</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </ajaxlogin_setup>
+            <ajaxlogin_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </ajaxlogin_write>
+            <ajaxlogin_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </ajaxlogin_read>
+        </resources>
+        
+        <events>
+			<controller_action_postdispatch_customer_account_createpost>
+				<observers>
+					<ajaxlogin>
+						<type>singleton</type>
+						<class>
+							Magify_AjaxLogin_Model_Observercreate
+						</class>
+						<method>check_create</method>
+					</ajaxlogin>
+				</observers>
+			</controller_action_postdispatch_customer_account_createpost>
+			
+			<customer_login>
+				<observers>
+					<ajaxlogin>
+						<type>singleton</type>
+						<class>
+							Magify_AjaxLogin_Model_Observerlogin
+						</class>
+						<method>check_login</method>
+					</ajaxlogin>
+				</observers>
+			</customer_login>
+
+			<controller_action_postdispatch_customer_account_login>
+				<observers>
+					<ajaxlogin>
+						<type>singleton</type>
+						<class>
+							Magify_AjaxLogin_Model_Observerloginpost
+						</class>
+						<method>check_login</method>
+					</ajaxlogin>
+				</observers>
+			</controller_action_postdispatch_customer_account_login>
+			
+			<controller_action_postdispatch_customer_account_forgotpasswordpost>
+				<observers>
+					<ajaxlogin>
+						<type>singleton</type>
+						<class>
+							Magify_AjaxLogin_Model_Observerforgot
+						</class>
+						<method>check_forgot</method>
+					</ajaxlogin>
+				</observers>
+			</controller_action_postdispatch_customer_account_forgotpasswordpost>
+        </events>
+
+        
+        <blocks>
+          <ajaxlogin>
+                <class>Magify_AjaxLogin_Block</class>
+            </ajaxlogin>
+        </blocks>
+        
+        <helpers>
+            <ajaxlogin>
+                <class>Magify_AjaxLogin_Helper</class>
+            </ajaxlogin>
+        </helpers>
+        
+    </global>
+  <default>
+    <ajaxlogin>
+      <login>
+        <enabled>1</enabled>
+        <mode>ssl</mode>
+      </login>
+    </ajaxlogin>
+  </default>
+</config>

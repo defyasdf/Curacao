@@ -3,5 +3,6 @@
 <file name="payment_verisign.log" server="198.101.163.120//var/www/" local="130209765390000000" remote="130209765390000000" Dst="2" />
 <file name="bronto_common.log" server="198.101.163.120//var/www/" local="130209123570000000" remote="130209123570000000" Dst="2" />
 <file name="payment_paypaluk_express.log" server="198.101.163.120//var/www/" local="130209102990000000" remote="130209102990000000" Dst="2" />
-<file name="exception.log" server="198.101.163.120//var/www/" local="130216706490000000" remote="130216706490000000" Dst="2" />
+<file name="exception.log" server="198.101.163.120//var/www/" local="130217734620000000" remote="130217734620000000" Dst="2" />
+<file name="system.log" server="198.101.163.120//var/www/" local="130217743740000000" remote="130217743740000000" Dst="2" />
 </dwsync>

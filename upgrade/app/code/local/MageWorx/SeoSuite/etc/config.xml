@@ -1,0 +1,194 @@
+<?xml version="1.0"?>
+<!-- 
+/**
+ * MageWorx
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the MageWorx EULA that is bundled with
+ * this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.mageworx.com/LICENSE-1.0.html
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade the extension
+ * to newer versions in the future. If you wish to customize the extension
+ * for your needs please refer to http://www.mageworx.com/ for more information
+ *
+ * @category   MageWorx
+ * @package    MageWorx_SeoSuite
+ * @copyright  Copyright (c) 2012 MageWorx (http://www.mageworx.com/)
+ * @license    http://www.mageworx.com/LICENSE-1.0.html
+ */
+
+/**
+ * SEO Suite extension
+ *
+ * @category   MageWorx
+ * @package    MageWorx_SeoSuite
+ * @author     MageWorx Dev Team
+ */
+-->
+<config>
+    <modules>
+        <MageWorx_SeoSuite>
+            <version>3.7.3</version>
+        </MageWorx_SeoSuite>
+    </modules>
+    <frontend>
+        <translate>
+            <modules>
+                <MageWorx_SeoSuite>
+                    <files>
+                        <default>MageWorx_SeoSuite.csv</default>
+                    </files>
+                </MageWorx_SeoSuite>
+            </modules>
+        </translate>
+        <layout>
+            <updates>
+                <seosuite>
+                    <file>seosuite.xml</file>
+                </seosuite>
+            </updates>
+        </layout>
+    </frontend>
+    <global>
+        <models>
+            <seosuite>
+                <class>MageWorx_SeoSuite_Model</class>
+                <resourceModel>seosuite_mysql4</resourceModel>
+            </seosuite>
+            <seosuite_mysql4>
+                <class>MageWorx_SeoSuite_Model_Mysql4</class>
+                <entities>
+                    <report_product><table>seosuite_report_product</table></report_product>
+                    <report_category><table>seosuite_report_category</table></report_category>
+                    <report_cms><table>seosuite_report_cms</table></report_cms>
+                    <template><table>seosuite_template</table></template>
+                    <template_store><table>seosuite_template_store</table></template_store>
+                </entities>
+            </seosuite_mysql4>            
+      
+           
+
+        </models>
+        <resources>
+            <seosuite_setup>
+                <setup>
+                    <module>MageWorx_SeoSuite</module>
+                    <class>MageWorx_SeoSuite_Model_Resource_Eav_Mysql4_Setup</class>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </seosuite_setup>
+            <seosuite_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </seosuite_write>
+            <seosuite_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </seosuite_read>
+        </resources>
+        <blocks>
+            <seosuite>
+                <class>MageWorx_SeoSuite_Block</class>
+            </seosuite>
+
+
+<!--            <cms>-->
+<!--                <rewrite>-->
+<!--                    <page>MageWorx_SeoSuite_Block_Cms_Page</page>-->
+<!--                </rewrite>-->
+<!--            </cms>-->
+<!--            <rss>-->
+<!--                <rewrite>-->
+<!--                    <list>MageWorx_SeoSuite_Block_Rss_List</list>-->
+<!--                    <catalog_category>MageWorx_SeoSuite_Block_Rss_Catalog_Category</catalog_category>-->
+<!--                    <catalog_new>MageWorx_SeoSuite_Block_Rss_Catalog_New</catalog_new>-->
+<!--                    <catalog_special>MageWorx_SeoSuite_Block_Rss_Catalog_Special</catalog_special>-->
+<!--                    <catalog_salesrule>MageWorx_SeoSuite_Block_Rss_Catalog_Salesrule</catalog_salesrule>-->
+<!--                </rewrite>-->
+<!--            </rss>-->
+<!--            <page>-->
+<!--                <rewrite>-->
+<!--                    <html_pager>MageWorx_SeoSuite_Block_Page_Html_Pager</html_pager>-->
+<!--                </rewrite>-->
+<!--            </page>-->
+<!--            <review>-->
+<!--                <rewrite>-->
+<!--                    <helper>MageWorx_SeoSuite_Block_Review_Helper</helper>-->
+<!--                    <product_view_list>MageWorx_SeoSuite_Block_Review_Product_View_List</product_view_list>-->
+<!--                    <view>MageWorx_SeoSuite_Block_Review_View</view>-->
+<!--                </rewrite>-->
+<!--            </review>-->
+<!--            <adminhtml>-->
+<!--                <rewrite>-->
+<!--                    <cms_page_edit_tab_meta>MageWorx_Adminhtml_Block_Seosuite_Cms_Page_Edit_Tab_Meta</cms_page_edit_tab_meta>-->
+<!--                </rewrite>-->
+<!--            </adminhtml>-->
+        </blocks>
+        <helpers>
+            <seosuite>
+                <class>MageWorx_SeoSuite_Helper</class>
+            </seosuite>
+        </helpers>
+       
+    </global>
+    <adminhtml>
+        <layout>
+            <updates>
+                <seosuite>
+                    <file>seosuite.xml</file>
+                </seosuite>
+            </updates>
+        </layout>
+
+        <translate>
+            <modules>
+                <MageWorx_SeoSuite>
+                    <files>
+                        <default>MageWorx_SeoSuite.csv</default>
+                    </files>
+                </MageWorx_SeoSuite>
+            </modules>
+        </translate>
+        
+    </adminhtml>
+    <default>
+        <mageworx_seo>
+            <seosuite>
+                <enabled>1</enabled>
+                <trailing_slash>1</trailing_slash>
+                <ignore_pages><![CDATA[catalogsearch_result_index
+catalogsearch_advanced_index
+catalogsearch_advanced_result
+checkout_cart_index
+checkout_onepage_index]]></ignore_pages>
+                <noindex_pages_user>?dir=*
+?order=*
+?mode=*
+?limit=*</noindex_pages_user>
+                <noindex_pages><![CDATA[^catalogsearch_.+,^customer_.+,^checkout_.+,^contacts_.+,^wishlist_.+,^catalog_product_compare_.+,.*?_product_send$,^tag_.+,^rss_.+]]></noindex_pages>
+                <category_link_title_enabled>0</category_link_title_enabled>
+                <product_meta_description>0</product_meta_description>
+                <product_canonical_url>1</product_canonical_url>
+                <reviews_friendly_urls>1</reviews_friendly_urls>
+                <pager_url_format></pager_url_format>
+                <enable_link_rel>1</enable_link_rel>
+                <layered_friendly_urls>1</layered_friendly_urls>
+                <layered_hide_attributes>1</layered_hide_attributes>
+                <layered_separatort>:</layered_separatort>
+                <enable_canonical_tag_for_layered_navigation>1</enable_canonical_tag_for_layered_navigation>
+                <template_limit>50</template_limit>
+                <add_canonical_url_port>0</add_canonical_url_port>
+                <enable_rich_snippets>1</enable_rich_snippets>
+            </seosuite>
+        </mageworx_seo>
+    </default>
+</config>

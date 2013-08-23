@@ -1,0 +1,117 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Magify Commerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magify.com so we can send you a copy immediately.
+ *
+ * @category    Magify
+ * @package     Magify_Core
+ * @copyright   Copyright (c) 2012 Magify Commerce (http://www.magify.com)
+ * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+-->
+<config>
+    <modules>
+        <Magify_Core>
+            <version>0.1.2</version>
+        </Magify_Core>
+    </modules>
+    <global>
+        <models>
+            <magify_core>
+                <class>Magify_Core_Model</class>
+            </magify_core>
+        </models>
+        <helpers>
+            <magify_core>
+                <class>Magify_Core_Helper</class>
+            </magify_core>
+        </helpers>
+        <blocks>
+            <magify_core>
+            	<class>Magify_Core_Block</class>
+			</magify_core>
+			<page>
+				<rewrite>
+					<html_head>Magify_Core_Block_Page_Html_Head</html_head>
+				</rewrite>
+			</page>
+        </blocks>
+    </global>
+    <frontend>
+        <translate>
+            <modules>
+                <magify_core>
+                    <files>
+                        <default>Magify_Core.csv</default>
+                    </files>
+                </magify_core>
+            </modules>
+        </translate>
+        <routers>
+            <magify_core>
+                <use>standard</use>
+                <args>
+                    <module>Magify_Core</module>
+                    <frontName>magify</frontName>
+                </args>
+            </magify_core>
+        </routers>
+        <events>
+        	<core_block_abstract_prepare_layout_after>
+                <observers>
+                    <magify_core>
+                        <type>singleton</type>
+                        <class>magify_core/observer</class>
+                        <method>addJquery</method>
+                    </magify_core>
+                </observers>
+        	</core_block_abstract_prepare_layout_after>
+        </events>
+    </frontend>
+    <adminhtml>
+        <layout>
+            <updates>
+                <magify_core>
+                    <file>magify/core.xml</file>
+                </magify_core>
+            </updates>
+        </layout>
+        <acl>
+            <resources>
+                <admin>
+                    <children>
+                        <system>
+                            <children>
+                                <config>
+                                    <children>
+                                        <magify_core>
+                                            <title>Magify Commerce</title>
+                                        </magify_core>
+                                    </children>
+                                </config>
+                            </children>
+                        </system>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+    </adminhtml>
+    <crontab>
+        <jobs>
+            <magify_core>
+                <schedule><cron_expr>0 2 * * *</cron_expr></schedule>
+                <run><model>magify_core/feed::checkUpdate</model></run>
+            </magify_core>
+        </jobs>
+    </crontab>
+</config>

@@ -1,0 +1,21 @@
+2013-08-23T23:32:54+00:00 ERR (3): Warning: simplexml_load_string(): Entity: line 50: parser error : StartTag: invalid element name  in /var/www/upgrade/lib/Varien/Simplexml/Config.php on line 510
+2013-08-23T23:32:54+00:00 ERR (3): Warning: simplexml_load_string(): 	 <100off299 translate="label">  in /var/www/upgrade/lib/Varien/Simplexml/Config.php on line 510
+2013-08-23T23:32:54+00:00 ERR (3): Warning: simplexml_load_string(): 	  ^  in /var/www/upgrade/lib/Varien/Simplexml/Config.php on line 510
+2013-08-23T23:32:54+00:00 ERR (3): Warning: simplexml_load_string(): Entity: line 54: parser error : expected '>'  in /var/www/upgrade/lib/Varien/Simplexml/Config.php on line 510
+2013-08-23T23:32:54+00:00 ERR (3): Warning: simplexml_load_string():      </100off299>  in /var/www/upgrade/lib/Varien/Simplexml/Config.php on line 510
+2013-08-23T23:32:54+00:00 ERR (3): Warning: simplexml_load_string():        ^  in /var/www/upgrade/lib/Varien/Simplexml/Config.php on line 510
+2013-08-23T23:32:54+00:00 ERR (3): Warning: simplexml_load_string(): Entity: line 54: parser error : Opening and ending tag mismatch: layouts line 10 and unparseable  in /var/www/upgrade/lib/Varien/Simplexml/Config.php on line 510
+2013-08-23T23:32:54+00:00 ERR (3): Warning: simplexml_load_string():      </100off299>  in /var/www/upgrade/lib/Varien/Simplexml/Config.php on line 510
+2013-08-23T23:32:54+00:00 ERR (3): Warning: simplexml_load_string():        ^  in /var/www/upgrade/lib/Varien/Simplexml/Config.php on line 510
+2013-08-23T23:32:54+00:00 ERR (3): Warning: simplexml_load_string(): Entity: line 58: parser error : Opening and ending tag mismatch: page line 9 and layouts  in /var/www/upgrade/lib/Varien/Simplexml/Config.php on line 510
+2013-08-23T23:32:54+00:00 ERR (3): Warning: simplexml_load_string():       </layouts>  in /var/www/upgrade/lib/Varien/Simplexml/Config.php on line 510
+2013-08-23T23:32:54+00:00 ERR (3): Warning: simplexml_load_string():                 ^  in /var/www/upgrade/lib/Varien/Simplexml/Config.php on line 510
+2013-08-23T23:32:54+00:00 ERR (3): Warning: simplexml_load_string(): Entity: line 59: parser error : Opening and ending tag mismatch: global line 8 and page  in /var/www/upgrade/lib/Varien/Simplexml/Config.php on line 510
+2013-08-23T23:32:54+00:00 ERR (3): Warning: simplexml_load_string():     </page>  in /var/www/upgrade/lib/Varien/Simplexml/Config.php on line 510
+2013-08-23T23:32:54+00:00 ERR (3): Warning: simplexml_load_string():            ^  in /var/www/upgrade/lib/Varien/Simplexml/Config.php on line 510
+2013-08-23T23:32:54+00:00 ERR (3): Warning: simplexml_load_string(): Entity: line 60: parser error : Opening and ending tag mismatch: config line 2 and global  in /var/www/upgrade/lib/Varien/Simplexml/Config.php on line 510
+2013-08-23T23:32:54+00:00 ERR (3): Warning: simplexml_load_string():   </global>  in /var/www/upgrade/lib/Varien/Simplexml/Config.php on line 510
+2013-08-23T23:32:54+00:00 ERR (3): Warning: simplexml_load_string():            ^  in /var/www/upgrade/lib/Varien/Simplexml/Config.php on line 510
+2013-08-23T23:32:54+00:00 ERR (3): Warning: simplexml_load_string(): Entity: line 61: parser error : Extra content at the end of the document  in /var/www/upgrade/lib/Varien/Simplexml/Config.php on line 510
+2013-08-23T23:32:54+00:00 ERR (3): Warning: simplexml_load_string(): <frontend>  in /var/www/upgrade/lib/Varien/Simplexml/Config.php on line 510
+2013-08-23T23:32:54+00:00 ERR (3): Warning: simplexml_load_string(): ^  in /var/www/upgrade/lib/Varien/Simplexml/Config.php on line 510

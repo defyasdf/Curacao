@@ -1,0 +1,172 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Magify Commerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magify.com so we can send you a copy immediately.
+ *
+ * @category    Magify
+ * @package     Magify_PreRenderer
+ * @copyright   Copyright (c) 2012 Magify Commerce (http://www.magify.com)
+ * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+-->
+<config>
+    <tabs>
+        <magify translate="label" module="magify_bannermanager">
+            <label>Magify Commerce</label>
+            <sort_order>190</sort_order>
+        </magify>
+    </tabs>
+    <sections>
+        <magify_bannermanager translate="label" module="magify_bannermanager">
+            <label>Banner Manager</label>
+            <tab>magify</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>20</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <class>magify magify_bannermanager</class>
+            <header_css>magify magify_bannermanager</header_css>
+            <groups>
+            	<info>
+            		<label>Information</label>
+                    <frontend_type>text</frontend_type>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+            		<comment>
+            			<![CDATA[
+            				Please read <a href="http://www.magify.com/documentation/bannermanager" title="Click here for documentation">documentation</a> before changing settings.
+            			]]>
+            		</comment>
+            	</info>
+                <settings translate="label" module="magify_bannermanager">
+                    <label>General Settings</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>10</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <mode translate="label title">
+                            <label>Mode</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>magify_bannermanager/adminhtml_system_config_source_mode</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </mode>
+                        <frontend translate="label title">
+                            <label>Frontend</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>magify_bannermanager/adminhtml_system_config_source_frontend</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Read documentation for theme compatibility information.</comment>
+                        </frontend>
+                        <custom>
+                            <label>Custom Template</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Only used if custom selected above. Custom template path e.g. "company/another_path/file.phtml". Default template for custom is "/template/magify/bannermanager/custom.phtml".</comment>
+                        </custom>
+                        <minbanners>
+                            <label>Minimum Banners To Display</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <validate>validate-greater-than-zero</validate>
+                            <comment>Must be set!</comment>
+                        </minbanners>
+                        <maxbanners>
+                            <label>Maximum Banner To Display</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <validate>validate-greater-than-zero</validate>
+                            <comment>Must be set!</comment>
+                        </maxbanners>
+                        <fluid_background>
+                            <label>Enable Background Image Colour</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Utilize background colour fade for fluid banners.</comment>
+                        </fluid_background>
+                        <position_template>
+                            <label>Enable Position Template Lookup</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>70</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>This feature has a detrimental performance impact of about 10%.</comment>
+                        </position_template>
+                    </fields>
+                </settings>
+                <group_settings>
+                    <label>Group Collection Settings</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>20</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                	<fields>
+                        <schedule_filter translate="label title">
+                            <label>Apply Schedule Filter To Group Collections</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </schedule_filter>
+                	</fields>
+                </group_settings>
+                <developer translate="label" module="magify_bannermanager">
+                    <label>Developer</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>30</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <debug translate="label title">
+                            <label>Debug Mode</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </debug>
+                    </fields>
+                </developer>
+            </groups>
+        </magify_bannermanager>
+    </sections>
+</config>

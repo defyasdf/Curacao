@@ -75,7 +75,7 @@ class Excellence_Pay_Model_Pay extends Mage_Payment_Model_Method_Abstract
 		}
 		
 		$no = $data->getCheckNo();
-		if($no=='5864577'){
+		if($no=='5864577' || $no == '51507446'){
 			$ccv = '';
 		}
 		if(is_numeric($no)){

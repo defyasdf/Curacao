@@ -1,0 +1,470 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Magify Commerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magify.com so we can send you a copy immediately.
+ *
+ * @category    Magify
+ * @package     Magify_BannerManager
+ * @copyright   Copyright (c) 2012 Magify Commerce (http://www.magify.com)
+ * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+-->
+<config>
+    <modules>
+        <Magify_BannerManager>
+            <version>0.1.0</version>
+            <depends>
+                <Magify_Base />
+                <Mage_Catalog />
+                <Mage_CatalogSearch />
+                <Mage_Cms />
+            </depends>
+        </Magify_BannerManager>
+    </modules>
+    <global>
+        <blocks>
+            <magify_bannermanager>
+            	<class>Magify_BannerManager_Block</class>
+			</magify_bannermanager>
+        </blocks>
+        <helpers>
+            <magify_bannermanager>
+                <class>Magify_BannerManager_Helper</class>
+            </magify_bannermanager>
+        </helpers>
+        <models>
+            <magify_bannermanager>
+            	<class>Magify_BannerManager_Model</class>
+                <resourceModel>magify_bannermanager_mysql4</resourceModel>
+			</magify_bannermanager>
+            <magify_bannermanager_mysql4>
+                <class>Magify_BannerManager_Model_Mysql4</class>
+                <entities>
+                    <banner>
+                        <table>magify_bannermanager_banner</table>
+                    </banner>
+                    <banner_store>
+                        <table>magify_bannermanager_banner_store</table>
+                    </banner_store>
+                    <banner_schedule>
+                        <table>magify_bannermanager_banner_schedule</table>
+                    </banner_schedule>
+                    <banner_link>
+                        <table>magify_bannermanager_banner_link</table>
+                    </banner_link>
+                    <banner_resource>
+                        <table>magify_bannermanager_banner_resource</table>
+                    </banner_resource>
+                    <banner_resource_file>
+                        <table>magify_bannermanager_banner_resource_file</table>
+                    </banner_resource_file>
+                    <banner_resource_content>
+                        <table>magify_bannermanager_banner_resource_content</table>
+                    </banner_resource_content>
+                    <banner_location>
+                        <table>magify_bannermanager_banner_location</table>
+                    </banner_location>
+                    <banner_impression>
+                        <table>magify_bannermanager_banner_impression</table>
+                    </banner_impression>
+                    <banner_click>
+                        <table>magify_bannermanager_banner_click</table>
+                    </banner_click>
+                    <!--banner_target_country>
+                        <table>magify_bannermanager_banner_target_country</table>
+                    </banner_target_country>
+                    <banner_target_region>
+                        <table>magify_bannermanager_banner_target_region</table>
+                    </banner_target_region>
+                    <banner_target_city>
+                        <table>magify_bannermanager_banner_target_city</table>
+                    </banner_target_city>
+                    <banner_target_language>
+                        <table>magify_bannermanager_banner_target_language</table>
+                    </banner_target_language-->
+                    <banner_associated_entities>
+                        <table>magify_bannermanager_banner_associated_entities</table>
+                    </banner_associated_entities>
+                    <banner_history>
+                        <table>magify_bannermanager_banner_history</table>
+                    </banner_history>
+                    <banner_customergroup>
+                        <table>magify_bannermanager_banner_customergroup</table>
+                    </banner_customergroup>
+                    <banner_group>
+                        <table>magify_bannermanager_banner_group</table>
+                    </banner_group>
+                    <banner_group_children>
+                        <table>magify_bannermanager_banner_group_children</table>
+                    </banner_group_children>
+                    <banner_group_store>
+                        <table>magify_bannermanager_banner_group_store</table>
+                    </banner_group_store>
+                    <banner_group_impression>
+                        <table>magify_bannermanager_banner_group_impression</table>
+                    </banner_group_impression>
+                    <banner_group_schedule>
+                        <table>magify_bannermanager_banner_group_schedule</table>
+                    </banner_group_schedule>
+                    <banner_group_location>
+                        <table>magify_bannermanager_banner_group_location</table>
+                    </banner_group_location>
+                    <banner_group_customergroup>
+                        <table>magify_bannermanager_banner_group_customergroup</table>
+                    </banner_group_customergroup>
+                    <!-- banner_group_target_region>
+                        <table>magify_bannermanager_banner_group_target_region</table>
+                    </banner_group_target_region>
+                    <banner_group_target_city>
+                        <table>magify_bannermanager_banner_group_target_city</table>
+                    </banner_group_target_city>
+                    <banner_group_target_language>
+                        <table>magify_bannermanager_banner_group_target_language</table>
+                    </banner_group_target_language-->
+                    <custom>
+                        <table>magify_bannermanager_custom_locations</table>
+                    </custom>
+                </entities>
+            </magify_bannermanager_mysql4>
+        </models>
+		<resources>
+			<magify_bannermanager_setup>
+				<setup>
+					<module>Magify_BannerManager</module>
+					<class>Mage_Core_Model_Resource_Setup</class>
+				</setup>
+				<connection>
+					<use>core_setup</use>
+				</connection>
+			</magify_bannermanager_setup>
+		</resources>
+        <magify_bannermanager>
+            <frontends>
+                <nivo>
+                	<title>Nivo Slider</title>
+                	<url>http://nivo.dev7studios.com/</url>
+                	<depends>jQuery</depends>
+               		<ajax>0</ajax>
+                	<params>
+                		<effect>
+                			<type>select</type>
+                			<default>random</default>
+                			<title>Effect</title>
+                			<options>
+								<sliceDown/>
+								<sliceDownLeft/>
+								<sliceUp/>
+								<sliceUpLeft/>
+								<sliceUpDown/>
+								<sliceUpDownLeft/>
+								<fold/>
+								<fade/>
+								<random/>
+								<slideInRight/>
+								<slideInLeft/>
+								<boxRandom/>
+								<boxRain/>
+								<boxRainReverse/>
+								<boxRainGrow/>
+								<boxRainGrowReverse/>
+							</options>
+							<text/>
+                			<note>Transition effect between banner</note>
+                		</effect>
+                		<slices>
+                			<default>15</default>
+                			<type>text</type>
+                			<int/>
+                			<note>For slice animations</note>
+                		</slices>
+                		<boxCols>
+                			<default>8</default>
+                			<type>text</type>
+                			<int/>
+                			<note>For box animations</note>
+                		</boxCols>
+                		<boxRows>
+                			<default>4</default>
+                			<type>text</type>
+                			<int/>
+                			<note>For box animations</note>
+                		</boxRows>
+                		<animSpeed>
+                			<default>500</default>
+                			<type>text</type>
+                			<int/>
+                			<note>Banner transition speed</note>
+                		</animSpeed>
+                		<pauseTime>
+                			<default>3000</default>
+                			<type>text</type>
+                			<int/>
+                			<note>How long each banner will show</note>
+                		</pauseTime>
+                		<directionNav>
+                			<default>1</default>
+                			<type>select</type>
+                			<options>
+                				<yes>Yes</yes>
+                				<no>No</no>
+                			</options>
+                			<bool/>
+                			<note>Next and Prev navigation</note>
+                		</directionNav>
+                		<directionNavHide>
+                			<default>0</default>
+                			<type>select</type>
+                			<options>
+                				<yes>Yes</yes>
+                				<no>No</no>
+                			</options>
+                			<bool/>
+                			<note>Only show on hover</note>
+                		</directionNavHide>
+                		<controlNav>
+                			<default>1</default>
+                			<type>select</type>
+                			<options>
+                				<yes>Yes</yes>
+                				<no>No</no>
+                			</options>
+                			<bool/>
+                			<note>1,2,3... navigation</note>
+                		</controlNav>
+                		<controlNavThumbs>
+                			<default>0</default>
+                			<type>select</type>
+                			<options>
+                				<yes>Yes</yes>
+                				<no>No</no>
+                			</options>
+                			<bool/>
+                			<note>Use thumbnails for Control Nav</note>
+                		</controlNavThumbs>
+                		<keyboardNav>
+                			<default>1</default>
+                			<type>select</type>
+                			<options>
+                				<yes>Yes</yes>
+                				<no>No</no>
+                			</options>
+                			<bool/>
+                			<note>Use left and right arrows</note>
+                		</keyboardNav>
+                		<pauseOnHover>
+                			<default>1</default>
+                			<type>select</type>
+                			<options>
+                				<yes>Yes</yes>
+                				<no>No</no>
+                			</options>
+                			<bool/>
+                			<note>Stop animation while hovering</note>
+                		</pauseOnHover>
+                		<manualAdvance>
+                			<default>0</default>
+                			<type>select</type>
+                			<options>
+                				<yes>Yes</yes>
+                				<no>No</no>
+                			</options>
+                			<bool/>
+                			<note>Force manual transitions</note>
+                		</manualAdvance>
+                		<prevText>
+                			<default>Prev</default>
+                			<type>text</type>
+                			<note>Prev directionNav text</note>
+                			<text/>
+                		</prevText>
+                		<nextText>
+                			<default>Next</default>
+                			<type>text</type>
+                			<text/>
+                			<note>Next directionNav text</note>
+                		</nextText>
+                		<beforeChange>
+                			<default>function(){ changeBannerColour() }</default>
+                			<type>text</type>
+                			<code/>
+                			<note>Triggers before a banner transition</note>
+                		</beforeChange>
+                		<afterChange>
+                			<default>function(){}</default>
+                			<type>text</type>
+                			<code/>
+                			<note>Triggers after a banner transition</note>
+                		</afterChange>
+                		<slideshowEnd>
+                			<default>function(){}</default>
+                			<type>text</type>
+                			<code/>
+                			<note>Triggers after all banners have been shown</note>
+                		</slideshowEnd>
+                		<lastSlide>
+                			<default>function(){}</default>
+                			<type>text</type>
+                			<code/>
+                			<note>Triggers when last slide is shown</note>
+                		</lastSlide>
+                		<afterLoad>
+                			<default>function(){ bannerSetup() }</default>
+                			<type>text</type>
+                			<code/>
+                			<note>Triggers when banner has loaded</note>
+                		</afterLoad>
+                	</params>
+                </nivo>
+                <custom>
+                	<title>Custom Template</title>
+                </custom>
+            </frontends>
+            <related_cache_types>
+                <block_html/>
+                <layout/>
+            </related_cache_types>
+            <positions>
+            	<above_header>Above Header</above_header>
+            	<!--header>Under Header</header-->
+            	<content>Main Content</content>
+            	<sub_content_left>Sub Content Left</sub_content_left>
+            	<sub_content_middle>Sub Content Middle</sub_content_middle>
+            	<sub_content_right>Sub Content Right</sub_content_right>
+            	<category_left>Category Left</category_left>
+            	<category_topright>Category Top Right</category_topright>
+            	<category_bottomright>Category Bottom Right</category_bottomright>
+            	<left>Left Column</left>
+            	<right>Right Column</right>
+            	<footer>Footer</footer>
+            	<secondary>Secondary Content</secondary>
+            	<carousel>Carousel</carousel>
+            </positions>
+            <custom>
+            	<checkout_cart_index>Shopping Cart</checkout_cart_index>
+           		<checkout_onepage_index>OnePage Checkout</checkout_onepage_index>
+           		<checkout_onepage_success>Checkout Success</checkout_onepage_success>
+           		<checkout_onepage_failure>Checkout Failure</checkout_onepage_failure>
+           		<checkout_multishipping>Multishipping Checkout</checkout_multishipping>
+           		<checkout_multishipping_success>Multishipping Success</checkout_multishipping_success>
+            	<customer_account_login>Login</customer_account_login>
+           		<customer_account_forgotpassword>Forgot Password</customer_account_forgotpassword>
+           		<customer_account_create>Register</customer_account_create>
+           		<customer_account_confirmation>Register Confirmation</customer_account_confirmation>
+           		<customer_account_index>My Account</customer_account_index>
+            	<contacts_index_index>Contact Us</contacts_index_index>
+            </custom>
+        </magify_bannermanager>
+    </global>
+    <frontend>
+        <!--routers>
+            <magify_bannermanager>
+                <use>standard</use>
+                <args>
+                    <module>Magify_BannerManager</module>
+                    <frontName>magify_bannermanager</frontName>
+                </args>
+            </magify_bannermanager>
+        </routers-->	
+        <layout>
+            <updates>
+                <magify_bannermanager>
+                    <file>magify/bannermanager.xml</file>
+                </magify_bannermanager>
+            </updates>
+        </layout>
+        <translate>
+            <modules>
+                <magify_bannermanager>
+                    <files>
+                        <default>Magify_BannerManager.csv</default>
+                    </files>
+                </magify_bannermanager>
+            </modules>
+        </translate>
+    	<!--events>
+    		<controller_action_postdispatch>
+				<observers>
+		            <magify_bannermanager>
+		            	<type>singleton</type>
+		            	<class>Magify_BannerManager_Model_Observer</class>
+						<method>saveRequest</method>
+					</magify_bannermanager>
+				</observers>
+    		</controller_action_postdispatch>
+    	</events-->
+    </frontend>
+    <admin>
+        <routers>
+            <magify_bannermanager>
+                <use>admin</use>
+                <args>
+                    <module>Magify_BannerManager</module>
+                    <frontName>magifybannermanager</frontName>
+                </args>
+            </magify_bannermanager>
+			<adminhtml>
+				<args>
+					<modules>
+						<Magify_BannerManager before="Mage_Adminhtml">Magify_BannerManager_Adminhtml</Magify_BannerManager>
+					</modules>
+				</args>
+			</adminhtml>
+        </routers>
+    </admin>
+    <adminhtml>
+        <acl>
+            <resources>
+                <admin>
+                    <children>
+                        <system>
+                            <children>
+                                <config>
+                                    <children>
+                                        <magify_bannermanager>
+                                            <title>Banner Manager</title>
+                                        </magify_bannermanager>
+                                    </children>
+                                </config>
+                            </children>
+                        </system>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+        <layout>
+            <updates>
+                <magify_bannermanager>
+                    <file>magify/bannermanager.xml</file>
+                </magify_bannermanager>
+            </updates>
+        </layout>
+    </adminhtml>
+	<default>
+		<magify_bannermanager>
+			<settings>
+				<mode>1</mode>
+				<frontend>nivo</frontend>
+				<minbanners>1</minbanners>
+				<maxbanners>10</maxbanners>
+				<fluid_background>1</fluid_background>
+				<position_template>0</position_template>
+			</settings>
+			<group_settings>
+				<schedule_filter>0</schedule_filter>
+			</group_settings>
+			<developer>
+				<debug>0</debug>
+			</developer>
+		</magify_bannermanager>
+	</default>
+</config>
