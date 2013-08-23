@@ -33,7 +33,7 @@
 
  mysql_select_db($db,$link);
 		
-		
+ini_set("soap.wsdl_cache_enabled", 0);		
 ?>
 
 
@@ -282,6 +282,11 @@
 				$set = "N";
 				
 			}
+			$loc = '33';
+			if($product->getVendorid() == '2139'){
+				$loc = '16';
+			}
+			
 			$list['TEstLine'][] = array('ItemType'=>$type,
 									  'Item_ID' => $sku,
 									  'Item_Name' => $n,
@@ -291,7 +296,8 @@
 									  'Price' =>$price,
 									  'Cost' => '',
 									  'Taxable' => 'Y',
-									  'WebVendor' => $v ) ;
+									  'WebVendor' => $v,
+									  'From' => $loc ) ;
 		}
 	
 	
@@ -392,7 +398,13 @@ echo '</pre>';*/
 ?>
 <input type="hidden" value="<?php echo $revshare?>" />
 <!--End Custom Code-->
-
+<div style="display:none">
+	<?php 
+		echo '<pre>';
+			print_r($param);
+		echo '</pre>';
+	?>
+</div>
 <?php if ($this->getOrderId()):?>
 <?php if ($this->getCanViewOrder()) :?>
     <p><?php echo $this->__('Your order # is: %s.', sprintf('<a href="%s">%s</a>', $this->escapeHtml($this->getViewOrderUrl()), $this->escapeHtml($this->getOrderId()))) ?></p>
@@ -481,6 +493,12 @@ echo '</pre>';*/
 	  Mage::getSingleton('core/session')->unsAuthrecord();
 	  if(Mage::getSingleton('core/session')->getCouponjoin100()){
 	  	Mage::getSingleton('core/session')->unsCouponjoin100();	
+	  }
+	   if(Mage::getSingleton('core/session')->getCouponjoin25()){
+	  	Mage::getSingleton('core/session')->unsCouponjoin25();	
+	  }
+	   if(Mage::getSingleton('core/session')->getCouponjoin299100()){
+	  	Mage::getSingleton('core/session')->unsCouponjoin299100();	
 	  }
 ?>
 <?php 
