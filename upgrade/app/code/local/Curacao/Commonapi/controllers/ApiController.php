@@ -130,6 +130,67 @@ class Curacao_Commonapi_ApiController extends Mage_Core_Controller_Front_Action
 		$this->getResponse()->setBody(Zend_Json::encode($response));
 	}
 	
+	public function gwm25couponAction()
+	{
+		$customerGroupIds = Mage::getModel('customer/group')->getCollection()->getAllIds();
+		$websitesId = Mage::getModel('core/website')->getCollection()->getAllIds();
+	
+		$cc = Mage::helper('core')->getRandomString(8);
+  	    $couponCode = strtoupper(strtolower($cc));
+	
+		$model = Mage::getModel('salesrule/rule');
+		$model->setName('$25 Off');
+		$model->setDescription('$25 Off');
+		$model->setFromDate();
+		$model->setToDate(date('Y-m-d', strtotime('+2 days')));
+		$model->setCouponType(2);
+		$model->setCouponCode($couponCode);
+		$model->setUsesPerCoupon(1);
+		$model->setUsesPerCustomer(1);
+		$model->setCustomerGroupIds($customerGroupIds);
+		$model->setIsActive(1);
+		$model->setConditionsSerialized('a:6:{s:4:\"type\";s:32:\"salesrule/rule_condition_combine\";s:9:\"attribute\";N;s:8:\"operator\";N;s:5:\"value\";s:1:\"1\";s:18:\"is_value_processed\";N;s:10:\"aggregator\";s:3:\"all\";}');
+		$model->setActionsSerialized('a:6:{s:4:\"type\";s:40:\"salesrule/rule_condition_product_combine\";s:9:\"attribute\";N;s:8:\"operator\";N;s:5:\"value\";s:1:\"1\";s:18:\"is_value_processed\";N;s:10:\"aggregator\";s:3:\"all\";}');
+		$model->setStopRulesProcessing(0);
+		$model->setIsAdvanced(1);
+		$model->setProductIds('');
+		$model->setSortOrder(1);
+		$model->setSimpleAction('cart_fixed');
+		$model->setDiscountAmount('25');
+		$model->setDiscountStep(0);
+		$model->setSimpleFreeShipping(0);
+		$model->setTimesUsed(0);
+		$model->setIsRss(0);
+		$model->setWebsiteIds($websitesId);
+		$model->setStoreLabels(array('$25 Off'));
+
+		try {
+			$model->save();
+			$response = array(
+				'success' => false,
+				'error'=> true,
+			);
+			$response['success'] = true;
+			$response['error'] = false;
+			$response['code'] = $couponCode;
+	
+		
+			
+        //End Coupon thing
+        
+		} catch (Exception $e) {
+			Mage::log($e->getMessage());
+			$response['success'] = false;
+
+			$response['error'] = true;
+			$response['message'] = $this->__('Can not generate coupon code, please try again later.');        	
+	
+		}
+		
+		$this->getResponse()->setBody(Zend_Json::encode($response));
+	}
+	
+	
 /*	public function signup10offAction()
 	{
 		$amt = 10;
