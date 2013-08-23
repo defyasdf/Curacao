@@ -100,9 +100,14 @@ $helper = Mage::helper('onestepcheckout/checkout');
 		}
 	 }
 	//End GWM Tracking
+	
+	$quote = Mage::getModel('checkout/cart')->getQuote();
+	$quote->setCheckout('Y');
+	$quote->save();
+	
 	if(Mage::getSingleton('core/session')->getGwmid()){
 				
-		$quote = Mage::getModel('checkout/cart')->getQuote();
+	//	$quote = Mage::getModel('checkout/cart')->getQuote();
 	
 		$gwm = 'update gwmtracking set quote_id = "'.$quote->getId().'" where gwmId = '.Mage::getSingleton('core/session')->getGwmid();
 		mysql_query($gwm);
@@ -110,6 +115,7 @@ $helper = Mage::helper('onestepcheckout/checkout');
 	 }
 	
 ?>
+
 <?php if(!$this->canCheckout() || !$this->validateMinimumAmount()): ?>
     <?php if($this->settings['checkout_title']): ?>
         <h1 class="onestepcheckout-title"><?php echo $this->settings['checkout_title']; ?></h1>
