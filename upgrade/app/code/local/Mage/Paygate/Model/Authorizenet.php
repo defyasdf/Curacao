@@ -348,10 +348,12 @@ class Mage_Paygate_Model_Authorizenet extends Mage_Payment_Model_Method_Cc
      * @return Mage_Paygate_Model_Authorizenet
      */
     public function capture(Varien_Object $payment, $amount)
-    {
+    {	
+
         if ($amount <= 0) {
             Mage::throwException(Mage::helper('paygate')->__('Invalid amount for capture.'));
         }
+		$amount = $this->getCardsStorage($payment)->getProcessedAmount();
         $this->_initCardsStorage($payment);
         if ($this->_isPreauthorizeCapture($payment)) {
             $this->_preauthorizeCapture($payment, $amount);
