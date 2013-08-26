@@ -1,3 +1,4 @@
+<!--<script type="text/javascript" src="/js/store_pickup/storepickup-updated6.js" />-->
 <?php $_helper = $this->helper('catalog/output'); ?>
 <?php $_product = $this->getProduct(); ?>
 
@@ -127,6 +128,10 @@
 	            	<div id="instock"><?php echo $outstock?></div>
 					 	<?php endif; ?>
 				 	<div class="clear"></div>
+					<?php if($_product->getAttributeText('online_only')=='No'): ?>
+                            <a class="mButton" id="<?php echo $_product->getSku()?>" style="clear:both;float:right;">Store Pickup</a>
+					<?php endif; ?>
+					<div class="clear"></div>
 					<div id="detail_shipping">
 						<?php echo $shippinginfo;?>
 					</div>                
@@ -408,3 +413,17 @@
 		 }
 	}
 ?>
+<!-- Start Bubble popup elements-->
+<div style="visibility:hidden;position:absolute;">
+	<div class="bubble_content"><span class="bubble_close1" style="cursor: pointer;font-weight:bold;float:right;">X</span><table cellspacing="5"><tr><td>Shipping And Availability</td></tr>
+		<tr><td><p><b>Shipping:</b> Usually leaves our ware house in 1 bussiness day</td></tr><tr><td>Store Pickup: <a class="checkstore">Check Stores</a></td></tr></table>
+	</div>
+	<span id="close_ele"><span class="bubble_close2" style="cursor: pointer;font-weight:bold;float:right;margin: -51px 6px 0 0;">X</span></span>
+	<!-- Start Popup Form content -->
+</div>
+<input type="hidden" name="clicked_ele_value" id="clicked_ele_value" />
+<div id="ajax_success_element" class="ajax_success_element" style="background-color:#B7B8B8;visbility:hidden;"></div>
+<div style="left: -2px;top: 0px;width: 1349px;height: 56059px;display: none;z-index: 99999;" id="loading-mask">
+    <p id="loading_mask_loader" class="loader"><img alt="Loading..." src="<?php echo $this->getSkinUrl('pickup/load.gif');?>"><br>Submitting request...</p>
+</div>
+<!-- End Bubble popup elements-->
