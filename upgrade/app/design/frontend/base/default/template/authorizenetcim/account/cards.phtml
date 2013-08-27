@@ -1,0 +1,54 @@
+<div class="page-title">
+    <h1><?php echo Mage::helper('authorizenetcim')->__('My Credit Cards'); ?></h1>
+</div>
+<div id="messages"><?php echo $this->getMessagesBlock()->getGroupedHtml() ?></div>
+<div>
+    <?php if ($this->getCards()) : ?>
+    <table class="data-table" id="my-cards-table">
+        <col width="1" />
+        <col width="1" />        
+        <col width="1" />
+        <col width="1" />
+        <col width="1" />
+        <thead>
+            <tr>
+                <th><?php echo $this->__('Card #') ?></th>
+                <th><?php echo $this->__('Bill To') ?></th>                
+                <th>&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php $_odd = ''; ?>
+            <?php foreach ($this->getCards() as $_card): ?>
+            <tr>
+                <td><?php echo $_card->getCcNumber() ?></td>
+                <td><?php echo $_card->getFirstname() . ' ' . $_card->getLastname() ?></td>
+                <td class="a-center">
+                    <span class="nobr"><a href="<?php echo $this->getEditUrl($_card) ?>"><?php echo $this->__('Edit Card') ?></a>
+                        <?php /*<span class="separator">|</span><a href="<?php echo $this->getTrackUrl($_order) ?>"><?php echo $this->__('Track Order') ?></a>&nbsp;*/ ?>                        
+                        <span class="separator">|</span> <a href="#" class="link-reorder" onclick="return deleteCard('<?php echo $_card->getGatewayId() ?>');"><?php echo $this->__('Delete') ?></a>                    
+                    </span>
+                </td>
+            </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+    <?php else: ?>
+    You have no credit cards on file.  
+    <?php endif ;?>
+</div>
+<script type="text/javascript">decorateTable('my-cards-table');</script>
+<div class="buttons-set">
+    <p class="back-link"><a href="<?php echo $this->escapeUrl($this->getBackUrl()) ?>"><small>&laquo; </small><?php echo $this->__('Back') ?></a></p>
+    <a href="<?php echo $this->helper('authorizenetcim')->getCustomerAddCreditCardUrl(); ?>" class="button"><span><?php echo $this->__('Add a Credit Card') ?></span></a>
+</div>
+<script type="text/javascript">
+//<![CDATA[
+    function deleteCard(cardId) {
+        if(confirm('<?php echo $this->__('Are you sure you want to delete this credit card?') ?>')) {
+            window.location='<?php echo $this->getDeleteUrl() ?>id/'+cardId;
+        }
+        return false;
+    }
+//]]>
+</script>

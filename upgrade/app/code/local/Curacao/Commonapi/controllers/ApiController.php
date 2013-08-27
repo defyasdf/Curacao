@@ -192,6 +192,7 @@ class Curacao_Commonapi_ApiController extends Mage_Core_Controller_Front_Action
 	
 	public function promo10offcouponAction()
 	{
+		if($_SERVER['REMOTE_ADDR']=='206.170.79.99' || $_SERVER['REMOTE_ADDR']=='206.170.79.5'){
 			$customerGroupIds = Mage::getModel('customer/group')->getCollection()->getAllIds();
 			$websitesId = Mage::getModel('core/website')->getCollection()->getAllIds();
 		
@@ -246,11 +247,11 @@ class Curacao_Commonapi_ApiController extends Mage_Core_Controller_Front_Action
 				$response['message'] = $this->__('Can not generate coupon code, please try again later.');        	
 		
 			}
-		/*}else{
+		}else{
 			$response['success'] = false;
 			$response['error'] = true;
-			$response['message'] = 'You are not logged in please login.';        	
-		}*/
+			$response['message'] = 'Access Denied.';        	
+		}
 		$this->getResponse()->setBody(Zend_Json::encode($response));
 		
 	}

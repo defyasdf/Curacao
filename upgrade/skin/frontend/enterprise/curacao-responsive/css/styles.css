@@ -950,13 +950,22 @@ body{ background: #fff; font: 14px/21px Arial, Tahoma, sans-serif; }
 	.block-layered-nav li a:hover { background: #ececec; }
 	.currently ol{ margin-bottom: 0;	}
 	.currently ol li span{ float: left; }
-	.currently ol li span.label{ margin-right: 4px; clear: left; 
+	.currently ol li span.label{
+		font-size: 12px;
+		margin-right: 4px;
+		clear: left; 
+	}
+	.currently ol li span.value{
+		font-size: 12px;	f
 	}
 	.currently ol li a.btn-remove{
-		float: left;
-		color: #fe4b05;
-		text-transform: uppercase;
+		border-bottom: 0 none;
+		color: #FE4B05;
+		float: right;
+		margin-top: -18px;
 		padding: 0 2px;
+		text-transform: uppercase;
+		width: 18px;
 	}
 	.currently{
 		border-bottom: 3px solid #dfe3e7;
