@@ -61,7 +61,7 @@
 
 	if($send == 1){
 	
-	$coupon = file_get_contents('http://m113.icuracao.com/onestepcheckout/ajax/createbuy42coupon/');
+	$coupon = file_get_contents('http://m113.icuracao.com/onestepcheckout/ajax/createautosignupcoupon/');
 	
 	$code = json_decode($coupon);
 	

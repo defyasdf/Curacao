@@ -23,12 +23,15 @@
 <file name="_addproduct4000.php" server="198.101.163.120//var/www/" local="130202028610000000" remote="130202028680000000" Dst="2" />
 <file name="_addproduct9116.php" server="198.101.163.120//var/www/" local="130202270696145857" remote="130202272370000000" Dst="2" />
 <file name="getitemwithoutprice.php" server="198.101.163.120//var/www/" local="130203747014412758" remote="130203747420000000" Dst="2" />
-<file name="_add_position.php" server="198.101.163.120//var/www/" local="130161579460000000" remote="130161579460000000" Dst="2" />
+<file name="_add_position.php" server="198.101.163.120//var/www/" local="130208929370000000" remote="130208929370000000" Dst="2" />
 <file name="_add_shipping_cost.php" server="198.101.163.120//var/www/" local="130161579460000000" remote="130161579460000000" Dst="2" />
 <file name="getActionData.php" server="198.101.163.120//var/www/" local="130203884749210738" remote="130203884790000000" Dst="2" />
 <file name="_addproductrosetta.php" server="198.101.163.120//var/www/" local="130203905051401956" remote="130203905100000000" Dst="2" />
-<file name="inventorycheck.php" server="198.101.163.120//var/www/" local="130161579460000000" remote="130161579460000000" Dst="2" />
+<file name="inventorycheck.php" server="198.101.163.120//var/www/" local="130222795566275977" remote="130222795710000000" Dst="2" />
 <file name="updateqty.php" server="198.101.163.120//var/www/" local="130205512774868479" remote="130205512830000000" Dst="2" />
 <file name="addequipo.php" server="198.101.163.120//var/www/" local="130205661680405388" remote="130205661740000000" Dst="2" />
 <file name="_add_curacao_price_bysku.php" server="198.101.163.120//var/www/" local="130205696240562116" remote="130205696310000000" Dst="2" />
+<file name="getcancelreport.php" server="198.101.163.120//var/www/" local="130222754237302095" remote="130222754370000000" Dst="2" />
+<file name="getcancelreport_merchandising.php" server="198.101.163.120//var/www/" local="130222760536292377" remote="130222760670000000" Dst="2" />
+<file name="inventoryTest.php" server="198.101.163.120//var/www/" local="130208929370000000" remote="130208929370000000" Dst="2" />
 </dwsync>

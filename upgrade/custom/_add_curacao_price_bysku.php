@@ -52,13 +52,13 @@
 
 	
 		$product = Mage::getModel('catalog/product');
-		$productId = $product->getIdBySku('25L-B10-HP/S7/2800US');
+		$productId = $product->getIdBySku('25L-B10-HP/S7/2801US');
 
 		$product->load($productId);
 		//$price = file_get_contents("http://data.icuracao.com/custom/get_price.php?sku=".$products->getSku());	
 	//if($product->getCron()!=492){	
 	
-		$credit = $proxy->GetSkuPrice(array('Sku'=>'25L-B10-HP/S7/2800US'));
+		$credit = $proxy->GetSkuPrice(array('Sku'=>'25L-B10-HP/S7/2801US'));
 	
 		$result = $credit->GetSkuPriceResult;
 		

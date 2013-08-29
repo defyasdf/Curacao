@@ -42,9 +42,9 @@
 	$h = $proxy->__setSoapHeaders($header); 
 		
 	$collection = Mage::getModel('catalog/product')->getCollection()
-		->addAttributeToSelect('*') // select all attributes
-		->addAttributeToFilter('vendorid', '2139')
-		->setCurPage(4); // set the offset (useful for pagination)
+				->addAttributeToSelect('*') // select all attributes
+				->addAttributeToFilter('vendorid', '2139')
+				->setCurPage(4); // set the offset (useful for pagination)
 		
 		// we iterate through the list of products to get attribute values
 	

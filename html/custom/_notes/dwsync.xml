@@ -4,7 +4,7 @@
 <file name="adddelloffer.php" server="198.101.163.120//var/www/" local="130173640457474528" remote="130173640490000000" Dst="2" />
 <file name="addbuy42email.php" server="198.101.163.120//var/www/" local="130175270311906870" remote="130175270370000000" Dst="2" />
 <file name="_add_curacao_price.php" server="198.101.163.120//var/www/" local="130209023365670470" remote="130209023400000000" Dst="2" />
-<file name="buy42gwmemail.php" server="198.101.163.120//var/www/" local="130175405851639299" remote="130175405910000000" Dst="2" />
+<file name="buy42gwmemail.php" server="198.101.163.120//var/www/" local="130175405910000000" remote="130175405910000000" Dst="2" />
 <file name="_getorder_item_collection.php" server="198.101.163.120//var/www/" local="130108943520000000" remote="130108943520000000" Dst="2" />
 <file name="_add_shipping_cost.php" server="198.101.163.120//var/www/" local="130108943520000000" remote="130108943520000000" Dst="2" />
 <file name="_addproduct.php" server="198.101.163.120//var/www/" local="130108943520000000" remote="130108943520000000" Dst="2" />
@@ -22,4 +22,5 @@
 <file name="_add_curacao_price_per_sku.php" server="198.101.163.120//var/www/" local="130191836626330146" remote="130191836790000000" Dst="2" />
 <file name="artest.php_old" server="198.101.163.120//var/www/" local="130108943520000000" remote="130108943520000000" Dst="2" />
 <file name="inventorycheck.php" server="198.101.163.120//var/www/" local="130214231274926523" remote="130214231380000000" Dst="2" />
+<file name="_add_curacao_price_by_db.php" server="198.101.163.120//var/www/" local="130221126980338321" remote="130221127100000000" Dst="2" />
 </dwsync>

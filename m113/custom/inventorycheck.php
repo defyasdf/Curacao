@@ -14,7 +14,7 @@ $header = new SOAPHeader($ns, 'TAuthHeader', $headerbody);
 //set the Headers of Soap Client. 
 $h = $proxy->__setSoapHeaders($header); 
 
-$credit = $proxy->InventoryLevel(array('cItem_ID'=>'33F-P23-ZL810/01DU','cLocations'=>'09,06,01,16,22,29,35,38,51,33'));
+$credit = $proxy->InventoryLevel(array('cItem_ID'=>'069-Q19-1002','cLocations'=>'16'));
 
 $result = $credit->InventoryLevelResult;
 

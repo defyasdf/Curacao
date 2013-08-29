@@ -10,17 +10,17 @@
 		$header = "<h1>Estamos regalando 4 refrigeradoras LG</h1>";
 		$dis = '<p>Para registrarte debes completar la siguiente informaci&oacute;n.</p>
 						';
-		$fname = "Nombre";
-		$lname = "Apellido";
-		$email = "Correo Electr&oacute;nico";
-		$tel = "Tel&eacute;fono";
-		$state = "Estado";
-		$note1 = "<p>No Compra necesaria. Para participar debe tener 18 a&ntilde;os o m&aacute;s. El concierto se realizar&aacute; en el Nokia Theatre el s&aacute;bado 31 de Agosto de 2013.</p>";
-		$note = "No compra necesaria. El sorteo de equipa tu casa esta abierto para residentes del Sur de California y Arizona únicamente, debe tener 18 años o más. Las probabilidades de ganar dependen del número de participaciones recibidas. Una compra o pago de cualquier tipo no aumentará sus probabilidades de ganar. Para m&aacute;s informaci&oacute;n Ver  <a href='http://www.icuracao.com/Equipa_Rules.pdf' target='_blank'>Reglas Oficiales</a>";
-		$greetings = "<h2>Gracias por Registrarte y Buena Suerte!</h2>";
+		$fname = "First Name";
+		$lname = "Last Name";
+		$email = "Email";
+		$tel = "Telephone";
+		$state = "State";
+		$note1 = "<p>No purchase necessary. Must be 18 years old or older to participate. Blue Man Group will perform at Hollywood Bowl, Saturday September 7th 2013.</p>";
+		$note = "No purchase necessary. Must be 18 years old or older to participate. Blue Man Group will perform at Hollywood Bowl, Saturday September 7th 2013.";
+		$greetings = "<h2>Thank you for register!</h2>";
 		$select = "Seleccione";
-		$error = "Campos requeridos";
-		$opt_in = "Inscribirme para recibir promociones por email";
+		$error = "Required fields";
+		$opt_in = "Sign me up to receive promotional emails.";
 	}else{
 		$header = "<h1>Estamos regalando 4 refrigeradoras LG</h1>";
 		$dis = '<p>Para registrarte debes completar la siguiente informaci&oacute;n.</p>
@@ -30,8 +30,8 @@
 		$email = "Correo Electr&oacute;nico";
 		$tel = "Tel&eacute;fono";
 		$state = "Estado";
-		$note1 = "<p>No Compra necesaria. Para participar debe tener 18 a&ntilde;os o m&aacute;s. El concierto se realizar&aacute; en el Nokia Theatre el s&aacute;bado 31 de Agosto de 2013.</p>";
-		$note = "No compra necesaria. El sorteo de equipa tu casa esta abierto para residentes del Sur de California y Arizona únicamente, debe tener 18 años o más. Las probabilidades de ganar dependen del número de participaciones recibidas. Una compra o pago de cualquier tipo no aumentará sus probabilidades de ganar. Para m&aacute;s informaci&oacute;n Ver  <a href='http://www.icuracao.com/Equipa_Rules.pdf' target='_blank'>Reglas Oficiales</a>";
+		$note1 = "<p>No Compra necesaria. Para participar debe tener 18 años o más. El show de Blue Man Group se realizará en el Hollywood Bowl el sábado 7 de Septiembre de 2013.</p>";
+		$note = "No Compra necesaria. Para participar debe tener 18 años o más. El show de Blue Man Group se realizará en el Hollywood Bowl el sábado 7 de Septiembre de 2013.";
 		$greetings = "<h2>Gracias por Registrarte y Buena Suerte!</h2>";
 		$select = "Seleccione";
 		$error = "Campos requeridos";
@@ -196,7 +196,7 @@ var WRInitTime=(new Date()).getTime();
 							if($_storeId == 1){
 						?>
                         <div align="right">
-                        	<a href="http://www.icuracao.com/messi-friends?___store=espn&___from_store=default">Ver en Espa&ntilde;ol</a>    </div>
+                        	<a href="http://www.icuracao.com/bluemangroup?___store=espn&___from_store=default">Ver en Espa&ntilde;ol</a>    </div>
                          <?php
 							
 							}
@@ -236,7 +236,7 @@ var WRInitTime=(new Date()).getTime();
 								<?php 
 									if($_storeId == 1){
 								?>
-                                <input type="image" src="images/btn_register_es.png" onClick="return createrecord()">
+                                <input type="image" src="images/btn_register_en.png" onClick="return createrecord()">
                                 <?php }else{?>
                                 <input type="image" src="images/btn_register_es.png" onClick="return createrecord()">
                                 <?php }?>

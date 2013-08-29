@@ -1,7 +1,8 @@
 <?php $_helper = $this->helper('catalog/output'); ?>
 <?php $_product = $this->getProduct(); ?>
 <?php 
-	if($_product->getId() == '9516'){
+
+	if($_SERVER["REQUEST_URI"] == '/'){
 ?>
 	<script type="text/javascript">
     	window.location.replace("http://www.icuracao.com/home");
