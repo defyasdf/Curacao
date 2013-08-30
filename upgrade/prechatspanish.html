@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Untitled Document</title>
+</head>
+
+<body>
+<!-- This script takes the endpoint URL parameter passed from the deployment page and makes
+it the action for the form -->
+<script type="text/javascript">
+(function() {
+function handlePageLoad() {
+var endpointMatcher = new RegExp("[\\?\\&]endpoint=([^&#]*)");
+document.getElementById('prechatForm').setAttribute('action',
+decodeURIComponent(endpointMatcher.exec(document.location.search)[1]));
+} if (window.addEventListener) {
+window.addEventListener('load', handlePageLoad, false);
+} else { window.attachEvent('onload', handlePageLoad, false);
+}})();
+</script>
+<img src="http://www.icuracao.com/skin/frontend/enterprise/curacao-responsive/images/logo.gif">
+<h1>Curacao Asistencia en Vivo</h1>
+<form method='post' id='prechatForm'>
+<table>
+	<tr><td>Nombre:</td><td><input type='text' name='liveagent.prechat.name' id='prechat_field' /></td></tr>
+    <tr><td>Correo Electr&oacute;nico:</td><td><input type='text' name='liveagent.prechat:Email' /></td></tr>
+    <tr><td>Cuál es su pregunta: </td><td><textarea name="liveagent.prechat:Question"></textarea></td></tr>
+</table>
+
+<!-- Creates an auto-query for a matching Contact record’s Email field based on the
+value of the liveagent.prechat:Email field -->
+<input type="hidden" name="liveagent.prechat.query:Email"
+value="Contact,Contact.Email" />
+<input type="hidden" name="liveagent.prechat.save:Email" value="Email__c" />
+<input type="hidden" name="liveagent.prechat.save:Question" value="Question__c" />
+<input type='submit' value='Asistencia por Chat' id='prechat_submit'/>
+<style type="text/css">
+ 
+p {font-weight: bolder; }
+#prechat_submit{
+	background: -moz-linear-gradient(center bottom , #FF5904 0px, #FF9259 100%) repeat scroll 0 0 transparent;
+    border: 0 none;
+    border-radius: 20px 20px 20px 20px;
+    box-shadow: 0 5px 3px -5px #000000;
+    color: #FFFFFF;
+    float: left;
+    font-family: Arial,Tahoma,sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    height: 31px;
+    margin: 0;
+    padding: 7px 20px;
+    text-shadow: 0 -1px #666666;
+    text-transform: capitalize;
+}
+</style>
+</form>
+
+</body>
+</html>
