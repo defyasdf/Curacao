@@ -1,0 +1,246 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php
+/**
+ * Template for Mage_Page_Block_Html
+ */
+?>
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
+<?php	
+	$_storeId = Mage::app()->getStore()->getId();
+	if($_storeId == 1){
+		$_all = 'See All';
+		$_top = 'Top Sellers';
+		$_service = 'Services';
+	} else {
+		$_all = 'Ver todos';
+		$_top = 'M&aacute;s Vendidos';
+		$_service = 'Servicios';
+	}
+	
+?>	
+
+
+<head>
+	<?php echo $this->getChildHtml('head') ?>
+</head>
+
+<body<?php echo $this->getBodyClass()?' class="'.$this->getBodyClass().'"':'' ?>>
+	<?php //echo $this->getChildHtml('after_body_start') ?>
+    
+	
+	<header>
+		
+		<div class="container">
+			<?php echo $this->getChildHtml('header') ?>
+		</div><!--container-->
+		
+	</header>
+	
+	 <div id="overlayDiv">
+    	<div id="subbannercontent">
+    		<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('sub_header_banner')->toHtml() ?>
+        </div>
+	</div>
+	<div class="container">
+	
+		<div class="twenty columns breadcrumbs">
+			<?php echo $this->getChildHtml('breadcrumbs') ?>
+		</div><!--breadcrumbs-->
+		
+		<div class="twenty columns notices">
+			<?php echo $this->getChildHtml('global_notices') ?>
+		</div><!--notices-->
+	
+		<div class="twenty columns 1col content alpha omega">
+			<div class="twenty columns alpha omega hero">
+				<?php //get the banner-manager homepage-banner ?>
+				<div class="hero-banner sixteen columns alpha" id="hero-banner">
+					<?php echo $this->getChildHtml('content') ?>					
+				</div>
+				<div class="right four columns omega curacao-credit-ad">
+					<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('curacao_credit')->toHtml() ?>
+				</div>
+			</div>
+			<div class="twenty columns alpha omega carousel featured-items" id="featuredSlider">
+				<div id="slider-code">
+					<a class="buttons prev" href="#">left</a>
+					<div class="viewport">
+						<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('homepage_featured_carousel')->toHtml() ?>
+					</div>
+					<a class="buttons next" href="#">right</a>
+				</div>
+				<script type="text/javascript">
+				window.onload = function(){
+					jQuery('#slider-code').tinycarousel({ display: 4 });
+				}
+				</script>
+			</div>
+			<div class="twenty columns alpha omega banner" style="display:none">
+				<div class="hp-banner-full"><?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('homepage_banner')->toHtml() ?></div>
+			</div>
+			            
+            <div class="twenty columns alpha omega top-sellers">
+				<div class="block-header">
+                <?php echo $_top?>
+                <a class="right" href="/top-sellers.html"><?php echo($_all) ?></a></div>
+				<div class="collection-holder">
+					<?php echo $this->getLayout()->createBlock('catalog/product_list')->setCategoryId(424)->setTemplate('catalog/product/top-sellers.phtml')->toHtml() ?>
+				</div>
+			</div>
+			<!--<div class="twenty columns alpha omega full-banner">
+				<?php //echo $this->getLayout()->createBlock('cms/block')->setBlockId('curacao_financial_services_promo')->toHtml() ?>
+			</div>-->
+			<div class="twenty columns alpha omega services">
+            
+				<div class="block-header"><?php echo $_service?>
+				<?php //echo Mage::getModel('cms/block')->load('hp-service-list')->getTitle() ?><!--<a class="right view-link" href="/services.html"><?php //echo($_all) ?></a>--></div>
+				<div class="services-holder">
+					<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('hp-service-list')->toHtml() ?>
+				</div>
+			</div>
+			
+
+		</div>		
+		
+	    <?php echo $this->getChildHtml('footer') ?>
+		
+        
+        <?php echo $this->getChildHtml('before_body_end') ?>
+        <?php echo $this->getAbsoluteFooter() ?>
+	</div>        
+<script type="text/javascript">
+	var dataForm = new VarienForm('signup-form', true);
+	jQuery(document).ready(function() {
+	<?php 
+	$session = Mage::getSingleton('customer/session', array('name'=>'frontend')); 
+
+	if(!$session->isLoggedIn()){
+		if(isset($_GET['hid'])){
+			if(!isset($_COOKIE["signup"])){?>	
+				var url = "/lighbox_html/joinget100.php?width=620&height=405";
+				tb_show("Sign Up and Get $100 Off", url);
+				jQuery("#TB_overlay").unbind("click",tb_remove);
+		<?php 
+				$expire=time()+60*60*24*30;
+				setcookie("signup", "signup", $expire);
+			}
+		}
+	}
+	?>
+	
+	})
+	function signupoffer(){
+		var valid = new Validation('signup-form', {onSubmit:false});
+			valid.reset();
+		var result = valid.validate();
+			if(result){
+				jQuery("#formcontent").hide('slow');
+				jQuery("#formloadingsignup").show('slow');
+				var login_url = '/onestepcheckout/ajax/newsignup/'
+				jQuery.ajax({ 
+						type: 'post',
+						data: {'firstname':jQuery("#signupfnmae").val(),'lastname':jQuery("#signuplname").val(),'email':jQuery("#signupemail").val(),'password':jQuery("#signuppass").val()},
+						url:  login_url,                    
+						success: function(data) {
+						   var result = jQuery.parseJSON(data); 
+							if(result.success) {
+								var coupon_url = '/onestepcheckout/ajax/createautosignupcoupon/'
+								jQuery.ajax({ 
+										type: 'post',
+										data: {'firstname':jQuery("#signupfnmae").val()},
+										url:  coupon_url,                    
+										success: function(data) {
+										   var result = jQuery.parseJSON(data); 
+											if(result.success) {
+												jQuery("#signupcouponcode").html(result.code);
+												jQuery("#lighboxsignupform").hide('slow');
+												jQuery("#lighboxsignupthanks").show('slow');
+											} else {
+												
+											}
+										}.bind(this)
+								 });
+							} else {
+								alert(result.error);
+								jQuery("#formcontent").show('slow');
+								jQuery("#formloadingsignup").hide('slow');			
+							}
+						}.bind(this)
+				 });
+			
+			}
+			return false;
+		
+	}
+	
+	function countinueShop(){
+		 var coupon_url = '/onestepcheckout/ajax/savecoupon/'
+		 jQuery.ajax({ 
+				type: 'post',
+				data: {'coupon':jQuery("#couponjoin100").html()},
+				url:  coupon_url,                    
+				success: function(data) {
+				   	var result = jQuery.parseJSON(data); 
+					tb_remove();
+				}.bind(this)
+		 });
+		 return false;
+		// location.reload();
+	}
+	
+</script>
+
+
+
+</body>
+</html>
+
+<?php
+	if(isset($_GET['hid'])){
+		if(Mage::getSingleton('core/session')->getGwmid()){
+			$server = '192.168.100.121';
+			$user = 'curacaodata';
+			$pass = 'curacaodata';
+			$db = 'icuracaoproduct';
+			
+			
+			$link = mysql_connect($server,$user,$pass);
+			
+			mysql_select_db($db,$link);
+			
+			$gwm = 'update gwmtracking set landingpage = "Home_Signup_Promo" where gwmId = '.Mage::getSingleton('core/session')->getGwmid();
+			mysql_query($gwm);
+			
+			mysql_close($link);
+		}
+	}
+?>

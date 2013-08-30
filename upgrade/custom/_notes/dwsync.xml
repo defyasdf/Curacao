@@ -10,4 +10,7 @@
 <file name="buy42gwmemail.php" server="198.101.163.120//var/www/" local="130207271460000000" remote="130207271460000000" Dst="2" />
 <file name="get_gwm_numbers.php" server="198.101.163.120//var/www/" local="130216038945129353" remote="130216039040000000" Dst="2" />
 <file name="get_gwm_numbers_using_DF.php" server="198.101.163.120//var/www/" local="130215997599824537" remote="130215997670000000" Dst="2" />
+<file name="_add_upc.php" server="198.101.163.120//var/www/" local="130207271460000000" remote="130207271460000000" Dst="2" />
+<file name="getpayment_info.php" server="198.101.163.120//var/www/" local="130223027058106553" remote="130223027200000000" Dst="2" />
+<file name="_getorder_collection.php" server="198.101.163.120//var/www/" local="130207271460000000" remote="130207271460000000" Dst="2" />
 </dwsync>
