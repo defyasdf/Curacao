@@ -84,9 +84,10 @@ var WRInitTime=(new Date()).getTime();
 									if(Mage::getSingleton('core/session')->getCouponjoin25()){
 										$ccode =  Mage::getSingleton('core/session')->getCouponjoin25();
 									}else{
-										$coupon = file_get_contents('http://www.icuracao.com/commonapi/api/gwm25coupon');
-										$code = json_decode($coupon);
-										$ccode = $code->code;
+										//$coupon = file_get_contents('http://www.icuracao.com/commonapi/api/gwm25coupon');
+										//$code = json_decode($coupon);
+										//$ccode = $code->code;
+										$ccode = '';
 										Mage::getSingleton('core/session')->setCouponjoin25($code->code);
 									}
 								?>
