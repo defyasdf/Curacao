@@ -187,8 +187,10 @@ ini_set("soap.wsdl_cache_enabled", 0);
 		 $cd = $grandTotal;
 	}
 	
+	
 	$orderObj->setCuracaocustomernumber($cc_num);
 	$orderObj->setCuracaocustomerdiscount($cd);
+	$orderObj->addStatusToHistory('pending', "Please Review order for the fraud", false);
 	
 	$orderObj->save();
 	
@@ -390,8 +392,11 @@ echo '</pre>';*/
 		$orderObj->save();
 	}
 	
-	$orderObj->addStatusToHistory('pending', "Please Review order for the fraud", false);
-	$orderObj->save();
+	if($hid){
+		$orderObj->addStatusToHistory('gwmpromo', "Order Coming using promo : ".$coupan, false);
+		$orderObj->save();
+	}
+	
 	
 	// End Coupon code
 	
@@ -407,9 +412,9 @@ echo '</pre>';*/
 <!--End Custom Code-->
 <div style="display:none">
 	<?php 
-		echo '<pre>';
+		/*echo '<pre>';
 			print_r($param);
-		echo '</pre>';
+		echo '</pre>';*/
 	?>
 </div>
 <?php if ($this->getOrderId()):?>
