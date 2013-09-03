@@ -97,7 +97,7 @@ ini_set("soap.wsdl_cache_enabled", 0);
 		?>
 		<!--<iframe width='1' height='1' frameborder='0' src='http://affiliate.gwmtracker.com/rd/ipx.php?hid=<?php //echo $hid?>&sid=5135&transid=<?php //echo $this->getOrderId();?>&ate=<?php //echo $revshare?>'></iframe>-->
         
-        <iframe width='1' height='1' frameborder='0' src='https://affiliate.gwmtracker.com/rd/ipx.php?hid=<?php echo $hid?>&sid=<?php echo $sid;?>&transid=<?php echo $this->getOrderId();?>&ate=<?php echo $revshare;?>'></iframe>
+      <!--  <iframe width='1' height='1' frameborder='0' src='https://affiliate.gwmtracker.com/rd/ipx.php?hid=<?php //echo $hid?>&sid=<?php //echo $sid;?>&transid=<?php //echo $this->getOrderId();?>&ate=<?php //echo $revshare;?>'></iframe>-->
         
         <iframe width='1' height='1' frameborder='0' src='http://www.locksecure1.com/rd/ipx.php?hid=<?php echo $hid?>&sid=<?php echo $sid;?>&transid=<?php echo $this->getOrderId();?>'></iframe>
         
@@ -302,7 +302,8 @@ ini_set("soap.wsdl_cache_enabled", 0);
 									  'Cost' => '',
 									  'Taxable' => 'Y',
 									  'WebVendor' => $v,
-									  'From' => $loc ) ;
+									  'From' => $loc,
+									  'PickUp' => '0' ) ;
 		}
 	
 	
@@ -342,36 +343,44 @@ ini_set("soap.wsdl_cache_enabled", 0);
 /*echo '<pre>';
 	print_r($param);
 echo '</pre>';*/
+$est ='';
 
-	
-	$credit = $proxy->CreateEstimateRev($param,
+	try {
+			$credit = $proxy->CreateEstimateRev($param,
 										 "http://www.lacuracao.com/LAC-eComm-WebServices", 
 										 "http://www.lacuracao.com/LAC-eComm-WebServices/WebCustomerApplication",
 										 false, null , 'rpc', 'literal');  
 		
-	$re = $credit->CreateEstimateRevResult;
-	
-	$final = explode(";",$re);
-	
-	if(strtolower($final[0])=='error'){
-		$est = 'Estimate not been created because of '.$final[1];
-	}elseif(strtolower($final[0])=='ok'){
-		$est = 'Estimate Number: '.$final[1];
-		$orderObj->setEstimatenumber($final[1]);
-
-		if($Data != ''){
-			if(!Mage::getSingleton('core/session')->getAuthrecord()){
-				$creditDP = $proxy->WebDownPayment(array('CustID'=>$cust_id,"Amount"=>$Data,"InvNo"=>$final[1],"ReferID"=>$this->getOrderId()));
-				$crdp = $creditDP->WebDownPaymentResult;
-				$orderObj->addStatusToHistory($orderObj->getStatus(), 'Posted $'.$Data.' '.$crdp->ErrorInfo, false);
-				
-				$orderObj->save();
-			}
-		}
+			$re = $credit->CreateEstimateRevResult;
+			
+			$final = explode(";",$re);
+			
+			if(strtolower($final[0])=='error'){
+				$est = 'Estimate not been created because of '.$final[1];
+			}elseif(strtolower($final[0])=='ok'){
+				$est = 'Estimate Number: '.$final[1];
+				$orderObj->setEstimatenumber($final[1]);
 		
-	}else{
-		$est = 'Estimate not been created because of '.$re;
-	}
+				if($Data != ''){
+					if(!Mage::getSingleton('core/session')->getAuthrecord()){
+						$creditDP = $proxy->WebDownPayment(array('CustID'=>$cust_id,"Amount"=>$Data,"InvNo"=>$final[1],"ReferID"=>$this->getOrderId()));
+						$crdp = $creditDP->WebDownPaymentResult;
+						$orderObj->addStatusToHistory($orderObj->getStatus(), 'Posted $'.$Data.' '.$crdp->ErrorInfo, false);
+						
+						$orderObj->save();
+					}
+				}
+				
+			}else{
+				$est = 'Estimate not been created because of '.$re;
+			}
+					
+		}
+		catch (Exception $ex) {
+			$est = $ex->getMessage();
+			$cnt1++;
+		}
+	
 	
 	
 	//End Creating Estimate
