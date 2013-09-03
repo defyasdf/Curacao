@@ -77,15 +77,15 @@ var WRInitTime=(new Date()).getTime();
 		<div class="twenty columns alpha">
 			<div class="wrapper">
               <?php 
-			  			$ccode = '';
-						if(Mage::getSingleton('core/session')->getCouponjoin299100()){
+			  			$ccode = 'LVCR1LOG';
+						/*if(Mage::getSingleton('core/session')->getCouponjoin299100()){
 							$ccode =  Mage::getSingleton('core/session')->getCouponjoin299100();
 						}else{
-							$coupon = file_get_contents('https://www.icuracao.com/onestepcheckout/ajax/createautosignup299coupon/');
-							$code = json_decode($coupon);
-							$ccode = $code->code;
+							//$coupon = file_get_contents('https://www.icuracao.com/onestepcheckout/ajax/createautosignup299coupon/');
+							//$code = json_decode($coupon);
+							//$ccode = $code->code;
 							Mage::getSingleton('core/session')->setCouponjoin299100($code->code);
-						}
+						}*/
 				?>
    			  <!-- GWM Landing Page Code -->
               <div class="container">
