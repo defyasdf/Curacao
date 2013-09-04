@@ -29,15 +29,24 @@
     <h1><?php echo Mage::helper('contacts')->__('Contact Us') ?></h1>
 </div>
 
+<p id="livechatmsg" style="margin-bottom:35px;">
+	Please feel free to contact us with any questions or comments you may have and we will try to get back to you as soon as possible. You may submit a 
+message through the form below or reach us directly using the contact information on the right. Thank you.
+</p>
+
+<p id="offlinechatmsg" style="display:none; margin-bottom:35px;">
+	<strong>The live agent is not available.</strong> Please feel free to contact us with any questions or comments you may have and we will try to get back to you as soon as possible. You may submit a 
+message through the form below. Thank you.
+</p>
 
 <!--  ----------------------------------------------------------------------  -->
 <!--  NOTE: Please add the following <FORM> element to your page.             -->
 <!--  ----------------------------------------------------------------------  -->
-<div style="float:left; width:40%; border:solid 1px #ccc; padding:20px;">
+<div style="float:left; width:40%; border:solid 1px #ccc; padding:20px;" id="webtocaseform">
 <form action="https://cs11.salesforce.com/servlet/servlet.WebToCase?encoding=UTF-8" method="POST" id="contactForm">
 
 <input type=hidden name="orgid" value="00DZ0000001CIOx">
-<input type=hidden name="retURL" value="http://staging.icuracao.com">
+<input type=hidden name="retURL" value="http://staging.icuracao.com/thankyou">
 
 <!--  ----------------------------------------------------------------------  -->
 <!--  NOTE: These fields are optional debugging elements. Please uncomment    -->
@@ -121,7 +130,7 @@ Issue Type:<select  id="00NZ0000000xOv5" name="00NZ0000000xOv5" title="Issue Typ
     </div>
 </form>
 </div>
-<div style="float:left; width:25%; margin-left:2%;">
+<div style="float:left; width:25%; margin-left:2%;"  id="phoneform">
 	<h2 style="color:#e26d28;">Contact By Phone</h2>
     <div><strong>Online Customer Service</strong></div>
     <div>Phone : (866) 410-1611</div>
@@ -130,7 +139,7 @@ Issue Type:<select  id="00NZ0000000xOv5" name="00NZ0000000xOv5" title="Issue Typ
     <div><strong>Curacao Credit</strong></div>
     <div>Phone : (877) 287-2226</div>
 </div>
-<div style="float:left; width:30%; margin-left:2%;">
+<div style="float:left; width:30%; margin-left:2%;" id="chatform">
 	<h2 style="color:#e26d28;"> Live chat</h2>
 	
    <!-- <a id="liveagent_button_online_573Z0000000CaU6" style="display:none;" href="javascript://Chat"  onclick="liveagent.startChat('573Z0000000CaU6')"><img src="images/livechat.jpg" /></a><div id="liveagent_button_offline_573Z0000000CaU6" style="display: none;"><img src="images/offline.jpg" /></div><script type="text/javascript">
@@ -145,7 +154,8 @@ liveagent.init('https://d.la8cs.salesforceliveagent.com/chat', '572Z0000000CaT3'
 </script>
 -->
 
- <img id="liveagent_button_online_573Z0000000CaU6" style="display: none; border: 0px none; cursor: pointer" onclick="liveagent.startChat('573Z0000000CaU6')" src="http://icuracao.curacaodev.cs11.force.com/resource/1377794677000/Chat_Button" /><img id="liveagent_button_offline_573Z0000000CaU6" style="display: none; border: 0px none; " src="http://icuracao.curacaodev.cs11.force.com/resource/1377794677000/Chat_Button" />
+ <img id="liveagent_button_online_573Z0000000CaU6" style="display: none; border: 0px none; cursor: pointer" onclick="liveagent.startChat('573Z0000000CaU6')" src="images/livechat.jpg" />
+ <img id="liveagent_button_offline_573Z0000000CaU6" style="display: none; border: 0px none;" onclick="return offlinechatform()" src="images/offline.jpg" />
 <script type="text/javascript">
 if (!window._laq) { window._laq = []; }
 window._laq.push(function(){liveagent.showWhenOnline('573Z0000000CaU6', document.getElementById('liveagent_button_online_573Z0000000CaU6'));
@@ -159,12 +169,21 @@ liveagent.showWhenOffline('573Z0000000CaU6', document.getElementById('liveagent_
 liveagent.init('https://d.la8cs.salesforceliveagent.com/chat', '572Z0000000CaT3', '00DZ0000001CIOx');
 </script>
 
-
 </div>
 
 <script type="text/javascript">
 //<![CDATA[
     var contactForm = new VarienForm('contactForm', true);
 //]]>
+
+function offlinechatform(){
+	jQuery("#livechatmsg").hide('slow');	
+	
+	jQuery("#chatform").hide('slow');
+	
+	jQuery("#offlinechatmsg").show("slow");
+	jQuery("#webtocaseform").width('600px');
+	jQuery("#name").focus();
+}
 </script>
 

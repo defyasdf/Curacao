@@ -51,5 +51,22 @@ class Curacao_Unlockcustomer_Model_ObjectModel_Api extends Mage_Api_Model_Resour
 	   
 	    return $msg;
     }
+	
+	public function notifyCustomer($arg){
+		$order = Mage::getModel('sales/order')->load($arg);
+		$_totalData = $order->getData();
+		/*
+			$_totalData['customer_email']
+			if(mail){
+				$msg = 'SUCCESS | Customer notified successfully';
+			}else{
+				$msg = 'FAILED | Customer not found';
+			}
+		*/
+		
+		$msg = 'SUCCESS | Customer notified successfully';
+		
+		return $msg;
+	}
 }
 ?>

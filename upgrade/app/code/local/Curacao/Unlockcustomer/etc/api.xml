@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<config>
+    <api>
+        <resources>
+            <unlock_customer translate="title" module="curacao_unlockcustomer">
+            <title>Unlocking customer</title>
+            <model>unlockcustomer/objectmodel_api</model>
+            <methods>
+                <unlockCustomer translate="title" module="curacao_unlockcustomer">
+                    <title>Unlocking customer</title>
+                </unlockCustomer>
+            </methods>
+            </unlock_customer>
+			
+			<replace_sku translate="title" module="curacao_unlockcustomer">
+            <title>Change Sku</title>
+            <model>unlockcustomer/objectmodel_api</model>
+            <methods>
+                <replaceSku translate="title" module="curacao_unlockcustomer">
+                    <title>Change SKU</title>
+                </replaceSku>
+            </methods>
+            </replace_sku>
+			
+			<notify_customer translate="title" module="curacao_unlockcustomer">
+            <title>Notify Customer</title>
+            <model>unlockcustomer/objectmodel_api</model>
+            <methods>
+                <notifyCustomer translate="title" module="curacao_unlockcustomer">
+                    <title>Notify Customer</title>
+                </notifyCustomer>
+            </methods>
+            </notify_customer>
+						
+        </resources>
+    </api>
+</config>
