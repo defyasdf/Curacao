@@ -69,7 +69,7 @@
     <?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
        
     <div class="page-title title-buttons">
-   
+    <div style="display:none"><?php echo $quote->getId();?></div>
         <h1><?php echo $this->__('Shopping Cart') ?></h1>
         <?php if(!$this->hasError()): ?>
         
@@ -317,11 +317,11 @@
 	}
 //]]>
 </script>
-
+<!--
 <script type="text/javascript">
 
         var v24JsProtocol = (("https:" == document.location.protocol) ? "https://" : "http://");
 
         document.write(unescape("%3Cscript src='" + v24JsProtocol + "static.vee24.com/v24/veedesk/v24Embedded.js' type='text/javascript'%3E%3C/script%3E"));
 
-</script>
+</script>-->

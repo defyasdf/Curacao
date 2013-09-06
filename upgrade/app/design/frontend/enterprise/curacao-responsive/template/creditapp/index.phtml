@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
+<head>
+	<?php echo $this->getChildHtml('head') ?>
+</head>
+
+<body<?php echo $this->getBodyClass()?' class="'.$this->getBodyClass().'"':'' ?>>
+
+	<?php 
+			
+		$step = 0;
+		$step = Mage::getSingleton('core/session')->getStep(true);
+		$re = Mage::getSingleton('core/session')->getRe(true);
+		$final = Mage::getSingleton('core/session')->getFinal(true);
+		//$re = Mage::app()->getRequest()->getParam('re');
+		//$final = Mage::app()->getRequest()->getParam('final');
+		$loggedin = Mage::getSingleton('customer/session')->isLoggedIn();
+	
+	if( $loggedin ){
+
+		$c_id = Mage::getSingleton('customer/session')->getId();
+		
+		$customer = Mage::getModel('customer/customer')->load($c_id);		
+
+		$_fname = $customer->getFirstname();
+		$_lname = $customer->getLastname();
+		$_email = $customer->getEmail();
+		
+		$customerAddressId = Mage::getSingleton('customer/session')->getCustomer()->getDefaultBilling();
+
+		if ($customerAddressId){
+		   $address = Mage::getModel('customer/address')->load($customerAddressId);
+		   	
+			$_city 		= $address['city'];
+			$country_id = $address['country_id'];
+			$_region	= $address['region'];
+			$_postcode	= $address['postcode'];
+			$_tel		= $address['telephone'];
+			
+			$_regionid	= $address['region_id'];
+			$_street	= $address['street'];
+		   
+		} 
+	}elseif( Mage::getSingleton('core/session')->getFname() ){
+		$_fname = Mage::getSingleton('core/session')->getFname(true);
+		$_lname = Mage::getSingleton('core/session')->getLname(true);
+		$_email = Mage::getSingleton('core/session')->getEmail(true);
+		$_password = Mage::getSingleton('core/session')->getPassword(true);
+		$_confpassword = Mage::getSingleton('core/session')->getConfirmpass(true);
+	} else {
+		if( isset($_GET['email']))
+			$_email = $_GET['email'];
+	}
+	?>
+
+	<header>
+		
+		<div class="container">
+			<?php echo $this->getChildHtml('header') ?>
+		</div><!--container-->
+		
+	</header>
+	
+	<div class="container">
+	
+		<div class="twenty columns breadcrumbs alpha">
+			<?php echo $this->getChildHtml('breadcrumbs') ?>
+		</div><!--breadcrumbs-->
+
+		<div class="twenty columns breadcrumbs alpha">
+			<h3 class="page-title">Curacao Credit Application<span id="condition">*</span></h3>
+            <div><img src="<?php echo $this->getSkinUrl('images/creditapp/icn_curacaocard.png');?>" alt="curacao card icon"><div style="width: 907px; float: right; margin-top: 8px;">* CURACAO CREDIT IS CURRENTLY AVAILABLE  TO CALIFORNIA AND ARIZONA RESIDENTS ONLY. NATIONAL FINANCING WILL BE AVAILABLE SOON.</div></div>
+		</div>
+
+		<div class="twenty columns breadcrumbs alpha">
+			<div class="six columns alpha">
+				<p class="message instructions">Please provide the following information:</p>
+			</div>
+			<div class="eight columns omega">
+				<div class="step-counter <?php if($step == 0): echo('one'); elseif($s==1): echo('two'); else: echo('three'); endif; ?>"></div>
+			</div>
+		</div>
+				
+		<div class="twenty columns notices">
+			<?php echo $this->getChildHtml('global_notices') ?>
+		</div><!--notices-->
+	
+		<div class="twenty columns 1col content alpha omega">
+			<?php //echo $this->getChildHtml('content') ?>
+			
+			<div class="fourteen columns alpha">
+				<div class="credit-form">
+					
+					<?php if($step == 0): ?>
+					
+					<div class="steps step-one">
+						<div class="step-header">
+							<h5><span class="numeric">1</span>Personal Information</h5>
+						</div>
+						<div class="step-content">
+							<form action="<?php echo Mage::getUrl('creditapp/index/step1Post'); ?>" method="post" id="credit-application">
+								<fieldset>
+									<div class="hidden" style="display:none;">
+										<input type="hidden" id="step"  value="1" name="step" />
+										<input type="hidden" id="appId" value="0" name="appid" />
+									</div>
+                                    
+                                    <!--Custom Fields-->
+                                    
+                                    <div class="credit-app-line columns alpha">	
+                                    	<div class="subline columns alpha">
+                                        	<div class="input-box input-firstname">
+													<label for="fname"><?php echo $this->__('First Name')?> <span class="required">*</span></label>
+													<input type="text" value="<?php echo($_fname)?>" id="fname" name="fname" class="required-entry input-text required"/>
+												</div>
+                                        </div>
+                                        <div class="subline columns alpha">
+                                        	<div class="input-box input-lastname">
+													<label for="lname"><?php echo($this->__('Last Name'))?> <span class="required">*</span></label>
+													<input type="text" value="<?php echo($_lname)?>" id="lname" name="lname" class="required-entry required  input-text"/>
+												</div>
+                                        </div>
+                                    </div>
+									
+                                    
+                                    <div class="credit-app-line columns alpha">	
+                                    	<div class="subline columns alpha">
+                                        	<div id="add1">
+                                            <div class="input-box input-address">
+													<label for="street1"><?php echo($this->__('Address'))?>  <span class="required">*</span></label>
+													<input type="text" class="required-entry required  input-text onestepcheckout-address-line" value="<?php echo($_street)?>" id="street1" name="street1" title="Street Address 1"/>
+													
+												</div>
+                                               </div>
+                                               <div id="add2">
+                                               	<label for="street1"><?php echo "Apt/Ste"?> </label>                                               
+                                               	<input type="text" class="input-text onestepcheckout-address-line" value="" id="street2" name="street2" title="Street Address 2"/>
+                                               </div>
+                                        </div>
+                                        <div class="subline columns alpha">
+                                        	
+                                            <div id="credit-city"><div class="input-box input-city">
+													<label for="city"><?php echo($this->__('City')) ?> <span class="required">*</span></label>
+													<input type="text" id="city" class="required-entry required  input-text" title="City" value="<?php echo($_city)?>" rel="" name="city">
+												</div></div>
+                                            <div id="credit-state">
+                                            	<div class="input-box input-state">
+													<label for="state" class="required"><?php echo($this->__('State'))?> <span class="required">*</span></label>
+													<select style="" class="validate-select required-entry required " title="State" name="state" id="state" defaultvalue="<?php echo($_regionid)?>">
+														<option value=""><?php echo($this->__('-State-'))?></option>
+														<option value="AL">Alabama</option><option value="AK">Alaska</option><option value="AZ">Arizona</option><option value="AR">Arkansas</option><option value="CA">California</option><option value="CO">Colorado</option><option value="CT">Connecticut</option><option value="DE">Delaware</option><option value="DC">District of Columbia</option><option value="FL">Florida</option><option value="GA">Georgia</option><option value="HI">Hawaii</option><option value="ID">Idaho</option><option value="IL">Illinois</option><option value="IN">Indiana</option><option value="IA">Iowa</option><option value="KS">Kansas</option><option value="KY">Kentucky</option><option value="LA">Louisiana</option><option value="ME">Maine</option><option value="MD">Maryland</option><option value="MA">Massachusetts</option><option value="MI">Michigan</option><option value="MN">Minnesota</option><option value="MS">Mississippi</option><option value="MO">Missouri</option><option value="MT">Montana</option><option value="NE">Nebraska</
+option><option value="NV">Nevada</option><option value="NH">New Hampshire</option><option value="NJ">New Jersey</option><option value="NM">New Mexico</option><option value="NY">New York</option><option value="NC">North Carolina</option><option value="ND">North Dakota</option><option value="OH">Ohio</option><option value="OK">Oklahoma</option><option value="OR">Oregon</option><option value="PA">Pennsylvania</option><option value="RI">Rhode Island</option><option value="SC">South Carolina</option><option value="SD">South Dakota</option><option value="TN">Tennessee</option><option value="TX">Texas</option><option value="UT">Utah</option><option value="VT">Vermont</option><option value="VA">Virginia</option><option value="WA">Washington</option><option value="WV">West Virginia</option><option value="WI">Wisconsin</option><option value="WY">Wyoming</option>
+													</select>
+												</div>
+                                            </div>
+                                            <div id="credit-zip">
+                                            	<div class="input-box input-zip">
+													<label for="postcode"><?php echo($this->__('Zip'))?> <span class="required">*</span></label>
+													<input type="text" class="validate-zip-international required-entry required  input-text" value="<?php echo($_postcode)?>" id="postcode" name="postcode" title="Zip Code" size="5" maxlength="5">
+												</div>
+                                            </div>
+                                            
+                                            
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="credit-app-line columns alpha">	
+                                    	<div class="subline columns alpha">
+                                        	<div class="input-box input-">
+													<label for=""><?php echo($this->__('Time Living at Current Address'))?> <span class="required">*</span></label>
+													<input type="hidden" name="years" value="" id="years_leaving">
+                                                    <input type="hidden" name="months" value="" id="months_leaving">
+                                                    <select name="year_month" id="year_month" required="required" class="required validate-select">
+                                                        <option value=""><?php echo($this->__('Years'))?> </option>
+                                                        <option value="0-6">6 <?php echo($this->__('Months'))?></option>
+                                                        <option value="1-0">1 <?php echo($this->__('Years'))?></option>
+                                                        <option value="1-6">1 <?php echo($this->__('Years'))?> 6 <?php echo($this->__('Months'))?></option>
+                                                        <option value="2-0">2 <?php echo($this->__('Years'))?></option>
+                                                        <option value="2-6">2 <?php echo($this->__('Years'))?> 6 <?php echo($this->__('Months'))?></option>
+                                                        <option value="3-0">3 <?php echo($this->__('Years'))?></option>
+                                                        <option value="3-6">3 <?php echo($this->__('Years'))?> 6 <?php echo($this->__('Months'))?></option>
+                                                        <option value="4-0">4 <?php echo($this->__('Years'))?></option>
+                                                        <?php for($i=5;$i<100;$i++){ ?>
+                                                                <option value="<?php echo $i?>-0"><?php echo $i?> <?php echo($this->__('Years'))?></option>
+                                                        <?php } ?>
+                                                   	</select>
+                                                    <!--<select name="years" required="required" id="years" class="required validate-select">
+									                	<option value=""><?php echo($this->__('Years'))?> </option>
+														<?php for($i=0;$i<100;$i++){ ?>
+									                            <option value="<?php echo $i?>"><?php echo $i?></option>
+														<?php } ?>
+									                </select>
+									                <select name="months" required="required" class="required validate-select" id="months">
+										                <option value=""><?php echo($this->__('Months'))?></option>
+										                <?php for($i=0;$i<12;$i++){ ?>
+														<option value="<?php echo $i?>"><?php echo $i?></option>
+														<?php } ?>
+									                </select>-->
+												</div>
+                                            
+                                            
+                                                    <!--<label for="fname"><?php echo $this->__('First Name')?> <span class="required">*</span></label>
+													<input type="text" value="<?php echo($_fname)?>" id="fname" name="fname" class="required-entry input-text required"/>-->
+												
+                                        </div>
+                                        <div class="subline columns alpha">
+                                        	
+                                        </div>
+                                    </div>
+                                    
+                                    
+                                    <div class="credit-app-line columns alpha">	
+                                    	<div class="subline columns alpha">
+                                        	<div class="input-box input-firstname">
+							   <div id="phones" class="phones">
+                                                        <label for="phones"><?php echo HomePhone?><span id="require">*</span></label>
+                                                        <input type="text" size="3" maxlength="3" required class="required three required-entry" name="area"/>
+                                                        <input type="text" size="3" maxlength="3" required class="required three required-entry" name="local1"/>
+                                                        <input type="text" size="4" maxlength="4" required class="required four required-entry"  name="local2"/>
+                                                    </div>
+                                                </div>
+                                        </div>
+                                        <div class="subline columns alpha">
+                                        	<div class="input-box input-firstname">
+													 <div id="cphones">
+                                                        <label for="cphone1"><?php echo CellPhone?></label>
+                                                        <input type="text" size="3" maxlength="3" name="cphone1" class="three" />
+                                                        <input type="text" size="3" maxlength="3" name="cphone2" class="three" />
+                                                        <input type="text" size="4" maxlength="4" name="cphone3" class="four" />
+                                                    </div>
+												</div>
+                                        </div>
+                                    </div>
+                                    
+                                    
+                                    <div class="credit-app-line columns alpha">	
+                                    	<div class="subline columns alpha">
+                                        	<div class="input-box input-dob">
+													<label for="dob"><?php echo($this->__('Date Of Birth'))?> <span class="required">*</span></label>
+													<select name="dobM" required="required" class="required validate-select" onChange="return setupday()" id="dobM">
+									                	<option value="">MM</option>
+									                	<?php  for($i=1;$i<13;$i++){ ?>
+							                            <option value="<?php echo $i?>"><?php if($i<10){echo '0'.$i;}else{echo $i;}?></option>
+														<?php } ?>
+									                </select>
+									                
+									                <select name="dobD" required="required" class="required validate-select" id="dobD">
+										                <option value="">DD</option>
+									                	<?php for($i=1;$i<32;$i++){ ?>
+							                            <option value="<?php echo $i?>"><?php if($i<10){echo '0'.$i;}else{echo $i;}?></option>
+														<?php } ?>
+									                </select>
+									
+									                <select name="dobY" id="dobY" required="required" class="required validate-select">
+										                <option value="">YYYY</option>
+									                	<?php for($i=(date("Y")-18);$i>1900;$i--){ ?>
+														<option value="<?php echo $i?>"><?php echo $i?></option>
+														<?php } ?>
+									                </select>
+												</div>
+                                        </div>
+                                        <div class="subline columns alpha">
+                                        	<div class="input-box input-firstname">
+													 <div id="ssn" class="ssn">
+                                                        <label for="ssn"><?php echo SSN?><span id="require">*</span></label>
+                                                        <input type="text" size="3" required class="required three required-entry" 	maxlength="3" name="ssn1" id="ssn1">
+                                                        <input type="text" size="2" required class="required two required-entry" 	maxlength="2" name="ssn2" id="ssn2">
+                                                        <input type="text" size="4" required class="required four required-entry" 	maxlength="4" name="ssn3" id="ssn3">
+                                                    </div>
+                                                 <a href="#" class="no-ssn"><?php echo $this->__('Don&acute;t have SSN?'); ?></a>
+                                                   <div class="tool-tip" id="nossn-tool-tip" style="display:none;">
+                                                    <div class="btn-close">
+                                                        <a href="javascript:void(0);" id="nossn-tool-tip-close"><img src="<?php echo $this->getSkinUrl('images/btn_window_close.gif') ?>" alt="<?php echo $this->__('Close') ?>" /></a>
+                                                    </div>
+                                                    <div class="block-content">
+														<h4><?php echo $this->__('Don&acute;t have Social Security Number?');?></h4>
+                                                        <p style="line-height:16px;"><?php echo $this->__('Please see our nearest store to complete your application in person. <a href="/store-locator">See our stores</a>');?></p>
+                                                    </div>
+                                                </div>
+
+												</div>
+                                        </div>
+                                    </div>
+                                    <script type="text/javascript">
+										
+                                    	$$('.no-ssn').each(function(element){
+											Event.observe(element, 'click', toggleToolTipnossn);
+										});
+										function toggleToolTipnossn(event){
+											if($('nossn-tool-tip')){
+												$('nossn-tool-tip').setStyle({
+													left: (Event.pointerX(event)-350)+'px',
+													top: (Event.pointerY(event)-150)+'px'
+												});
+												$('nossn-tool-tip').toggle();
+											}
+											Event.stop(event);
+										} 
+									
+									jQuery("#nossn-tool-tip-close").click(function(){
+										jQuery("#nossn-tool-tip").hide('slow');
+									});	
+									
+										
+                                    </script>
+                                    
+                                    <div class="credit-app-line columns alpha">	
+                                    	<div class="subline columns alpha">
+                                        	<div class="input-box input-">
+													<label for="id-number"><?php echo($this->__('ID Number')) ?> <span class="required">*</span></label>
+													<input type="text" id="id_number" class="required-entry required  input-text" title="id_number" value="" name="id_number">
+												</div>
+											
+											
+                                        </div>
+                                        <div class="subline columns alpha">
+                                        		<div class="input-box input-">
+													<label for=""><?php echo($this->__('ID Type'))?> <span class="required">*</span></label>
+													<select onchange="checkIDtype(this);" class="validate-select" id="id_type" name="id_type" required="required" class="required" name="id_type">
+														<option value=""><?php echo $this->__('Choose ID Type')?></option>
+														<option value="AU1"><?php echo $this->__('California ID/License')?></option>
+														<option value="AU2"><?php echo $this->__('Working Permit/Green Card')?></option>
+														<option value="AU4"><?php echo $this->__('Others States ID/Driver License')?></option>
+													</select>
+												</div>
+                                        </div>
+                                    </div>
+                                    
+                                    
+                                    
+                                     <div class="credit-app-line columns alpha">	
+                                    	<div class="subline columns alpha">
+                                        	<div class="input-box input-id-exp">
+
+									                <label for="idexpM"><?php echo ($this->__('ID Expiration Date'))?> <span id="require">*</span></label>		
+									                <select name="idexpM" required="required" class="required validate-select" id="idexpM">
+										                <option value="">MM</option>
+									                	<?php for($i=1;$i<13;$i++){	?>
+														<option value="<?php echo $i?>"><?php echo $i?></option>
+														<?php } ?>
+									                </select>
+									                
+									                <input type="hidden" name="idexpD" value="10" />
+									                <select name="idexpY" required="required" class="required validate-select" id="idexpY">
+									                	<option value="">YYYY</option>
+									                	<?php for($i=date("Y");$i<((int)date("Y")+10);$i++){ ?>
+														<option value="<?php echo $i?>"><?php echo $i?></option>
+														<?php } ?>
+									                </select>
+				            
+												</div>
+											
+											
+                                        </div>
+                                        <div class="subline columns alpha">
+                                        		<div class="input-box input-">
+													<label for="id_state"><?php echo($this->__('ID State')) ?> <span class="required">*</span></label>
+													<select style="" class="validate-select required-entry required " title="State" name="id_state" id="id_state" defaultvalue="12">
+														<option value=""><?php echo($this->__('-State-'))?></option>
+														<option value="AL">Alabama</option><option value="AK">Alaska</option><option value="AZ">Arizona</option><option value="AR">Arkansas</option><option value="CA">California</option><option value="CO">Colorado</option><option value="CT">Connecticut</option><option value="DE">Delaware</option><option value="DC">District of Columbia</option><option value="FL">Florida</option><option value="GA">Georgia</option><option value="HI">Hawaii</option><option value="ID">Idaho</option><option value="IL">Illinois</option><option value="IN">Indiana</option><option value="IA">Iowa</option><option value="KS">Kansas</option><option value="KY">Kentucky</option><option value="LA">Louisiana</option><option value="ME">Maine</option><option value="MD">Maryland</option><option value="MA">Massachusetts</option><option value="MI">Michigan</option><option value="MN">Minnesota</option><option value="MS">Mississippi</option><option value="MO">Missouri</option><option value="MT">Montana</option><option value="NE">Nebraska</
+option><option value="NV">Nevada</option><option value="NH">New Hampshire</option><option value="NJ">New Jersey</option><option value="NM">New Mexico</option><option value="NY">New York</option><option value="NC">North Carolina</option><option value="ND">North Dakota</option><option value="OH">Ohio</option><option value="OK">Oklahoma</option><option value="OR">Oregon</option><option value="PA">Pennsylvania</option><option value="RI">Rhode Island</option><option value="SC">South Carolina</option><option value="SD">South Dakota</option><option value="TN">Tennessee</option><option value="TX">Texas</option><option value="UT">Utah</option><option value="VT">Vermont</option><option value="VA">Virginia</option><option value="WA">Washington</option><option value="WV">West Virginia</option><option value="WI">Wisconsin</option><option value="WY">Wyoming</option>
+													</select>
+                                                    <input type="hidden" name="country_id" value="US">
+												</div>
+                                        </div>
+                                    </div>
+                               
+                                    <!--End Custom Fields-->
+                                    
+                                   
+									<div class="thirteen columns clearfix alpha">
+										<h6 class="additional-title">Login Information</h6>
+									</div>
+									 <div class="credit-app-line columns alpha">	
+                                    	<div class="subline columns alpha">
+                                        	<div class="input-box input-">
+													<label for="emailid"><?php echo($this->__('Email'))?> <span class="required">*</span></label>
+													<input type="text" class="validate-email required-entry required  input-text" title="<?php echo($this->__('Email'))?>" value="<?php echo($_email)?>" id="emailid" name="emailid">
+												</div>
+											
+											
+                                        </div>
+                                        <div class="subline columns alpha">
+                                        
+                                     
+                                             
+                                                
+                                        </div>
+                                    </div>
+                                    
+                                     <?php if(! $loggedin): ?>
+                                     	<div class="credit-app-line columns alpha">	
+                                    	<div class="subline columns alpha">
+                                        	<div class="input-box input-">
+													<label for="password"><?php echo($this->__('Password'))?> <span class="required">*</span></label>
+                                                    <input type="password" style="font-weight: 500; font-style: normal; color: rgb(0, 0, 0);" class="input-text required-entry validate-password" title="Password" id="psswd" name="psswd"  value="<?php echo($_password)?>">
+													
+												</div>
+											
+											
+                                        </div>
+                                        <div class="subline columns alpha">
+                                        
+                                     		    	<div class="input-box input-">
+													<label for="confirmpass"><?php echo($this->__('Confirm Password'))?> <span class="required">*</span></label>
+                                            <input type="password" style="font-weight: 500; font-style: normal; color: rgb(0, 0, 0);" class="input-text required-entry validate-cpassword"  id="psswd2" title="Confirm Password" name="psswd2"  value="<?php echo($_confpassword)?>">
+													
+												</div>
+											
+                                             
+                                                
+                                        </div>
+                                    </div>
+                                    <?php endif; ?>
+									<div class="form-footer fourteen columns">
+										<button class="continue button" id="first_step_submit" type="button" value="continue" onclick="formSubmit();"><span><span>Continue</span></span></button>
+                                        <span style="display:none; float:left" class="please-wait" id="please-wait">
+				        <img class="v-middle" alt="" src="<?php echo $this->getSkinUrl('images/creditapp/opc-ajax-loader.gif');?>"> Loading next step...    </span>
+									</div>
+								</fieldset>
+							</form>
+							<script type="text/javascript">
+							//<![CDATA[
+								var creditForm = new VarienForm('credit-application');
+								
+								function formSubmit(){
+									var valid = new Validation('credit-application', {onSubmit:false});
+									valid.reset();
+									var result = valid.validate();
+									if(result) {
+										$('first_step_submit').hide();
+										var addvalid = validateaddress()
+										//document.forms["credit-application"].submit();
+									}else {
+									//	alert('please check the form for errors');
+									}
+								}
+							//]]>
+							</script>
+						</div>
+					</div>
+					
+					<?php elseif( ($step == 1) && ($re->Result=='QUESTIONS') ): ?>
+					
+					<div class="steps step-two">
+						<div class="step-header">
+							<h5><span class="numeric">2</span><?php echo($txt_dataVerification) ?></h5>
+						</div>
+						<div class="step-content">
+							<form action="<?php echo Mage::getUrl('creditapp/index/step2Post'); ?>" method="post"  id="lexusform">
+								<fieldset>
+									<?php //echo $re->Result;?>
+									<?php if($re->Result=='QUESTIONS'){ ?>
+									<div class="twelve columns">
+										<div class="hidden" style="display:none;">
+											<input type="hidden" id="step"  value="1" name="step" />
+											<input type="hidden" id="appId" value="<?php echo $_POST['appid']?>" name="appid" />		    	
+									    	<input type="hidden" value="<?php echo $re->QuestionSetId?>" name="qsetid" />
+									        <input type="hidden" value="<?php echo $re->QuestionId?>" name="qid" />
+									        <input type="hidden" value="<?php echo $re->TransactionNumber?>" name="tnum" />
+									        <input type="hidden" value="<?php echo $re->TransactionId?>" name="tid" />
+										</div>
+				        
+				        				<div class="helptext"><?php echo $re->HelpText?></div>
+								        <p class="lexus_question"><?php echo $re->Question?></p>
+				        
+								    	<div class="lexus_question">
+								        <?php  $choice = $re->Choice->aChoice; ?>
+										<?php for($i=0;$i<sizeof($choice);$i++): ?>
+											<input type="radio" class="nexus_rb <?php if($i==0):?>validate-one-required<?php endif; ?>" value="<?php echo $choice[$i]->ChoiceId?>" name="choiceid" /><?php echo $choice[$i]->Choice?><br/>
+										<?php endfor; ?>
+				        				</div>
+										<div class="clearfix"></div>
+									</div>
+									<div class="form-footer fourteen columns">
+										<button class="continue button" id="second_step_submit" type="button" value="continue" onclick="formSubmit();"><span><span>Continue</span></span></button>
+                                        <span style="display:none; float:left" class="please-wait-2" id="please-wait-2">
+				        <img class="v-middle" alt="" src="/skin/frontend/enterprise/curacao-responsive/images/opc-ajax-loader.gif"> Loading next step...    </span>
+                        
+									</div>
+									<?php } else { ?>
+									<div class="twelve columns">
+										<!--<h2 style="color:#FF0000">Lexus Nexus authentication failed.</h2>-->
+										<h2><?php echo $this->__('Thank you for your application')?></h2><br />
+										<p><?php echo $this->__('We will send a letter within <strong>10 days </strong>with additional information regarding your application. However, you may use another method of payment to complete your order. ') ?></p><br />
+										<p><?php echo $this->__('If you have any question please contact us at: 877-287-2226.<br /><strong>Monday - Sunday, 10AM - 7PM Pacific Time.</strong> ') ?></p>
+									</div>									
+									<?php } ?>
+
+								</fieldset>
+							</form>
+							<script type="text/javascript">
+							//<![CDATA[
+								var creditForm = new VarienForm('lexusform');
+								
+								function formSubmit(){
+									var valid = new Validation('lexusform', {onSubmit:false});
+									valid.reset();
+									var result = valid.validate();
+									if(result) {
+										$('second_step_submit').hide();	
+										$('please-wait-2').show();								
+										document.forms["lexusform"].submit();
+									}else {
+									//	alert('please check the form for errors');
+									}
+								}
+							//]]>
+							</script>
+
+						</div>
+					</div>
+					<?php elseif($re->Result=='PASSED'): 
+					    
+					?>
+					<div class="steps step-three">
+						<div class="step-header">
+							<h5><span class="numeric">3</span>Income Information</h5>
+						</div>
+						<div class="step-content">
+                        
+                        	<form action="<?php echo Mage::getUrl('creditapp/index/step3Post'); ?>" method="post"  id="final-step">
+                            <fieldset>
+                        	
+                            <input type="hidden" id="step"  value="2" name="step" />
+							<input type="hidden" id="appId" value="<?php echo $_POST['appid']?>" name="appid" />
+                            	
+                            <div class="six columns alpha">
+                            	<ul>
+                                	<li class="clearfix">
+                                    	<div class="input-box input-address">
+                                        	<label for=""><?php echo($this->__('Employer Name'))?> <span class="required">*</span></label>
+                                           <input type="text" name="company" required class="required-entry required  input-text" />
+                                        </div>
+                                    </li>
+                                    
+                                    <li class="clearfix">
+                                    	<div class="input-box input-address">
+                                        	<label for=""><?php echo($this->__('Mothers Maiden Name'))?> <span class="required">*</span></label>
+                                           <input type="text" name="maidenname" required class="required-entry required  input-text" />
+                                        </div>
+                                    </li>
+                                    
+                                </ul>
+                            </div>
+                            
+                            <div class="six columns omega">
+                            		<ul>
+                                	<li class="clearfix">
+                                    	<div class="input-box input-address" id="monthly">
+                                        	<label for=""><?php echo($this->__('Monthly Income'))?> <span class="required">*</span></label>
+                                           <input type="text" name="salary" required class="required-entry required  input-text" />
+                                        </div>
+                                       </li> 
+                                      <li class="clearfix">
+                                        <div class="input-box input-address" id="timeworking">
+                                        	<label for=""><?php echo($this->__('Time with Current Employer'))?> <span class="required">*</span></label>
+                                           	<select name="emonths" required="required" class="required-entry required  input-text" id="months">
+                                                <option value="">&lt;MM&gt;</option>
+                                                <?php  for($i=0;$i<13;$i++){ ?>
+                                                <option value="<?php echo $i?>"><?php echo $i?></option>
+                                                <?php } ?>
+                                            </select>
+                                            
+                                            <select name="eyears" required="required" class="required-entry required  input-text" id="years">
+                                                <option value="">&lt;YYYY&gt;</option>
+                                                <?php  for($i=0;$i<100;$i++){ ?>
+                                                <option value="<?php echo $i?>"><?php echo $i?></option>
+                                                <?php } ?>				
+                                            </select>
+                                        </div>
+                                        
+                                    </li>
+                                  
+                                    <li class="clearfix">
+                                    	<div class="input-box input-address">
+                                        	<label for=""><?php echo($this->__('Work Phone'))?> <span class="required">*</span></label>
+                                           <input type="text" name="wphone" required class="required-entry required  input-text" />
+                                        </div>
+                                    </li>
+                                    
+                                </ul>
+                            </div>
+                            <div class="clearfix"></div>
+                            </div>
+						</div>
+                        
+                         <div class="steps step-three">
+						<div class="step-header">
+							
+						</div>
+						<div class="step-content">
+                            <div class="field">
+							<h2>E-Sign Consent and Terms and Conditions</h2>
+							<hr>	
+							<p>You must read the E-sign consent of the <a href="">Terms and Conditions</a> prior to checking the box below.</p>
+							<table style="margin-left:-6px;margin-top: 10px;">
+								<tbody>
+									<tr>
+										<td><input type="checkbox" name="agreeToTerms" id="agreeToTerms" required class="required-entry required  input-text"></td>
+										<td><span>I agree to have the Terms and Conditions presented electronically</span></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+			       		<div class="field">
+							<div align="center">Term and Conditions of Curacao</div>
+							<div style="height:150px; overflow-y:scroll; overflow-x:hidden">
+							<?php 
+								echo file_get_contents('https://www.icuracao.com/credit/caengterm');
+							?>
+                            </div>
+						</div>
+                            
+                        	<div class="form-footer fourteen columns">
+										<button class="continue button" type="button" value="continue" onclick="formSubmit();"><span><span>Submit</span></span></button>
+							</div>
+                           </fieldset>
+                           </form> 
+                           <script type="text/javascript">
+							//<![CDATA[
+								var creditForm = new VarienForm('final-step');
+								
+								function formSubmit(){
+									var valid = new Validation('final-step', {onSubmit:false});
+									valid.reset();
+									var result = valid.validate();
+									if(result) {
+										document.forms["final-step"].submit();
+									}else {
+									//	alert('please check the form for errors');
+									}
+								}
+							//]]>
+							</script>
+                           
+                           
+						</div>
+					</div>	
+                    <?php elseif($step==2):?>
+                    				
+                    	<div class="steps step-three">
+                            <div class="step-content">
+                            	<?php 
+									if($final[0]=='APPROVED'){
+									
+										
+										//$sid = Mage::getSingleton('core/session')->getSid();
+										//$hid = Mage::getSingleton('core/session')->getHid();
+									?>
+
+
+								<!-- Google Code for Credit Application Conversion Page -->
+<script type="text/javascript">
+/* <![CDATA[ */
+var google_conversion_id = 1000830477;
+var google_conversion_language = "en";
+var google_conversion_format = "2";
+var google_conversion_color = "ffffff";
+var google_conversion_label = "8pWKCJuPxgMQjeyd3QM";
+var google_conversion_value = 0;
+/* ]]> */
+</script>
+<script type="text/javascript" src="https://www.googleadservices.com/pagead/conversion.js">
+</script>
+<noscript>
+<div style="display:inline;">
+<img height="1" width="1" style="border-style:none;" alt="" src="https://www.googleadservices.com/pagead/conversion/1000830477/?value=0&amp;label=8pWKCJuPxgMQjeyd3QM&amp;guid=ON&amp;script=0"/>
+</div>
+</noscript>
+<img width='1' height='1' border='0' src='https://affiliate.ccatracker.com/rd/px.php?sid=3&transid=<?php echo $final[1];?>' />
+	
+									<?php
+									//	}
+									?>
+                                    
+												<div align="right"><?php echo $this->__('Account Number:')?><?php echo $final[1]; ?></div>
+												<h1><?php echo $this->__('Congratulations!')?></h1>
+												<p><?php echo $this->__('You have been <span id="spendinglimit">APPROVED</span> for a Curacao Credit account with a spending limit of <span id="spendinglimit">$')?><?php echo $final[2]?><?php echo $this->__('</span>. You can start shopping now using your account number.')?></p>
+                                                <p><?php echo $this->__('A CCV code will be emailed to you shortly which may be required during checkout.')?></p>
+                                    
+                                    
+ <!-- start visitio conversion tracking code -->
+<script type="text/javascript">
+    if(typeof(zspl_load_) == "undefined") { var zspl_load_ = Math.floor(Math.random()*10000000); (function(id) {var jsSrc="//zen.visit.io/all-4.js?" + zspl_load_;var js;if(document.getElementById(id)){return;}js=document.createElement('script');js.id= id;js.type="text/javascript";js.src = jsSrc;js.async = true;(document.getElementsByTagName('head')[0]||document.getElementsByTagName('body')[0]).appendChild(js);}('splurgy-embed-js'));} window._visitio_conversions = window._visitio_conversions || []; window._visitio_conversions.push({conversion_uid:'cid_0a1dc7a56cad2136fca44d56c2f23c93ef3c938b'});
+</script>
+<noscript>
+<div style="display:inline;"><img height="1" width="1" style="border-style:none;" alt="" src="https://events.visit.io/conversion/_ct.gif?conversion_uid=cid_0a1dc7a56cad2136fca44d56c2f23c93ef3c938b"/>
+</div>
+</noscript>
+<!-- end visitio conversion tracking code -->
+                                                
+                                                
+								<?php 
+									} elseif($final[0]=='PENDING') {
+								?>
+												<div align="right"><?php echo $this->__('Thank you! Your temporary account number is:')?> <?php echo $final[1]; ?></div>
+										
+												<h2><?php echo $this->__('Thank you for your application.')?></h2>
+												<p>	<?php echo $this->__('Your account is under review. However you can continue shopping using your credit card. Once we complete the processing of your application we will notify you with our decision. ')?></p>
+								<?php
+									} else { 
+								?>
+										
+												<h2><?php echo $this->__('Thank you for your application.')?></h2>
+												<p><?php echo $this->__('We are unable to open your account at this time. You may use another form of payment to complete your order. We will send you a letter within 10 days with additional information regarding your application.')?></p>
+												<p><?php echo $this->__('If you have any questions please call our toll free number at 877-287-2226.<br /><strong>Monday - Sunday, 10AM - 7PM PST.</strong> ')?></p>
+								<?php
+									}
+								?>
+                            </div>
+                        </div>
+					<?php else: ?>
+					<div class="steps step-three">
+						<!--<div class="step-header">
+							<h5><span class="numeric">3</span>Income Information</h5>
+						</div>-->
+						<div class="step-content">
+ 
+										<!--<h2 style="color:#FF0000">Lexus Nexus authentication failed.</h2>-->
+										<h2><?php echo $this->__('Thank you for your application')?></h2><br />
+										<p><?php echo $this->__('We are unable to open your account at this time. We will send a letter within <strong>10 days </strong>with additional information regarding your application. However, you may use another method of payment to complete your order. ') ?></p><br />
+										<p><?php echo $this->__('If you have any question please contact us at: 877-287-2226.<br /><strong>Monday - Sunday, 10AM - 7PM Pacific Time.</strong> ') ?></p>
+
+                        
+						</div>
+					</div>
+					<?php endif; ?>
+				</div>
+			</div>
+			<div class="six columns omega curacao-credit">
+				<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('curacao_credit_card')->toHtml() ?>
+			</div>
+			
+			
+		</div>		
+		
+	    <?php echo $this->getChildHtml('footer') ?>
+		
+		<?php if($step == 0): ?>
+		<script type="text/javascript">
+			
+			jQuery(document).ready(function () {
+			        
+			    jQuery(".required").change(function () {
+			        createcredit();
+			    });
+			
+			    jQuery("#appform").submit(function () {
+			        var isFormValid = true;
+			
+			        jQuery(".required input").each(function () {
+			            if (jQuery.trim(jQuery(this).val()).length == 0) {
+			                jQuery(this).addClass("validation-failed");
+			                isFormValid = false;
+			            } else {
+			                jQuery(this).removeClass("validation-failed");
+			            }
+			        });
+			
+			        if (!isFormValid) alert("Please fill in all the required fields (indicated by *)");
+			
+			        return isFormValid;
+			    });
+			});
+			
+			function showloading(){
+				jQuery("#please-wait-2").show();
+			}
+			function setupday() {
+			    var dtMonth = jQuery("#dobM").val();
+			    var lim;
+			    var days;
+			    if ((dtMonth == 4 || dtMonth == 6 || dtMonth == 9 || dtMonth == 11)) {
+			        lim = 30;
+			    } else if (dtMonth == 2) {
+			        lim = 29;
+			    } else {
+			        lim = 31;
+			    }
+			    days += '<option value="">DD</option>';
+			    for (var i = 1; i <= lim; i++) {
+			        days += '<option value="' + i + '">' + i + '</option>';
+			    }
+			
+			    jQuery("#dobD").html(days);
+			}
+			
+			function createcredit() {
+			 	
+				var year_months = jQuery('#year_month').val();
+				var y_m = year_months.split('-');
+				
+				jQuery("#years_leaving").val(y_m[0]);
+				jQuery("#months_leaving").val(y_m[1]);
+								
+			    var formdata = jQuery('form').serializeArray();
+				
+			   
+			    jQuery.ajax({
+			        type: "POST",
+			        url: "<?php echo Mage::getUrl('creditapp/index/credit'); ?>",
+			        data: formdata,
+			        success: function (data) {
+			            //alert(data)
+			            jQuery("#appId").val(data);
+			        }
+			    })
+			}
+			
+			function formvalidate() {
+			    var isFormValid = true;
+			    jQuery(".required").each(function () {
+			        if (jQuery.trim(jQuery(this).val()).length == 0) {
+			            jQuery(this).addClass("validation-failed");
+			            isFormValid = false;
+			            jQuery("#formsubmit").val('1');
+			        } else {
+			            jQuery(this).removeClass("validation-failed");
+			        }
+			    });
+			    return isFormValid;
+			    return false;
+			}
+			
+			function formvalidation() {
+			
+			    var isFormValid = true;
+			    var err = 'Please verify all the required fields (indicated by *)\n\r';
+			    jQuery(".required").each(function () {
+			        if (jQuery.trim(jQuery(this).val()).length == 0) {
+			            jQuery(this).addClass("validation-failed");
+			            isFormValid = false;
+			            jQuery("#formsubmit").val('1');
+			        } else {
+			            jQuery(this).removeClass("validation-failed");
+			        }
+			    });
+			
+			    if (isFormValid) {
+			        if (jQuery('#years').val() == '0' && jQuery("#months").val() == '0') {
+			            isFormValid = false;
+			            jQuery('#years').addClass('validation-failed')
+			            jQuery('#months').addClass('validation-failed')
+			            err += 'Year and Month should not be blank \n\r'
+			        }
+			
+			    }
+			    var dtYear = jQuery("#dobY").val();
+			    var isleap = (dtYear % 4 == 0 && (dtYear % 100 != 0 || dtYear % 400 == 0));
+			    var dtDay = jQuery("#dobD").val();
+			    var dtMo = jQuery("#dobM").val();
+			    if (dtMo == 2) {
+			        //alert("hello");
+			
+			        if (dtDay > 29 || (dtDay == 29 && !isleap)) {
+			            isFormValid = false;
+			            jQuery('#dobD').addClass('validation-failed')
+			            jQuery('#dobY').addClass('validation-failed')
+			
+			            err += 'Please validate your DOB \n\r'
+			        }
+			    }
+
+			    var id_num = jQuery("#idNum").val();
+			
+			    if (id_num.length == 8) {
+			        var first_id_num = id_num.substr(0, 1);
+			        if (jQuery("#id_type").val() == 'AU1') {
+			            if (first_id_num.match('^([A-Za-z])$')) {
+			
+			            } else {
+			                jQuery("#idNum").addClass('validation-failed')
+			                isFormValid = false;
+			
+			                err += 'Please input currect ID \n\r'
+			            }
+			        }
+			    } else {
+			        jQuery("#idNum").addClass('validation-failed')
+			        isFormValid = false;
+			
+			        err += 'Please input currect ID \n\r'
+			    }
+			    if (isFormValid) {
+			        if (jQuery('#ssn1').val() == '000' && jQuery('#ssn2').val() == '000' && jQuery('#ssn3').val() == '000') {
+			            isFormValid = false;
+			            jQuery('#ssn1').addClass('validation-failed')
+			            jQuery('#ssn2').addClass('validation-failed')
+			            jQuery('#ssn3').addClass('validation-failed')
+			            err += 'Please input your currect SSN \n\r'
+			        }
+			    }
+			    if (!isValidEmailAddress(jQuery("#emailid").val())) {
+			        isFormValid = false;
+			        jQuery('#emailid').addClass('validation-failed')
+			
+			        err += 'Please input valid Email \n\r'
+			    }
+			
+			    createcredit();
+			
+			    if (!isFormValid) alert(err);
+
+			    if (isFormValid) {
+			        if (jQuery("#valiadd").val() == 1) { isFormValid = true; } else { lastvalidateaddress(); return false; }
+			    }
+				
+				if(isFormValid){ jQuery("#please-wait").show() }
+			
+			    return isFormValid;
+			
+			
+			}
+			
+			function validateaddress() {
+				
+				jQuery("#please-wait").show();
+			    
+				var st = jQuery("#street1").val();
+			    var z = jQuery("#postcode").val();
+			    var aid = jQuery("#appId").val();
+			    jQuery.ajax({
+			        type: "POST",
+			        url: "<?php echo Mage::getUrl('creditapp/index/validate'); ?>",
+			        data: {
+			            street: st,
+			            zip: z,
+			            appid: aid
+			        },
+			        success: function (data) {
+			            if (data == '1') {
+						//	alert("Valid");
+			               jQuery("#credit-application").submit();
+						   return true;
+			            } else {
+						 alert("Please provide valid address");
+						 jQuery("#first_step_submit").show();
+						jQuery("#please-wait").hide();
+						jQuery("#street1").addClass('validation-failed')
+						jQuery("#postcode").addClass("validation-failed");
+			               return false;
+			            }
+			
+			        }
+			    });
+			}
+			
+			
+			function lastvalidateaddress() {
+			    jQuery("#addrvalidate").html("<img src='../skin/frontend/enterprise/curacao-responsive/images/opc-ajax-loader.gif'>")
+			    var st = jQuery("#add").val();
+			    var z = jQuery("#zip").val();
+			    var aid = jQuery("#appId").val();
+			    jQuery.ajax({
+			        type: "POST",
+			        url: "/credit/addressvalidation.php",
+			        data: {
+			            street: st,
+			            zip: z,
+			            appid: aid
+			        },
+			        success: function (data) {
+			            if (data == '1') {
+			                jQuery('#addrvalidate').html("Valid Address");
+			                jQuery("#addrvalidate").removeClass("notvalidAdd")
+			                jQuery("#addrvalidate").addClass('validAdd')
+			                jQuery("#valiadd").val('1');
+			                jQuery("#appform").submit();
+			                return true;
+			            } else {
+			                jQuery('#addrvalidate').html(" Not Valid Address");
+			                jQuery("#addrvalidate").removeClass("validAdd")
+			                jQuery("#addrvalidate").addClass('notvalidAdd')
+			                jQuery("#add").addClass("validation-failed");
+			                jQuery("#zip").addClass("validation-failed");
+			                jQuery("#valiadd").val('0')
+			                jQuery("#formsubmit").val('1');
+			                return false;
+			            }
+			
+			        }
+			    });
+			}
+			
+			var idstate = document.getElementById("id_state");
+			var idtype =  document.getElementById("id_type");
+				
+			if(idtype.options[idtype.selectedIndex].value=="AU4") idstate.disabled = false;
+				
+			function checkIDtype(obj) {
+				if(obj.value =="AU4") {
+				    idstate.disabled = false;
+				    idstate.className = "validate-select";
+				} else {
+				    idstate.disabled = true;
+				    jQuery('#id_state').val('12');
+				    idstate.className = "";
+				}
+			}	
+			
+			
+			var p;
+			var p1;
+			var p2;
+			
+			// ERROR BELOW -- should tab to next index - throws error / 
+			function next(i) {
+			    return function () {
+			        //strip non-digits
+			        p[i].value = p[i].value.replace(/[^0-9]/g, "");
+			
+			        //go forward one box when full, except when on the end box
+			        if (p[i].value.length == p[i].size && i < p.length) p[i + 1].focus();
+			    }
+			}
+			
+			function back(i) {
+			    return function (e) {
+			        //go backward one when empty, except when on the first box
+			        if (e.keyCode == 8 && p[i].value.length == 0 && i > 0) p[i - 1].focus();
+			    }
+			}
+			
+			function next2(i) {
+			    return function () {
+			        //strip non-digits
+			        p2[i].value = p2[i].value.replace(/[^0-9]/g, "");
+			
+			        //go forward one box when full, except when on the end box
+			        if (p2[i].value.length == p2[i].size && i < p2.length) p2[i + 1].focus();
+			    }
+			}
+			
+			function back2(i) {
+			    return function (e) {
+			        //go backward one when empty, except when on the first box
+			        if (e.keyCode == 8 && p2[i].value.length == 0 && i > 0) p2[i - 1].focus();
+			    }
+			}
+			
+			
+			function next1(i) {
+			    return function () {
+			        //strip non-digits
+			        p1[i].value = p1[i].value.replace(/[^0-9]/g, "");
+			
+			        //go forward one box when full, except when on the end box
+			        if (p1[i].value.length == p1[i].size && i < p1.length) p1[i + 1].focus();
+			    }
+			}
+			
+			function back1(i) {
+			    return function (e) {
+			        //go backward one when empty, except when on the first box
+			        if (e.keyCode == 8 && p1[i].value.length == 0 && i > 0) p1[i - 1].focus();
+			    }
+			}
+			
+			window.onload = function () {
+				
+			    p = document.getElementById("phones").getElementsByTagName("input");
+			
+			    for (var i = 0; i < p.length; i++) {
+			        p[i].onkeyup = next(i);
+			        p[i].onkeydown = back(i);
+			    }
+			
+			    p1 = document.getElementById("ssn").getElementsByTagName("input");
+			
+			    for (var i = 0; i < p1.length; i++) {
+			        p1[i].onkeyup = next1(i);
+			        p1[i].onkeydown = back1(i);
+			    }
+			
+			    p2 = document.getElementById("cphones").getElementsByTagName("input");
+			
+			    for (var i = 0; i < p2.length; i++) {
+			        p2[i].onkeyup = next2(i);
+			        p2[i].onkeydown = back2(i);
+			    }
+			
+			}
+			
+				  
+		</script>
+		
+		<?php endif; ?>
+        
+        <?php echo $this->getChildHtml('before_body_end') ?>
+        <?php echo $this->getAbsoluteFooter() ?>
+	</div>
+</body>
+</html>
