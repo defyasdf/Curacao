@@ -72,6 +72,120 @@ class Curacao_Commonapi_ApiController extends Mage_Core_Controller_Front_Action
 
 		
     }
+	
+	public function signupchekAction(){
+		$response = array(
+				'success' => false,
+				'error'=> true,
+			);
+		
+		if($_REQUEST['catId'] == '8' && !Mage::getSingleton('core/session')->getSignupbronto()){
+				$response['success'] = true;
+				$response['error'] = false;
+				Mage::getSingleton('core/session')->setSignupbronto("Signup");
+		}
+		$this->getResponse()->setBody(Zend_Json::encode($response));
+		
+	}
+	public function signupemailAction(){
+		$email = $_REQUEST['email'];
+		$subscriber = Mage::getModel('newsletter/subscriber')->loadByEmail($email);
+		$response = array(
+				'success' => false,
+				'error'=> true,
+			);
+			
+		if (!$subscriber->getId()) {
+			$subscriber->setStatus(Mage_Newsletter_Model_Subscriber::STATUS_SUBSCRIBED);
+		   	$subscriber->setSubscriberEmail($email);
+			//$subscriber->setSubscriberConfirmCode($subscriber->RandomSequence());
+			$subscriber->setStoreId(Mage::app()->getStore()->getId());
+			try {
+				$subscriber->save();
+				
+				$tenoff = file_get_contents('http://www.icuracao.com/commonapi/api/signupcoupon');
+				$tenoffcode = json_decode($tenoff);
+			file_get_contents('http://app.bronto.com/public/?q=direct_add&fn=Public_DirectAddForm&id=acxhzmypejmnhsowqaqxwyyhyesgbcd&email='.$email.'&field1=Sign_Up_Lightbox,set,true&field2=Sign_Up_Coupon,set,'.$tenoffcode->code.'&list3=0bc603ec0000000000000000000000053fa7');
+				$response['success'] = true;
+				$response['error'] = false;
+				$response['message'] = "Email Been Added";
+				
+			}
+			catch (Exception $e) {
+				throw new Exception($e->getMessage());
+			}
+			
+		}else{
+			$response['success'] = false;
+			$response['error'] = true;
+			$response['message'] = "Email Already Exist";
+		}
+		
+		$this->getResponse()->setBody(Zend_Json::encode($response));
+				
+	}
+	################Create 10% off Coupon for sign up ##############################
+	public function signupcouponAction()
+	{
+		$customerGroupIds = Mage::getModel('customer/group')->getCollection()->getAllIds();
+		$websitesId = Mage::getModel('core/website')->getCollection()->getAllIds();
+	
+		$cc = Mage::helper('core')->getRandomString(8);
+  	    $couponCode = strtoupper(strtolower($cc));
+	
+		$model = Mage::getModel('salesrule/rule');
+		$model->setName('10% off on signup');
+		$model->setDescription('10% off on signup');
+		$model->setFromDate();
+		$model->setToDate(date('Y-m-d', strtotime('+2 days')));
+		$model->setCouponType(2);
+		$model->setCouponCode($couponCode);
+		$model->setUsesPerCoupon(1);
+		$model->setUsesPerCustomer(1);
+		$model->setCustomerGroupIds($customerGroupIds);
+		$model->setIsActive(1);
+		$model->setConditionsSerialized('a:6:{s:4:\"type\";s:32:\"salesrule/rule_condition_combine\";s:9:\"attribute\";N;s:8:\"operator\";N;s:5:\"value\";s:1:\"1\";s:18:\"is_value_processed\";N;s:10:\"aggregator\";s:3:\"all\";}');
+		$model->setActionsSerialized('a:6:{s:4:\"type\";s:40:\"salesrule/rule_condition_product_combine\";s:9:\"attribute\";N;s:8:\"operator\";N;s:5:\"value\";s:1:\"1\";s:18:\"is_value_processed\";N;s:10:\"aggregator\";s:3:\"all\";}');
+		$model->setStopRulesProcessing(0);
+		$model->setIsAdvanced(1);
+		$model->setProductIds('');
+		$model->setSortOrder(1);
+		$model->setSimpleAction('by_percent');
+		$model->setDiscountAmount('10');
+		$model->setDiscountStep(0);
+		$model->setSimpleFreeShipping(0);
+		$model->setTimesUsed(0);
+		$model->setIsRss(0);
+		$model->setWebsiteIds($websitesId);
+		$model->setStoreLabels(array('10% off on signup'));
+
+		try {
+			$model->save();
+			$response = array(
+				'success' => false,
+				'error'=> true,
+			);
+			$response['success'] = true;
+			$response['error'] = false;
+			$response['code'] = $couponCode;
+	
+		
+			
+        //End Coupon thing
+        
+		} catch (Exception $e) {
+			Mage::log($e->getMessage());
+			$response['success'] = false;
+
+			$response['error'] = true;
+			$response['message'] = $this->__('Can not generate coupon code, please try again later.');        	
+	
+		}
+		
+		$this->getResponse()->setBody(Zend_Json::encode($response));
+	}
+	################ 10% off coupon End############################################# 
+	
 	public function claimcouponAction()
 	{
 		$customerGroupIds = Mage::getModel('customer/group')->getCollection()->getAllIds();

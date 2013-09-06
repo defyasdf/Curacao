@@ -1,0 +1,313 @@
+<?php
+/**
+ * Magento Enterprise Edition
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Magento Enterprise Edition License
+ * that is bundled with this package in the file LICENSE_EE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.magentocommerce.com/license/enterprise-edition
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://www.magentocommerce.com/license/enterprise-edition
+ */
+?>
+<?php
+/**
+ * Category view template
+ *
+ * @see Mage_Catalog_Block_Category_View
+ */
+?>
+<?php
+    $_helper    = $this->helper('catalog/output');
+    $_category  = $this->getCurrentCategory();
+
+	// create folder for resize category images
+	if(!file_exists("./media/catalog/category/resized")) mkdir("./media/catalog/category/resized",0777);
+    
+    $_imgUrl = $_category->getImageUrl();
+    $_imgHtml   = '';
+    
+
+
+/*
+    if ($_imgUrl = $_category->getImageUrl()) {
+        $_imgHtml = '<p class="category-image"><img src="'.$_imgUrl.'" alt="'.$this->htmlEscape($_category->getName()).'" title="'.$this->htmlEscape($_category->getName()).'" /></p>';
+        $_imgHtml = $_helper->categoryAttribute($_category, $_imgHtml, 'image');
+    }
+    */
+?>
+<div class="page-title category-title">
+    <?php if($this->IsRssCatalogEnable() && $this->IsTopCategory()): ?>
+        <a href="<?php echo $this->getRssLink() ?>" class="link-rss"><?php echo $this->__('Subscribe to RSS Feed') ?></a>
+    <?php endif; ?>
+    <h1><?php echo $_helper->categoryAttribute($_category, $_category->getName(), 'name') ?></h1>
+</div>
+
+<?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+
+<?php if($_imgUrl): ?>
+    <?php echo $_imgHtml ?>
+<?php endif; ?>
+
+<div class="featured-products">
+	<?php
+		$_collection =   $_category->getCategories($_category->entity_id);
+	    $_myhelper     = Mage::helper('catalog/category');
+	    
+	    $qty = 0;
+	    
+	    foreach ($_collection as $_cat):
+	    	$qty++;
+	    endforeach;
+	    		
+	    
+	    if( $qty > 1):
+	?>
+	<div class="sixteen columns alpha top-sellers">
+		<div class="block-header"><?php echo($_category->getDescription()) ?> <!-- <a class="right" href="#">See All</a> --></div>
+		<div class="collection-holder">
+			<ul class="category-thumbs">
+	    	<?php 
+	    		foreach ($_collection as $_cat):
+					$_imgHtml   = '';
+					$_cat = Mage::getModel('catalog/category')->load($_cat->getId());
+					$_imgUrl = $_cat->getImageUrl();
+//					$_imgUrl = $_cat->getImage();
+
+					if ( trim($_imgUrl) != '' ) {
+					
+ 
+ 					/*
+ 						NEED TO MODIFY PERMISSIONS - CANNOT CREATE IMAGES?
+						// get image name
+						$_imgName = substr(strrchr($_imgUrl,"/"),1);
+ 
+						// resized image path (media/catalog/category/resized/IMAGE_NAME)
+						$_imgResized = Mage::getBaseDir('media').DS."catalog".DS."category".DS."resized".DS.$_imgName;
+ 
+						// changing image url into direct path
+						$_dirImg = Mage::getBaseDir().str_replace("/",DS,strstr($_imgUrl,'/media'));
+ 
+						// if resized image doesn't exist, save the resized image to the resized directory
+						if (!file_exists($_imgResized)&&file_exists($_dirImg)) :
+							$_imgObj = new Varien_Image($_dirImg);
+							$_imgObj->constrainOnly(TRUE);
+							$_imgObj->keepAspectRatio(TRUE);
+							$_imgObj->keepFrame(FALSE);
+							$_imgObj->resize(120, 120);
+							$_imgObj->save($_imgResized);
+						endif;
+ 
+						$_newImgUrl = Mage::getBaseUrl('media')."catalog/category/resized/".$_imgUrl;
+
+						$_imgHtml = '<div class="category-image">';
+						$_imgHtml .= '<img src="'.$_newImgUrl.'" title="'.$this->htmlEscape($_cat->getName()).'" name="'.$this->htmlEscape($_cat->getName()).'" />';
+ 						$_imgHtml .= '<div>';
+ 					*/
+						$_imgHtml = '<div class="category-image">';
+						$_imgHtml .= '<a href="'.($_myhelper->getCategoryUrl($_cat)).'">';
+						$_imgHtml .= '<img src="'.$_imgUrl.'" title="'.$this->htmlEscape($_cat->getName()).'" name="'.$this->htmlEscape($_cat->getName()).'" />';
+						$_imgHtml .= '</a>';
+ 						$_imgHtml .= '</div>';
+ 					
+			?>
+	            <li>
+	                <?php echo($_imgHtml); ?>
+	                <div class="category-thumb-title"><a href="<?php echo $_myhelper->getCategoryUrl($_cat);?>"><?php echo($this->htmlEscape($_cat->getName())) ?></a></div>
+                    <div class="cat_description"><?php echo($this->htmlEscape($_cat->getDescription())) ?></div>
+	            </li>			
+			<?php
+					}
+	    	?>
+
+			<?php endforeach;?>
+			</ul>
+		</div>
+	</div>
+	<?php
+ endif; 
+?>
+</div>
+
+
+<?php 
+	$arr = array(8,9,10,11,12);
+	if(!in_array($_category->getId(),$arr)){?>
+
+
+<?php if($this->isContentMode()): ?>
+    <?php echo $this->getCmsBlockHtml() ?>
+
+<?php elseif($this->isMixedMode()): ?>
+    <?php echo $this->getCmsBlockHtml() ?>
+    <?php echo $this->getProductListHtml() ?>
+
+<?php else: ?>
+    <?php echo $this->getProductListHtml() ?>
+<?php endif; ?>
+
+<?php }?>
+
+
+<script type="text/javascript">
+	var dataForm = new VarienForm('signup-form', true);
+	jQuery(document).ready(function() {
+	<?php
+	
+	$session = Mage::getSingleton('customer/session', array('name'=>'frontend')); 
+	if(!$session->isLoggedIn()){
+		if(!Mage::getSingleton('core/session')->getHid()){
+			 	?>	
+					
+					var login_url = '/commonapi/api/signupchek'
+					jQuery.ajax({ 
+							type: 'post',
+							data: {'catId':<?php echo $_category->getId()?>},
+							url:  login_url,                    
+							success: function(data) {
+							   var result = jQuery.parseJSON(data); 
+														
+								if(result.success) {
+									var url = "/lighbox_html/signup_bronto.html?width=620&height=405";
+									tb_show("Sign Up and Get 10% Off", url);
+									jQuery("#TB_overlay").unbind("click",tb_remove);
+								} 
+							}.bind(this)
+					 });
+					
+/*					
+*/			<?php 
+			
+		}
+	}
+	?>
+	
+	})
+	function signupoffer(){
+		var valid = new Validation('signup-form', {onSubmit:false});
+			valid.reset();
+		var result = valid.validate();
+			if(result){
+				//jQuery("#formcontent").hide('slow');
+				//jQuery("#formloadingsignup").show('slow');
+				var login_url = '/commonapi/api/signupemail'
+				jQuery.ajax({ 
+						type: 'post',
+						data: {'email':jQuery("#signupEmail").val()},
+						url:  login_url,                    
+						success: function(data) {
+						   var result = jQuery.parseJSON(data); 
+							if(result.success) {
+								jQuery(".signupForm").hide('slow');
+								jQuery(".signupThankyou").show('slow');
+							} else {
+								jQuery("#regularthnk").hide('slow');
+								jQuery("#alreadyExist").show('slow');
+								jQuery(".signupForm").hide('slow');
+								jQuery(".signupThankyou").show('slow');			
+							}
+						}.bind(this)
+				 });
+			
+			}
+			return false;
+		
+	}
+	
+	function countinueShop(){
+		 tb_remove();
+		 return false;
+	}
+	
+</script>
+
+
+<?php
+	if(isset($_GET['hid'])){
+		if(!$_COOKIE["buy42"]){	
+            if($_category->getId() == '569'){
+        ?>
+				<script type="text/javascript">
+                    jQuery(document).ready(function() {
+                        var url = "/lighbox_html/buy42.html?width=620&height=405";
+                        tb_show("Sign Up and Get $100 Off", url);
+                        jQuery("#TB_overlay").unbind("click",tb_remove);    
+                    });
+                </script>
+<?php 		}
+			$expire=time()+60*60*24*30;
+			setcookie("buy42", "buy42", $expire);
+		}
+	}
+?>
+<?php if(  isset($_GET['hid']) && isset($_GET['sub_id']) && isset($_GET['aff_id']) ):?>
+	<script type="text/javascript">
+		function buy42offer(){
+			var valid = new Validation('buy42offer', {onSubmit:false});
+				valid.reset();
+			var result = valid.validate();
+				if(result){
+					var em = jQuery("#buy42email").val();
+					var login_url = '/custom/addbuy42email.php'
+					jQuery.ajax({ 
+							type: 'post',
+							data: {'email':em,'hid':'<?php if(isset($_GET['hid'])): echo $_GET['hid']; endif;?>','sid':'<?php if(isset($_GET['sub_id'])): echo $_GET['sub_id']; endif;?>','affid':'<?php if(isset($_GET['aff_id'])): echo $_GET['aff_id']; endif;?>'},
+				//			data: {'email':em,'hid':'1234','sid':'45689','affid':'amdsid'},
+							url:  login_url,                    
+							success: function(data) {
+								if(data==2){
+									alert("Email already exist");
+								}else{
+							     jQuery("#lighboxsignupform").hide('slow');
+	  						 	 jQuery("#lighboxsignupthanks").show('slow');
+								}
+							}.bind(this)
+					 });
+				
+				}
+				return false;
+			
+		}
+		
+		function countinueShop(){
+			 tb_remove();
+		}
+	</script>
+<?php endif;?>
+
+<?php
+	if(isset($_GET['hid'])){
+		 if($_category->getId() == '569'){
+			if(Mage::getSingleton('core/session')->getGwmid()){
+				$server = '192.168.100.121';
+				$user = 'curacaodata';
+				$pass = 'curacaodata';
+				$db = 'icuracaoproduct';
+				
+				
+				$link = mysql_connect($server,$user,$pass);
+				
+				mysql_select_db($db,$link);
+				
+				$gwm = 'update gwmtracking set landingpage = "ALL_TV_PROMO" where gwmId = '.Mage::getSingleton('core/session')->getGwmid();
+				mysql_query($gwm);
+				
+				mysql_close($link);
+			}
+		 }
+	}
+?>

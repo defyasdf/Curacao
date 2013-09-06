@@ -1,0 +1,163 @@
+<html>
+<head>
+<style>
+#TB_ajaxContent{
+	padding:25px 5px 15px;
+}
+#TB_window a img{
+	display:none;
+}
+#TB_ajaxContent{
+	border-radius: 5px;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	padding:10px;
+}
+.lightbox {
+	background-color: #ffffff;
+	border-radius: 5px;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	box-shadow: 5px 5px 5px #999999;
+	-webkit-box-shadow: 5px 5px 5px #999999;
+	-moz-box-shadow: 5px 5px 5px #999999;
+/*	padding: 10px;*/
+	width: 630px;
+	height: 380px;
+}
+
+.clear { clear: both; }
+.clear10 { height: 10px; clear: both; }
+.clear25 { height: 25px; clear: both; }
+.clear40 { height: 40px; clear: both; }
+
+.lightbox button {
+	border: 0;
+	background-color: #f26722;
+	padding: 7px 20px;
+	border-radius: 5px;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	box-shadow: 0 1px 1px #555555;
+	-webkit-box-shadow: 0 1px 1px #555555;
+	-moz-box-shadow: 0 1px 1px #555555;
+}
+
+.lightbox button.blue {
+	background: #008ecf;
+	margin-top: 15px;
+}
+
+a.close {
+	float: right;
+	text-decoration: none;
+	margin-right: 20px;
+	font-size: 12px;
+}
+
+button span {	
+	color: #ffffff;
+	font-family: Arial, sans-serif;
+	font-size: 12px;
+	text-decoration: none;
+}
+
+span {
+	font-size: 14px;
+	font-family: Arial, sans-serif;
+	color: #ffffff;
+}
+
+span.restrictions {
+	font-size: 11px;
+	font-family: Arial, sans-serif;
+	color: #ffffff;
+}	
+
+form input {
+	font-size: 14px;
+	color: #999999;
+	font-family: Arial, sans-serif;
+	width: 280px;
+	margin-bottom: 10px;
+	box-shadow: inset 1px 1px 1px 0px #dddddd;
+	-webkit-box-shadow: inset 1px 1px 1px 0px #dddddd;
+	-moz-box-shadow: inset 1px 1px 1px 0px #dddddd;
+	padding: 3px;
+}
+
+form input.fat {
+	height: 35px;
+	margin: 10px 0 0 0;
+	padding-left: 10px;
+	display:inline;
+}
+
+#lb_signup10 {
+	background-color: #d5172f;
+	width: 630px;
+	height: 380px;
+	text-align: center;
+}
+
+#lb_signup10 img {
+	margin-top: 40px;
+}
+
+
+#lb_signup10 form {
+	margin: 20px 0 0 110px;
+	width: 400px;
+}
+
+#lb_signup10 .thankyou {
+	margin: 20px 65px;
+	width: 500px;
+	text-align: left;
+}
+#countinueshopping{
+	margin-left:250px;
+}
+</style>
+</head>
+<body>
+
+<div class="signupForm">
+	<div class="lightbox">
+		<div id="lb_signup10">
+			<img src="http://www.icuracao.com/images/save10.png" /><br />
+			<form id="signup-form">
+				<span>To redeem this exclusive offer please enter your email address:</span>
+				<input type="text" name="email" class="fat input-text validate-email required-entry" id="signupEmail" value="" />
+				<a href="#"><button class="blue right" onClick="return signupoffer()"><span>SUBMIT</span></button></a>
+				<div class="clear10"></div>
+				<div class="clear10"></div>
+				<span class="restrictions">*Offer valid for new email subscribers only. See email for full restrictions.</span>
+				<div class="clear25"></div>
+			</form>
+			<a href="#" class="close" onClick="return countinueShop()"><span>No Thanks &raquo;</span></a>
+			<div class="clear"></div>
+		</div>
+	</div>
+</div>
+<div class="signupThankyou" style="display:none;">
+	<div class="lightbox">
+		<div id="lb_signup10">
+			<img src="http://www.icuracao.com/images/thankyou.png" /><br />
+			<div class="thankyou" id="regularthnk">
+				<span>Welcome! You are now signed up to receive news about exclusive offers, event sales, discount coupons, new arrivals and much more.</span><br /><br />
+				<span>To show our thanks, we'll be sending an email shortly with a coupon to save 10% on your first purchase.</span>
+			</div>
+            <div class="thankyou" id="alreadyExist" style="display:none">
+            	<span>The email you entered already exist in our records.</span><br /><br />
+            </div>
+			<div class="clear10"></div>
+			<a href="#" onClick="return countinueShop()"><button class="blue" id="countinueshopping"><span>CONTINUE SHOPPING</span></button></a>
+			<div class="clear40"></div>
+			<a href="#" class="close" onClick="return countinueShop()"><span>Close &raquo;</span></a>
+			<div class="clear"></div>
+		</div>
+	</div>
+</div>
+</body>
+<html>
