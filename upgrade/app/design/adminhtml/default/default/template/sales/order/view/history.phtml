@@ -20,7 +20,7 @@
  *
  * @category    design
  * @package     default_default
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 ?>
@@ -30,15 +30,33 @@
         <div><?php echo Mage::helper('sales')->__('Add Order Comments') ?></div>
         <span class="field-row">
             <label class="normal" for="history_status"><?php echo Mage::helper('sales')->__('Status') ?></label><br/>
+           <?php if($this->getOrder()->getStatus() == 'pending' || $this->getOrder()->getStatus() == 'processing' || $this->getOrder()->getStatus() == 'internalfulfillment' || $this->getOrder()->getStatus() == 'senttovendor'|| $this->getOrder()->getStatus() == 'gwmpromo'){?>
+            <select id="history_status" class="select" name="history[status]">
+                     <option <?php if($this->getOrder()->getStatus() == 'pending'){?> selected="selected"<?php }?> value="pending">Pending</option>
+                     <option <?php if($this->getOrder()->getStatus() == 'processing'){?> selected="selected"<?php }?> value="processing">Processing</option>
+                     <option <?php if($this->getOrder()->getStatus() == 'internalfulfillment'){?> selected="selected"<?php }?> value="internalfulfillment">Internal Fulfillment</option>
+                     <option <?php if($this->getOrder()->getStatus() == 'senttovendor'){?> selected="selected"<?php }?> value="senttovendor">Sent To Vendor</option>
+                     <option <?php if($this->getOrder()->getStatus() == 'canceled'){?> selected="selected"<?php }?> value="canceled">Cancel</option>
+                     <option <?php if($this->getOrder()->getStatus() == 'complete'){?> selected="selected"<?php }?> value="complete">Complete</option>
+                     <option <?php if($this->getOrder()->getStatus() == 'gwmpromo'){?> selected="selected"<?php }?> value="gwmpromo">GWM-promo</option>
+                     <option <?php if($this->getOrder()->getStatus() == 'acountnotactive'){?> selected="selected"<?php }?> value="acountnotactive">Account Not Active</option>
+                     <option <?php if($this->getOrder()->getStatus() == 'acconhold'){?> selected="selected"<?php }?> value="acconhold">Account Been Held</option>
+                     <option <?php if($this->getOrder()->getStatus() == 'downpaymentrequired'){?> selected="selected"<?php }?> value="downpaymentrequired">Down Payment Required</option>
+                     <option <?php if($this->getOrder()->getStatus() == 'replacementneeded'){?> selected="selected"<?php }?> value="replacementneeded">Replacement Needed</option>
+                     <option <?php if($this->getOrder()->getStatus() == 'outofstock'){?> selected="selected"<?php }?> value="outofstock">Out of Stock</option>
+            </select>
+            <?php }else{?>
             <select name="history[status]" class="select" id="history_status">
             <?php foreach ($this->getStatuses() as $_code=>$_label): ?>
                 <option value="<?php echo $_code ?>"<?php if($_code==$this->getOrder()->getStatus()): ?> selected="selected"<?php endif; ?>><?php echo $_label ?></option>
             <?php endforeach; ?>
             </select>
+            <?php }?>
         </span>
         <span class="field-row">
             <label class="normal" for="history_comment"><?php echo Mage::helper('sales')->__('Comment') ?></label>
             <textarea name="history[comment]" rows="3" cols="5" style="height:6em; width:99%;" id="history_comment"></textarea>
+	<input type='hidden' name="history[comment_user]" value="by Sanjay" />	
         </span>
         <div class="f-left">
             <?php if ($this->canSendCommentEmail()): ?>
@@ -47,7 +65,8 @@
             <input name="history[is_visible_on_front]" type="checkbox" id="history_visible" value="1" /><label class="normal" for="history_visible"> <?php echo Mage::helper('sales')->__('Visible on Frontend') ?></label>
         </div>
         <div class="f-right">
-            <?php echo $this->getChildHtml('submit_button') ?>
+        	<button style="" onclick="return submitComment()" class="scalable save" type="button" title="Submit Comment" id="id_37aab20b3b6674b991971fbdae7ff11d"><span><span><span>Submit Comment</span></span></span></button>
+            <?php //echo $this->getChildHtml('submit_button') ?>
         </div>
         <div class="clear"></div>
     </div>
@@ -74,7 +93,17 @@
         </li>
     <?php endforeach; ?>
     </ul>
+    <?php 
+		$user = Mage::getSingleton('admin/session');
+		$userFirstname = $user->getUser()->getFirstname();
+		$userLastname = $user->getUser()->getLastname();
+	?>
     <script type="text/javascript">
+	function submitComment() {
+		$('history_comment').value += ' By <?php echo $userFirstname.' '.$userLastname;?>'
+		submitAndReloadArea($('order_history_block').parentNode, '<?php echo $this->getSubmitUrl() ?>')
+	}
+
     if($('order_status'))$('order_status').update('<?php echo $this->getOrder()->getStatusLabel() ?>');
     </script>
 </div>

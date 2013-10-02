@@ -128,7 +128,17 @@
 				 	<div class="clear"></div>
 					<div id="detail_shipping">
 						<?php echo $shippinginfo;?>
-					</div>                
+					</div> 
+                    
+                    <?php 
+						if($_product->getTvBrand() == '813'){
+						?>
+							<A HREF="javascript:void(0)"
+onclick="window.open('http://www.bose.com/controller?event=VIEW_STATIC_PAGE_EVENT&url=/customer_service/shopping/authorized_dealers.jsp?src=DLR528','badge','toolbar=no,location=yes,directories=no,status=no,menubar=no,scrollbars=yes')"><img src="/images/bose_badge.gif"></A>
+						
+						<?php 
+						}
+					?>               
 		        </div>
 		        <?php echo $this->getChildHtml('extra_buttons') ?>
 

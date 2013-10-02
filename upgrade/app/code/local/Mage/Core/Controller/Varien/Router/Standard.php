@@ -428,6 +428,13 @@ class Mage_Core_Controller_Varien_Router_Standard extends Mage_Core_Controller_V
     /* --- override to only put particular functions to secure --- */
     protected function _checkShouldBeSecure($request, $path = '')
     {
+    
+    	//return for API calls
+    	if( stripos($path, 'api/v2_soap') ) return;
+		if( stripos($path, 'api/soap') ) return;
+		if( stripos($path, 'api') ) return;
+    	
+    	
         if (!Mage::isInstalled() || $request->getPost()) {
             return;
         }

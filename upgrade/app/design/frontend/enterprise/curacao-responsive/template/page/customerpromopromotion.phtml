@@ -19,19 +19,7 @@
 		<?php
 		}
 	?>
-    <?php 
-	if(isset($_COOKIE["signup299"])){
-		?>
-			<script type="text/javascript">
-            	window.location.replace("http://www.icuracao.com");
-            </script>
-		<?php
-		
-		}else{
-			$expire=time()+60*60*24*30;
-			setcookie("signup299", "signup", $expire);
-		}
-?>
+   
 
 	<?php echo $this->getChildHtml('head') ?>
 	
@@ -78,14 +66,7 @@ var WRInitTime=(new Date()).getTime();
 			<div class="wrapper">
               <?php 
 			  			$ccode = 'LVCR1LOG';
-						/*if(Mage::getSingleton('core/session')->getCouponjoin299100()){
-							$ccode =  Mage::getSingleton('core/session')->getCouponjoin299100();
-						}else{
-							//$coupon = file_get_contents('https://www.icuracao.com/onestepcheckout/ajax/createautosignup299coupon/');
-							//$code = json_decode($coupon);
-							//$ccode = $code->code;
-							Mage::getSingleton('core/session')->setCouponjoin299100($code->code);
-						}*/
+						
 				?>
    			  <!-- GWM Landing Page Code -->
               <div class="container">
@@ -239,12 +220,13 @@ var WRInitTime=(new Date()).getTime();
 </body>
 </html>
 <?php
+/*
 	if(isset($_GET['hid'])){
 		if(Mage::getSingleton('core/session')->getGwmid()){
 			$server = '192.168.100.121';
-			$user = 'curacaodata';
-			$pass = 'curacaodata';
-			$db = 'icuracaoproduct';
+			$user = 'curacao_magento';
+			$pass = '4nRGQqyQ4KGPEw7n';
+			$db = 'curacao_magento';
 			
 			
 			$link = mysql_connect($server,$user,$pass);
@@ -252,9 +234,11 @@ var WRInitTime=(new Date()).getTime();
 			mysql_select_db($db,$link);
 			
 			$gwm = 'update gwmtracking set landingpage = "Home_Signup_Promo_299" where gwmId = '.Mage::getSingleton('core/session')->getGwmid();
+			print $gwm;exit;
 			mysql_query($gwm);
 			
 			mysql_close($link);
 		}
 	}
+	*/
 ?>

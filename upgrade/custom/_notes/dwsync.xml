@@ -13,4 +13,22 @@
 <file name="_add_upc.php" server="198.101.163.120//var/www/" local="130207271460000000" remote="130207271460000000" Dst="2" />
 <file name="getpayment_info.php" server="198.101.163.120//var/www/" local="130223027058106553" remote="130223027200000000" Dst="2" />
 <file name="_getorder_collection.php" server="198.101.163.120//var/www/" local="130207271460000000" remote="130207271460000000" Dst="2" />
+<file name="_getorder_item_collection_margin.php" server="198.101.163.120//var/www/" local="130232353747748032" remote="130232353920000000" Dst="2" />
+<file name="_getorder_collection_withdate.php" server="198.101.163.120//var/www/" local="130232353602259711" remote="130232353770000000" Dst="2" />
+<file name="_getorder_item_collection.php" server="198.101.163.120//var/www/" local="130232354005762790" remote="130232354180000000" Dst="2" />
+<file name="getauthenticationreport.php" server="198.101.163.120//var/www/" local="130232354410695951" remote="130232354580000000" Dst="2" />
+<file name="getallactiveproducts_withupc.php" server="198.101.163.120//var/www/" local="130232377992224737" remote="130232378160000000" Dst="2" />
+<file name="unloack_customer.php" server="198.101.163.120//var/www/" local="130207271450000000" remote="130207271450000000" Dst="2" />
+<file name="updateproduct.php" server="198.101.163.120//var/www/" local="130207271460000000" remote="130207271460000000" Dst="2" />
+<file name="replacesku.php" server="198.101.163.120//var/www/" local="130207271460000000" remote="130207271460000000" Dst="2" />
+<file name="checkoutapi.php" server="198.101.163.120//var/www/" local="130207271460000000" remote="130207271460000000" Dst="2" />
+<file name="checksoap.php" server="198.101.163.120//var/www/" local="130233337068700774" remote="130233337250000000" Dst="2" />
+<file name="killprocess.php" server="198.101.163.120//var/www/" local="130238537784195594" remote="130238538000000000" Dst="2" />
+<file name="_desableProduct.php" server="198.101.163.120//var/www/" local="130207271460000000" remote="130207271460000000" Dst="2" />
+<file name="getallproducts_curacao.php" server="198.101.163.120//var/www/" local="130207271460000000" remote="130207271460000000" Dst="2" />
+<file name="addequipo.php" server="198.101.163.120//var/www/" local="130207271450000000" remote="130207271450000000" Dst="2" />
+<file name="getallproducts.php" server="198.101.163.120//var/www/" local="130241058010000000" remote="130241058230000000" Dst="2" />
+<file name="tucson.php" server="198.101.163.120//var/www/" local="130245465975092909" remote="130245466020000000" Dst="2" />
+<file name="cartAbandonment.php" server="198.101.163.120//var/www/" local="130251307609835305" remote="130251307720000000" Dst="2" />
+<file name="datediff.php" server="198.101.163.120//var/www/" local="130250643029083460" remote="130250643110000000" Dst="2" />
 </dwsync>

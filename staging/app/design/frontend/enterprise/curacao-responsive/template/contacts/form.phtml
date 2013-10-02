@@ -49,6 +49,9 @@ message through the form below or reach us directly using the contact informatio
 		$livechat = 'images/livechat.jpg';
 		$offline = 'images/offline.jpg';
 		$contactbyphone = 'Contact By Phone';
+		$findstore = "Find A Store";
+		$storelink = "<a href='/store-locator'>Click Here</a> to find contact
+information for each store location.";
 	}else{
 		$msg = 'No dude en contactar con nosotros con cualquier pregunta o comentario que pueda tener y que va a tratar de volver a usted tan pronto como sea posible por favor. Puede enviar un mensaje a través del siguiente formulario o contactarnos directamente utilizando la información de contacto a la derecha. Gracias.';
 		$msg_nocsr = '<strong>El agente en vivo no está disponible.</strong> No dude en contactar con nosotros con cualquier pregunta o comentario que pueda tener y que va a tratar de volver a usted tan pronto como sea posible por favor. Puede enviar un mensaje a través del siguiente formulario. Gracias.';
@@ -72,6 +75,10 @@ message through the form below or reach us directly using the contact informatio
 		$livechat = 'images/livechat_es.jpg';
 		$offline = 'images/offline_es.jpg';
 		$contactbyphone = 'Contacto por teléfono';
+		
+		$findstore = "Localizar Tienda";
+		
+		$storelink = "<a href='/store-locator'>Clic Aquí</a> para obtener información de cada tienda.";
 	}
 ?>
 <div id="messages_product_view"><?php echo $this->getMessagesBlock()->getGroupedHtml() ?></div>
@@ -212,6 +219,12 @@ liveagent.showWhenOffline('573Z0000000CaU6', document.getElementById('liveagent_
 liveagent.init('https://d.la8cs.salesforceliveagent.com/chat', '572Z0000000CaT3', '00DZ0000001CIOx');
 </script>
 
+
+<p>&nbsp;</p>
+<div>
+	<h2 style="color:#e26d28;"> <?php echo $findstore?></h2>
+    <div><?php echo $storelink?></div>
+</div>
 </div>
 
 <script type="text/javascript">

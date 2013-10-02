@@ -38,7 +38,7 @@ Whoops, it looks like you have an invalid PHP version.</h3></div><p>Magento supp
  * Error reporting
  */
 error_reporting(E_ALL | E_STRICT);
-
+ini_set('apc.cache_by_default', 0); 
 /**
  * Compilation includes configuration file
  */
@@ -84,9 +84,9 @@ $mageRunCode = isset($_SERVER['MAGE_RUN_CODE']) ? $_SERVER['MAGE_RUN_CODE'] : ''
 /* Run store or run website */
 $mageRunType = isset($_SERVER['MAGE_RUN_TYPE']) ? $_SERVER['MAGE_RUN_TYPE'] : 'store';
 
-//Mage::run($mageRunCode, $mageRunType);
+//Mage::run($mageRunCode, $mageRunType); 96.251.72.16 
 
-if($_SERVER['REMOTE_ADDR']=='206.170.79.99' || $_SERVER['REMOTE_ADDR']=='206.170.79.5' || $_SERVER['REMOTE_ADDR']== '198.72.211.115'){
+if($_SERVER['REMOTE_ADDR']=='206.170.79.99' || $_SERVER['REMOTE_ADDR']=='206.170.79.5' || $_SERVER['REMOTE_ADDR']== '198.72.211.115' ||  $_SERVER['REMOTE_ADDR']== '101.223.93.123' ||  $_SERVER['REMOTE_ADDR']== '183.82.193.70' || $_SERVER['REMOTE_ADDR']== '123.236.151.111' || $_SERVER['REMOTE_ADDR']== '183.82.243.156' || $_SERVER['REMOTE_ADDR']== '96.251.72.16' || $_SERVER['REMOTE_ADDR']== '95.251.72.16' || $_SERVER['REMOTE_ADDR']== '101.223.120.234' || $_SERVER['REMOTE_ADDR']== '49.204.46.199' || $_SERVER['REMOTE_ADDR']== '173.166.9.250' ){
 	Mage::run($mageRunCode, $mageRunType);
 }else{
 	header("Location: http://www.icuracao.com/");

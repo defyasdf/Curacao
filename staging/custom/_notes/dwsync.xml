@@ -3,4 +3,7 @@
 <file name="_add_curacao_price.php" server="198.101.163.120//var/www/" local="130207271460000000" remote="130207271460000000" Dst="2" />
 <file name="emailsignuo.php" server="198.101.163.120//var/www/" local="130228821192552087" remote="130228821420000000" Dst="2" />
 <file name="emailsignup.php" server="198.101.163.120//var/www/" local="130228824893453766" remote="130228825090000000" Dst="2" />
+<file name="_add_position.php" server="198.101.163.120//var/www/" local="130208929370000000" remote="130208929370000000" Dst="2" />
+<file name="get_report.php" server="198.101.163.120//var/www/" local="130246959701239158" remote="130246959760000000" Dst="2" />
+<file name="_add_curacao_price_bysku.php" server="198.101.163.120//var/www/" local="130250424208637647" remote="130250424290000000" Dst="2" />
 </dwsync>

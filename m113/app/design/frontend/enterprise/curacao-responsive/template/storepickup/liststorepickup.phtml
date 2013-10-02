@@ -1,0 +1,384 @@
+<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=<?php echo Mage::getModel('storepickup/shipping_storepickup')->getConfigData('gkey'); ?>&sensor=false"></script>
+<script src="http://www.google.com/uds/api?file=uds.js&v=1.0" type="text/javascript"></script>
+<?php 
+	$stores = $this->getAllStores();
+	$searchconfig = $this->getSearchConfiguration();
+?>
+
+<div class="page-title">
+	<h1><?php echo $this->__('Our Stores') ?></h1>
+</div>
+<div class=" account-login search_store">
+<form method="get" action="<?php echo(Mage::getBaseUrl() . "storepickup/index/index/"); ?>" name="storepickupsearch">
+	<div id="list-storepickup" class="part-left" style="float:left;overflow:hidden;width:450px;">
+		<?php if($searchconfig['country'] == 1) { ?>
+			<ul class="form-list">
+				<li>
+					<label for="country"><b><?php echo $this->__('Country') ?></b></label>
+					<select id="search_country" name="country" style="width:295px;">
+						<option value=""><?php echo $this->__('Select country')?></option>
+						<?php 
+						$countries = Mage::helper('storepickup/location')->getOptionCountry();
+						
+						foreach($countries as $country) { 
+							$selected = '';
+							if ($country['value'] == $this->getRequest()->getParam('country')){ 
+								$selected = 'selected';
+							}
+						?>
+							<option value="<?php echo $country['value']; ?>" <?php echo $selected;?>><?php echo $country['label'];?></option>
+						<?php } ?>	
+					</select>
+				</li>
+				
+			</ul>
+		<?php }
+			if($searchconfig['state'] == 1) { ?>	
+			<ul class="form-list">
+				<li>
+					<label for="state"><b><?php echo $this->__('State/Province')?></b></label>
+					<input class="input-text" id="search_state" name="state" type="text" value="<?php echo $this->getRequest()->getParam('state') ?>" style="width:290px"/>
+				</li>
+			</ul>
+		<?php }
+			if($searchconfig['city'] == 1) { ?>
+			<ul class="form-list">
+				<li>
+					<label for="city"><b><?php echo $this->__('City')?></b></label>
+					<input class="input-text" id="search_city" name="city" type="text" value="<?php echo $this->getRequest()->getParam('city') ?>" style="width:290px" />
+				</li>
+			</ul>
+		<?php }
+			if($searchconfig['name'] == 1) { ?>
+			<ul class="form-list">
+				<li>
+					<label for="name"><b><?php echo $this->__('Store Name')?></b></label>
+					<input class="input-text" id="search_name" name="name" type="text" value="<?php echo $this->getRequest()->getParam('name') ?>" style="width:290px" />
+				</li>
+			</ul>
+		<?php } ?>	
+	</div>
+</form>
+<?php if(($searchconfig['country'] ==1) || ($searchconfig['state'] ==1) || ($searchconfig['city'] ==1) || ($searchconfig['name'] ==1)) {?>
+<div class="part-right" style="width:80%">
+	<button onclick="setLocation('<?php echo $this->getUrl('storepickup/index/index') ?>');" class="button" title="reset" style="padding:20px"><span><span><?php echo $this->__('Reset')?></span></span></button>
+	<button onclick="document.storepickupsearch.submit();" class="button" title="search"><span><span><?php echo $this->__('Search')?></span></span></button>
+</div>
+<?php } ?>
+<div>
+	<ul class="form-list">
+		<li>
+			<label for="selected_store"><b><?php echo $this->__('Selected Store')?></b></label>
+			<input type="hidden" name="store_id" id="store_id" value="" />
+			<div id="store-info">
+			<?php if(count($stores)){
+				if($this->getRequest()->getParam('viewstore') != null)
+					$display = '';
+				else $display = 'display:none';	
+				foreach($stores as $store) { ?> 
+				<div id="store-info-<?php echo $store->getId()?>" style="<?php echo $display?>;margin-left:10px" >
+					<strong><?php echo $store->getStoreName();?></strong>
+					<br><?php echo $store->getAddress();?>
+					<br><?php echo $store->getCity().', ';?>
+					<?php echo $store->getState().', ';?>
+					<?php echo $store->getZipcode();?>
+					<br><?php echo $this->getCountryName($store->getCountry());?>
+					<br><?php echo $store->getStorePhone();?>
+				</div>
+				<?php }} ?>
+				<input type="hidden" id="curr-store" value="" />
+			</div>					
+		</li>
+	</ul>	
+</div>
+</div>
+<div id="map" style="width:400px; height:400px;overflow:hidden;"></div>
+
+<script type="text/javascript">
+//<![CDATA[
+var myLatlng = new google.maps.LatLng(-34.397, 150.644);
+var myOptions = {
+zoom: 8,
+center: myLatlng,
+mapTypeId: google.maps.MapTypeId.ROADMAP
+}
+var map = new google.maps.Map(document.getElementById("map"),myOptions);
+var bounds = new google.maps.LatLngBounds();
+<?php 
+	foreach($stores as $store) {
+		//$store=$store['info'];
+		$coordinates['lat'] = $store->getStoreLatitude();
+		$coordinates['lng'] = $store->getStoreLongitude();
+		if($coordinates['lat'] == '0.000' && $coordinates['lat'] == '0.000')
+			$coordinates = $this->getCoordinates();
+		//$address = $store->getFormatedAddress();	
+		$address = $store->getFormatedAddressforMap();
+?>
+var setLat = <?php echo $coordinates['lat'] ?>;
+var setLon = <?php echo $coordinates['lng'] ?>; 
+var storeId = <?php echo $store->getId(); ?>;
+var store_info = '<?php echo Mage::helper('storepickup')->jsQuoteEscape($store->getStoreName()) ?><br/><?php echo str_replace("\n","",str_replace("\r","",Mage::helper('storepickup')->jsQuoteEscape($address))); ?>' ;
+var marker_point = new google.maps.LatLng(setLat, setLon);
+bounds.extend(marker_point);
+var infoWindow = new google.maps.InfoWindow();
+placeMarker(setLat,setLon,store_info,storeId);
+<?php }?>
+
+// fix zoom max (06-02-2013)
+<?php if(count($stores) ==1) { ?>
+		map.setZoom(<?php echo $this->getDefaultZoom(); ?>);		
+		map.setCenter(marker_point);
+<?php }else{ ?>
+map.fitBounds(bounds);	
+map.setCenter(bounds.getCenter());
+<?php } ?>
+//end fix
+
+function placeMarker(setLat, setLon,store_info,storeId) {
+	var message = "geotagged geo:lat=" + setLat + " geo:lon=" + setLon + " "; 
+	var messageRoboGEO = setLat + ";" + setLon + ""; 
+	
+	var point = new google.maps.LatLng(setLat, setLon);
+	var marker = new google.maps.Marker({
+		  position: point,
+		  map: map
+		});
+	
+	
+		google.maps.event.addListener(marker, 'click', function(event) {
+			infoWindow.setContent(store_info);
+			infoWindow.setPosition(event.latLng);
+			infoWindow.open(map);
+			$('store_id').value = storeId;
+			changestorebyMap();
+		});
+}
+
+
+function changestorebyMap()
+{
+	if ($('shipping_date'))
+			$('shipping_date').value ='';
+		
+		var storeId;
+		
+		storeId = $('store_id').value;
+		
+		var url = '<?php echo $this->getUrl('storepickup/index/changestore'); ?>' ;
+		
+		url = url + 'store_id/' + storeId;
+	   
+		var request = new Ajax.Request(url,{method: 'get', onFailure: ""}); 
+		
+		if($('storepickup-box') != null)
+			$('storepickup-box').style.display = 'block';
+		if($('date-box') != null)
+			$('date-box').style.display = 'block';
+		if($('time-box') != null)	
+			$('time-box').style.display = 'block';
+			
+			//end all store mode
+		if($('curr-store') != null)
+		{
+			var curr_store_id = $('curr-store').value;
+			
+			if($('store-info-'+ curr_store_id) != null)
+			{
+				$('store-info-'+ curr_store_id).style.display = 'none';
+			}		
+			
+			if($('store-info-'+ storeId) != null)
+			{
+				$('store-info-'+ storeId).style.display = 'block';
+				$('curr-store').value = storeId;
+			}		
+		}
+}
+//]]>
+</script> 
+
+<div>&nbsp;</div>
+<?php if (count($stores)) { ?>
+
+<?php if($this->getRequest()->getParam('viewstore') != null):
+		$display = '';
+    else:
+        $display = 'display:none';
+    ?>
+    <?php echo $this->getPagerHtml(); ?>
+    <?php endif; ?>
+    <?php foreach ($stores as $store): ?>      
+    <?php $urlimage = Mage::helper('storepickup')->getImageUrl($store->getId()); //var_dump($urlimage);die(); ?>
+<div class ="pickup_imco"  style ="<?php echo $display?>"> 
+    <?php $area_width = 495; // use for content width in Form 
+           $area_height = 157;  // use for content height in Form        
+    ?>
+    <?php if(count($urlimage)):?>
+    <div class ="pickup_image" id="pickup_image">
+        <div class="pickup-main-outer">
+            <p class ="pickup-image-main">
+                <?php $image_big = Mage::helper('storepickup')->getImageUrlBig($store->getId()); ?>
+                <a title="" onclick="popWin('<?php echo $image_big;?>', 'gallery', 'width=300,height=300,left=0,top=0,location=no,status=yes,scrollbars=yes,resizable=yes'); return false;" href="#">
+                     <img id="image" src="<?php echo $image_big ?>" width="350px" hieght="253px">
+                </a>
+                
+            </p>
+            <div class="more-views">
+                <h2>More Views</h2>
+                <ul>
+                    <?php foreach ($urlimage as $item): ?>
+                    <li>
+                        <a class="pickup-image-small" title="" onclick="popWin('<?php echo $item;?>', 'gallery', 'width=300,height=300,left=0,top=0,location=no,status=yes,scrollbars=yes,resizable=yes'); return false;" href="#">
+                            <img width="56" height="56" alt="" src="<?php echo $item;?>">
+                        </a>
+                    </li>
+                    <?php endforeach; ?>
+                 </ul>
+            </div>
+        </div>        
+    </div>   
+    <div class = "pickup_contact" style="width:500px; float:right">
+    <?php else: $area_width = 560; $area_height = 112;?>
+    <div class = "pickup_contact" style="width:auto; float:none">
+    <?php endif; ?>
+	<h3><?php echo $this->__('Contact') ?></h3>
+	<form id="review-form" method="post" action="<?php echo $this->getUrl('*/*/savecontact',array('id'=>$store->getId()));?>">
+	<fieldset>
+		<ul class="form-list">
+			<li>
+			<label class="required pickup-required" for="name_field">
+			<b><em>*</em>
+			<?php echo $this->__('Your Name')  ?></b>
+			</label>
+				<div class="input-box">
+				<input id="name_field" class="input-text required-entry" type="text" value="<?php echo  $this->getFormData('name') ?>" name="name">
+				</div>
+			</li>
+			<li>
+			<label class="required pickup-required" for="email_field">
+			<b><em>*</em>
+			<?php echo $this->__('Email') ?></b>
+			</label>
+				<div class="input-box">
+				<input id="email_field" class="input-text required-entry" type="text" value="<?php echo $this->getFormData('email') ?>" name="email">
+				</div>
+			</li>
+			<li>
+			<label class="required pickup-required" for="message_field">
+			<b><em>*</em>
+			<?php echo $this->__('Content') ?></b>			
+			</label>
+				<div class="input-box">
+				<textarea id="message_field" class="required-entry" rows="3" cols="5" name="message"style="width: <?php echo $area_width-20;?>px; height: <?php echo $area_height ?>px;"><?php echo $this->getFormData('message') ?></textarea>
+				</div>
+                        </li>
+                        <li>
+                            <div class="field" <?php if(count($urlimage)):?>style="width:255px"<?php endif ?>>
+                                <label class="required pickup-required" for="pickup-captcha" style="margin-bottom:3px"><b><em>*</em><?php echo $this->__('Verification'); ?></b></label>
+                                <div class="input-box">
+                                    <img src="<?php echo $this->getUrl('*/*/imagecaptcha',array('id'=>$store->getId()));?>" id="pickup_captcha_image" />
+                                    <span id="pickup-please-wait-captcha" style="display:none;" class="opc-please-wait">
+                                            <img src="<?php echo $this->getSkinUrl('images/opc-ajax-loader.gif') ?>" class="v-middle" alt="" /> &nbsp; <?php echo $this->__('Getting new captcha') ?>...
+                                    </span>
+                                    <a href="javascript:void(0);" onclick="refreshCaptchaImage();return false;" id="pickup-captcha-link"><?php echo $this->__("Refresh"); ?></a>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="field">
+								<label></label>
+                                <div class="input-box">
+                                    <input id="pickup-captcha" class="input-text required-entry" type="text" title="<?php echo $this->__('Captcha code') ?>" name="captcha" />
+                                </div>
+                            </div>
+                        </li>
+		</ul>
+		</fieldset>
+                <div class="buttons-set button-pickup">
+                        <button class="button b-pickup" title="Submit" type="submit">                      
+                        <span>  
+						<span>
+                        <canvas style="width: 0px; height: 5px; top: -2px;"></canvas>
+                        <cufontext><?php echo $this->__('Submit') ?></cufontext>
+                        </cufon>                        
+						</span>
+                        </span>                   
+                        </button>
+                </div>
+            </form>       
+    </div>   
+   
+</div>
+<script type="text/javascript">
+    var dataForm = new VarienForm('review-form');
+    function refreshCaptchaImage(){
+		url = '<?php echo $this->getUrl('*/*/refreshcaptcha',array('id'=>$store->getId())) ?>';
+		$('pickup_captcha_image').hide();
+		$('pickup-captcha-link').hide();
+		$('pickup-please-wait-captcha').show();
+		refreshCaptcha = new Ajax.Request(url,{
+			method: 'get',
+			onSuccess: function(transport){
+				imageCapcha = new Image();
+				imageCapcha.src = transport.responseText;
+				$('pickup_captcha_image').src = imageCapcha.src;
+				$('pickup-please-wait-captcha').hide();
+				$('pickup_captcha_image').show();
+				$('pickup-captcha-link').show();
+			},
+			onException: function (xhr, e){
+                                $('pickup-please-wait-captcha').hide();
+				$('pickup_captcha_image').show();
+				$('pickup-captcha-link').show();
+				 alert('Exception: ' + e);
+                }
+		});
+	}
+</script>
+    <?php endforeach; ?>
+<div>&nbsp;</div>
+
+<div class="result_store">
+
+<table cellspacing="0" cellpadding="5" border="0" width="98%">
+	<tbody>
+		<?php foreach ($stores as $store): ?>
+			<tr>
+				<td width="300px" align="left" style="padding:0 0 0 10px">
+					<strong><?php echo $store->getStoreName();?></strong>
+					<br><?php echo $store->getAddress();?>
+					<br><?php echo $store->getCity();?>
+					<br><?php echo $store->getState();?>
+					<br><?php echo $this->getCountryName($store->getCountry());?>
+					<br><?php echo $store->getStorePhone();?>
+				</td>
+				<td width="220px" align="left">
+					<strong><?php echo $this->__('HOURS');?></strong>
+					<br><?php if($store->getSundayOpen()!=null) echo $this->__('Sun ').$store->getSundayOpen().$this->__('AM-').$store->getSundayClose().$this->__('PM'); else echo $this->__('Sun Closed')?>
+					<br><?php if($store->getMondayOpen()!=null) echo $this->__('Mon ').$store->getMondayOpen().$this->__('AM-').$store->getMondayClose().$this->__('PM'); else echo $this->__('Mon Closed')?>
+					<br><?php if($store->getTuesdayOpen()!=null) echo $this->__('Tue ').$store->getTuesdayOpen().$this->__('AM-').$store->getTuesdayClose().$this->__('PM'); else echo $this->__('Tue Closed')?>
+					<br><?php if($store->getWednesdayOpen()!=null) echo $this->__('Wed ').$store->getWednesdayOpen().$this->__('AM-').$store->getWednesdayClose().$this->__('PM'); else echo $this->__('Wed Closed')?>
+					<br><?php if($store->getThursdayOpen()!=null) echo $this->__('Thu ').$store->getThursdayOpen().$this->__('AM-').$store->getThursdayClose().$this->__('PM'); else echo $this->__('Thu Closed')?>
+					<br><?php if($store->getFridayOpen()!=null) echo $this->__('Fri ').$store->getFridayOpen().$this->__('AM-').$store->getFridayClose().$this->__('PM'); else echo $this->__('Fri Closed')?>
+					<br><?php if($store->getSaturdayOpen()!=null) echo $this->__('Sat ').$store->getSaturdayOpen().$this->__('AM-').$store->getSaturdayClose().$this->__('PM'); else echo $this->__('Sat Closed')?>
+				</td>
+				<td width="200px" align="left" style="padding:0 0 0 10px">
+					<strong><?php echo $this->__('DESCRIPTION');?></strong>
+					<p><?php echo $store->getDescription();?></p>
+				</td>
+				<td>
+					<a href="<?php echo $this->getUrl('storepickup/index/index',array('viewstore'=>$store->getId()))?>"><?php echo $this->__('VIEW MAP')?></a>
+				</td>
+			</tr>
+			<tr>
+				<td height="1" class="dottedBox" colspan="4">&nbsp;</td>
+			</tr>
+		<?php endforeach; ?>
+	</tbody>
+</table>
+
+</div>
+
+<?php } else { ?>
+<p> <?php echo $this->__('There is no stores') ?> </p>
+<?php } ?>

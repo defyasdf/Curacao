@@ -284,6 +284,33 @@
         jQuery('.messages .success-msg').fadeIn(400).delay(3000).hide();
 	});
 	
+	function getEstimate(){
+
+		var login_url = 'checkout/cart/estimatePost/'
+
+		jQuery.ajax({ 
+				type: 'post',
+				data: {'onestepcheckout_username':jQuery("#useremail").val(),'onestepcheckout_password':jQuery("#userpass").val()},
+				url:  login_url,                    
+				success: function(data) {
+				 
+				   var result = jQuery.parseJSON(data); 
+					if(result.success) {
+						window.location = '/onestepcheckout/';
+					} else {
+						//alert(result.error);
+						jQuery("#onestepcheckout-login-error").html(result.error);
+						jQuery("#onestepcheckout-login-error").show('slow')
+						jQuery("#send2").show('slow');
+						jQuery("#login-loading").hide('slow');
+					}
+				}.bind(this)
+	     });
+		
+		return false;
+
+	}
+	
 	function create_login(){
 		jQuery("#send2").hide('slow');
 		jQuery("#login-loading").show('slow');

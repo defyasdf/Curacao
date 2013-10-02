@@ -88,14 +88,16 @@ class Mage_Shipping_Model_Carrier_Flatrate
 
 						if(sizeof($cat)>0){
 							$cat_ids = $cur_fproduct->getCategoryIds();
-							$shipRate = ($item->getQty())*($_helper->productAttribute($cur_fproduct, $cur_fproduct->getShprate(), 'shprate'));
+							//$shipRate = ($item->getQty())*($_helper->productAttribute($cur_fproduct, $cur_fproduct->getShprate(), 'shprate'));
+							$shipRate = ($item->getQty())*$this->getShipRate($cur_fproduct->getSku(),$cur_fproduct->getId());
 							for($j=0;$j<sizeof($cat);$j++){
 								if(in_array($cat[$j],$cat_ids)){
 									$shipRate = 0;	
 								}
 							}
 						}else{
-							$shipRate = ($item->getQty())*($_helper->productAttribute($cur_fproduct, $cur_fproduct->getShprate(), 'shprate'));
+							//$shipRate = ($item->getQty())*($_helper->productAttribute($cur_fproduct, $cur_fproduct->getShprate(), 'shprate'));
+							$shipRate = ($item->getQty())*$this->getShipRate($cur_fproduct->getSku(),$cur_fproduct->getId());
 						}
 						
 						
@@ -135,7 +137,8 @@ class Mage_Shipping_Model_Carrier_Flatrate
 	
 							if(sizeof($cat)>0){
 								$cat_ids = $cur_fproduct->getCategoryIds();
-								$shipRate = ($item->getQty())*($_helper->productAttribute($cur_fproduct, $cur_fproduct->getShprate(), 'shprate'));
+								//$shipRate = ($item->getQty())*($_helper->productAttribute($cur_fproduct, $cur_fproduct->getShprate(), 'shprate'));
+								$shipRate = ($item->getQty())*$this->getShipRate($cur_fproduct->getSku(),$cur_fproduct->getId());
 								for($j=0;$j<sizeof($cat);$j++){
 									if(in_array($cat[$j],$cat_ids)){
 										$shipRate = 0;	
@@ -143,7 +146,8 @@ class Mage_Shipping_Model_Carrier_Flatrate
 								}
 							
 							}else{
-								$shipRate = ($item->getQty())*($_helper->productAttribute($cur_fproduct, $cur_fproduct->getShprate(), 'shprate'));
+								//$shipRate = ($item->getQty())*($_helper->productAttribute($cur_fproduct, $cur_fproduct->getShprate(), 'shprate'));
+								$shipRate = ($item->getQty())*$this->getShipRate($cur_fproduct->getSku(),$cur_fproduct->getId());
 							}
 							
 							
@@ -151,7 +155,8 @@ class Mage_Shipping_Model_Carrier_Flatrate
 							
 						}
 						// End Free Shipping Code					
-
+					//echo $shipRate ; 
+					
 					$custom_ship +=	$shipRate;		
 					
 				}else{
@@ -214,7 +219,40 @@ class Mage_Shipping_Model_Carrier_Flatrate
     {
         return array('flatrate'=>$this->getConfigData('name'));
     }
-	
+	public function getShipRate($sku,$pid){
+		$session = Mage::getSingleton("core/session",  array("name"=>"frontend"));
+		$rate = 0;
+		$quote = Mage::getSingleton('checkout/session')->getQuote();
+		$billingAddress = $quote->getShippingAddress();
+		$zipcode = $billingAddress->getPostcode();
+
+		if($session[$sku]){
+				if(is_numeric($session[$sku])){
+					if($session['zipcode'] == $zipcode){
+						$rate = $session[$sku];
+					}else{
+						$product = Mage::getModel('catalog/product');
+						$product->load($pid);
+						$getrate = file_get_contents('http://m113.icuracao.com/fedex/RateService_v13_php/php/RateWebServiceClient/Rate/RateWebServiceClient.php?zip='.$zipcode.'&shiptype='.$product->getShprate().'&weight='.$product->getWeight());
+						
+						$rats = explode("|",$getrate);
+					}
+				}else{
+					$rate = 0;
+				}
+			}else{
+				$product = Mage::getModel('catalog/product');
+				$product->load($pid);
+				
+				$getrate = file_get_contents('http://m113.icuracao.com/fedex/RateService_v13_php/php/RateWebServiceClient/Rate/RateWebServiceClient.php?zip='.$zipcode.'&shiptype='.$product->getShprate().'&weight='.$product->getWeight());
+				$rats = explode("|",$getrate);
+				$rate = $rats[1];
+			}
+			
+		$rate = $rats[1];
+		
+		return $rate;
+	}
 	
 
 }

@@ -1,0 +1,635 @@
+<?php
+/**
+ * Magento Enterprise Edition
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Magento Enterprise Edition License
+ * that is bundled with this package in the file LICENSE_EE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.magentocommerce.com/license/enterprise-edition
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://www.magentocommerce.com/license/enterprise-edition
+ */
+ 
+ $server = '192.168.100.121';
+ $user = 'curacaodata';
+ $pass = 'curacaodata';
+ $db = 'icuracaoproduct';
+	
+ $link = mysql_connect($server,$user,$pass);
+
+ mysql_select_db($db,$link);
+		
+		
+?>
+
+
+<div class="page-title">
+    <h1><?php echo $this->__('Your order has been received.') ?></h1>
+</div>
+<?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+<h2 class="sub-title"><?php echo $this->__('Thank you for your purchase!') ?></h2>
+
+<!--Custom code-->
+
+<?php
+
+	 //loading the order object 
+    $orderObj = Mage::getModel('sales/order')->loadByIncrementId($this->getOrderId());
+   // get all the items included on the order. 
+	 $custId = $orderObj->getCouponCode();
+    
+	
+	 $Data = Mage::getSingleton('core/session')->getCuracacaodp();
+	 $track = Mage::getSingleton('core/session')->getTrackingId();	
+	 $grandTotal = $orderObj->getGrandTotal();
+	 
+	 $_totalData =$orderObj->getData(); 
+	
+	 $_tax = $_totalData['base_tax_amount'];		
+	 
+	 $cd = 0.00;
+	 $cc_num = Mage::getSingleton('core/session')->getCuracacaonum(); 
+	 
+	 $customer = Mage::getModel('customer/customer')->load($orderObj->getCustomerId()); 
+//	 print_r($customer->getData());
+	 
+	 $cust_detail = $customer->getData();
+	 $promo_codes = array('BONO10','BONO20','BONO30','BONO40','BONO50','BONO60','BONO70','BONO80','BONO90','BONO100'); 
+	$pnum = $grandTotal/100;
+	
+	$pind = (int)$pnum;
+	$amount = $pind*100;
+	$coupanamt = $pind*10;
+	
+	$ecid = Mage::getSingleton('core/session')->getCampaignid();
+	$hid = Mage::getSingleton('core/session')->getHid();
+	//$sub = $orderObj->getSubtotal();
+	$sub = $grandTotal - $_tax - $_totalData['shipping_amount'];
+	if($sub>0){
+	$revs = $sub/10;
+	$revshare = number_format($revs,2);
+	}else{
+		$revshare = 0;
+	}
+	
+	if($hid){
+		
+		$_storeId = Mage::app()->getStore()->getId();
+		$sid = '5851';
+		
+		if(Mage::getSingleton('core/session')->getSid()){
+			$sid = Mage::getSingleton('core/session')->getSid();
+		}
+		?>
+		<!--<iframe width='1' height='1' frameborder='0' src='http://affiliate.gwmtracker.com/rd/ipx.php?hid=<?php //echo $hid?>&sid=5135&transid=<?php //echo $this->getOrderId();?>&ate=<?php //echo $revshare?>'></iframe>-->
+        
+        <iframe width='1' height='1' frameborder='0' src='https://affiliate.gwmtracker.com/rd/ipx.php?hid=<?php echo $hid?>&sid=<?php echo $sid;?>&transid=<?php echo $this->getOrderId();?>&ate=<?php echo $revshare;?>'></iframe>
+       <?php
+	  $orderObj->setRevshareamt($revshare);
+	  $orderObj->setHid($hid); 
+	}
+	
+	if($ecid){
+		$q = "select * from emailcampaign where campaignId = '".$ecid."'";
+		$resu = mysql_query($q);
+		$ro = mysql_fetch_array($resu);
+
+		$finishemaincheck = (int)$ro['finishcheckout'];
+		$finishemaincheck++;
+		$checkout_amount = $ro['checkoutAmount']+$grandTotal;
+		
+		
+		$sq = "update emailcampaign set finishcheckout = ".$finishemaincheck.", checkoutAmount = '".$checkout_amount."' where ecId = ".$ro['ecId'];
+		mysql_query($sq);
+		
+		 Mage::getSingleton('core/session')->unsCampaignid();
+		
+	}
+	
+		
+
+	 	if(Mage::getSingleton('core/session')->getTrackid()){
+				$sql = "update userActivitytrack set paymentmethod = '".$orderObj->getPayment()->getMethod()."', finishcheckout = 1, checkoutAmount = '".$grandTotal."' where uaId = ".Mage::getSingleton('core/session')->getTrackid();
+			mysql_query($sql);
+		}
+		$paid = 0;
+		if(isset($_COOKIE['preapprove_promo_id'])){
+				$paid = $_COOKIE['preapprove_promo_id'];
+		}elseif(Mage::getSingleton('core/session')->getPreapproveid()){
+			$paid = Mage::getSingleton('core/session')->getPreapproveid();
+		}else{
+			$paid = 0;
+		}
+			if($paid > 0){
+				$query = "select * from preapproved where paID = ".$paid;				
+				$res = mysql_query($query);
+				$r = mysql_fetch_array($res);
+				if((float)$r['amount']<(float)$grandTotal){
+					$q = "update preapproved set order_complete = '1', order_amount = '".$grandTotal."', amount = '".$grandTotal."' where paID = ".$paid;
+				}else{
+					$q = "update preapproved set order_complete = '1', order_amount = '".$grandTotal."' where paID = ".$paid;
+				}
+				mysql_query($q);
+		}
+	 
+	 if($track){
+		
+		$sql = "update curacao_cust_tracking set order_complete = 1 where trackId = ".$track;
+		mysql_query($sql);	
+		
+	 }
+	
+	 if(Mage::getSingleton('core/session')->getGwmid()){
+		$gwm = 'update gwmtracking set order_id = "'.$this->getOrderId().'" where gwmId = '.Mage::getSingleton('core/session')->getGwmid();
+		mysql_query($gwm);
+		
+	 }
+		
+	 if($Data!=''){
+		$curacao_credit = $grandTotal - $Data;
+		$cc_num = Mage::getSingleton('core/session')->getCuracacaonum(); 
+		$comment = "$".$curacao_credit." Paid with Curacao Credit using account number: ".$cc_num." and $".$Data." Paid with Credit card as down payment";
+		$orderObj->addStatusToHistory($orderObj->getStatus(), $comment, false);
+		$orderObj->save();		
+		$cd = $curacao_credit;	
+		
+		if(Mage::getSingleton('core/session')->getTrackid()){
+
+				$sql = "update userActivitytrack set paymentmethod = 'curacao credit with credit card as dp', downpayment = ".$Data.", finishcheckout = 1 where uaId = ".Mage::getSingleton('core/session')->getTrackid();
+				mysql_query($sql);
+		}
+	}
+	 
+    $payment = $orderObj->getPayment()->getMethod();
+	
+	
+	
+	if(strtolower($payment) == 'pay'){	
+		 $cd = $grandTotal;
+	}
+	
+	$orderObj->setCuracaocustomernumber($cc_num);
+	$orderObj->setCuracaocustomerdiscount($cd);
+	
+	$orderObj->save();
+	
+	if(Mage::getSingleton('core/session')->getAuthrecord()){
+		if(Mage::getSingleton('core/session')->getAuthrecord() == 'Not_Active'){
+			$orderObj->addStatusToHistory('acountnotactive', "Please review the order for the account number".$cc_num, false);
+		}elseif(Mage::getSingleton('core/session')->getAuthrecord() == 'On_Hold'){
+			$orderObj->addStatusToHistory('acconhold', "Please review the order for the account number".$cc_num, false);
+		}elseif(Mage::getSingleton('core/session')->getAuthrecord() == 'Downpayment'){
+			$orderObj->addStatusToHistory('downpaymentrequired', "Please review the order for the account number".$cc_num." For downpayment requirement $".$Data, false);
+		}
+		$orderObj->save();
+	}
+	
+	//echo $shipping_address_data['base_tax_amount'];
+	/*
+	echo $this->getOrderId();
+	echo $shipping_address_data['postcode'];
+	echo $orderSubTotal = $orderObj->subtotal;	*/
+	
+	$orderItems = $orderObj->getAllItems();
+	$list = array();
+	
+	if(strtolower($payment) == 'pay'){
+		$cc_num = Mage::getSingleton('core/session')->getCuracacaonum();
+		$comment = "Paid Using Curacao Account Number : ".$cc_num;
+		$orderObj->addStatusToHistory($orderObj->getStatus(), $comment, false);
+		$orderObj->save();		
+	}
+	
+	
+	// Change this if condition to payment information
+				
+	// if(strtolower(trim($cna[0]))=='curacao'){
+	//if(strtolower($payment) == 'pay'){	
+		$shipping_address_data    = $orderObj->getShippingAddress();
+		$customer = Mage::getModel('customer/customer')->load($orderObj->getCustomerId()); 
+		if($Data!=''){
+		//if($orderObj->getCuracaocustomernumber()!=''){
+			//$cust_id = $orderObj->getCuracaocustomernumber();
+			$cust_id = Mage::getSingleton('core/session')->getCuracacaonum();
+		}elseif(strtolower($payment) == 'pay'){
+			$cust_id = Mage::getSingleton('core/session')->getCuracacaonum();
+		}else{
+			$cust_id = '500-8555';
+		}
+		
+		$shipping_address_data    = $orderObj->getShippingAddress();
+		$_totalData =$orderObj->getData(); 
+		$_sub = $_totalData['subtotal']+ $_totalData['shipping_amount']+$_totalData['discount_amount'];
+		$_tax = $_totalData['base_tax_amount'];
+		$_shipping = $_totalData['shipping_amount'];
+		$rebate = 0;
+		foreach($orderItems as $item)
+		{
+		  //you can either echo each sku of the order / you can use array variable to pass items skubs
+			$it = explode('-',$item->getSku());
+			if(sizeof($it)==3){
+				if(strtolower($it[0])!='cur' && is_numeric(substr($it[0],0,2))){
+					$type =  'CUR';
+					$v = '0';
+					$sku = $item->getSku();
+					$model = $it[2];
+					$n = $item->getName();
+				}else{
+					$type =  'DR1';
+					$v = '1';
+					$sku = '99 -999-ECOM_ONLY';
+					$model = 'ECOM_ONLY';
+					$n = $item->getSku();
+					
+				}
+				
+				
+				
+			}else{
+				$type =  'DR1';
+				$sku = '99 -999-ECOM_ONLY';
+				$model = 'ECOM_ONLY';
+				$n = $item->getSku();
+				$v = '1';
+			}
+			
+			$am = $item->getDiscount_amount()/(int)$item->getQtyOrdered();
+			$price = $item->getPrice() - $am; 
+			
+			$product = Mage::getModel('catalog/product');
+			$productId = $product->getIdBySku($item->getSku());
+			$product->load($productId);
+			$rebate += ($product->getRebate()*(int)$item->getQtyOrdered());
+			if($product->getSet()=='1'){
+				$set = 'Y';
+			}else{
+				$set = "N";
+				
+			}
+			$list['TEstLine'][] = array('ItemType'=>$type,
+									  'Item_ID' => $sku,
+									  'Item_Name' => $n,
+									  'Model' => 	$model,
+									  'ItemSet' => 	$set,
+									  'Qty' => (int)$item->getQtyOrdered(),
+									  'Price' =>$price,
+									  'Cost' => '',
+									  'Taxable' => 'Y',
+									  'WebVendor' => $v ) ;
+		}
+	
+	
+	
+	
+	// AR creating the estimate
+	
+	
+	$proxy = new SoapClient('https://exchangeweb.lacuracao.com:2007/ws1/eCommerce/Main.asmx?WSDL');
+	
+	$ns = 'http://lacuracao.com/WebServices/eCommerce/';
+	
+	//
+	
+	$headerbody = array('UserName' => 'mike', 
+						'Password' => 'ecom12'); 
+	
+	//Create Soap Header.        
+	$header = new SOAPHeader($ns, 'TAuthHeader', $headerbody);        
+			
+	//set the Headers of Soap Client. 
+	$h = $proxy->__setSoapHeaders($header); 
+	
+				$param = array('CustomerID'=>$cust_id,
+							  'CreateDate' => date('Y-m-d\Th:i:s'),
+							  'CreateTime' => date('h:i A'),
+							  'WebReference' => $this->getOrderId(),
+							  'SubTotal' => $_sub,
+							  'TaxAmount' => $_tax,
+							  'DestinationZip' => $shipping_address_data['postcode'],
+							  'ShipCharge' => $_shipping,
+							  'ShipDescription' => 'STANDARD GROUND SHIPPING',
+							  'Detail'=>$list
+				);
+
+
+/*echo '<pre>';
+	print_r($param);
+echo '</pre>';*/
+
+	
+	$credit = $proxy->CreateEstimateRev($param,
+										 "http://www.lacuracao.com/LAC-eComm-WebServices", 
+										 "http://www.lacuracao.com/LAC-eComm-WebServices/WebCustomerApplication",
+										 false, null , 'rpc', 'literal');  
+		
+	$re = $credit->CreateEstimateRevResult;
+	
+	$final = explode(";",$re);
+	
+	if(strtolower($final[0])=='error'){
+		$est = 'Estimate not been created because of '.$final[1];
+	}elseif(strtolower($final[0])=='ok'){
+		$est = 'Estimate Number: '.$final[1];
+		$orderObj->setEstimatenumber($final[1]);
+
+		if($Data != ''){
+			if(!Mage::getSingleton('core/session')->getAuthrecord()){
+				$creditDP = $proxy->WebDownPayment(array('CustID'=>$cust_id,"Amount"=>$Data,"InvNo"=>$final[1],"ReferID"=>$this->getOrderId()));
+				$crdp = $creditDP->WebDownPaymentResult;
+				$orderObj->addStatusToHistory($orderObj->getStatus(), 'Posted $'.$Data.' '.$crdp->ErrorInfo, false);
+				
+				$orderObj->save();
+			}
+		}
+		
+	}else{
+		$est = 'Estimate not been created because of '.$re;
+	}
+	
+	
+	//End Creating Estimate
+
+	$orderObj->addStatusToHistory($orderObj->getStatus(), $est, false);
+	$orderObj->setRebate($rebate);
+	$orderObj->save();	
+	
+	// Get Coupon Code
+	 $coupon = Mage::getModel('salesrule/coupon');	
+	 $coupon->load($custId, 'code');
+	 $couponObj = Mage::getModel('salesrule/rule')->load($coupon->getRuleId());
+	 $coupan =  $couponObj->getName();	
+	 /*$cName = explode('-',$coupan);
+	 $cna = explode(' ',trim($cName[1]));*/
+	if($coupan == 'Sign up and get $100 off'){
+		$orderObj->addStatusToHistory('gwmpromo', "Please Review order for the fraud", false);
+		$orderObj->save();
+	}
+	// End Coupon code
+	
+	//}else{
+		//echo 'No Need to Create an estimate';
+	//}
+
+ 		 	
+		//do a loop to get the sku of each item
+	
+?>
+<input type="hidden" value="<?php echo $revshare?>" />
+<!--End Custom Code-->
+
+<?php if ($this->getOrderId()):?>
+<?php if ($this->getCanViewOrder()) :?>
+    <p><?php echo $this->__('Your order # is: %s.', sprintf('<a href="%s">%s</a>', $this->escapeHtml($this->getViewOrderUrl()), $this->escapeHtml($this->getOrderId()))) ?></p>
+<?php  else :?>
+    <p><?php echo $this->__('Your order # is: %s.', $this->escapeHtml($this->getOrderId())) ?></p>
+<?php endif;?>
+    <p><?php echo $this->__('You will receive an order confirmation email with details of your order and a link to track its progress.') ?></p>
+    
+   <?php
+	if(Mage::getSingleton('core/session')->getAuthrecord()){
+		echo '<p>&nbsp;</p>';
+	$_storeId = Mage::app()->getStore()->getId();
+	if($_storeId == 1){
+		$notactive = '<p><strong>NOTE : </strong>Your order has been received however your account is inactive.  We usually can resolve this matter automatically however we may need to reach out to you for verification purposes. </p><p>We may contact you shortly or to expedite your order, you may contact our customer service team at <strong>1(866) 410-1611</strong>.</p>';
+		$onhold = '<p><strong>NOTE : </strong>Your order has been received however your account is on hold.  We usually can resolve this matter automatically however we may need to reach out to you for verification purposes. </p><p>We may contact you shortly or to expedite your order, you may contact our customer service team at <strong>1(866) 410-1611</strong>.</p>';
+		$dprequired = '<p><strong>NOTE : </strong>Your order has been received and an initial payment may be required of up to $'.$Data.'. </p><p>We may contact you shortly or to expedite your order, you may contact our customer service team at <strong>1(866) 410-1611</strong>.</p>';
+	}else{
+		$notactive = '<p><strong>NOTA : </strong>Su orden ha sido recibida sin embargo, su cuenta se encuentra Inactiva. Por lo general se puede resolver este problema de forma automática pero es posible que necesitemos contactarle por motivos de verificación.</p><p>Para acelerar el proceso de su pedido, por favor comuníquese con nuestro departamento de servicio al cliente al <strong>1(866) 410-1611</strong> lo más pronto posible.</p>';
+		$onhold = '<p><strong>NOTA : </strong>Su orden ha sido recibida sin embargo, su cuenta muestra alguna información pendiente. Por lo general se puede resolver este problema de forma automática pero es posible que necesitemos contactarle por motivos de verificación.</p><p>Para acelerar el proceso de su pedido, por favor comuníquese con nuestro departamento de servicio al cliente al <strong>1(866) 410-1611</strong> lo más pronto posible.</p>';
+		$dprequired = '<p><strong>NOTA : </strong>Su orden ha sido recibida sin embargo un pago inicial de hasta $'.$Data.' podría ser requerido para poder procesar su orden</p><p>Para acelerar el proceso de su pedido, por favor comuníquese con nuestro departamento de servicio al cliente al <strong>1(866) 410-1611</strong> lo más pronto posible y así poder ayudarle con el pago inicial requerido.</p>';
+	
+	}
+		
+		
+		if(Mage::getSingleton('core/session')->getAuthrecord() == 'Not_Active'){
+			echo $notactive;
+		}elseif(Mage::getSingleton('core/session')->getAuthrecord() == 'On_Hold'){
+			echo $onhold;
+		}elseif(Mage::getSingleton('core/session')->getAuthrecord() == 'Downpayment'){
+			echo $dprequired;
+		}
+		
+		echo '<p>&nbsp;</p>';
+	}
+?>
+ 
+    
+    
+<?php if ($this->getCanViewOrder() && $this->getCanPrintOrder()) :?>
+    <p>
+        <?php echo $this->__('Click <a href="%s" onclick="this.target=\'_blank\'">here to print</a> a copy of your order confirmation.', $this->getPrintUrl()) ?>
+        <?php echo $this->getChildHtml() ?>
+    </p>
+<?php endif;?>
+<?php endif;?>
+
+<?php if ($this->getAgreementRefId()): ?>
+    <p><?php echo $this->__('Your billing agreement # is: %s.', sprintf('<a href="%s">%s</a>', $this->escapeHtml($this->getAgreementUrl()), $this->escapeHtml($this->getAgreementRefId())))?></p>
+<?php endif;?>
+
+<?php if ($profiles = $this->getRecurringProfiles()):?>
+<p><?php echo $this->__('Your recurring payment profiles:'); ?></p>
+<ul class="disc">
+<?php foreach($profiles as $profile):?>
+<?php $profileIdHtml = ($this->getCanViewProfiles() ? sprintf('<a href="%s">%s</a>', $this->escapeHtml($this->getProfileUrl($profile)), $this->escapeHtml($this->getObjectData($profile, 'reference_id'))) : $this->escapeHtml($this->getObjectData($profile, 'reference_id')));?>
+    <li><?php echo $this->__('Payment profile # %s: "%s".', $profileIdHtml, $this->escapeHtml($this->getObjectData($profile, 'schedule_description')))?></li>
+<?php endforeach;?>
+</ul>
+<?php endif;?>
+
+<div class="buttons-set">
+    <button type="button" class="button" title="<?php echo $this->__('Continue Shopping') ?>" onclick="window.location='<?php echo $this->getUrl() ?>'"><span><span><?php echo $this->__('Continue Shopping') ?></span></span></button>
+</div>
+<?php
+	
+	if(Mage::getSingleton('core/session')->getCheckouttrackid()){
+		$sql = 'update checkouttrack set order_complete = 1, user_track_id = "'.Mage::getSingleton('core/session')->getTrackid().'", auth_track_id = "'.$track.'" where checkouttrackid = "'.Mage::getSingleton('core/session')->getCheckouttrackid().'"';
+		mysql_query($sql);
+	}
+	
+
+	  Mage::getSingleton('core/session')->unsCuracacaodp(); 
+	  Mage::getSingleton('core/session')->unsCuracacaonum(); 	
+	  Mage::getSingleton('core/session')->unsAuthenticationerror(); 	
+	  Mage::getSingleton('core/session')->unsAuthentication(); 	
+	  Mage::getSingleton('core/session')->unsTrackingId(); 
+	  Mage::getSingleton('core/session')->unsTrackid();	
+	  Mage::getSingleton('core/session')->unsPreapproveid();	
+	  Mage::getSingleton('core/session')->unsAttempt();
+	  Mage::getSingleton('core/session')->unsHid();
+	  Mage::getSingleton('core/session')->unsSid();
+	  Mage::getSingleton('core/session')->unsCheckouttrackid();	
+	  Mage::getSingleton('core/session')->unsSubid();	
+	  Mage::getSingleton('core/session')->unsAffid();	
+	  Mage::getSingleton('core/session')->unsGwmid();	
+	  Mage::getSingleton('core/session')->unsAuthrecord();
+	  if(Mage::getSingleton('core/session')->getCouponjoin100()){
+	  	Mage::getSingleton('core/session')->unsCouponjoin100();	
+	  }
+?>
+<?php 
+	// Google Track
+	
+		 if ($orderObj->getIsVirtual()) {
+                $address = $orderObj->getBillingAddress();
+            } else {
+                $address = $orderObj->getShippingAddress();
+
+            }
+        $result = array();
+	    $result[] = sprintf("_gaq.push(['_addTrans', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s']);",
+			$orderObj->getIncrementId(),
+			$this->jsQuoteEscape(Mage::app()->getStore()->getFrontendName()),
+			$orderObj->getBaseGrandTotal(),
+			$orderObj->getBaseTaxAmount(),
+			$orderObj->getBaseShippingAmount(),
+			$this->jsQuoteEscape(Mage::helper('core')->escapeHtml($address->getCity())),
+			$this->jsQuoteEscape(Mage::helper('core')->escapeHtml($address->getRegion())),
+			$this->jsQuoteEscape(Mage::helper('core')->escapeHtml($address->getCountry()))
+		);
+		
+		 foreach ($orderObj->getAllVisibleItems() as $item) {
+                $result[] = sprintf("_gaq.push(['_addItem', '%s', '%s', '%s', '%s', '%s', '%s']);",
+                    $orderObj->getIncrementId(),
+                    $this->jsQuoteEscape($item->getSku()), $this->jsQuoteEscape($item->getName()),
+                    null, // there is no "category" defined for the order item
+                    $item->getBasePrice(), $item->getQtyOrdered()
+                );
+            }
+            $result[] = "_gaq.push(['_trackTrans']);";
+			$ga = '';
+			
+			
+			
+       
+	
+//End google Track
+
+?>
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33516995-1']);
+  _gaq.push(['_setDomainName', 'icuracao.com']);
+  _gaq.push(['_trackPageview']);
+  <?php
+  	for($i=0;$i<sizeof($result);$i++){
+		echo $result[$i];				
+	}
+  ?>
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'stats.g.doubleclick.net/dc.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+
+
+<!-- Google Code for Sale Conversion Page -->
+<script type="text/javascript">
+/* <![CDATA[ */
+var google_conversion_id = 1000830477;
+var google_conversion_language = "en";
+var google_conversion_format = "2";
+var google_conversion_color = "ffffff";
+var google_conversion_label = "CkXsCOuEuQMQjeyd3QM";
+var google_conversion_value = 0;
+/* ]]> */
+</script>
+<script type="text/javascript" src="https://www.googleadservices.com/pagead/conversion.js">
+</script>
+<noscript>
+<div style="display:inline;">
+<img height="1" width="1" style="border-style:none;" alt="" src="https://www.googleadservices.com/pagead/conversion/1000830477/?value=0&amp;label=CkXsCOuEuQMQjeyd3QM&amp;guid=ON&amp;script=0"/>
+</div>
+</noscript>
+
+<!-- start visitio conversion tracking code 
+<script type="text/javascript">
+    if(typeof(zspl_load_) == "undefined") { var zspl_load_ = Math.floor(Math.random()*10000000); (function(id) {var jsSrc="//zen.visit.io/all-4.js?" + zspl_load_;var js;if(document.getElementById(id)){return;}js=document.createElement('script');js.id= id;js.type="text/javascript";js.src = jsSrc;js.async = true;(document.getElementsByTagName('head')[0]||document.getElementsByTagName('body')[0]).appendChild(js);}('splurgy-embed-js'));} window._visitio_conversions = window._visitio_conversions || []; window._visitio_conversions.push({conversion_uid:'cid_1308316256ed19fee435f33fba67d1f2d48d4b94'});
+</script>
+<noscript>
+<div style="display:inline;"><img height="1" width="1" style="border-style:none;" alt="" src="https://events.visit.io/conversion/_ct.gif?conversion_uid=cid_1308316256ed19fee435f33fba67d1f2d48d4b94"/>
+</div>
+</noscript>
+<!-- end visitio conversion tracking code -->
+<!-- start visitio conversion tracking code checkout page -->
+<script type="text/javascript" src="//zen.visit.io/conversion-1.js?_sply_=hook&conversion_token=cid_1308316256ed19fee435f33fba67d1f2d48d4b94"></script>
+<!-- end visitio conversion tracking code -->
+<?php 
+	mysql_close($link);
+?>
+<!--Bronto Conversion-->
+<!--Load JavaScript (TOP of the page after the opening BODY tag) -->
+
+
+<!--Open Body Tag -->
+<script type="text/javascript">
+	document.write(unescape("%3Cscript src='"
+		+ ((document.location.protocol == "https:") ? "https:" : "http:")
+		+ "//p.bm23.com/bta.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+	var bta = new __bta('acxhzmypejmnhsowqaqxwyyhyesgbcd');
+	bta.setHost("app.bronto.com");
+</script>
+
+
+
+
+<!--Track conversion (BOTTOM of the page before the closing BODY tag)-->
+
+<script type="text/javascript">
+	// Uncomment one of the following to track conversions
+
+	// 1) Legacy conversion tracking
+	 bta.addConversionLegacy("$", "sale", "<?php echo $grandTotal;?>");
+
+	// 2) New, more detailed conversion tracking
+	// In most cases, values in the cookie are used to associate an order
+	// with a contact and a delivery, so there is no need to pass in email or
+	// contact_id. If you do pass in email or contact_id and these values do not
+	// match what is in the cookie (or the cookie does not exist), then the order
+	// will only be associated with the email or contact_id passed in. If you pass
+	// in email or contact_id and these values match what is in the cookie, then the
+	// order will be associated with the email or contact_id passed in, and the delivery
+	// from the cookie.
+	/*
+	bta.addOrder({ "order_id": "", "email": "", "contact_id": "", "date": "", "items": [
+		{ "item_id":"item1", "desc":"description", "amount":"$123.33", "quantity":"1", "name":"name", "category":"category", "image":"http://imageUrl", "url":"http://itemUrl" },
+		{ "item_id":"item2", "desc":"description 2", "amount":"$10.25", "quantity":"1", "name":"name", "category":"category", "image":"http://imageUrl", "url":"http://itemUrl" }
+	]});
+	*/
+</script>
+<!--Close Body Tag -->
+<!--End Bronto Conversion-->
+<!-- Addroll Conversion Tracking -->
+<script type=”text/javascript”>
+		adroll_conversion_value_in_dollars = <?php echo $grandTotal;?>; 
+		adroll_custom_data = {“ORDER_ID”: “<?php echo $this->getOrderId()?>”, “USER_ID”:”<?php echo $cust_detail['firstname'].' '.$cust_detail['lastname']?>”}
+</script>
+
+<!-- End Addroll Conversion Tracking -->
+<?php //Social Annex Tracking ?>
+<script src="//c.socialannex.com/c-sale-track/?site_id=9914051&order_id=<?php echo $this->getOrderId()?>&sale_amount=<?php echo $grandTotal;?>"></script>
+
+<?php //End social annex tracking ?>

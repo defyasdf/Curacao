@@ -272,6 +272,39 @@
         }());
     </script>
 <!-- End Addroll Pixel -->     
+
+<!-- OwnerIQ Analytics tag -->
+<script type="text/javascript">
+var _oiqq = _oiqq || [];
+_oiqq.push(['oiq_doTag']);
+
+(function() {
+var oiq = document.createElement('script'); oiq.type = 'text/javascript'; oiq.async = true;
+oiq.src = document.location.protocol + '//px.owneriq.net/stas/s/cxjd39.js';
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(oiq, s);
+})();
+</script>
+<!-- End OwnerIQ tag -->
+
+<!-- OwnerIQ Thank You tag -->
+<script type="text/javascript">
+var _oiq_lifecycle = 'rcpt'; var _oiqq = _oiqq || [];
+_oiqq.push(['oiq_addPageLifecycle', _oiq_lifecycle]);
+_oiqq.push(['oiq_doTag']);
+
+(function() {
+var oiq = document.createElement('script'); oiq.type = 'text/javascript'; oiq.async = true;
+oiq.src = document.location.protocol + '//px.owneriq.net/stas/s/cxjd39.js';
+var oiq_doctitle = 'Default Conversion - do not edit';
+if (typeof document != 'undefined' && document){ if(document.title!=null && document.title!='') {oiq_doctitle = document.title; } }
+var oiq_conv = document.createElement('script'); oiq_conv.type = 'text/javascript'; oiq_conv.async = true;
+oiq_conv.src = document.location.protocol + '//px.owneriq.net/j?pt=cxjd39&s='+_oiq_lifecycle+'&sConvTitle='+oiq_doctitle+'&cnv=true';
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(oiq, s);
+s.parentNode.insertBefore(oiq_conv, s);
+})();
+</script>
+<!-- End OwnerIQ tag -->
+
  <?php 
 	$page = Mage::helper('core/url')->getCurrentUrl() ;
 	$base = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB);
@@ -309,4 +342,3 @@
 
 */ ?>
 <?php }?>
-

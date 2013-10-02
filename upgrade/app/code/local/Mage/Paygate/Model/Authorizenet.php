@@ -35,7 +35,7 @@ class Mage_Paygate_Model_Authorizenet extends Mage_Payment_Model_Method_Cc
     /*
      * Transaction Details gateway url
      */
-    const CGI_URL_TD = 'https://apitest.authorize.net/xml/v1/request.api';
+    const CGI_URL_TD = 'https://api.authorize.net/xml/v1/request.api';
 
     const REQUEST_METHOD_CC     = 'CC';
     const REQUEST_METHOD_ECHECK = 'ECHECK';
@@ -69,7 +69,9 @@ class Mage_Paygate_Model_Authorizenet extends Mage_Payment_Model_Method_Cc
     const RESPONSE_REASON_CODE_PENDING_REVIEW_AUTHORIZED = 252;
     const RESPONSE_REASON_CODE_PENDING_REVIEW = 253;
     const RESPONSE_REASON_CODE_PENDING_REVIEW_DECLINED = 254;
-
+	const RESPONSE_PENDING_REVIEW_DECLINED = 'declined';
+	const RESPONSE_PENDING_REVIEW_EXPIRED = 'expired';
+	
     const PARTIAL_AUTH_CARDS_LIMIT = 5;
 
     const PARTIAL_AUTH_LAST_SUCCESS         = 'last_success';
@@ -353,7 +355,9 @@ class Mage_Paygate_Model_Authorizenet extends Mage_Payment_Model_Method_Cc
         if ($amount <= 0) {
             Mage::throwException(Mage::helper('paygate')->__('Invalid amount for capture.'));
         }
-		$amount = $this->getCardsStorage($payment)->getProcessedAmount();
+		if($amount>$this->getCardsStorage($payment)->getProcessedAmount()){
+			$amount = $this->getCardsStorage($payment)->getProcessedAmount();
+		}
         $this->_initCardsStorage($payment);
         if ($this->_isPreauthorizeCapture($payment)) {
             $this->_preauthorizeCapture($payment, $amount);
@@ -1038,6 +1042,9 @@ class Mage_Paygate_Model_Authorizenet extends Mage_Payment_Model_Method_Cc
         if ($cardsStorage->getCardsCount() != 1) {
             return parent::fetchTransactionInfo($payment, $transactionId);
         }
+		// Get Payment Data
+		$orderData = $payment->getData();
+		
         $cards = $cardsStorage->getCards();
         $card = array_shift($cards);
         $transactionId = $card->getLastTransId();
@@ -1048,12 +1055,23 @@ class Mage_Paygate_Model_Authorizenet extends Mage_Payment_Model_Method_Cc
         }
 
         $response = $this->_getTransactionDetails($transactionId);
-        if ($response->getResponseCode() == self::RESPONSE_CODE_APPROVED) {
+		// Added Extra Comment to the order
+		$orderObj = Mage::getModel('sales/order')->load($orderData['entity_id']);
+		$orderObj->addStatusToHistory($orderObj->getStatus(), "Authorize.net Response : ".$response->getTransactionReason(), false);
+		$orderObj->save();
+	   
+	    if ($response->getResponseCode() == self::RESPONSE_CODE_APPROVED) {
             $transaction->setAdditionalInformation($this->_isTransactionFraud, false);
             $payment->setIsTransactionApproved(true);
         } elseif ($response->getResponseReasonCode() == self::RESPONSE_REASON_CODE_PENDING_REVIEW_DECLINED) {
             $payment->setIsTransactionDenied(true);
-        }
+        }elseif($response->getTransactionStatus() == self::RESPONSE_PENDING_REVIEW_DECLINED){
+			$payment->setIsTransactionDenied(true);	
+		}elseif($response->getTransactionStatus() == self::RESPONSE_PENDING_REVIEW_EXPIRED){
+			$payment->setIsTransactionDenied(true);	
+		}
+		
+
         return parent::fetchTransactionInfo($payment, $transactionId);
     }
 
@@ -1532,20 +1550,26 @@ class Mage_Paygate_Model_Authorizenet extends Mage_Payment_Model_Method_Cc
 
         $client = new Varien_Http_Client();
         $uri = $this->getConfigData('cgi_url_td');
+		
         $client->setUri($uri ? $uri : self::CGI_URL_TD);
+		
         $client->setConfig(array('timeout'=>45));
         $client->setHeaders(array('Content-Type: text/xml'));
         $client->setMethod(Zend_Http_Client::POST);
         $client->setRawData($requestBody);
 
         $debugData = array('request' => $requestBody);
-
+		
         try {
             $responseBody = $client->request()->getBody();
             $debugData['result'] = $responseBody;
             $this->_debug($debugData);
             libxml_use_internal_errors(true);
+			
             $responseXmlDocument = new Varien_Simplexml_Element($responseBody);
+			//print_r(Zend_Http_Client::POST);
+			//echo '<br>';
+
             libxml_use_internal_errors(false);
         } catch (Exception $e) {
             Mage::throwException(Mage::helper('paygate')->__('Payment updating error.'));
@@ -1556,6 +1580,7 @@ class Mage_Paygate_Model_Authorizenet extends Mage_Payment_Model_Method_Cc
             ->setResponseCode((string)$responseXmlDocument->transaction->responseCode)
             ->setResponseReasonCode((string)$responseXmlDocument->transaction->responseReasonCode)
             ->setTransactionStatus((string)$responseXmlDocument->transaction->transactionStatus)
+			->setTransactionReason((string)$responseXmlDocument->transaction->responseReasonDescription)
         ;
         return $response;
     }

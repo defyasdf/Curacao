@@ -28,17 +28,17 @@
 <config>
     <global>
         <install>
-            <date><![CDATA[Fri, 06 Jul 2012 01:12:56 +0000]]></date>
+            <date><![CDATA[Sun, 11 Aug 2013 16:11:50 +0000]]></date>
         </install>
         <crypt>
-            <key><![CDATA[7d237517af1d29c2966899a2d62cbe52]]></key>
+            <key><![CDATA[d205df3d06dd4a61df38f4b328ab0097]]></key>
         </crypt>
         <disable_local_modules>false</disable_local_modules>
         <resources>
             <db>
                 <table_prefix><![CDATA[]]></table_prefix>
             </db>
-            <default_setup>                
+            <default_setup>
                 <connection>
                     <host><![CDATA[192.168.100.121]]></host>
                     <username><![CDATA[curacao_magento]]></username>
@@ -52,29 +52,57 @@
                 </connection>
             </default_setup>
         </resources>
-
-		<!-- This is a child node of config/global for Magento Enterprise FPC -->
-
-		<full_page_cache>
-			<backend>Cm_Cache_Backend_Redis</backend>
-			<backend_options>
-				<server>127.0.0.1</server>
-				<port>6379</port>
-				<persistent></persistent>
-				<database>1</database>
-				<password></password>
-				<force_standalone>0</force_standalone>
-				<connect_retries>1</connect_retries>
-				<lifetimelimit>57600</lifetimelimit>
-				<compress_data>0</compress_data>
-			</backend_options>
-		</full_page_cache>
-
         <session_save><![CDATA[files]]></session_save>
+        
+		<!--cache>
+			<backend>Apc</backend>
+			<fast_backend>Apc</fast_backend>
+			
+			<slow_backend>Memcached</slow_backend>
 
-
+			<slow_backend_options>
+				<servers>
+					<server>
+						<host><![CDATA[127.0.0.1]]></host>
+						<port><![CDATA[11211]]></port>
+						<persistent><![CDATA[1]]></persistent>
+					</server>
+				</servers>
+				<compression><![CDATA[]]></compression>
+				<cache_dir><![CDATA[]]></cache_dir>
+				<hashed_directory_level><![CDATA[]]></hashed_directory_level>
+				<hashed_directory_umask><![CDATA[]]></hashed_directory_umask>
+				<file_name_prefix><![CDATA[]]></file_name_prefix>
+			</slow_backend_options>
+			
+			<memcached>
+				<servers>
+					<server>
+					<host><![CDATA[127.0.0.1]]></host>
+					<port><![CDATA[11211]]></port>
+					<persistent><![CDATA[1]]></persistent>
+					</server>
+				</servers>
+				<compression><![CDATA[]]></compression>
+				<cache_dir><![CDATA[]]></cache_dir>
+				<hashed_directory_level><![CDATA[]]></hashed_directory_level>
+				<hashed_directory_umask><![CDATA[]]></hashed_directory_umask>
+				<file_name_prefix><![CDATA[]]></file_name_prefix>
+			</memcached>
+		</cache-->
+		        
+        <full_page_cache>
+            <backend_options>
+                 <cache_dir>full_page_cache</cache_dir>
+             </backend_options>
+             <slow_backend_options>
+                 <hashed_directory_level>1</hashed_directory_level>
+                 <hashed_directory_umask>0777</hashed_directory_umask>
+                 <file_name_prefix>fpc</file_name_prefix>
+                 <cache_dir><![CDATA[full_page_cache]]></cache_dir>
+             </slow_backend_options>
+         </full_page_cache>
     </global>
-
     <admin>
         <routers>
             <adminhtml>

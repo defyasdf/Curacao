@@ -24,59 +24,236 @@
  * @license     http://www.magentocommerce.com/license/enterprise-edition
  */
 ?>
+<?php 
+	$_storeId = Mage::app()->getStore()->getId();
+	if($_storeId == 1){
+		$msg = 'Please feel free to contact us with any questions or comments you may have and we will try to get back to you as soon as possible. You may submit a 
+message through the form below or reach us directly using the contact information on the right. Thank you.';
+		$msg_nocsr = '<strong>The live agent is not available.</strong> Please feel free to contact us with any questions or comments you may have and we will try to get back to you as soon as possible. You may submit a message through the form below. Thank you.';
+		$options = '<option value="An order you placed online">An order you placed online</option>
+					<option value="Returns and Exchanges">Returns and Exchanges</option>
+					<option value="Report your package lost or damaged">Report your package lost or damaged</option>
+					<option value="Need help with your account">Need help with your account</option>
+					<option value="Need help placing an order online">Need help placing an order online</option>
+					<option value="Need product information">Need product information</option>';
+		$name = 'Name';
+		$email = 'Email';
+		$telephone = 'Telephone';
+		$issuetype = 'Issues Type';
+		$comment = 'Comment';
+		$req = 'Required Fields';
+		$submit = 'Submit';
+		$ocr = 'Online Customer Service';
+		$ssr = 'Store Customer Service';
+		$cc = 'Curacao Credit';
+		$livechat = 'images/livechat.jpg';
+		$offline = 'images/offline.jpg';
+		$contactbyphone = 'Contact By Phone';
+		$findstore = "Find A Store";
+		$storelink = "<a href='/store-locator'>Click Here</a> to find contact
+information for each store location.";
+	}else{
+		$msg = 'No dude en contactar con nosotros con cualquier pregunta o comentario que pueda tener y que va a tratar de volver a usted tan pronto como sea posible por favor. Puede enviar un mensaje a través del siguiente formulario o contactarnos directamente utilizando la información de contacto a la derecha. Gracias.';
+		$msg_nocsr = '<strong>El agente en vivo no está disponible.</strong> No dude en contactar con nosotros con cualquier pregunta o comentario que pueda tener y que va a tratar de volver a usted tan pronto como sea posible por favor. Puede enviar un mensaje a través del siguiente formulario. Gracias.';
+		$options = '<option value="An order you placed online">Una orden que colocó en línea</option>
+					<option value="Returns and Exchanges">Cambios y Devoluciones</option>
+					<option value="Report your package lost or damaged">Informe su paquete perdido o dañado</option>
+					<option value="Need help with your account">¿Necesita ayuda con su cuenta</option>
+					<option value="Need help placing an order online">¿Necesitas ayuda para realizar un pedido en línea</option>
+					<option value="Need product information">Need product information</option>';
+		
+		$name = 'nombre';
+		$email = 'Email';
+		$telephone = 'teléfono';
+		$issuetype = 'Cuestiones Tipo';
+		$comment = 'comentario';
+		$req = 'Los campos requeridos';
+		$submit = 'presentar';
+		$ocr = 'Servicio al Cliente Online';
+		$ssr = 'Tienda Servicio al Cliente';
+		$cc = 'Curacao crédito';
+		$livechat = 'images/livechat_es.jpg';
+		$offline = 'images/offline_es.jpg';
+		$contactbyphone = 'Contacto por teléfono';
+		
+		$findstore = "Localizar Tienda";
+		
+		$storelink = "<a href='/store-locator'>Clic Aquí</a> para obtener información de cada tienda.";
+	}
+?>
 <div id="messages_product_view"><?php echo $this->getMessagesBlock()->getGroupedHtml() ?></div>
 <div class="page-title">
     <h1><?php echo Mage::helper('contacts')->__('Contact Us') ?></h1>
 </div>
-<form action="<?php echo $this->getFormAction(); ?>" id="contactForm" method="post">
+
+<p id="livechatmsg" style="margin-bottom:35px;">
+	<?php echo $msg;?>
+</p>
+
+<p id="offlinechatmsg" style="display:none; margin-bottom:35px;">
+	<?php echo $msg_nocsr?>
+</p>
+
+<!--  ----------------------------------------------------------------------  -->
+<!--  NOTE: Please add the following <FORM> element to your page.             -->
+<!--  ----------------------------------------------------------------------  -->
+<div style="float:left; width:40%; border:solid 1px #ccc; padding:20px;" id="webtocaseform">
+<form action="https://www.salesforce.com/servlet/servlet.WebToCase?encoding=UTF-8" method="POST">
+
+<input type=hidden name="orgid" value="00DG0000000BoKP">
+<input type=hidden name="retURL" value="http://www.icuracao.com/thankyou">
+
+<!--  ----------------------------------------------------------------------  -->
+<!--  NOTE: These fields are optional debugging elements. Please uncomment    -->
+<!--  these lines if you wish to test in debug mode.                          -->
+<!--  <input type="hidden" name="debug" value=1>                              -->
+<!--  <input type="hidden" name="debugEmail"                                  -->
+<!--  value="gitai.parnes@icuracao.com">                                      -->
+<!--  ----------------------------------------------------------------------  -->
+
+<!--<label for="name">Contact Name</label><input  id="name" maxlength="80" name="name" size="20" type="text" /><br>
+
+<label for="email">Email</label><input  id="email" maxlength="80" name="email" size="20" type="text" /><br>
+
+<label for="phone">Phone</label><input  id="phone" maxlength="40" name="phone" size="20" type="text" /><br>
+
+Issue Type:<select  id="00NZ0000000xOv5" name="00NZ0000000xOv5" title="Issue Type"><option value="">--None--</option><option value="Test 1">Test 1</option>
+<option value="Test 2">Test 2</option>
+<option value="Test 3">Test 3</option>
+</select><br>
+
+<label for="description">Description</label><textarea name="description"></textarea><br>
+
+<input type="submit" name="submit">
+
+</form>-->
+
+
+
+<!--<form action="<?php echo $this->getFormAction(); ?>" id="contactForm" method="post">-->
     <div class="fieldset">
         <h2 class="legend"><?php echo Mage::helper('contacts')->__('Contact Information') ?></h2>
         <ul class="form-list">
             <li class="fields">
                 <div class="field">
-                    <label for="name" class="required"><em>*</em><?php echo Mage::helper('contacts')->__('Name') ?></label>
+                    <label for="name" class="required"><em>*</em><?php echo $name ?></label>
                     <div class="input-box">
-                        <input name="name" id="name" title="<?php echo Mage::helper('contacts')->__('Name') ?>" value="<?php echo $this->escapeHtml($this->helper('contacts')->getUserName()) ?>" class="input-text required-entry" type="text" />
+                        <input name="name" id="name" title="<?php echo $name ?>" value="<?php echo $this->escapeHtml($this->helper('contacts')->getUserName()) ?>" class="input-text required-entry" type="text" />
                     </div>
                 </div>
                 <div class="field">
-                    <label for="email" class="required"><em>*</em><?php echo Mage::helper('contacts')->__('Email') ?></label>
+                    <label for="email" class="required"><em>*</em><?php echo $email ?></label>
                     <div class="input-box">
-                        <input name="email" id="email" title="<?php echo Mage::helper('contacts')->__('Email') ?>" value="<?php echo $this->escapeHtml($this->helper('contacts')->getUserEmail()) ?>" class="input-text required-entry validate-email" type="text" />
+                        <input name="email" id="email" title="<?php echo $email ?>" value="<?php echo $this->escapeHtml($this->helper('contacts')->getUserEmail()) ?>" class="input-text required-entry validate-email" type="text" />
                     </div>
                 </div>
             </li>
             <li>
-                <label for="telephone"><?php echo Mage::helper('contacts')->__('Telephone') ?></label>
+                <label for="telephone"><?php echo $telephone ?></label>
                 <div class="input-box">
-                    <input name="telephone" id="telephone" title="<?php echo Mage::helper('contacts')->__('Telephone') ?>" value="" class="input-text" type="text" />
+                    <input name="phone" id="phone" title="<?php echo $telephone ?>" value="" class="input-text" type="text" />
                 </div>
             </li>
-            <li class="wide">
-                <label for="comment" class="required"><em>*</em><?php echo Mage::helper('contacts')->__('Comment') ?></label>
+            
+             <li>
+                <label for="telephone"><?php echo $issuetype ?></label>
                 <div class="input-box">
-                    <textarea name="comment" id="comment" title="<?php echo Mage::helper('contacts')->__('Comment') ?>" class="required-entry input-text" cols="5" rows="3"></textarea>
+                    <select  id="00NG0000009gaiL" name="00NG0000009gaiL" title="Issue Type">
+                    	<option value="">--None--</option>
+                        <?php echo $options?>
+                    </select>
+                </div>
+            </li>
+                        
+            <li class="wide">
+                <label for="comment" class="required"><em>*</em><?php echo $comment ?></label>
+                <div class="input-box">
+                    <textarea name="description" id="comment" title="<?php echo $comment ?>" class="required-entry input-text" cols="5" rows="3"></textarea>
                 </div>
             </li>
         </ul>
     </div>
     <div class="buttons-set">
-        <p class="required"><?php echo Mage::helper('contacts')->__('* Required Fields') ?></p>
+        <p class="required"><?php echo $req ?></p>
         <input type="text" name="hideit" id="hideit" value="" style="display:none !important;" />
-        <button type="submit" title="<?php echo Mage::helper('contacts')->__('Submit') ?>" class="button"><span><span><?php echo Mage::helper('contacts')->__('Submit') ?></span></span></button>
+        <button type="submit" title="<?php echo $submit ?>" class="button"><span><span><?php echo $submit ?></span></span></button>
     </div>
 </form>
+</div>
+<div style="float:left; width:25%; margin-left:2%;"  id="phoneform">
+	<h2 style="color:#e26d28;"><?php echo $contactbyphone?></h2>
+    <div><strong><?php echo $ocr;?></strong></div>
+    <div>Phone : (866) 410-1611</div>
+    <div><strong><?php echo $ssr;?></strong></div>
+    <div>Phone : (877) 287-2226</div>
+    <div><strong><?php echo $cc;?></strong></div>
+    <div>Phone : (877) 287-2226</div>
+</div>
+<div style="float:left; width:21%; margin-left:2%;" id="chatform">
+	<h2 style="color:#e26d28;"> Live chat</h2>
+	
+   <!-- <a id="liveagent_button_online_573Z0000000CaU6" style="display:none;" href="javascript://Chat"  onclick="liveagent.startChat('573Z0000000CaU6')"><img src="images/livechat.jpg" /></a><div id="liveagent_button_offline_573Z0000000CaU6" style="display: none;"><img src="images/offline.jpg" /></div><script type="text/javascript">
+if (!window._laq) { window._laq = []; }
+window._laq.push(function(){liveagent.showWhenOnline('573Z0000000CaU6', document.getElementById('liveagent_button_online_573Z0000000CaU6'));
+liveagent.showWhenOffline('573Z0000000CaU6', document.getElementById('liveagent_button_offline_573Z0000000CaU6'));
+});</script>
+
+<script type='text/javascript' src='https://c.la8cs.salesforceliveagent.com/content/g/deployment.js'></script>
+<script type='text/javascript'>
+liveagent.init('https://d.la8cs.salesforceliveagent.com/chat', '572Z0000000CaT3', '00DZ0000001CIOx');
+</script>
+-->
+<?php if($_storeId == 1){?>
+<img id="liveagent_button_online_573G0000000GpHU" style="display: none; border: 0px none; cursor: pointer" onclick="liveagent.startChat('573G0000000GpHU')" src="https://icuracao.secure.force.com/resource/1378952898000/Online_Chat_English" /><img id="liveagent_button_offline_573G0000000GpHU"  onclick="return offlinechatform()" style="display: none; border: 0px none; " src="https://icuracao.secure.force.com/resource/1378952942000/Offline_Chat_English" />
+<script type="text/javascript">
+if (!window._laq) { window._laq = []; }
+window._laq.push(function(){liveagent.showWhenOnline('573G0000000GpHU', document.getElementById('liveagent_button_online_573G0000000GpHU'));
+liveagent.showWhenOffline('573G0000000GpHU', document.getElementById('liveagent_button_offline_573G0000000GpHU'));
+});</script>
+<?php }else{?>
+<img id="liveagent_button_online_573G0000000GpHZ" style="display: none; border: 0px none; cursor: pointer" onclick="liveagent.startChat('573G0000000GpHZ')" src="https://icuracao.secure.force.com/resource/1378952974000/Online_Chat_Spanish" /><img id="liveagent_button_offline_573G0000000GpHZ"  onclick="return offlinechatform()" style="display: none; border: 0px none; " src="https://icuracao.secure.force.com/resource/1378953003000/Offline_Chat_Spanish" />
+<script type="text/javascript">
+if (!window._laq) { window._laq = []; }
+window._laq.push(function(){liveagent.showWhenOnline('573G0000000GpHZ', document.getElementById('liveagent_button_online_573G0000000GpHZ'));
+liveagent.showWhenOffline('573G0000000GpHZ', document.getElementById('liveagent_button_offline_573G0000000GpHZ'));
+});</script>
+
+<?php }?>
+<!-- <img id="liveagent_button_online_573Z0000000CaU6" style="display: none; border: 0px none; cursor: pointer" onclick="liveagent.startChat('573Z0000000CaU6')" src="<?php echo $livechat;?>" />
+ <img id="liveagent_button_offline_573Z0000000CaU6" style="display: none; border: 0px none;" onclick="return offlinechatform()" src="<?php echo $offline?>" />
+<script type="text/javascript">
+if (!window._laq) { window._laq = []; }
+window._laq.push(function(){liveagent.showWhenOnline('573Z0000000CaU6', document.getElementById('liveagent_button_online_573Z0000000CaU6'));
+liveagent.showWhenOffline('573Z0000000CaU6', document.getElementById('liveagent_button_offline_573Z0000000CaU6'));
+});</script>
+ 
+--> 
+ 
+<script type='text/javascript' src='https://c.la1w1.salesforceliveagent.com/content/g/deployment.js'></script>
+<script type='text/javascript'>
+liveagent.init('https://d.la1w1.salesforceliveagent.com/chat', '572G00000008Qmn', '00DG0000000BoKP');
+</script>
+
+<p>&nbsp;</p>
+<div>
+	<h2 style="color:#e26d28;"> <?php echo $findstore?></h2>
+    <div><?php echo $storelink?></div>
+</div>
+</div>
+
 <script type="text/javascript">
 //<![CDATA[
     var contactForm = new VarienForm('contactForm', true);
 //]]>
+
+function offlinechatform(){
+	jQuery("#livechatmsg").hide('slow');	
+	
+	jQuery("#chatform").hide('slow');
+	
+	jQuery("#offlinechatmsg").show("slow");
+	jQuery("#webtocaseform").width('600px');
+	jQuery("#name").focus();
+}
 </script>
 
-<!--<script type="text/javascript">
-
-        var v24JsProtocol = (("https:" == document.location.protocol) ? "https://" : "http://");
-
-        document.write(unescape("%3Cscript src='" + v24JsProtocol + "static.vee24.com/v24/veedesk/v24Embedded.js' type='text/javascript'%3E%3C/script%3E"));
-
-    </script>
--->

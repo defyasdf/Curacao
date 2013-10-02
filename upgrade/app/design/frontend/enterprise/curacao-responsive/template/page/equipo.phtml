@@ -2,9 +2,6 @@
 /**
  * Template for Mage_Page_Block_Html
  */
- 
- print_r($_REQUEST);
- 
 ?>
 <?php 
 	$_storeId = Mage::app()->getStore()->getId();
@@ -23,20 +20,19 @@
 		$error = "Required fields";
 		$opt_in = "Sign me up to receive promotional emails.";
 	}else{
-		$header = "<h1>Estamos regalando 4 refrigeradoras LG</h1>";
-		$dis = '<p>Para registrarte debes completar la siguiente informaci&oacute;n.</p>
-						';
-		$fname = "Nombre";
-		$lname = "Apellido";
-		$email = "Correo Electr&oacute;nico";
-		$tel = "Tel&eacute;fono";
-		$state = "Estado";
-		$note1 = "<p>No Compra necesaria. Para participar debe tener 18 a&ntilde;os o m&aacute;s. El concierto se realizar&aacute; en el Nokia Theatre el s&aacute;bado 31 de Agosto de 2013.</p>";
-		$note = "No compra necesaria. El sorteo de equipa tu casa esta abierto para residentes del Sur de California y Arizona únicamente, debe tener 18 años o más. Las probabilidades de ganar dependen del número de participaciones recibidas. Una compra o pago de cualquier tipo no aumentará sus probabilidades de ganar. Para m&aacute;s informaci&oacute;n Ver  <a href='http://www.icuracao.com/Equipa_Rules.pdf' target='_blank'>Reglas Oficiales</a>";
-		$greetings = "<h2>Gracias por Registrarse!</h2>";
-		$select = "Seleccione";
-		$error = "Campos requeridos";
-		$opt_in = "Inscribirme para recibir promociones por email";
+		$header = "<h1>We are giving away 4 LG refrigerators!</h1>";
+		$dis = '<p>Buy your tickets for the game in Curacao Ticketmaster.</p>';
+		$fname = "First Name";
+		$lname = "Last Name";
+		$email = "Email";
+		$tel = "Telephone";
+		$state = "State";
+		$note1 = "<p>Upgrades will be available in exchange for the purchased tickets of any level. Number of winners will be determined by the amount of tickets that the winners hold. Maximum 5 per person. To participate you must fill the form with your information. You must surrender a valid ticket for the Messi and Friends game to be exchanged for the $500 level ticket.</p>";
+		$note = "No purchase necessary. Equip your home promotion is open to residents of Southern California and Arizona only, must be 18 years or older. Odds of winning depend on the number of entries received. A purchase or payment of any kind will not increase your chances of winning. For more details see <a href='http://www.icuracao.com/Equipa_Rules.pdf' target='_blank'>Official Rules</a>";
+		$greetings = "<h2>Thank you for register!</h2>";
+		$select = "Please Select";
+		$error = "Required fields";
+		$opt_in = "Sign me up to receive promotional emails.";
 	}
 ?>
 <!DOCTYPE html>
@@ -47,25 +43,21 @@
 <head>
 	<?php echo $this->getChildHtml('head') ?>
     <link media="all" href="/skin/frontend/enterprise/curacao-responsive/css/elcapo.css" type="text/css" rel="stylesheet">
-    <?php
-		
-		if($_storeId != 1){
-		?>
-		<style type="text/css">
+    <style type="text/css">
         	#elcapo_banner {
-                background: url("./images/main_banner_es.jpg") no-repeat scroll 0 0 transparent;
-                
+                background: url("./images/tucson.jpg") no-repeat scroll 0 0 transparent;
+				height:660px;
             }
 			#elcapo_banner_es{
-				height:660px !important;
+				background: url("./images/tucson.jpg") no-repeat scroll 0 0 transparent;
+				height:660px;
 			}
-			#bottom_note{
-				margin-top: 194px; padding-bottom: 0px; margin-bottom: -40px;
+			#elcapo_content .copy{
+				margin:30px 30px 0;
 			}
-		</style>
-        <?php
-		}
-	?>
+			
+	</style>		
+   
 </head>
 
 <body<?php echo $this->getBodyClass()?' class="'.$this->getBodyClass().'"':'' ?>>
@@ -192,18 +184,11 @@ var WRInitTime=(new Date()).getTime();
                         }}else{
 						
 						?>
-                        <?php 
-							if($_storeId == 1){
-						?>
-                        <div align="right">
-                        	<a href="http://www.icuracao.com/messi-friends?___store=espn&___from_store=default">Ver en Espa&ntilde;ol</a>    </div>
-                         <?php
-							
-							}
-						?>
-						 <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('equipa-promo')->toHtml() ?>
+                        <h1 style="font-size: 22px; line-height: 25px;">Register for a chance to Win a $1000 shopping spree!</h1>
+                        <p style="font-size:20px;">A winner every week!</p>
+                        <p>To register please fill out the following form:</p>
 						<?php //echo $dis;?>
-                        <form action="/el-komander-post" method="post" name="elcapoform" id="elcapoform">
+                        <form action="/el-komander-post" method="post" name="elcapoform" id="elcapoform" onSubmit="return createrecord()">
                         <div align="center">
                             <div id="formline">
 								<div id="form_input_label"><?php echo $fname;?><em>*</em> :</div>
@@ -215,11 +200,23 @@ var WRInitTime=(new Date()).getTime();
                             </div>
                             <div id="formline">
 								<div id="form_input_label"><?php echo $email;?><em>*</em> :</div>
-                                <div id="form_input"><input type="text" name="email"></div>                                
+                                <div id="form_input"><input type="text" name="el-email"></div>                                
                             </div>
                             <div id="formline">
 								<div id="form_input_label"><?php echo $tel;?><em>*</em> :</div>
                                 <div id="form_input"><input type="text" name="tel"></div>                                
+                            </div>
+                            <div id="formline">
+								<div id="form_input_label">Address<em>*</em> :</div>
+                                <div id="form_input"><input type="text" name="address"></div>                                
+                            </div>
+                            <div id="formline">
+								<div id="form_input_label">City<em>*</em> :</div>
+                                <div id="form_input"><input type="text" name="city"></div>                                
+                            </div>
+                            <div id="formline">
+								<div id="form_input_label">zip<em>*</em> :</div>
+                                <div id="form_input"><input type="text" name="zip"></div>                                
                             </div>
                              <div id="formline">
 								<div id="form_input_label"><input type="checkbox" value="1" name="opt_in" checked>:</div>
@@ -229,26 +226,38 @@ var WRInitTime=(new Date()).getTime();
 									?>
                                 </div>                                
                             </div> 
-
+							<div id="formline">
+								<div id="form_input_label"><input type="checkbox" value="1" name="opt_in_text" checked>:</div>
+                                <div id="form_input_label" style="text-align:left; margin-bottom:15px; margin-left:15px; width:56%;">
+                                	I would like to receive notifications on my mobile phone.
+                                </div>                                
+                            </div> 
+	
                             <div id="formline">
 								<div id="form_input_label"><span id="lable_disclamer"><em>*</em> <?php echo $error?></span></div>
                                 <div id="form_input">
-								<?php 
-									if($_storeId == 1){
-								?>
-                                <input type="image" src="images/btn_register_en.png">
-                                <?php }else{?>
-                                <input type="image" src="images/btn_register_es.png">
-                                <?php }?>
+								
+                                <input type="image" src="images/btn_register_en.png" onClick="return createrecord()">
+                                
                                 </div>                                
                             </div>
                         </div>
                         </form>
+                        
+                         <div id="equipo_link" style="display:none"><img src="/images/gray_fade_small.gif"></div>
+                        
+                        <div style="display:none;" id="equipo-response">
+                            <p>&nbsp;</p>
+                            <h2>Thank you for register!</h2>
+                            <p>&nbsp;</p>
+                             <div class="clear"></div>
+                        </div>
+                        
                         <div class="clear"></div><br>
 <br>
 
 <div id="bottom_note">
-<?php echo $note1;?>
+No purchase necessary. One winner every week for five (5) weeks. Name of winner and picture will be posted on www.facebook.com/icuracao.com. Curacao employees and promotional media partners are not eligible to participate. Shopping Spree Promotion only valid at Curacao Tucson store located at 3390 S. 6th Ave, Tucson, AZ 85713. For more information check the <a href="/pdf/Tucson_ShopSpree_Official_Rules.pdf" target="_blank">official rules</a>.
 </div>
 <div class="clear"></div>
                         <span><?php //echo $note;?></span>
@@ -272,4 +281,30 @@ var WRInitTime=(new Date()).getTime();
 		
 
 </body>
+
+<script type="text/javascript">
+	function createrecord() {
+		jQuery("#elcapoform").hide("slow");
+		jQuery("#equipo_link").show("slow")			
+		var formdata = jQuery('form').serializeArray();
+		jQuery.ajax({
+			type: "POST",
+			url: "custom/tucson.php",
+			data: formdata,
+			success: function (data) {
+				if(data==1){
+					jQuery("#equipo-response").show("slow");
+					jQuery("#equipo_link").hide("slow")
+				}else{
+					alert(data)
+					jQuery("#elcapoform").show("slow");
+					jQuery("#equipo_link").hide("slow")
+				}
+			  }
+		})
+	
+		return false;
+	}	
+</script>
+
 </html>

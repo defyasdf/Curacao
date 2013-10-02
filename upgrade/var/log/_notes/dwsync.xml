@@ -3,6 +3,8 @@
 <file name="payment_verisign.log" server="198.101.163.120//var/www/" local="130209765390000000" remote="130209765390000000" Dst="2" />
 <file name="bronto_common.log" server="198.101.163.120//var/www/" local="130209123570000000" remote="130209123570000000" Dst="2" />
 <file name="payment_paypaluk_express.log" server="198.101.163.120//var/www/" local="130209102990000000" remote="130209102990000000" Dst="2" />
-<file name="exception.log" server="198.101.163.120//var/www/" local="130228153070000000" remote="130228153070000000" Dst="2" />
-<file name="system.log" server="198.101.163.120//var/www/" local="130228178320000000" remote="130228178380000000" Dst="2" />
+<file name="exception.log" server="198.101.163.120//var/www/" local="130239252950000000" remote="130239252950000000" Dst="2" />
+<file name="system.log" server="198.101.163.120//var/www/" local="130239405710000000" remote="130239405710000000" Dst="2" />
+<file name="payment_authorizenet.log" server="198.101.163.120//var/www/" local="130241011870000000" remote="130241011870000000" Dst="2" />
+<file name="payment_authorizenetcim.log" server="198.101.163.120//var/www/" local="130235912810000000" remote="130235912810000000" Dst="2" />
 </dwsync>

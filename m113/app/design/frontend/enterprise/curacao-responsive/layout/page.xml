@@ -35,14 +35,34 @@ Default layout, loads most of the pages
         <block type="page/html" name="root" output="toHtml" template="page/3columns.phtml">
 
             <block type="page/html_head" name="head" as="head">
-                <action method="addJs"><script>jquery/jquery-1.8.3.min.js</script><group>global</group></action>
-	        	<action method="addJs"><script>jquery/plugins/jquery.nivo.slider.js</script><group>global</group></action>
-
-                <action method="addJs"><script>jquery/onestepcheckout/jquery.cookie.js</script><group>global</group></action>
-                <action method="addJs"><script>jquery/onestepcheckout/thickbox.js</script><group>global</group></action> 
-				<action method="addJs" ifconfig="ajaxlogin/login/enabled"><script>jquery/jquery.fancybox.js</script><group>global</group></action>
-				<action method="addJs"><script>jquery/plugins/jquery.tinycarousel.min.js</script><group>global</group></action>
-				<!--action method="addItem"><type>skin_js</type><name></name></action-->
+                <action method="addJs">
+                	<script>jquery/jquery-1.10.2.min.js</script>
+                	<group>global</group>
+                </action>
+                <action method="addJs">
+                	<script>jquery/jquery-ui-1.10.3.custom.min.js</script>
+                	<group>global</group>
+                </action>
+	        	<action method="addJs">
+	        		<script>jquery/plugins/jquery.nivo.slider.js</script>
+	        		<group>global</group>
+	        	</action>
+                <action method="addJs">
+                	<script>jquery/onestepcheckout/jquery.cookie.js</script>
+                	<group>global</group>
+                </action>
+                <action method="addJs">
+                	<script>jquery/onestepcheckout/thickbox.js</script>
+                	<group>global</group>
+                </action> 
+				<action method="addJs" ifconfig="ajaxlogin/login/enabled">
+					<script>jquery/jquery.fancybox.js</script>
+					<group>global</group>
+				</action>
+				<action method="addJs">
+					<script>jquery/plugins/jquery.tinycarousel.min.js</script>
+					<group>global</group>
+				</action>
                 
                 <action method="addJs"><script>prototype/prototype.js</script></action>
                 <action method="addJs"><script>lib/ccard.js</script></action>
