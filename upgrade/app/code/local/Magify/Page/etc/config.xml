@@ -52,7 +52,11 @@
           <template>page/customerpromopromotion.phtml</template>
           <layout_handle>customerpromopromotion</layout_handle>
      </customerpromotion>
-	
+	<lgpromo translate="label">
+          <label>LG Promotion</label>
+          <template>page/lgpromo.phtml</template>
+          <layout_handle>lgpromo</layout_handle>
+     </lgpromo>
 	        
 	<!-- add more layouts here -->
         
