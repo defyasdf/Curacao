@@ -48,6 +48,21 @@ class Curacao_Commonapi_ApiController extends Mage_Core_Controller_Front_Action
 		echo '<hr>';	
 
     }
+	public function shippinginfoAction()
+	{
+		$params = $this->getRequest()->getParams();
+		$session = Mage::getSingleton("core/session",  array("name"=>"frontend"));
+		
+		$session->setData($params['sku'],$params['shiprate']);
+		$session->setData('zipcode',$params['zip']);
+		$response = array(
+				'success' => false,
+				'error'=> true,
+			);
+		$response['success'] = true;
+		$response['error'] = false;
+		$this->getResponse()->setBody(Zend_Json::encode($response));
+	}
 	public function claimcouponAction()
 	{
 		$customerGroupIds = Mage::getModel('customer/group')->getCollection()->getAllIds();

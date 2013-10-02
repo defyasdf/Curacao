@@ -1,3 +1,92 @@
+<div class="store-select-holder">
+	
 <?php 
-echo 'sandeeppppp';
+	$selectedState = '';
+	$postData = Mage::app()->getRequest()->getPost();
+		
+	if(!empty($postData['state_list'])){
+		$selectedState = $this->loadstate($postData['state_list']);
+	}
+	
+	$city = $postData['City'];
+		
+	if(!empty($postData['zip_code'])){
+		$address = $postData['zip_code'];
+	}else{
+		$address = $city.','.$selectedState;
+	}
+		
+	$myaddress = urlencode($address);
+	$url = "http://maps.googleapis.com/maps/api/geocode/json?address=$myaddress&sensor=false&region='US'";
+	$getmap = file_get_contents($url);
+	$googlemap = json_decode($getmap);
+		
+	foreach($googlemap->results as $res){
+		$address = $res->geometry;
+		$latlng = $address->location;
+		$formattedaddress = $res->formatted_address;
+		$latitude = $latlng->lat;
+		$longitude = $latlng->lng;
+	}
+	$listStore = $this->getStores();
+	$storeIds = array();
+
+	foreach($listStore as $store){
+		$storeIds[] = $store['info']->getId();
+	}
+
+	$helper = Mage::helper('pickup');
+	$returnValue = $helper->getDetails($postData,implode(',',$storeIds));
+	$availableStores = $returnValue['stores'];
+	$sku = $returnValue['sku'];
+	$storeData = array();
+
+	for($i=0;$i<count($availableStores);$i++){
+		$storeData[] = $this->loadStore($availableStores[$i])->getData();
+	}
+	
+	$message = '';
+	
+	// New Updated stuff
+	$product = Mage::getModel('catalog/product');
+	$productId = $product->getIdBySku($sku);
+	if ($productId) {
+		$product->load($productId);
+	}
+	
 ?>
+<?php //Adding Delivery Option ?>
+<div class="select_store_hdng"><strong>Delivery Option</strong></div>
+<?php
+
+	$content = file_get_contents('http://m113.icuracao.com/fedex/RateService_v13_php/php/RateWebServiceClient/Rate/RateWebServiceClient.php?zip='.$postData['zip_code'].'&weight='.$product->getWeight().'&shiptype='.$product->getShprate());
+	$shipinfo = explode("|",$content);
+	Mage::getSingleton('core/session')->setEstimated($shipinfo[0]);
+?>
+<ul class="store-list-select">
+	<li>
+        <input type="radio" onclick="return setshipping('<?php echo $shipinfo[1]?>')" />
+        <label class="store-name">Fedex Ground</label>
+        <label class="distance">$<?php echo $shipinfo[1]?></label>
+    </li>
+</ul>
+
+<?php // End Delivery Option ?>
+
+    <div class="select_store_hdng"><strong>Select Store (Store Pick up)</strong></div>
+    
+    	<ul class="store-list-select">
+		<?php
+		foreach($storeData as $row){
+			$disinmiles = $this->getMiles($row['store_id'],$latitude,$longitude,'M');
+		?>
+			<li>
+				<input type="radio" name="availablestore" value="<?php echo $row['store_id'];?>" onclick="setsessionvar(this.value,'<?php echo $sku; ?>');">
+				<label class="store-name"><?php echo $row['store_name'];?></label>
+				<label class="distance"><?php echo round($disinmiles,1, PHP_ROUND_HALF_UP);?> miles</label>
+			</li>
+		<?php 	
+		}
+		?>
+		</ul>
+</div>
