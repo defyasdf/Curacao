@@ -14,6 +14,7 @@ class Ria_Pickup_IndexController extends Mage_Core_Controller_Front_Action
 		$block = $this->getLayout()->createBlock('pickup/pickup');
 		$storeinfo = $block->loadStore($params['store_id'])->getData();
 		$session = Mage::getSingleton("core/session",  array("name"=>"frontend"));
+		
 		$session->setData($params['sku'],$storeinfo['store_name']);
 		$session->setData($params['sku'].'_storeId',$params['store_id']);
 		echo $storeinfo['store_name'];

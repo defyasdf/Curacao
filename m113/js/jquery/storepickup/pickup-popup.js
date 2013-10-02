@@ -1,5 +1,4 @@
 jQuery(document).ready(function() {
-
 	
 	jQuery('.mButton').qtip({
 		id: jQuery(this).attr('id'),
@@ -35,7 +34,8 @@ jQuery(document).ready(function() {
 //
 //---------------------------------------------------------------------------------------------------------------
 function showStoreFinderForm(id){
-	var sku = jQuery("a[data-hasqtip='"+id+"']").attr("id");
+	
+	var sku = jQuery("a[data-hasqtip='"+id+"']").attr("title");
 	var form_str =	'<p>Enter your ZIP code or city and state to see where you can pick up this item.</p>' +
 						'<form class="qtipform" name="qtip_form" id="qtip_form_'+id+'" action="">' +
 							'<input type="hidden" name="clicked_ele_sku" id="clicked_ele_sku" value="'+ sku +'" />' +
@@ -93,7 +93,7 @@ function qtip_submit_click(id) {
 //
 //---------------------------------------------------------------------------------------------------------------
 function setsessionvar(store_id,sku){
-	var getelms = '/store_id/'+store_id+'/sku/'+sku;
+	var getelms = '/?store_id='+store_id+'&sku='+sku;
 	jQuery.ajax({
 		type:"POST",
 		dataType:"html",
@@ -108,6 +108,7 @@ function setsessionvar(store_id,sku){
 			jQuery('.mButton').html("Change");
 			jQuery('#StoreLocation').html(result_data);
 			jQuery('#StoreLocation').show();
+			location.reload();
 			//jQuery("#loading-mask").hide();
 			//jQuery("#store_"+sku).val(result_data);
 			//jQuery( "#ajax_success_element" ).dialog('destroy');

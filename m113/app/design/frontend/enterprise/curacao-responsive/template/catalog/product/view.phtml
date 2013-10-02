@@ -163,6 +163,7 @@
 						$skuSelectedStore = '';
 						$skuSelectedStore = $session->getData($_product->getSku());
 						
+//						print_r($session);
 					?>	
                     
                     
@@ -181,19 +182,19 @@
 						 
                         <div id="optionDiv">   	
                             <span id="StoreLocation" style="display:none;"></span>
-                           <a class="mButton" id="<?php echo $_product->getSku()?>">Change</a>
+                           <a class="mButton" id="<?php echo $_product->getId()?>" title="<?php echo $_product->getSku()?>">Change</a>
                            	
                            </div>
 						   <?php 
 						   }else{?>
                          
                         <div id="optionDiv">   
-                        	<a class="mButton" id="<?php echo $_product->getSku()?>">Store Pickup</a> 
+                        	<a class="mButton" id="<?php echo $_product->getId()?>" title="<?php echo $_product->getSku()?>">Shipping Option</a> 
                             
                         </div>
                         <?php }?>
 						<input type="hidden" name="store_<?php echo $_product->getSku()?>" id="store_<?php echo $_product->getSku()?>" value="<?php echo $skuSelectedStore;?>" />
-						<div class="shipping-text" id="ship-text-<?php echo $_product->getSku()?>">
+						<div class="shipping-text" id="ship-text-<?php echo $_product->getId()?>">
 							<ul class="shipping-method-overlay-list">
 								<li>
 									<span class="method"><?php echo $this->__('Shipping') ?>:</span> <?php echo $this->__('Usually leaves our warehouse in 1 business day.') ?>
