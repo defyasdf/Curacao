@@ -48,6 +48,45 @@ class Curacao_Commonapi_ApiController extends Mage_Core_Controller_Front_Action
 		echo '<hr>';	
 
     }
+	public function addestimatenumberAction(){
+		$orderId = Mage::app()->getRequest()->getParam('orderid');
+		$estimate = Mage::app()->getRequest()->getParam('estimatenumber');
+		$order = Mage::getModel('sales/order')->load($orderId);
+		$order->setEstimatenumber($estimate);
+		$response = array(
+				'success' => false,
+				'error'=> true,
+			);
+		try
+		{
+			$order->save();
+			
+			$response['success'] = true;
+			$response['error'] = false;
+		}catch (Exception $e) {
+			Mage::log($e->getMessage());
+			
+			$response['success'] = false;
+			$response['error'] = true;
+			$response['message'] = $this->__('Can not generate coupon code, please try again later.');        	
+	
+		}
+		
+		$this->getResponse()->setBody(Zend_Json::encode($response));
+	}
+	
+	public function supplyestimateitemAction(){
+		$params = $this->getRequest()->getParams();
+		$response = array(
+				'success' => false,
+				'error'=> true,
+		);
+		
+		$response['success'] = true;
+		$response['error'] = false;
+		$response['message'] = 'SKU  : '.$params['sku'].' And Estimate Numner : '.$params['estimatenumber'];        	
+		$this->getResponse()->setBody(Zend_Json::encode($response));
+	}
 	public function shippinginfoAction()
 	{
 		$params = $this->getRequest()->getParams();
