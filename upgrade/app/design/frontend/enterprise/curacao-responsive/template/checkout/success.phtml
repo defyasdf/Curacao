@@ -244,6 +244,7 @@ ini_set("soap.wsdl_cache_enabled", 0);
 		$_tax = $_totalData['base_tax_amount'];
 		$_shipping = $_totalData['shipping_amount'];
 		$rebate = 0;
+		$mc = 0;
 		foreach($orderItems as $item)
 		{
 		  //you can either echo each sku of the order / you can use array variable to pass items skubs
@@ -280,6 +281,9 @@ ini_set("soap.wsdl_cache_enabled", 0);
 			$product = Mage::getModel('catalog/product');
 			$productId = $product->getIdBySku($item->getSku());
 			$product->load($productId);
+			if($product->getVendorid() == '55676'){
+				$mc = 1;
+			}
 			$rebate += ($product->getRebate()*(int)$item->getQtyOrdered());
 			if($product->getSet()=='1'){
 				$set = 'Y';
@@ -385,7 +389,7 @@ $est ='';
 	
 	
 	//End Creating Estimate
-
+	$orderObj->setHsmc($mc);
 	$orderObj->addStatusToHistory($orderObj->getStatus(), $est, false);
 	$orderObj->setRebate($rebate);
 	$orderObj->save();	

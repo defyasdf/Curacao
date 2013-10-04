@@ -1,11 +1,12 @@
 <?php
-
-$xml = new SimpleXMLElement('<Batch/>');
-	$number = $xml->addChild('Number','2446');
-	$count = $xml->addChild('Count','1');
-	$order1 = $xml->addChild('Order');
+ini_set('display_errors', 1);
+$order1 = new SimpleXMLElement('<Order/>');
+	//$number = $xml->addChild('Number','2446');
+	//$count = $xml->addChild('Count','1');
+	//$order1 = $xml->addChild('Order');
 		$order1->addChild('pickmsg',"Send morris the information to check the order");
-		$order1->addChild('po',"10002546");
+		$order1->addChild('po',"10002550");
+		$order1->addChild('via',"425");
 		$order1->addChild('count',"1");
 			$shipTo = $order1->addChild("ShipTo");
 				$address = $shipTo->addChild("Address");
@@ -53,13 +54,13 @@ $xml = new SimpleXMLElement('<Batch/>');
 //Header('Content-type: text/xml');
 //print($xml->asXML());
 try{
-	file_put_contents('batch_2446.xml', $xml->asXML());
+	file_put_contents('po_10002550.xml', $order1->asXML());
 	// Send morris the information to check the order
 	
 	try{
-		$content = file_get_contents("http://morris.morriscostumes.com/cgi-bin/doxml.cgi?userid=curacao&password=reuben&xml_url=http://www.icuracao.com/custom/morris/batch_2446.xml&message=done");
+		//$content = file_get_contents("http://morris.morriscostumes.com/cgi-bin/doxml.cgi?userid=curacao&password=reuben&xml_url=http://www.icuracao.com/custom/morris/batch_2446.xml&message=done");
 		//echo $content;
-		print_r($content);
+		//print_r($content);
 	}
 	catch (Exception $ex) {
 		echo $ex;	

@@ -243,4 +243,25 @@
             $_item->getRowTotal() + $_item->getTaxAmount() + $_item->getHiddenTaxAmount() + $_item->getWeeeTaxAppliedRowAmount() - $_item->getDiscountAmount()
         ); ?>
     </td>
+    <?php
+		$id = Mage::getModel('catalog/product')->getIdBySku($_item->getSku());
+	//$id = 0;
+	//echo 'hre';
+	if($id){
+		$product = Mage::getModel('catalog/product')->loadByAttribute('sku', $_item->getSku(), array('vendorid')); 
+		$vid = $product->getVendorid();
+	}else{
+		$vid = '';
+	}
+	?>
+	<td>
+    <?php if($vid == '2139'){?>
+<!--    	<button  title="Submit Estimate" type="button" class="scalable save" style=""><span><span><span>Edit</span></span></span></button><br />
+        <button  title="Submit Estimate" type="button" class="scalable save" style=""><span><span><span>Delete</span></span></span></button><br />
+-->        <button  title="Supply Item" type="button" class="scalable save" onclick="return supplyitem('<?php echo $_item->getSku();?>')" style=""><span><span><span>Supply</span></span></span></button>
+<?php }else{
+	echo 'Drop Shipper SKU';
+}?>
+    </td>
+
 </tr>
