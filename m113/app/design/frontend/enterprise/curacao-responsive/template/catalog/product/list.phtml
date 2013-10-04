@@ -180,11 +180,38 @@
 							$skuSelectedStore = '';
 							$skuSelectedStore = $session->getData($_product->getSku());
 							?>
-                            <a class="mButton" id="<?php echo $_product->getSku()?>"><?php echo $this->__('Check Shipping & Store Availability >') ?></a>
+                             <?php if($session[$_product->getSku()]){
+						   echo '<span id="StoreLocation">';
+						   	if(is_numeric($session[$_product->getSku()])){
+								echo '<span style="font-size:10px;">Estimated Shipping Rate $'.$session[$_product->getSku()].'</span>';
+							//	echo '<br><span>Estimated Delivery Date : '.Mage::getSingleton('core/session')->getEstimated().'</span>';
+							}else{
+								echo '<span style="font-size:10px;">Store : '.$session[$_product->getSku()].'</span>';
+								//echo '<br> Delivery Charge : Free';
+							}
+						   echo '</span>';
+						   ?>
+                           
+						 
+                        <div id="optionDiv">   	
+                            <span id="StoreLocation" style="display:none;"></span>
+                           <a class="mButton" id="<?php echo $_product->getId()?>" title="<?php echo $_product->getSku()?>">Change</a>
+                           	
+                           </div>
+						   <?php 
+						   }else{?>
+                         
+                        <div id="optionDiv">   
+                        	<a class="mButton" id="<?php echo $_product->getId()?>" title="<?php echo $_product->getSku()?>"><?php echo $this->__('Check Shipping & Store Availability >') ?></a> 
+                            
+                        </div>
+                        <?php }?>
+                        
+                            
 							<input type="hidden" name="store_<?php echo $_product->getSku()?>" id="store_<?php echo $_product->getSku()?>" value="<?php echo $skuSelectedStore;?>" />
 							
 							
-							<div class="shipping-text" id="ship-text-<?php echo $_product->getSku()?>">
+							<div class="shipping-text" id="ship-text-<?php echo $_product->getId()?>">
 								<ul class="shipping-method-overlay-list">
 									<li>
 										<span class="method"><?php echo $this->__('Shipping') ?>:</span> <?php echo $this->__('Usually leaves our warehouse in 1 business day.') ?>
@@ -211,7 +238,7 @@
 			<?php if($i%$_columnCount==0): ?>
 			<li class="full sixteen item columns alpha"></li>
 			<?php endif; ?>
-            <?php $i++; $ii++; if($ii>1){ $ii=0;} ?>
+            <?php $i++; $ii++; //if($ii>1){ $ii=0;} ?>
         <?php endforeach ?>
         </ul>
         <script type="text/javascript">decorateGeneric($$('ul.products-grid'), ['odd','even','first','last'])</script>
@@ -222,3 +249,31 @@
     </div>
 </div>
 <?php endif; ?>
+
+ <div id="register_link" style="display:none"></div>
+ <div id="registerloading"><img src="/images/gray_fade_small.gif"></div>    
+
+<script type="text/javascript">
+	function setshipping(rate){
+			jQuery("#register_link").show();
+			jQuery("#registerloading").show();
+			var zip = jQuery("#zip").val();
+			var login_url = '/commonapi/api/shippinginfo'
+			jQuery.ajax({ 
+						type: 'post',
+						data: {'sku':'<?php echo $_product->getSku()?>','shiprate': rate,'zip': zip},
+			//			data: {'email':em,'hid':'1234','sid':'45689','affid':'amdsid'},
+						url:  login_url,                    
+						success: function(data) {
+							var result = jQuery.parseJSON(data); 
+							if(result.success) {
+								alert('Shipping rate been selected successfully');
+								jQuery("#register_link").hide();
+								jQuery("#registerloading").hide();	
+								location.reload();							
+							}
+							
+						}.bind(this)
+					 });
+	}
+</script>

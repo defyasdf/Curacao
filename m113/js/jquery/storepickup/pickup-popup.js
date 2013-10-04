@@ -52,6 +52,7 @@ function showStoreFinderForm(id){
 						
 	var api = jQuery('#qtip-'+id).qtip('api');
 	api.set('content.text', form_str);
+	return false;
 }
 //---------------------------------------------------------------------------------------------------------------
 //
@@ -87,13 +88,14 @@ function qtip_submit_click(id) {
 			api.set('content.text', result_data);
 		},
 	});
-	
+	return false;
 }
 //---------------------------------------------------------------------------------------------------------------
 //
 //---------------------------------------------------------------------------------------------------------------
-function setsessionvar(store_id,sku){
-	var getelms = '/?store_id='+store_id+'&sku='+sku;
+function setsessionvar(store_id,sku,type){
+	
+	var getelms = '/?store_id='+store_id+'&sku='+sku+'&type='+type;
 	jQuery.ajax({
 		type:"POST",
 		dataType:"html",
@@ -117,3 +119,4 @@ function setsessionvar(store_id,sku){
 		},
 	});
 }
+

@@ -65,7 +65,7 @@
 ?>
 <ul class="store-list-select">
 	<li>
-        <input type="radio" onclick="return setshipping('<?php echo $shipinfo[1]?>')" />
+        <input type="radio"  onclick="setsessionvar('<?php echo $shipinfo[1]?>','<?php echo $sku; ?>','delivery');" />
         <label class="store-name">Fedex Ground</label>
         <label class="distance">$<?php echo $shipinfo[1]?></label>
     </li>
@@ -77,16 +77,24 @@
     
     	<ul class="store-list-select">
 		<?php
+		$availableStoreCount = 0;
 		foreach($storeData as $row){
 			$disinmiles = $this->getMiles($row['store_id'],$latitude,$longitude,'M');
+			if($disinmiles<=25){
+				$availableStoreCount++;	
 		?>
 			<li>
-				<input type="radio" name="availablestore" value="<?php echo $row['store_id'];?>" onclick="setsessionvar(this.value,'<?php echo $sku; ?>');">
+				<input type="radio" name="availablestore" value="<?php echo $row['store_id'];?>" onclick="setsessionvar(this.value,'<?php echo $sku; ?>','pickup');">
 				<label class="store-name"><?php echo $row['store_name'];?></label>
 				<label class="distance"><?php echo round($disinmiles,1, PHP_ROUND_HALF_UP);?> miles</label>
 			</li>
 		<?php 	
+			}
 		}
+		if($availableStoreCount==0){
+			echo '<li>There is no store near your area. Only available option is delivery to this area</li>';
+		}
+		
 		?>
 		</ul>
 </div>
