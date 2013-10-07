@@ -30,6 +30,32 @@
  *
  * @see Mage_Checkout_Block_Cart
  */
+ 
+ // Change to your postcode / country.
+/*$zipcode = '90025';
+$country = 'US';
+
+// Update the cart's quote.
+$cart = Mage::getSingleton('checkout/cart');
+$address = $cart->getQuote()->getShippingAddress();
+$address->setCountryId($country)
+        ->setPostcode($zipcode)
+        ->setCollectShippingrates(true);
+$cart->save();
+
+// Find if our shipping has been included.
+$rates = $address->collectShippingRates()
+                 ->getGroupedAllShippingRates();
+
+foreach ($rates as $carrier) {
+    foreach ($carrier as $rate) {
+        echo '<pre>';
+		print_r($rate->getData());
+		echo '</pre>';
+    }
+}
+ */
+ 
 ?>
 <?php
 	
@@ -283,33 +309,6 @@
     jQuery(document).ready(function() {
         jQuery('.messages .success-msg').fadeIn(400).delay(3000).hide();
 	});
-	
-	function getEstimate(){
-
-		var login_url = 'checkout/cart/estimatePost/'
-
-		jQuery.ajax({ 
-				type: 'post',
-				data: {'onestepcheckout_username':jQuery("#useremail").val(),'onestepcheckout_password':jQuery("#userpass").val()},
-				url:  login_url,                    
-				success: function(data) {
-				 
-				   var result = jQuery.parseJSON(data); 
-					if(result.success) {
-						window.location = '/onestepcheckout/';
-					} else {
-						//alert(result.error);
-						jQuery("#onestepcheckout-login-error").html(result.error);
-						jQuery("#onestepcheckout-login-error").show('slow')
-						jQuery("#send2").show('slow');
-						jQuery("#login-loading").hide('slow');
-					}
-				}.bind(this)
-	     });
-		
-		return false;
-
-	}
 	
 	function create_login(){
 		jQuery("#send2").hide('slow');

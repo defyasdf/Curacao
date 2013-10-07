@@ -59,7 +59,7 @@ try
 	}
 	
 	$response = $client ->getRates($request);
-        
+     
     if ($response -> HighestSeverity != 'FAILURE' && $response -> HighestSeverity != 'ERROR')
     {  	
     	$rateReply = $response -> RateReplyDetails;
@@ -68,6 +68,14 @@ try
 		if(date('l',strtotime('+'.$days.' days')) == 'Sunday'){
 			$days = $days+1;
 		}
+		/*foreach($rateReply as $rates){
+			echo '<pre>';
+				print_r($rates);
+			echo '</pre>';
+			/*echo $rates->ServiceType.'=>$'.number_format($rates->RatedShipmentDetails[0]->ShipmentRateDetail->TotalNetCharge->Amount*1.5,2,".",",").'<br>';
+			$days = $time[$rates->CommitDetails->TransitTime]+3;
+			echo $rates->CommitDetails->TransitTime.' : ' .date('l jS \of F Y',strtotime('+'.$days.' days')).'<br>';
+		}*/
 	    echo date('l jS \of F Y',strtotime('+'.$days.' days')).'|';
 	    echo number_format($rateReply->RatedShipmentDetails[0]->ShipmentRateDetail->TotalNetCharge->Amount*1.5,2,".",",");
     }

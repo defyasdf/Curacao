@@ -1,0 +1,2 @@
+<?xml version="1.0"?>
+<Order><pickmsg>Send morris the information to check the order</pickmsg><po>100004897</po><via>420</via><count>1</count><ShipTo><Address><Line1>reuben  simantob</Line1><Street1>1605 W. Olympic Blvd. Suite 516</Street1><Street2/><City>Los Angeles</City><State>California</State><Zip>90015</Zip><Country>US</Country><Phone>310-429-1899</Phone></Address></ShipTo><LineItems><Line><part>445290</part><qty>1.0000</qty></Line></LineItems></Order>

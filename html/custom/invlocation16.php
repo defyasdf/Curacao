@@ -127,3 +127,4 @@ foreach ($collection as $products) {
 }
 $query = "insert into inventorycronstatus(cronday, status) values('".date('Y-m-d')."','1')";
 mysql_query($query) or die(mysql_error());
+mysql_close($link);
