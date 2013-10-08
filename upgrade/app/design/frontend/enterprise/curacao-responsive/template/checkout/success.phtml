@@ -190,7 +190,7 @@ ini_set("soap.wsdl_cache_enabled", 0);
 	
 	$orderObj->setCuracaocustomernumber($cc_num);
 	$orderObj->setCuracaocustomerdiscount($cd);
-	$orderObj->addStatusToHistory('pending', "Please Review order for the fraud", false);
+	//$orderObj->addStatusToHistory('pending', "Please Review order for the fraud", false);
 	
 	$orderObj->save();
 	
