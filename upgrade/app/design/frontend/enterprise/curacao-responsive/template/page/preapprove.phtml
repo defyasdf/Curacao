@@ -164,7 +164,9 @@ if(isset($_POST['prefname'])){
 		$customer->isauthenticate = '1';
 		$customer->curacaocustid = $final[1];
 		$customer->save();	
-		$q = "update preapproved set step2 = '1', approve = '1', pending = '0', decline = '0', approvedcreditlimit = '".$final[2]."', accnumber = '".$final[1]."' where paID = ".$_POST['appId'];		
+		Mage::getSingleton('core/session')->setPreapproveccv($final[3]);
+		$q = "update preapproved set step2 = '1', approve = '1', pending = '0', decline = '0', approvedcreditlimit = '".$final[2]."', accnumber = '".$final[1]."' where paID = ".$_POST['appId'];	
+			
 	}elseif($final[0] == 'PENDING'){
 		$sql = "select * from preapproved where paID = ".$_POST['appId'];
 		$r = mysql_query($sql);

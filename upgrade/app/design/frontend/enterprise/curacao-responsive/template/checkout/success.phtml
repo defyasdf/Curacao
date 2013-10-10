@@ -362,6 +362,8 @@ $est ='';
 			
 			if(strtolower($final[0])=='error'){
 				$est = 'Estimate not been created because of '.$final[1];
+				$orderObj->addStatusToHistory('pending', $est, false);
+				$orderObj->save();
 			}elseif(strtolower($final[0])=='ok'){
 				$est = 'Estimate Number: '.$final[1];
 				$orderObj->setEstimatenumber($final[1]);
@@ -384,15 +386,22 @@ $est ='';
 		catch (Exception $ex) {
 			$est = $ex->getMessage();
 			$cnt1++;
+			$orderObj->addStatusToHistory('pending', $est, false);
+			$orderObj->save();		
 		}
 	
 	
 	
 	//End Creating Estimate
-	$orderObj->setHsmc($mc);
+	$orderObj->setHasmc($mc);
 	$orderObj->addStatusToHistory($orderObj->getStatus(), $est, false);
 	$orderObj->setRebate($rebate);
 	$orderObj->save();	
+	
+	if($final[1] == ''){
+		$orderObj->addStatusToHistory('pending', "Estimate not been created", false);
+		$orderObj->save();		
+	}
 	
 	// Get Coupon Code
 	 $coupon = Mage::getModel('salesrule/coupon');	
@@ -526,6 +535,9 @@ $est ='';
 	   if(Mage::getSingleton('core/session')->getCouponjoin299100()){
 	  	Mage::getSingleton('core/session')->unsCouponjoin299100();	
 	  }
+	  if(Mage::getSingleton('core/session')->getPreapproveccv()){
+		 Mage::getSingleton('core/session')->unsPreapproveccv();	
+		}
 ?>
 <?php 
 	// Google Track

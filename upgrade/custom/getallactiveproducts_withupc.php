@@ -7,7 +7,7 @@
 	$server = '192.168.100.121';
 	$user = 'curacaodata';
 	$pass = 'curacaodata';
-	$db = 'curacao_production';
+	$db = 'curacao_magento';
 	
 	
 	
@@ -145,8 +145,9 @@
 			  $j++;
 
 		}
-	
-
+	echo '<pre>';
+		print_r($data);
+	echo '</pre>';
 	  $filename = "Magento_Active_Products.xls";
 	
 	  header("Content-Disposition: attachment; filename=\"$filename\"");

@@ -1,0 +1,2 @@
+<?xml version="1.0"?>
+<Order><pickmsg>Send morris the information to check the order</pickmsg><po>100004944</po><via>420</via><count>1</count><ShipTo><Address><Line1>Jonna Beem</Line1><Street1>1752 San Esteban Circle</Street1><Street2/><City>Roseville</City><State>California</State><Zip>95747</Zip><Country>US</Country><Phone>707-849-3416</Phone></Address></ShipTo><LineItems><Line><part>MA1009</part><qty>4.0000</qty></Line></LineItems></Order>

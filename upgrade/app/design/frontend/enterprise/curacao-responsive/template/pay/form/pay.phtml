@@ -2,7 +2,7 @@
 
 <?php 
 $_storeId = Mage::app()->getStore()->getId();
-if($_storeId == 1 || $_storeId == 4){
+if($_storeId == 1){
 	$month = 'Month';
 	$year = 'Year';
 	$day = 'DD';
@@ -45,8 +45,13 @@ if($_storeId == 1 || $_storeId == 4){
 								?>
 								<input type="password" maxlength="4" title="<?php echo $this->__('CCV') ?>" class="input-text required-entry input-text validate-digits validate-length maximum-length-4" id="<?php echo $_code ?>_cc_cid" name="payment[ccv]" value="<?php echo Mage::getSingleton('core/session')->getCcv()?>" />
 								<?php
-								}?>
+								}elseif(Mage::getSingleton('core/session')->getPreapproveccv()){
+								?>
+								<input type="password" maxlength="4" title="<?php echo $this->__('CCV') ?>" class="input-text required-entry input-text validate-digits validate-length maximum-length-4" id="<?php echo $_code ?>_cc_cid" name="payment[ccv]" value="<?php echo Mage::getSingleton('core/session')->getPreapproveccv()?>" />
+								<?php
+								}else{?>
                                 <input type="password" maxlength="4" title="<?php echo $this->__('CCV') ?>" class="input-text required-entry input-text validate-digits validate-length maximum-length-4" id="<?php echo $_code ?>_cc_cid" name="payment[ccv]" value="" />
+                                <?php }?>
                             </div>
                             <a href="#" class="cvv-what-is-this-curacao"><?php echo $this->__('What is this?') ?></a>
                         </div>
