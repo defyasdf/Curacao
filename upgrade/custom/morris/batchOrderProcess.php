@@ -21,7 +21,7 @@
 	$currentStore = Mage::app()->getStore()->getId();
 	Mage::app()->setCurrentStore(Mage_Core_Model_App::ADMIN_STORE_ID);
 	
-	$sql = "SELECT * FROM `sales_flat_order` WHERE (status = 'processing' or status = 'internalfulfillment') and senttomc = 0 and hasmc = 1";	
+	$sql = "SELECT * FROM `sales_flat_order` WHERE (status = 'processing' or status = 'internalfulfillment' or status = 'senttovendor') and senttomc = 0 and hasmc = 1";	
 	$result = mysql_query($sql);
 	while($row = mysql_fetch_array($result)){
 	$query = "SELECT * FROM `sales_flat_order_item` WHERE `order_id` = ".$row['entity_id'];
@@ -40,7 +40,7 @@
 			}
 		}
 	}
-	echo $i;
+	//echo $i;
 	$addSql = "SELECT * FROM `sales_flat_order_address` WHERE `parent_id` = ".$row['entity_id']." and address_type = 'shipping'";
 	$addresult = mysql_query($addSql);
 	$addrow = mysql_fetch_array($addresult);
@@ -51,7 +51,7 @@
 		//$order1 = $xml->addChild('Order');
 			$order1->addChild('pickmsg',"Send morris the information to check the order");
 			$order1->addChild('po',$row['increment_id']);
-			$order1->addChild('via',"420");
+			$order1->addChild('via',"213");
 			$order1->addChild('count',$i);
 				$shipTo = $order1->addChild("ShipTo");
 					$address = $shipTo->addChild("Address");
@@ -120,9 +120,10 @@
 				// Send morris the information to check the order
 				
 				try{
-					//$content = file_get_contents("http://morris.morriscostumes.com/cgi-bin/doxml.cgi?userid=curacao&password=reuben&xml_url=http://www.icuracao.com/custom/morris/batch_2446.xml&message=done");
-					//echo $content;
-					//print_r($content);
+					$content = file_get_contents("http://morris.morriscostumes.com/cgi-bin/doxml.cgi?userid=curacao&password=reuben&xml_url=http://www.icuracao.com/custom/morris/po_".$row['increment_id'].".xml&message=done");
+					echo '<pre>';
+						print_r($content);
+					echo '</pre><br>';
 				}
 				catch (Exception $ex) {
 					echo $ex;	

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <dwsync>
 <file name="_addproduct.php" server="198.101.163.120//var/www/" local="130207271450000000" remote="130207271450000000" Dst="2" />
-<file name="_add_curacao_price.php" server="198.101.163.120//var/www/" local="130207271460000000" remote="130207271460000000" Dst="2" />
+<file name="_add_curacao_price.php" server="198.101.163.120//var/www/" local="130258397270000000" remote="130258397270000000" Dst="2" />
 <file name="_addproduct4000.php" server="198.101.163.120//var/www/" local="130207271460000000" remote="130207271460000000" Dst="2" />
 <file name="_add_curacao_price_bysku.php" server="198.101.163.120//var/www/" local="130228139204304590" remote="130228139460000000" Dst="2" />
 <file name="inventorycheck.php" server="198.101.163.120//var/www/" local="130214231892041820" remote="130214231970000000" Dst="2" />
@@ -13,7 +13,7 @@
 <file name="_add_upc.php" server="198.101.163.120//var/www/" local="130207271460000000" remote="130207271460000000" Dst="2" />
 <file name="getpayment_info.php" server="198.101.163.120//var/www/" local="130223027058106553" remote="130223027200000000" Dst="2" />
 <file name="_getorder_collection.php" server="198.101.163.120//var/www/" local="130207271460000000" remote="130207271460000000" Dst="2" />
-<file name="_getorder_item_collection_margin.php" server="198.101.163.120//var/www/" local="130232353747748032" remote="130232353920000000" Dst="2" />
+<file name="_getorder_item_collection_margin.php" server="198.101.163.120//var/www/" local="130259238337589334" remote="130259238430000000" Dst="2" />
 <file name="_getorder_collection_withdate.php" server="198.101.163.120//var/www/" local="130232353602259711" remote="130232353770000000" Dst="2" />
 <file name="_getorder_item_collection.php" server="198.101.163.120//var/www/" local="130232354005762790" remote="130232354180000000" Dst="2" />
 <file name="getauthenticationreport.php" server="198.101.163.120//var/www/" local="130232354410695951" remote="130232354580000000" Dst="2" />
@@ -31,4 +31,5 @@
 <file name="tucson.php" server="198.101.163.120//var/www/" local="130245465975092909" remote="130245466020000000" Dst="2" />
 <file name="cartAbandonment.php" server="198.101.163.120//var/www/" local="130256682679731718" remote="130256682820000000" Dst="2" />
 <file name="datediff.php" server="198.101.163.120//var/www/" local="130250643029083460" remote="130250643110000000" Dst="2" />
+<file name="preapprovepurchage.php" server="198.101.163.120//var/www/" local="130259196852396517" remote="130259196950000000" Dst="2" />
 </dwsync>

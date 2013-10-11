@@ -149,7 +149,10 @@
 		}
 
 		$proxy = new SoapClient($soap_proxy_url);
-					
+		
+		$init_request = "UPDATE `credit_app` SET `init_request` = '1'  WHERE `credit_id` = ".$_POST['appid'];
+		mysql_query($init_request,$link) ;
+		
 		$result = $proxy->Auth_Init(array('Params' => 
 										array(	'Firstname' =>$_POST['fname'],
 												'Middlename'=>'',
@@ -178,7 +181,10 @@
 			                    	'literal'
                     			);
 		$re = $result->Auth_InitResult;		//this is throwing an error
-		
+		if($re->Result){
+			$init_response = "UPDATE `credit_app` SET `init_response` = '1'  WHERE `credit_id` = ".$_POST['appid'];
+			mysql_query($init_response,$link) ;
+		}
 		//echo $re->Result;
 
 	// -----------------------------------------------------------------------------------------------		
@@ -187,6 +193,14 @@
 		$s = '1';
 		if(isset($_POST['qsetid'])){
 			//$proxy = new SoapClient('https://exchangeweb.lacuracao.com:2007/ws1/lacauth/service.asmx?WSDL');
+			$get_request = "select lnq_send,lnq_recieve from credit_app  WHERE `credit_id` = ".$_POST['appid'];
+			$res = mysql_query($get_request);
+			$row = mysql_fetch_array($res);
+			$send = $row['lnq_send'] +1;
+			
+			$init_request = "UPDATE `credit_app` SET `lnq_send` = ".$send."  WHERE `credit_id` = ".$_POST['appid'];
+			mysql_query($init_request,$link) ;
+	
 			$proxy = new SoapClient('https://exchangeweb.lacuracao.com:2007/ws1/lacauth/service.asmx?WSDL');
 			
 			$result = $proxy->Auth_Continue( 
@@ -203,8 +217,16 @@
 						false, null, 'rpc', 'literal'
 						);
 			$re = $result->Auth_ContinueResult;
-			
-			
+			if($re->Result){
+				if($re->Result=='QUESTIONS'){
+					$recieve = $row['lnq_recieve']+1;
+					$init_recieve = "UPDATE `credit_app` SET `lnq_recieve` = ".$recieve."  WHERE `credit_id` = ".$_POST['appid'];
+					mysql_query($init_recieve,$link) ;
+				}else{
+					$init_recieve = "UPDATE `credit_app` SET `ln_result` = '".$re->Result."'  WHERE `credit_id` = ".$_POST['appid'];
+					mysql_query($init_recieve,$link) ;
+				}
+			}		
 			
 			if($re->Result=='PASSED'){
 				$s = '3';

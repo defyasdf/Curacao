@@ -72,6 +72,26 @@ class Curacao_Commonapi_ApiController extends Mage_Core_Controller_Front_Action
 
 		
     }
+	public function supplyitemAction(){
+		
+		$proxy = new SoapClient('https://exchangeweb.lacuracao.com:2007/ws1/eCommerce/Main.asmx?WSDL');
+		$ns = 'http://lacuracao.com/WebServices/eCommerce/';
+		// Set headers
+		$headerbody = array('UserName' => 'mike',
+							'Password' => 'ecom12');
+		//Create Soap Header.
+		$header = new SOAPHeader($ns, 'TAuthHeader', $headerbody);
+		//set the Headers of Soap Client.
+		$h = $proxy->__setSoapHeaders($header);
+		$orderId = Mage::app()->getRequest()->getParam('orderid');
+		$order = Mage::getModel('sales/order')->load($orderId);
+		$credit = $proxy->GoSupplyInvoice(array('InvNo'=>$order->getEstimatenumber(),"FirstName"=>$order->getCustomer_firstname(),"LastName"=>$order->getCustomer_lastname(),"eMail"=>$order->getCustomer_email()));
+		$result = $credit->GoSupplyInvoiceResult;
+		
+		print_r($result);		
+		
+	}
+	
 	public function addestimatenumberAction(){
 		$orderId = Mage::app()->getRequest()->getParam('orderid');
 		$estimate = Mage::app()->getRequest()->getParam('estimatenumber');
