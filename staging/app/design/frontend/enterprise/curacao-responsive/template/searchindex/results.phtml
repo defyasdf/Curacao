@@ -1,0 +1,59 @@
+<?php
+$_indexes     = $this->getIndexes();
+$_cntNotEmpty = 0;
+$count = 0;
+foreach ($_indexes as $_index) {
+    if ($_index->getCountResults()) {
+        $_cntNotEmpty++;
+		if(strtolower($_index->getTitle())=='catalog'){
+			$count = $_index->getCountResults();
+		}
+    }
+}
+?>
+<?php if ($_cntNotEmpty > 1): ?>
+<ul class="searchindex-results">
+<?php 
+foreach ($_indexes as $_index): ?>
+
+    <?php if ($_index->getCountResults()): ?>
+        <?php if ($_index == $this->getCurrentIndex()): ?>
+        <li class="active">
+        <?php else: ?>
+        <li>
+        <?php endif ?>
+            <a href="<?php echo $this->getIndexUrl($_index) ?>"><?php echo $_index->getTitle() ?>&nbsp;<span>(<?php echo $_index->getCountResults() ?>)</span></a>
+        </li>
+    <?php endif ?>
+<?php endforeach ?>
+</ul>
+
+<?php endif ?>
+<?php 
+	$cat = array("0"=>"All","8"=>"Electronics","9"=>"For The Home","11"=>"Kids & Babies","10"=>"Fashion & Beauty","466"=>"Specials","612"=>"More..",);
+?>
+<script type="text/javascript">
+<!--
+	// omniture tagging
+	//	prop4	- Internal Search Keywords - Enable Pathing - 
+	//	prop5	# of Search Results 
+	//	prop6	Internal Search Origin
+	//	Prop7	Internal Search Category
+//	document.observe("dom:loaded", function() {
+//		if (typeof s != 'undefined'){
+			s.prop4	= "<?php echo $this->helper('catalogsearch')->getEscapedQueryText() ?>";
+			<?php if($count > 0){?>
+			s.prop5	= "<?php echo $count ?>";
+			<?php }else{?>
+			s.prop5	= "zero";
+			<?php }?>
+			s.prop7	= "<?php echo $cat[$_REQUEST['cat']];?>";
+	//	}
+//	});
+//-->
+</script>
+
+<div class="page-title">
+    <h1><?php echo ($this->getHeaderText() || $this->getHeaderText() === false) ? $this->getHeaderText() : $this->__("Search results for '%s'", $this->helper('catalogsearch')->getEscapedQueryText()) ?></h1>
+</div>
+<?php echo $this->getCurrentContent() ?>

@@ -49,7 +49,7 @@ class Excellence_Pay_Model_Pay extends Mage_Payment_Model_Method_Abstract
 		if(Mage::getSingleton('core/session')->getAuthenticationerror()){
 			Mage::getSingleton('core/session')->unsAuthenticationerror();
 		}
-		Mage::getSingleton('core/session')->setCuracacaonum($data->getCheckNo());
+		//Mage::getSingleton('core/session')->setCuracacaonum($data->getCheckNo());
 		$session = Mage::getSingleton('customer/session', array('name'=>'frontend')); 
 		$customer_data = Mage::getModel('customer/customer')->load($session->id);	
 		if($customer_data->lockattempt){
@@ -75,7 +75,7 @@ class Excellence_Pay_Model_Pay extends Mage_Payment_Model_Method_Abstract
 		}
 		
 		$no = $data->getCheckNo();
-		if($no=='5864577' || $no == '51507446'){
+		if($no=='5864577' || $no == '51507446' || $no=='8864577'){
 			$ccv = '';
 		}
 		if(is_numeric($no)){
@@ -87,6 +87,8 @@ class Excellence_Pay_Model_Pay extends Mage_Payment_Model_Method_Abstract
 			Mage::throwException('Please input valid number for the account');
 			
 		}
+		
+		Mage::getSingleton('core/session')->setCuracacaonum($no);
 		if($data->getCc_dob_year()){
 			$dob = $data->getCc_dob_year().'-'.$data->getCc_dob_month().'-'.$data->getCc_dob_day();
 			Mage::getSingleton('core/session')->setDoby($data->getCc_dob_year());
@@ -107,32 +109,67 @@ class Excellence_Pay_Model_Pay extends Mage_Payment_Model_Method_Abstract
 				Mage::getSingleton('core/session')->setAuthenticationerror("acc_error");
 				Mage::throwException('Accpunt not active only raference number'); 			
 			}
-			$d = $this->validate_customer_calculate_dp($no, $dob, $ssn, $maiden, $ccv);
-			if($d!=0){
-				Mage::getSingleton('core/session')->setCuracacaodp($d);
-				//Mage::throwException('Initial Down Payment Require $'.$d); 			
-				// Authentication, Authorization and Downpayment calculation
-				$quote = Mage::getModel('checkout/cart')->getQuote();
-				$amount = $quote->getGrandTotal();	
-				$balance = file_get_contents('http://108.171.160.207/SOAP/getbalance.php?custnum='.$no);
-				if(!$amount){
-					Mage::throwException('Initial Down Payment Require $'.$d); 		
-				}elseif(Mage::getSingleton('core/session')->getAuthrecord()){
-						//Mage::throwException('Initial Down Payment Require $'.$d); 			
-				}elseif($balance>$amount){
-						Mage::getSingleton('core/session')->setAuthrecord("Downpayment");
-				}else{
-					Mage::throwException('Initial Down Payment Require $'.$d); 		
-				}
-			}		
-		}else{
-			Mage::throwException('Curacao Credit'); 		
+			if($this->isCustomerActive($no)){
+				 $d = $this->validate_customer_calculate_dp($no, $dob, $ssn, $maiden, $ccv);
+				if($d!=0){
+					
+					
+						Mage::getSingleton('core/session')->setCuracacaodp($d);
+						Mage::throwException('Initial Down Payment Require $'.$d); 			
+								
+					
+					// Authentication, Authorization and Downpayment calculation
+					/*$quote = Mage::getModel('checkout/cart')->getQuote();
+					$amount = $quote->getGrandTotal();	
+					$balance = file_get_contents('http://www.icuracao.com/SOAP/getbalance.php?custnum='.$no);
+					if(!$amount){
+						Mage::throwException('Initial Down Payment Require $'.$d); 		
+					}elseif(Mage::getSingleton('core/session')->getAuthrecord()){
+							//Mage::throwException('Initial Down Payment Require $'.$d); 			
+					}elseif($balance>$amount){
+							Mage::getSingleton('core/session')->setAuthrecord("Downpayment");
+					}else{
+						Mage::throwException('Initial Down Payment Require $'.$d); 		
+					}*/
+				}		
+			}else{
+				Mage::throwException('Curacao Credit'); 		
+			}
+		
 		}
-		
-		
 				
         return $this;
     }
+	
+	public function isCustomerActive($custId){
+		
+		$proxy = new SoapClient('https://exchangeweb.lacuracao.com:2007/ws1/eCommerce/Main.asmx?WSDL');
+		$ns = 'http://lacuracao.com/WebServices/eCommerce/';
+		$headerbody = array('UserName' => 'mike', 
+							'Password' => 'ecom12'); 
+		//Create Soap Header.        
+		$header = new SOAPHeader($ns, 'TAuthHeader', $headerbody);        
+		//set the Headers of Soap Client. 
+		$h = $proxy->__setSoapHeaders($header); 
+		$credit = $proxy->IsCustomerActive(array('CustomerID' => $custId),
+										 "http://www.lacuracao.com/LAC-eComm-WebServices", 
+										 "http://www.lacuracao.com/LAC-eComm-WebServices/WebCustomerApplication",
+										 false, null , 'rpc', 'literal');  
+		
+		$result =  $credit->IsCustomerActiveResult;
+		$response = explode(';',$result);
+		//print_r($response);
+		if(strtolower($response[0]) == 'no'){
+			Mage::getSingleton('core/session')->setAuthentication(0);
+			Mage::getSingleton('core/session')->setAuthenticationerror("acc_lock");
+			Mage::throwException($result); 
+			return false;			
+		}else{
+			Mage::getSingleton('core/session')->setCustomeractiveresponse($response[0]);
+			Mage::getSingleton('core/session')->setCustresponsedetail($result);
+		}
+		return true;
+	}
 	
 	public function validate_customer_calculate_dp($cust_num,$dob,$ssn,$maiden,$ccv){
 	  
@@ -199,7 +236,7 @@ class Excellence_Pay_Model_Pay extends Mage_Payment_Model_Method_Abstract
 		
 		// New change
 		
-			/*$url = 'http://108.171.160.207/SOAP/authenticate_user.php';
+			/*$url = 'http://www.icuracao.com/SOAP/authenticate_user.php';
 			$fields = array(	
 								'CustID' => $cust_num,
 								'DOB' => $dob,
@@ -271,7 +308,7 @@ class Excellence_Pay_Model_Pay extends Mage_Payment_Model_Method_Abstract
 		if(strtolower($result->StatusMessage) == 'ok'){
 			
 			if(!Mage::getSingleton('core/session')->getCustbalance()){
-				$balance = file_get_contents('http://108.171.160.207/SOAP/getbalance.php?custnum='.$cust_num);
+				$balance = file_get_contents('http://www.icuracao.com/SOAP/getbalance.php?custnum='.$cust_num);
 				Mage::getSingleton('core/session')->setCustbalance($balance);
 			}
 			
@@ -287,6 +324,9 @@ class Excellence_Pay_Model_Pay extends Mage_Payment_Model_Method_Abstract
 				mysql_query($que);
 			}
 			Mage::getSingleton('core/session')->setTrackingId($tracker_id);
+			
+			//Mage::getSingleton('core/session')->setCustomeractiveresponse('YES');
+			
 		}else{
 			$dp = $amount;
 			$response = explode('[',$result->StatusMessage);

@@ -14,7 +14,7 @@
 	
 	$link = mysql_connect($server,$user,$pass);
 	
-	mysql_select_db($db,$link) or die(mysql_error());
+	mysql_select_db($db,$link) ;
 	
 	//$sql = "UPDATE `credit_app` SET `is_lexis_nexus_complete` = '1'  WHERE `credit_id` = 188868";
 	//mysql_query($sql,$link) ;
@@ -948,9 +948,18 @@ var WRInitTime=(new Date()).getTime();
 				        
 								    	<div class="lexus_question">
 								        <?php  $choice = $re->Choice->aChoice; ?>
+                                        <table>
 										<?php for($i=0;$i<sizeof($choice);$i++): ?>
-											<input type="radio" class="nexus_rb <?php if($i==0):?>validate-one-required<?php endif; ?>" value="<?php echo $choice[$i]->ChoiceId?>" name="choiceid" /><?php echo $choice[$i]->Choice?><br/>
+											<tr>
+                                            	<td>
+                                            		<input type="radio" class="nexus_rb " value="<?php echo $choice[$i]->ChoiceId?>" name="choiceid" />
+                                                </td>   
+												<td>
+													<?php echo $choice[$i]->Choice?><br/>
+                                                </td>
+                                            </tr>
 										<?php endfor; ?>
+                                        </table>
 				        				</div>
 										<div class="clearfix"></div>
 									</div>

@@ -207,7 +207,7 @@
 		var login_url = '/onestepcheckout/ajax/login/'
 		//alert("I am Clicking login");
 		//alert(jQuery("#userpass").val());
-        jQuery.cookie('EmailCustomer', jQuery("#useremail_link").val(), { expires: 30, path: '/' });
+       // jQuery.cookie('EmailCustomer', jQuery("#useremail_link").val(), { expires: 30, path: '/' });
 		jQuery.ajax({ 
 				type: 'post',
 				data: {'onestepcheckout_username':jQuery("#useremail_link").val(),'onestepcheckout_password':jQuery("#userpass_link").val()},

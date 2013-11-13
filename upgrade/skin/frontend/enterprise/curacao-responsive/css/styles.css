@@ -304,7 +304,8 @@ body{ background: #fff; font: 14px/21px Arial, Tahoma, sans-serif; }
 	  float: left;
 	  font-size:11px;
 	}
-	header .switches .switch .switch-wrapper .language-english_mobile {
+	header .switches .switch .switch-wrapper .language-english_mobile,
+	header .switches .switch .switch-wrapper .language-espn_mobile {
 		display: none !important;
 	}
 	
@@ -837,7 +838,7 @@ body{ background: #fff; font: 14px/21px Arial, Tahoma, sans-serif; }
 		margin: 0 0 0 2px;
 		padding: 6px 8px;
 		text-align: right;
-		width: 172px;
+		width: 152px;
 	}	
 	footer .form-subscribe .input-text:focus{
 		text-align: left;
@@ -985,6 +986,7 @@ body{ background: #fff; font: 14px/21px Arial, Tahoma, sans-serif; }
 	margin:0 0 16px;
 }
 .columns.hero .curacao-credit-ad.four.columns {
+	display: block;
 }
 
 #featuredSlider {
@@ -1713,6 +1715,15 @@ a.button.related strong { color: #fff; text-shadow:0 -1px #666666;}
 		margin: -19px 4px 0 0;
 	}
 	
+	p.product-image {
+		display: block;
+		float: left;
+		max-width: 100%;
+	}
+	.product-img-box .product-image img {
+		max-width: 100%;
+	}
+	
 	.product-options-bottom .price-box { display: none; }
 	
 	.review-product-list .add-to-box p.availability,
@@ -1920,6 +1931,47 @@ a.button.related strong { color: #fff; text-shadow:0 -1px #666666;}
 		display: block;
 	}
 	
+	
+	.amconf-image {
+		float: left;
+		max-width: 36px;
+	}
+	
+	.amconf-image.amconf-image-selected {
+		border: 2px solid #D5172F;
+	}
+	
+	.amconf-image-container {
+		float: left;
+		margin: 0 4px 0 0;
+		max-width: 36px;
+		width: 100% !important;
+    }
+	.amconf-image-title {
+		clear: left;
+		float: left;
+		font-size: 10px;
+		font-weight: normal !important;
+		width: 100% !important;
+	}
+	.amconf-images-container {
+		position: relative;
+	}
+
+	.viewsaperator,
+	#viewsaperator {
+		float: left;
+		margin: 0 8px;
+	}
+ 	
+	.super-attribute-select.no-display {
+		display: none;
+	}
+
+	#selectqty {
+		display: none;
+	}
+	
 	div.pr-de{
 		margin-left:30px !important;
 	}
@@ -1974,9 +2026,9 @@ a.button.related strong { color: #fff; text-shadow:0 -1px #666666;}
 		margin-bottom: 20px;
 	}
 	.more-views li {
-		border: 1px solid #D0D0D0;
+		border: 1px solid #fff;
 		float: left;
-		margin: 5px 15px 5px 0;
+		margin: 5px 15px 5px 0 !important;
 		padding: 0;
 	}
 	.more-views li:hover {
@@ -2312,7 +2364,7 @@ a.button.related strong { color: #fff; text-shadow:0 -1px #666666;}
 	.review-product-list ul.add-to-links,
 	.catalog-product-view ul.add-to-links{
 		float: left;
-	    margin: 0 0 0 15px;
+	    margin: 0 0 0 1px;
 	}
 	
 	.review-product-list ul.add-to-links li,
@@ -5103,3 +5155,136 @@ span.separator {
 }
 
 /* End Of Event Sales */
+
+/*BF Count Down*/
+.black_friday_outer_04_nov
+{
+	width:100%;
+}
+.black_friday_inner_04_nov
+{
+	width:990px;
+	height:663px;
+	margin:auto;
+	background:url(../images/Black-Friday-Landing.png) no-repeat;
+}
+.black_friday_inner_04_nov_esp
+{
+	width:990px;
+	height:663px;
+	margin:auto;
+	background:url(../images/Black-Friday-Landing-ESP.png) no-repeat;
+}
+.formcontainer_04_nov
+{
+	width:500px !important;
+	position:relative;
+	padding-top:300px;
+	padding-left:20px;
+	color:#FFF;
+	font-size:25px;
+	margin-left:30px;
+}
+.formcontainer_04_nov input[type="text"]
+{
+	width:250px;
+	border:none;
+	padding:4px;
+	margin-left:2px;
+}
+.submitdata_04_nov
+{
+	background:#ff8c4f;
+	border:none;
+	color:#FFFFFF;
+	padding:4px;
+	font-weight:bold;
+	border-radius:5px 5px 5px 5px;
+	-moz-border-radius:5px 5px 5px 5px;
+	-webkit-border-radius:5px 5px 5px 5px;
+	}
+	.counter_04_nov
+	{
+		width:500px;
+		margin-top:70px;
+		height:128px;
+		background:url(../images/counter.jpg) no-repeat;
+		margin-left:35px;
+	}
+	#defaultCountdown
+	{
+		background:none;
+		border:none;
+		width:400px;
+		padding-top:45px !important;
+		color:#FFFFFF;
+		font-size:30px;
+		margin-left:8px;
+	}
+.btn_cart_04_nov {
+    padding: 5px 20px !important;
+    text-shadow: 0 -1px #666666;
+    text-transform: capitalize;
+	float:right !important;
+	margin-right:8px !important;
+}
+
+.hasCountdown {
+	border: 1px solid #ccc;
+	background-color: #eee;
+}
+.countdown_rtl {
+	direction: rtl;
+}
+.countdown_holding span {
+	color: #888;
+}
+.countdown_row {
+	clear: both;
+	width: 100%;
+	padding: 0px 2px;
+	text-align: center;
+}
+.countdown_show1 .countdown_section {
+	width: 98%;
+}
+.countdown_show2 .countdown_section {
+	width: 48%;
+}
+.countdown_show3 .countdown_section {
+	width: 32.5%;
+}
+.countdown_show4 .countdown_section {
+	width: 24.5%;
+}
+.countdown_show5 .countdown_section {
+	width: 19.5%;
+}
+.countdown_show6 .countdown_section {
+	width: 16.25%;
+}
+.countdown_show7 .countdown_section {
+	width: 14%;
+}
+.countdown_section {
+	display: block;
+	float: left;
+	font-size: 75%;
+	text-align: center;
+}
+.countdown_amount {
+	font-size: 200%;
+}
+.countdown_descr {
+	display: block;
+	width: 100%;
+}
+.formcontainer_04_nov table th, td{
+	vertical-align:top ;
+	padding-bottom:0 !important;
+	padding-top:5px !important;
+}
+.formcontainer_04_nov p{
+	color:#FFF;
+}
+/*End BF count down*/

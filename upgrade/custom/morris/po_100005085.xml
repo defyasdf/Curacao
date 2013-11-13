@@ -1,0 +1,2 @@
+<?xml version="1.0"?>
+<Order><pickmsg>Send morris the information to check the order</pickmsg><po>100005085</po><via>213</via><count>4</count><ShipTo><Address><Line1>Adrian Arredondo</Line1><Street1>8851 N Oracle Rd</Street1><Street2/><City>Oro Valley</City><State>Arizona</State><Zip>85704</Zip><Country>US</Country><Phone>3239210086</Phone></Address></ShipTo><LineItems><Line><part>IC1061LG</part><qty>1</qty></Line><Line><part>HA132BN10</part><qty>1</qty></Line><Line><part>ELA3444</part><qty>1</qty></Line><Line><part>DG14444</part><qty>1</qty></Line></LineItems></Order>

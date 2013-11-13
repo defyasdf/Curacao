@@ -1,0 +1,1053 @@
+<?php
+/**
+ * Template for Mage_Page_Block_Html
+ 
+ Array ( [pressn] => 23458959 [preage] => 44 [prefname] => JACK [prelname] => AAAAAAAA [prestreet] => 26979 GRAJUELO DR [precity] => VALENCIA [prestate] => CA [prezip] => 91354 [prepromo] => XXAAAA000000 [edit_add] => 1 [add_etempt] => 0 [fname] => JACK [lname] => AAAAAAAA [street] => 26979 GRAJUELO DR [city] => VALENCIA [state] => CA [zip] => 91354 [ssn] => 123 [dobM] => 1 [dobD] => 1 [dobY] => 1970 [pcode1] => 357 [pcode2] => 811 [pcode3] => 5878 [code1] => [code2] => [code3] => [pphone] => 3578115878 [sphone] => [predobm] => 1 [predobd] => 1 [predoby] => 1970 [state_id] => A456898 [mIncome] => 1500 ) 
+ 
+ */
+$proxy = new SoapClient('https://exchangeweb.lacuracao.com:2007/ws1/eCommerce/Main.asmx?WSDL');
+$ns = 'http://lacuracao.com/WebServices/eCommerce/';
+
+//set the headers values
+
+$headerbody = array('UserName' => 'mike', 
+                    'Password' => 'ecom12'); 
+
+//Create Soap Header.        
+$header = new SOAPHeader($ns, 'TAuthHeader', $headerbody);        
+        
+//set the Headers of Soap Client. 
+$h = $proxy->__setSoapHeaders($header); 
+$lock = 0; 
+if(isset($_POST['prefname'])){
+	
+	if(Mage::getSingleton('core/session')->getPreattempt()){
+		 Mage::getSingleton('core/session')->unsPreattempt();	
+	}
+	
+	if($_POST['edit_add'] == '1'){
+		$fname = $_POST['fname'];
+		$lname = $_POST['lname'];
+		$street = $_POST['street'];
+		$city  = $_POST['city'];
+		$zip = $_POST['zip'];
+		$state = $_POST['state'];
+		
+	}else{
+		$fname = $_POST['prefname'];
+		$lname = $_POST['prelname'];
+		$street = $_POST['prestreet'];
+		$city  = $_POST['precity'];
+		$zip = $_POST['prezip'];
+		$state = $_POST['prestate'];	
+	}
+	
+	$phone = $_POST['pphone'];
+	$sphone = $_POST['sphone'];
+	$ssn = substr($_POST['ssn'],0,1).$_POST['pressn'];
+	//Create an account
+	$email = $_POST['uemail'];
+	$psswd = $_POST['password'];
+
+	
+	$customer = Mage::getModel('customer/customer');
+	$customer->setWebsiteId(Mage::app()->getWebsite()->getId());
+	$customer->loadByEmail($email);
+	
+	// -----------------------------------------------------------------------------------------------
+	// Check if the email exist on the system.
+	// -----------------------------------------------------------------------------------------------
+	if(!$customer->getId()) {
+		$customer->setEmail($email); 			//set user data
+		$customer->setFirstname($fname);
+		$customer->setLastname($lname);
+		$customer->setPassword($psswd);
+	
+		try {
+		  $customer->save();
+		  $customer->setConfirmation(null);
+		  $customer->save(); 
+		  $customer->sendNewAccountEmail();
+		  $session = $this->_getSession();	
+		 // $session->login($email, $psswd);
+		
+			 
+		 
+		} catch(Exception $ex){ }			
+	}
+	
+	// Set Address
+	
+		$customer->loadByEmail($email);
+		
+		$c_id = $customer->getId();
+		
+		if($state == 'AZ'){
+			$reg_id = 4;
+		}elseif($state == 'CA'){
+			$reg_id = 12;
+		}
+		
+		$_custom_address = array ('firstname'=>$fname,'lastname' => $lname,'street' => array ('0' => $street,'1' => '',),'city' => $city,'region_id' => $reg_id,'postcode' => $zip,'country_id' => 'US','telephone' => $phone);
+			
+			$customAddress = Mage::getModel('customer/address');
+			//$customAddress = new Mage_Customer_Model_Address();
+			$customAddress->setData($_custom_address)->setCustomerId($c_id)->setIsDefaultBilling('1')->setIsDefaultShipping('1')->setSaveInAddressBook('1');	
+		try {
+           $customAddress->save();
+		  
+        }
+        catch (Mage_Core_Exception $e) {
+//           $response['message'] = $e->getMessage();
+		  
+			
+       }
+	//End Setting Address
+	//End Creating account
+	$server = '192.168.100.121';
+	$user = 'curacaodata';
+	$pass = 'curacaodata';
+	$db = 'icuracaoproduct';
+	
+	
+	$link = mysql_connect($server,$user,$pass);
+	mysql_select_db($db,$link);
+	
+	//
+	/*$_storeId = Mage::app()->getStore()->getId();
+	if($_storeId == 1){
+		$lang = 'E';	
+	}else{
+		$lang = "S";
+	}*/
+	//Credit application
+	
+	$credit = $proxy->WebCustomerApplication(array(
+								'LastName' => $lname,
+								'FirstName' => $fname,
+								'MiddleInitial' => '',
+								'HomePhone' => $phone,
+								'eMail' => $email,                                        
+								'Street' => trim($street), 
+								'City' => $city,
+								'State' => $state,
+								'Zip' => $zip,
+								'Phone2' => $sphone,
+								'SSN' => $ssn,
+								'ID' => $_POST['state_id'],
+								'IDType' => 'AU1',
+								'MotherMaidenName' => '',
+								'WorkName' => '',
+								'WorkPhone' => '',
+								'DOB' => date('Y-m-d\Th:i:s', mktime(0,0,0,$_POST['dobM'], $_POST['dobD'], $_POST['dobY'])),
+								'IDExpiration' => date('Y-m-d\Th:i:s',mktime(0,0,0,'01', '01', '2015')), 
+								'LenghtInCurrAddress' => '',
+								'LenghtInCurrWork' => '',
+								'AnnualIncome' => $_POST['mIncome'],
+								'IDState' => '',
+								'IPAddress' => $_SERVER['REMOTE_ADDR'],
+								'Language' => 'E', 
+								'AGPP' => 'N',
+								'Submit' => 'Y',
+								'PromoCode' => $_POST['prepromo']
+								),
+							 "http://www.lacuracao.com/LAC-eComm-WebServices", 
+							 "http://www.lacuracao.com/LAC-eComm-WebServices/WebCustomerApplication",
+							 false, null , 'rpc', 'literal');  
+	
+	$re = $credit->WebCustomerApplicationResult;	
+	$final = explode("|",$re);
+	
+	if($final[0] == 'APPROVED')	{
+
+		$customer->loadByEmail($email);
+		$customer->isauthenticate = '1';
+		$customer->curacaocustid = $final[1];
+		$customer->save();	
+		$q = "update preapproved set step2 = '1', approve = '1', pending = '0', decline = '0', approvedcreditlimit = '".$final[2]."', accnumber = '".$final[1]."' where paID = ".$_POST['appId'];		
+	}elseif($final[0] == 'PENDING'){
+		$sql = "select * from preapproved where paID = ".$_POST['appId'];
+		$r = mysql_query($sql);
+		$ro = mysql_fetch_array($r);
+		if($ro['approve'] == '1'){
+			$q = "update preapproved set step2 = '1', approve = '1',pending = '0'  where paID = ".$_POST['appId'];
+		}else{
+			$q = "update preapproved set step2 = '1', pending = '1', accnumber = '".$final[1]."'  where paID = ".$_POST['appId'];
+		}
+	}else{
+		$sql = "select * from preapproved where paID = ".$_POST['appId'];
+		$r = mysql_query($sql);
+		$ro = mysql_fetch_array($r);
+		if($ro['approve'] == '1'){
+			$q = "update preapproved set step2 = '1', approve = '1',decline = '0'  where paID = ".$_POST['appId'];
+		}else{
+			$q = "update preapproved set step2 = '1', decline = '1' where paID = ".$_POST['appId'];
+		}
+	}
+
+	mysql_query($q,$link);
+	mysql_close();
+
+	Mage::getSingleton('core/session')->setPreapproveid($_POST['appId']);	
+	
+	$expire=time()+60*60*24*30;
+	setcookie("preapprove_promo_id", $_POST['appId'], $expire);
+	
+//	End Credit application
+	
+		
+}elseif(isset($_POST['pcode1'])){
+
+
+$promo = $_POST['pcode1'].$_POST['pcode2'].$_POST['pcode3'];	
+
+// Check for the promo 
+$invalidpromo = 0;
+if(strlen(trim($promo))>12 || trim($promo) != ''){
+	$que = 'select * from lockedpromo where promoCode = "'.$promo.'"';
+	$res = mysql_query($que);
+	
+	if(mysql_num_rows > 0){
+		$lock = 1;
+	}else{
+	//Check Promo code
+		
+		
+		$data = $proxy->CheckPreAppPromo(array('PromoID'=>$promo));
+		
+		$result = $data->CheckPreAppPromoResult;
+	
+		//End Promo Code
+		
+		$exp_date = $result->ExpireData;
+		$todays_date = date("Y-m-d");
+		
+		$today = strtotime($todays_date);
+		$expiration_date = strtotime($exp_date);
+		if($result->ErrorID != '2'){
+		
+			if ($expiration_date > $today) {
+				 $valid = "yes";
+			}else {
+				 $valid = "no";
+			}
+		}else{
+			if(Mage::getSingleton('core/session')->getPreattempt()){
+				if(Mage::getSingleton('core/session')->getPreattempt()>2){
+					$qu = 'insert into lockedpromo (promoCode) values ("'.$result->PromoCode.'")';
+					mysql_query($qu);
+					$lock = 1;
+					Mage::getSingleton('core/session')->unsPreattempt();		
+				}else{
+					$attempt = (int)Mage::getSingleton('core/session')->getPreattempt()+1;
+					Mage::getSingleton('core/session')->setPreattempt($attempt);
+				}
+			}else{
+				Mage::getSingleton('core/session')->setPreattempt('1');	
+			}
+		}
+		
+		$server = '192.168.100.121';
+		$user = 'curacaodata';
+		$pass = 'curacaodata';
+		$db = 'icuracaoproduct';
+		
+		
+		$link = mysql_connect($server,$user,$pass);
+		mysql_select_db($db,$link);
+		 $string = explode("/",$_SERVER["HTTP_REFERER"]);
+		 
+		$isql = "INSERT INTO `preapproved` (`promo`,  `addressverification`, `step1`, `step2`, `approve`, `pending`, `decline`, `shop`, `amount`, `checkout`, `order_complete`, `order_amount`, `ip_address`, `referal_url`, `created_date`, `browser`) VALUES ('".$promo."', '1', '0', '0', '0', '0', '0', '0', '', '0', '0', '','".$_SERVER['REMOTE_ADDR']."','".$string[3]."','".date('Y-m-d')."', '".$_SERVER['HTTP_USER_AGENT']."')";
+			
+		mysql_query($isql);
+			
+		$in_id = mysql_insert_id();
+		
+	}
+}else{
+	$invalidpromo = 1;
+}
+}
+$_storeId = Mage::app()->getStore()->getId();
+	if($_storeId == 1){
+		$personalinfo = "PLEASE VERIFY YOUR PERSONAL INFORMATION ";
+		$txt_firstName = 'First Name';
+		$txt_lastName= 'Last Name';
+		$txt_email= 'Email';
+		$txt_address= 'Address';
+		$txt_city= 'City';
+		$txt_state = 'State';
+		$txt_postcode= 'Zip';
+		$txt_homePhone= 'Primary Phone';
+		$txt_cellPhone= 'Secondary Phone';
+		$txt_caid	= ' Driver&acute;s Licence / State ID';
+		$txt_dob= 'Date Of Birth';
+		$txt_ssn= 'First 3 Digit of SSN';
+		$txt_password = 'Password';
+		$txt_confirmPassword = 'Confirm Password';
+		$txt_monthly = 'Monthly Income';
+		$txt_submit = "Submit";
+		$txt_finish = "Finish";	
+		$txt_select = "-Select-";
+		$txt_offer = 'The offer has been expired please <a href="credit-application">continue application</a>.';
+		$txt_sorry = 'Sorry the promo code doesnt match our record please <a href="credit-offer">Retry</a>.';
+		$login_credantial = "CREATE A LOGIN AND PASSWORD";
+		$locked = "You have been locked due to three or more attempt";
+		$loadingmessage = 'This process may take up to one minute, please do not close your browser.';
+		
+		define('GREET',"Congratulations! You&acute;re Pre-Approved");
+		define('CONGRATES','Congratulations!');
+		define('APPROVE_1','You have been <span id="spendinglimit">APPROVED</span> for a Curacao Credit account with a spending limit of <span id="spendinglimit"><strong>$</strong>');
+		define('APPROVE_2','</span>. You can start shopping now using your account number.');
+		define('APPROVE_3','A CCV code will be emailed to you shortly which may be required during checkout.');
+		
+		define('TMPNO','Thank you! Your temporary account number is: ');
+		define('PENDING','Your account is under review. However you can continue shopping using your credit card. Once we complete the processing of your application we will notify you with our decision. ');
+		define("SORRY","Sorry For inconvenience");
+		define('ACCNO','Account Number: ');
+		define('THANKS','Thank you for your application');
+		define('DECLINE','We are unable to open your account at this time. You may use another form of payment to complete your order. We will send you a letter within 10 days with additional information regarding your application.');
+		define('CUSTSERVICE','If you have any questions please call our toll free number at 877-287-2226.<br /><strong>Monday - Sunday, 10AM - 7PM PST.</strong> ');
+		
+		define('SHOPPING','Start Shopping');
+		
+	}else{
+		
+		$txt_firstName = 'Nombre';
+		$txt_lastName= 'Apellido';
+		$txt_email= 'Correo Electrónico';
+		$txt_address= 'Dirección';
+		$txt_city= 'Ciudad';
+		$txt_state = 'Estado';
+		$txt_postcode= 'Código Postal';
+		$txt_homePhone= 'Teléfono Primario';
+		$txt_cellPhone= 'Teléfono Secundario';
+		$txt_caid	= ' Licencia de conducir / Número de Id';
+		$txt_dob= 'Fecha de Nacimiento';
+		$txt_ssn= 'Primeros 3 dígitos de su Seguro Social';
+		$txt_password = 'Contraseña';
+		$txt_confirmPassword = 'Confirmar Contraseña';
+		$txt_monthly = 'Ingreso Mensual';
+		$txt_submit = "Enviar";
+		$txt_finish = "Finalizar";	
+		$txt_select = "-Seleccionar-";
+		$txt_offer = 'La oferta ha expirado por favor<a href="credit-application">continue con la aplicación</a>.';
+		$txt_sorry = 'El c&oacute;digo de promoci&oacute;n no coincide con nuestros registros, por favor <a href="credit-offer">intente de nuevo</a>.';
+		$login_credantial = "CREAR ACCESO Y CONTRASEÑA";
+		$personalinfo = "POR FAVOR VERIFIQUE SU INFORMACION PERSONAL";
+		$locked = "Su cuenta ha sido bloqueada debido a tres intentos fallidos";
+		$loadingmessage = 'Este proceso podría tomar hasta un minuto, por favor no cierre su navegador.';
+		define('GREET',"Felicitaciones! usted ha sido pre-aprobado");
+		define('CONGRATES','Felicitaciones!');
+		define('APPROVE_1','Usted ha sido <span id="spendinglimit">APPROBADO</span> para una cuenta de crédito de Curacao con un límite de <span id="spendinglimit">$');
+		define('APPROVE_2','</span>. Usted puede empezar a comprar en línea desde ya utilizando su número de cuenta:');
+		define('APPROVE_3','Un Código de Seguridad (CCV) se le enviará pronto, el cual será requerido al momento de pagar.');
+		
+		define('TMPNO','Gracias! Su número de cuenta temporal es: ');
+		define('PENDING','Para completar su aplicación de crédito y empezar a comprar, por favor comuníquese a nuestro número gratuito: 877-287-2226.<br /><strong>Lunes - Domingo, 10AM - 7PM (Pacífico).</strong> ');
+		define("SORRY","Disculpe el inconveniente");
+		define('ACCNO','Número de Cuenta: ');
+		define('THANKS','Gracias por su aplicación');
+		define('DECLINE','No podemos procesar su cuenta en este momento. Sin embargo, usted puede utilizar otras formas de pago para completar su orden. Usted recibirá una carta dentro de aproximadamente 10 días con información adicional en relación a su aplicación.');
+		define('CUSTSERVICE','Si tiene alguna pregunta por favor comuníquese al: 1-877-287-2226.<br /><strong>Lunes - Domingo, 10AM - 7PM (Pacífico).</strong> ');
+		define('SHOPPING', 'Compre ahora mismo');
+	}
+?>
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
+
+<head>
+	<?php echo $this->getChildHtml('head') ?>
+	<?php
+		if(!isset($_POST['pcode1'])){ 
+	?>
+		<script type="text/javascript">
+    	 window.location="https://www.icuracao.com/credit-offer";
+    </script>	
+	<?php 
+		}
+	?>
+    <style type="text/css">
+    	p{
+			text-transform:none;
+			font-size:14px;
+		}
+		h1{
+			text-transform:none;
+		}
+    </style>
+    
+    <script type="text/javscript">
+    //<![CDATA[
+        Translator.add('Invalid number.', 'this is something');
+    //]]>
+</script>
+    
+</head>
+
+<body<?php echo $this->getBodyClass()?' class="'.$this->getBodyClass().'"':'' ?>>
+
+<!-- Adobe Marketing Cloud Tag Loader Code
+Copyright 1996-2013 Adobe, Inc. All Rights Reserved
+More info available at http://www.adobe.com/solutions/digital-marketing.html -->
+<script type="text/javascript">//<![CDATA[
+var amc=amc||{};if(!amc.on){amc.on=amc.call=function(){}};
+document.write("<scr"+"ipt type=\"text/javascript\" src=\"//www.adobetag.com/d1/v2/ZDEtY3VyYWNhby0xNDMxOS0zNTgw/amc.js\"></sc"+"ript>");
+//]]></script>
+<!-- End Adobe Marketing Cloud Tag Loader Code -->
+
+	<?php //echo $this->getChildHtml('after_body_start') ?>
+	<!-- ClickTale Top part 
+<script type="text/javascript">
+var WRInitTime=(new Date()).getTime();
+</script>
+<!-- ClickTale end of Top part -->
+
+	<header>
+		
+		<div class="container">
+			<?php echo $this->getChildHtml('header') ?>
+		</div><!--container-->
+		
+	</header>
+	
+	<div class="container">
+	
+		<div class="twenty columns breadcrumbs alpha">
+			<?php echo $this->getChildHtml('breadcrumbs') ?>
+		</div><!--breadcrumbs-->
+
+		<div class="twenty columns breadcrumbs alpha">
+			<div class="wrapper">
+               <?php 
+			   	if(isset($_POST['prefname'])){
+				?>
+				<div id="authorize"><img class="entercode" title="Enter Your Authorization Code" src="/media/wysiwyg/authorize_card.jpg" alt="Enter Your Authorization Code" />
+                <div class="preapproved">
+                	<?php 
+						if($final['0']=='PENDING'){
+							//echo 'Pending';
+						?>
+                        	<div align="right"><?php echo TMPNO?> <?php echo $final[1]; ?></div>
+                            <h1><?php echo THANKS?></h1>
+                            <p>	<?php echo PENDING?></p>
+                        	
+						<?php
+						}elseif($final[0] == 'APPROVED'){
+							//echo 'Approved';
+						?>
+                        <h1><?php echo CONGRATES?></h1>
+                        <p><?php echo ACCNO?><strong><?php echo $final[1]; ?></strong></p>
+                        <p>&nbsp;</p>
+                        <p><?php echo APPROVE_1?><strong><?php echo $final[2]?></strong><?php echo APPROVE_2?></p>
+                        <p>&nbsp;</p>
+                        <p><?php echo APPROVE_3?></p>
+                        <p>&nbsp;</p>
+                        <button type="button" title="<?php echo SHOPPING ?>" id="send2" onclick="return loginandshop('<?php echo $email?>','<?php echo $psswd?>')"><span><span><?php echo SHOPPING ?></span></span></button>
+                        <div id="login-loading" style="display:none"><img src="/images/gray_fade_small.gif"></div>
+						<?php
+						}else{
+							//echo 'Declined';
+						?>
+                        	<h1><?php echo THANKS?></h1>
+                            <p><?php echo DECLINE?></p>
+                            <p><?php echo CUSTSERVICE?></p>
+						<?php
+						}
+					?>
+                </div>
+                  <div class="clear">&nbsp;</div>
+                </div>
+                <?php }elseif($lock == '1'){
+				?>
+				 <div id="authorize"><img class="entercode" title="Enter Your Authorization Code" src="/media/wysiwyg/authorize_card.jpg" alt="Enter Your Authorization Code" />
+                <div class="preapproved">
+                	<h1><?php echo SORRY?></h1>
+                    <p><?php echo $locked?></p>
+                    <p><?php echo CUSTSERVICE?></p>
+                </div>
+                  <div class="clear">&nbsp;</div>
+                </div>
+                
+                   
+				 <?php
+				   }elseif($result->ErrorID == '2'){
+				?>
+				 <div id="authorize"><img class="entercode" title="Enter Your Authorization Code" src="/media/wysiwyg/authorize_card.jpg" alt="Enter Your Authorization Code" />
+                <div class="preapproved">
+                	<?php echo $txt_sorry?>
+                </div>
+                  <div class="clear">&nbsp;</div>
+                </div>
+                
+                   
+				 <?php
+				   }elseif($valid == 'no'){
+				 
+				 ?>
+				 <div id="authorize"><img class="entercode" title="Enter Your Authorization Code" src="/media/wysiwyg/authorize_card.jpg" alt="Enter Your Authorization Code" />
+                <div class="preapproved">
+                	<?php echo $txt_offer?>
+                </div>
+                  <div class="clear">&nbsp;</div>
+                </div>
+                
+                   
+				 <?php
+				   }elseif($invalidpromo == 1){
+				?>
+				<div id="authorize"><img class="entercode" title="Enter Your Authorization Code" src="/media/wysiwyg/authorize_card.jpg" alt="Enter Your Authorization Code" />
+                <div class="preapproved">
+                	<?php echo $txt_sorry?>
+                </div>
+                  <div class="clear">&nbsp;</div>
+                </div>
+                
+
+				<?php	   
+				}else{?>
+               <!--Pre-approved Application-->               
+                <h1 style="text-transform:none;"><?php echo GREET;?></h1>
+                <div id="authorize"><img class="entercode" title="Enter Your Authorization Code" src="/media/wysiwyg/authorize_card.jpg" alt="Enter Your Authorization Code" />
+                <div class="preapproved"><br />
+                <h2 class="legend"><?php echo $personalinfo;?><span id="preapprove-edit" onClick="return addInput()">Edit</span></h2>
+               <form action="<?php echo $this->helper('core/url')->getCurrentUrl()?>" method="post" id="pre-approved">
+               <?php 
+				   $string = explode("/",$_SERVER["HTTP_REFERER"]);
+		      ?>
+                <input type="hidden" value="<?php echo $result->SSN ?>" id="pre-ssn" name="pressn">
+                <input type="hidden" value="<?php echo $result->Age ?>" id="pre-age" name="preage">
+                <input type="hidden" value="<?php echo $result->FirstName ?>" name="prefname">
+                <input type="hidden" value="<?php echo $result->LastName ?>" name="prelname">
+                <input type="hidden" value="<?php echo $result->Street ?>" name="prestreet">
+                <input type="hidden" value="<?php echo $result->City ?>"  name="precity">
+                <input type="hidden" value="<?php echo $result->State ?>"  name="prestate" id="pre_state">
+                <input type="hidden" value="<?php echo $result->Zip ?>"  name="prezip">
+                <input type="hidden" value="<?php echo $promo?>" id="prepromo" name="prepromo">
+                <input type="hidden" value="0" id="edit_add" name="edit_add">
+                <input type="hidden" value="0" id="add_etempt" name="add_etempt">
+                <input type="hidden" value="<?php echo $in_id;?>" id="appId" name="appId">
+                <input type="hidden" value="0" id="attempt" name="attempt">
+                <input type="hidden" value="<?php echo $string[3]?>" name="referalurl">
+               <div id="preapprove_first_step">
+               	<div class="credit-app-line columns alpha">	
+                    <div class="subline columns alpha label">
+                    	<label><?php echo $txt_firstName?>:	</label>
+                    </div>
+                    <div class="subline columns alpha" id="pre-fname">
+                        <?php echo $result->FirstName;?>
+                    </div>
+                </div>
+                
+                <div class="credit-app-line columns alpha">	
+                    <div class="subline columns alpha label">
+                    	<label><?php echo $txt_lastName?>:	</label>
+                    </div>
+                    <div class="subline columns alpha" id="pre-lname">
+                        <?php echo $result->LastName;?>
+                    </div>
+                </div>
+                
+                <div class="credit-app-line columns alpha">	
+                    <div class="subline columns alpha label">
+                    	<label><?php echo $txt_address?> :	</label>
+                    </div>
+                    <div class="subline columns alpha" id="pre-street">
+                        <?php echo $result->Street;?>
+                    </div>
+                </div>
+               <!-- <div class="credit-app-line columns alpha">	
+                    <div class="subline columns alpha">
+                    	<label>Apt/Ste:	</label>
+                    </div>
+                    <div class="subline columns alpha">
+                        516
+                    </div>
+                </div>-->
+                <div class="credit-app-line columns alpha">	
+                    <div class="subline columns alpha label">
+                    	<label><?php echo $txt_city?>:	</label>
+                    </div>
+                    <div class="subline columns alpha" id="pre-city">
+                        <?php echo $result->City;?>
+
+                    </div>
+                </div>
+                <div class="credit-app-line columns alpha">	
+                    <div class="subline columns alpha label">
+                    	<label><?php echo $txt_state?>:	</label>
+                    </div>
+                    <div class="subline columns alpha" id="pre-state">
+                       <?php echo $result->State;?> 
+                    </div>
+                </div>
+                <div class="credit-app-line columns alpha">	
+                    <div class="subline columns alpha label">
+                    	<label><?php echo $txt_postcode?>:</label>	
+                    </div>
+                    <div class="subline columns alpha" id="pre-zip">
+                        <?php echo $result->Zip;?>
+                    </div>
+                </div>
+               
+               
+                <div class="clear">&nbsp;</div>
+                <hr>
+                
+                <script type="text/javascript">// <![CDATA[
+                                    function nextbox(fldobj, nbox) { 
+                                    if (fldobj.value.length==fldobj.maxLength) {
+                                    fldobj.form.elements[nbox].focus();
+                                    }
+                                    }
+							
+							function addInput(){
+								
+								jQuery('#preapprove-edit').hide();
+								
+								var  fname = jQuery.trim(jQuery("#pre-fname").html())
+								var lname = jQuery.trim(jQuery("#pre-lname").html())
+								var street = jQuery.trim(jQuery("#pre-street").html())
+								var city = jQuery.trim(jQuery("#pre-city").html())
+								var state = jQuery.trim(jQuery("#pre-state").html())
+								var zip = jQuery.trim(jQuery("#pre-zip").html())
+								
+								var selectstate = '<select id="prstate" name="state" class="required validate-select"><option value="">--Select State--</option>';
+								
+								if(jQuery.trim(state) == 'AZ'){
+									
+									selectstate += '<option value="AZ" selected>Arizona</option>';
+								}else{
+									selectstate += '<option value="AZ">Arizona</option>';
+								}
+								
+								if(jQuery.trim(state)=='CA'){
+									selectstate += '<option value="CA" selected>California</option>';
+								}else{
+									selectstate += '<option value="CA">California</option>';
+								}
+								jQuery("#edit_add").val('1');
+								jQuery("#pre-fname").html('<input type="text" name="fname" class="required-entry required  input-text prfname" value="'+fname+'">')
+								jQuery("#pre-lname").html('<input type="text" name="lname" class="required-entry required  input-text prlname" value="'+lname+'">')
+								jQuery("#pre-street").html('<input type="text" name="street" id="street1" class="required-entry required  input-text prstreet" value="'+street+'">')
+								jQuery("#pre-city").html('<input type="text" name="city" class="required-entry required  input-text prcity" value="'+city+'">')
+								jQuery("#pre-state").html(selectstate)
+								jQuery("#pre-zip").html('<input type="text" name="zip" id="prezip" class="required-entry required  input-text przip" value="'+zip+'">')
+								
+							}
+							
+									
+                // ]]></script>
+
+               
+               	 <div class="credit-app-line columns alpha">	
+                    <div class="subline columns alpha label">
+                    	<label><?php echo $txt_ssn?>:<em> *</em></label>	
+                    </div>
+                    <div class="subline columns alpha">
+                        <input type="text" maxlength="3" name="ssn" id="3ssn" class="required-entry required  input-text three validate-number"><br>
+
+                    </div>
+                </div>
+                 <div class="credit-app-line columns alpha">	
+                    <div class="subline columns alpha label">
+                    	<label><?php echo $txt_dob?>:<em> *</em></label>	
+                    </div>
+                    <div class="subline columns alpha">
+                        <div style="width:61px; float:left; margin-right:8px; ">
+                        <select name="dobM" required="required" class="required validate-select" onChange="return setupday()" id="dobM">
+                            <option value="">MM</option>
+                            <?php  for($i=1;$i<13;$i++){ ?>
+                            <option value="<?php echo $i?>"><?php if($i<10){echo '0'.$i;}else{echo $i;}?></option>
+                            <?php } ?>
+                        </select>
+                        </div>
+                        <div style="width:61px; float:left; margin-right:8px; ">
+                        <select name="dobD" required="required" class="required validate-select" id="dobD">
+                            <option value="">DD</option>
+                            <?php for($i=1;$i<32;$i++){ ?>
+                            <option value="<?php echo $i?>"><?php if($i<10){echo '0'.$i;}else{echo $i;}?></option>
+                            <?php } ?>
+                        </select>
+        				</div>
+                        <div style="width:61px; float:left; ">
+                        <select name="dobY" id="dobY" required="required" class="required validate-select">
+                            <option value="">YYYY</option>
+                            <?php for($i=(date("Y")-18);$i>1900;$i--){ ?>
+                            <option value="<?php echo $i?>"><?php echo $i?></option>
+                            <?php } ?>
+                        </select>
+                        </div>
+                    </div>
+                </div>
+                 <div class="credit-app-line columns alpha">	
+                    <div class="subline columns alpha label">
+                    	<label><?php echo $txt_homePhone?>:<em> *</em></label>	
+                    </div>
+                    <div class="subline columns alpha">
+                        <ul>
+                            <li><div style="width:55px"><input class="required three required-entry validate-number" onkeyup="nextbox(this,'pcode2');" type="text" name="pcode1" id="pcode1" maxlength="3" /></div></li>
+                            <!--<li>-</li>-->
+                            <li><div style="width:55px"><input class="required three required-entry validate-number" onkeyup="nextbox(this,'pcode3');" type="text" name="pcode2" id="pcode2" maxlength="3" /></div></li>
+                           <!-- <li>-</li>-->
+                            <li><div style="width:60px"><input class="required four required-entry validate-number" type="text" name="pcode3" id="pcode3" maxlength="4" /></div></li>
+                        </ul>
+                    </div>
+                </div>
+                 <div class="credit-app-line columns alpha">	
+                    <div class="subline columns alpha label">
+                    	<label><?php echo $txt_cellPhone?>:</label>	
+                    </div>
+                    <div class="subline columns alpha">
+                        <ul>
+                            <li><div style="width:55px"><input class="three validate-number" onkeyup="nextbox(this,'code2');" type="text" id="scode1" name="code1" maxlength="3" />
+                            	
+                            </div></li>
+                           <!-- <li>-</li>-->
+                            <li><div style="width:55px"><input class="three validate-number" onkeyup="nextbox(this,'code3');" type="text" id="scode2" name="code2" maxlength="3" /></div></li>
+                            <!--<li>-</li>-->
+                            <li><div style="width:60px"><input class="four validate-number" type="text" name="code3" id="scode3" maxlength="4" /></div></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                 <button class="button right" title="Submit" id="submit_button_step_1" onclick="return formSubmit();" type="submit"><span><span id="submittofinish"><?php echo $txt_submit?></span></span></button>
+                 <div id="login-loading-step1" style="display:none"><img src="/images/gray_fade_small.gif"></div>
+               </div>	
+               
+               <div id="preapproved_step_2" style="display:none">
+               <input type="hidden" name="pphone" id="pphone">
+               <input type="hidden" name="sphone" id="sphone">
+               <input type="hidden" name="predobm" id="predobm">
+               <input type="hidden" name="predobd" id="predobd">
+               <input type="hidden" name="predoby" id="predoby">
+               
+               		 <div class="credit-app-line columns alpha">	
+                        <div class="subline columns alpha label">
+                            <label><?php echo $txt_caid?>:<em> *</em></label>	
+                        </div>
+                         <div class="subline columns alpha">
+                                <input type="text" name="state_id" id="state_id" class="required required-entry">
+                         </div>
+                    </div>
+                    
+                    <div class="credit-app-line columns alpha">	
+                        <div class="subline columns alpha label">
+                            <label><?php echo $txt_monthly?>:<em> *</em></label>	
+                        </div>
+                         <div class="subline columns alpha">
+                                <select name="mIncome" class="required validate-select">
+                                	<option>-- <?php echo $txt_select?> --</option>
+                                    <option value="1250">$1000 - $1500</option>
+                                    <option value="1750">$1500 - $2000</option>
+                                    <option value="2250">$2000 - $2500</option>
+                                    <option value="2750">$2500 - $3000</option>
+                                    <option value="3250">$3000 - $3500</option>
+                                    <option value="3750">$3500 - $4000</option>
+                                    <option value="4250">$4000 - $4500</option>
+                                    <option value="4750">$4500 - $5000</option>
+                                    <option value="5250">$5000 - $5500</option>
+                                    <option value="5750">$5500 - $6000</option>
+                                    <option value="6250">$6000 - $6500</option>
+                                    <option value="6750">$6500 - $7000</option>
+                                </select>
+                         </div>
+                    </div>
+                    <hr>
+                    <h2 class="legend"><?php echo $login_credantial;?></h2>
+                     <div class="credit-app-line columns alpha">	
+                        <div class="subline columns alpha label">
+                            <label><?php echo $txt_email?>:<em> *</em></label>	
+                        </div>
+                        <div class="subline columns alpha">
+                            <input type="text" name="uemail" class="required-entry required  input-text validate-email">
+                        </div>
+                    </div>
+                    
+                     <div class="credit-app-line columns alpha">	
+                        <div class="subline columns alpha label">
+                            <label><?php echo $txt_password?>:<em> *</em></label>	
+                        </div>
+                        <div class="subline columns alpha">
+                            <input type="password" name="password"  class="required-entry required  input-text validate-password">
+                        </div>
+                    </div>
+                    
+                     <div class="credit-app-line columns alpha">	
+                        <div class="subline columns alpha label">
+                            <label><?php echo $txt_confirmPassword?>:<em> *</em></label>	
+                        </div>
+                        <div class="subline columns alpha">
+                            <input type="password" name="cpass" class="required-entry required  input-text validate-cpassword">
+                        </div>
+                    </div>
+                    <hr>
+                    <div id="terms">
+                    	<table style="margin-left:-6px;margin-top: 10px;">
+								<tbody>
+									<tr>
+										<td><div style="width:25px;"><input type="checkbox" name="agreeToTerms" id="agreeToTerms" required class="input-text" style="margin-bottom:10px;">
+                                        	<div id="termerror" style="color:#F00; font-size:10px; text-transform:none; display:none; position:absolute;">Check</div>
+                                        </div></td>
+										<td><span>I agree to the <a href="/ca_disclaimer.pdf" target="_blank" id="disclaimer">Terms and Conditions</a></span></td>
+									</tr>
+								</tbody>
+							</table>
+                    </div>
+                    
+                    <div class="clear"></div>
+                    
+	                    <button class="button right" title="Submit" onClick="return finishform()" type="submit"><span><span id="submittofinish"><?php echo $txt_finish?></span></span></button>
+                    <div class="clear"></div>
+                    
+                    <div id="loadingmessage"><?php echo $loadingmessage;?></div>    
+               </div>
+              </form>
+                
+                <script type="text/javascript">
+							//<![CDATA[
+						var creditForm = new VarienForm('pre-approved');
+							
+							function formSubmit(){
+								var valid = new Validation('pre-approved', {onSubmit:false});
+								valid.reset();
+								var result = valid.validate();
+								if(result){
+								var edit_add = jQuery("#edit_add").val()
+								jQuery("#submit_button_step_1").hide("slow")
+								jQuery("#login-loading-step1").show("slow")
+								if(edit_add == '1'){
+									addressvarification()
+								}else{	
+									validateinfo();
+								}
+									return false;
+								}
+							}
+							
+							jQuery(document).ready(function () {
+								jQuery(".required").change(function () {
+									createcredit();
+								});
+							});
+
+							function createcredit() {
+												
+								var formdata = jQuery('form').serializeArray();
+							   
+								jQuery.ajax({
+									type: "POST",
+									url: "credit/preapprove.php",
+									data: formdata,
+									success: function (data) {
+										//alert(data)
+										jQuery("#appId").val(jQuery.trim(data));
+									}
+								})
+							}
+							
+
+							function finishform(){
+								var valid = new Validation('pre-approved', {onSubmit:false});
+								valid.reset();
+								var result = valid.validate();
+								if(!result){
+									return false;
+								}else{
+									if(jQuery('#agreeToTerms').is(':checked')){
+										return true;
+									}else{
+										jQuery("#agreeToTerms").addClass('validation-failed');
+										jQuery("#termerror").show("slow");
+										return false;
+									}
+								}
+							}
+							
+							function  validateinfo(){
+								var pressn = jQuery("#pre-ssn").val()
+								var preage = jQuery("#pre-age").val()
+								
+								var ssn = jQuery("#3ssn").val();
+								var year = jQuery("#dobY").val();
+								var attmpt = jQuery("#attempt").val();
+								var appid = jQuery("#appId").val();
+								
+								if(attmpt>2){
+									jQuery.ajax({
+										type: "POST",
+										url: "credit/lockpreapprove.php",
+										data: {
+												promo: jQuery("#prepromo").val(),
+												
+											},
+										success: function (data) {
+											alert(data)
+											window.location="/credit-application";
+										}
+									})
+								}else{
+									var atempt = parseInt(attmpt)+1;
+									jQuery("#attempt").val(atempt);
+								}
+								
+								jQuery.ajax({
+											type: "POST",
+											url: "/custom/validateinfo.php",
+											data: {
+												pressn: pressn,
+												preage: preage,
+												pyear: year,
+												ssn: ssn,
+												app: appid,
+												
+											},
+											success: function (data) {
+												if (data == '1') {
+													var pphone = jQuery("#pcode1").val()+jQuery("#pcode2").val()+jQuery("#pcode3").val()
+													var sphone = jQuery("#scode1").val()+jQuery("#scode2").val()+jQuery("#scode3").val()
+													jQuery("#preapprove_first_step").hide('slow');
+													jQuery("#preapprove-edit").hide();
+													jQuery("#preapproved_step_2").show("slow");
+													jQuery("#pphone").val(pphone);
+													jQuery("#sphone").val(sphone);
+													jQuery("#predobd").val(jQuery("#dobD").val());
+													jQuery("#predobm").val(jQuery("#dobM").val());
+													jQuery("#predoby").val(jQuery("#dobY").val());
+													jQuery("#submittofinish").html("Finish");
+													if(jQuery("#pre_state").val()=='AZ'){
+														jQuery("a#disclaimer").attr('href','/az_disclaimer.pdf')
+													}
+													if(jQuery("#edit_add").val() == '1'){
+														
+														if(jQuery("#prstate").val()=='AZ'){
+															
+																jQuery("a#disclaimer").attr('href','/az_disclaimer.pdf')
+														}
+													}
+												   return false;
+												} else {
+												   alert(data);
+												   jQuery("#submit_button_step_1").show("slow")
+ 		  										   jQuery("#login-loading-step1").hide("slow")
+												   return false;
+												   
+												}
+									
+											}
+										});
+										
+										return false;
+														
+							}
+							function addressvarification(){
+								var st = jQuery("#street1").val();
+									var z = jQuery("#prezip").val();
+									jQuery.ajax({
+										type: "POST",
+										url: "/credit/addressvalidation.php",
+										data: {
+											street: st,
+											zip: z
+											
+										},
+										success: function (data) {
+											if (data == '1') {
+												validateinfo()
+											   return true;
+											} else {
+											var add_etempt = jQuery("#add_etempt").val()
+											if(add_etempt>=3){
+												alert("You already try 3 atempts. Please fillout full credit application");
+												 window.location="/credit-application";
+												 return false;
+											}else{
+												var atempt = parseInt(add_etempt)+1;
+												jQuery("#add_etempt").val(atempt);
+											}
+											 alert("Please provide valid address");
+											 jQuery("#street1").addClass('validation-failed')
+											 jQuery("#prezip").addClass("validation-failed");
+											 jQuery("#submit_button_step_1").show("slow")
+											 jQuery("#login-loading-step1").hide("slow")
+											 return false;
+											}
+								
+										}
+									});
+							}
+							
+							
+							function setupday() {
+								var dtMonth = jQuery("#dobM").val();
+								var lim;
+								var days;
+								if ((dtMonth == 4 || dtMonth == 6 || dtMonth == 9 || dtMonth == 11)) {
+									lim = 30;
+								} else if (dtMonth == 2) {
+									lim = 29;
+								} else {
+									lim = 31;
+								}
+								days += '<option value="">DD</option>';
+								for (var i = 1; i <= lim; i++) {
+									days += '<option value="' + i + '">' + i + '</option>';
+								}
+							
+								jQuery("#dobD").html(days);
+							}
+							
+						//]]>
+						</script>
+                
+                <div class="clear">&nbsp;</div>
+                <!--END Pre-Approve Application-->
+                
+                </div>
+                
+                <div class="clear">&nbsp;</div>
+                </div>
+                <?php }?>
+            </div>
+		</div>
+	
+      <?php echo $this->getChildHtml('footer') ?>
+    <?php echo $this->getChildHtml('before_body_end') ?>
+        <?php echo $this->getAbsoluteFooter() ?>
+	</div>        
+
+		
+<script type="text/javascript">
+	function loginandshop(email,pass){
+		
+		jQuery("#send2").hide('slow');
+		
+		jQuery("#login-loading").show('slow');
+		
+		var login_url = '/onestepcheckout/ajax/login/'
+		//alert("I am Clicking login");
+		//alert(jQuery("#userpass").val());
+		jQuery.ajax({ 
+				type: 'post',
+				data: {'onestepcheckout_username':email,'onestepcheckout_password':pass},
+				url:  login_url,                    
+				success: function(data) {
+				 
+				   var result = jQuery.parseJSON(data); 
+					if(result.success) {
+						window.location = '/';
+					} else {
+						//alert(result.error);
+						window.location = '/customer/account/login/';
+					}
+				}.bind(this)
+	     });
+		
+		return false;
+	}
+</script>
+</body>
+</html>

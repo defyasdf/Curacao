@@ -197,6 +197,14 @@
 		}
 		$orderObj->save();
 	}
+	$cardType = '';
+	if(strtolower($payment) == 'pay'){
+		$cardType = 'Curacao Credit';
+	}else{
+			$cardType = $orderObj->getPayment()->getCcTypeName();
+	}
+	
+	
 	
 	//echo $shipping_address_data['base_tax_amount'];
 	/*
@@ -237,6 +245,7 @@
 		$_tax = $_totalData['base_tax_amount'];
 		$_shipping = $_totalData['shipping_amount'];
 		$rebate = 0;
+		$prTrack = '';
 		foreach($orderItems as $item)
 		{
 		  //you can either echo each sku of the order / you can use array variable to pass items skubs
@@ -267,8 +276,15 @@
 				$v = '1';
 			}
 			
+			
 			$am = $item->getDiscount_amount()/(int)$item->getQtyOrdered();
 			$price = $item->getPrice() - $am; 
+			
+			if($am>0){
+				$prTrack .= ';'.$item->getSku().';'.(int)$item->getQtyOrdered().';'.(float)$item->getData('row_total_incl_tax').';event9='.$item->getDiscount_amount().';evar17='.$custId.',';
+			}else{
+				$prTrack .= ';'.$item->getSku().';'.(int)$item->getQtyOrdered().';'.(float)$item->getData('row_total_incl_tax').',';
+			}
 			
 			$product = Mage::getModel('catalog/product');
 			$productId = $product->getIdBySku($item->getSku());
@@ -280,6 +296,10 @@
 				$set = "N";
 				
 			}
+			$loc = '33';
+			if($product->getVendorid() == '2139'){
+				$loc = '16';
+			}
 			$list['TEstLine'][] = array('ItemType'=>$type,
 									  'Item_ID' => $sku,
 									  'Item_Name' => $n,
@@ -289,7 +309,10 @@
 									  'Price' =>$price,
 									  'Cost' => '',
 									  'Taxable' => 'Y',
-									  'WebVendor' => $v ) ;
+									  'WebVendor' => $v,
+									  'From' => $loc,
+									  'PickUp' => 'TRUE',
+									  'OrdItemID' => $item->getId() ) ;
 		}
 	
 	
@@ -298,7 +321,7 @@
 	// AR creating the estimate
 	
 	
-	$proxy = new SoapClient('https://exchangeweb.lacuracao.com:2007/ws1/eCommerce/Main.asmx?WSDL');
+	$proxy = new SoapClient('https://exchangeweb.lacuracao.com:2007/ws1/test/eCommerce/Main.asmx?WSDL');
 	
 	$ns = 'http://lacuracao.com/WebServices/eCommerce/';
 	
@@ -345,7 +368,11 @@ echo '</pre>';*/
 	}elseif(strtolower($final[0])=='ok'){
 		$est = 'Estimate Number: '.$final[1];
 		$orderObj->setEstimatenumber($final[1]);
-
+		
+		$invgosupply = $proxy->GoSupplyInvoice(array('InvNo'=>$final[1],"FirstName"=>'Sanjay',"LastName"=>'Prajapati',"eMail"=>'sanju.comp@gmail.com'));
+		$invres = $invgosupply->GoSupplyInvoiceResult;
+		print_r($invres);
+		
 		if($Data != ''){
 			if(!Mage::getSingleton('core/session')->getAuthrecord()){
 				$creditDP = $proxy->WebDownPayment(array('CustID'=>$cust_id,"Amount"=>$Data,"InvNo"=>$final[1],"ReferID"=>$this->getOrderId()));
@@ -388,10 +415,48 @@ echo '</pre>';*/
 		//do a loop to get the sku of each item
 	
 ?>
+
+	<script type="text/javascript">
+		s.events='purchase'; 
+        s.products='<?php echo $prTrack?>'; 
+        s.purchaseID='<?php echo $this->escapeHtml($this->getOrderId());?>'; 
+        s.eVar12='<?php echo $cardType;?>'; 
+        s.eVar13='Fedex Ground'; 
+        s.zip='<?php echo $shipping_address_data['postcode'];?>'; 
+        s.state='<?php $shipping_address_data['region']?>';
+	</script>	
+
+
 <input type="hidden" value="<?php echo $revshare?>" />
 <!--End Custom Code-->
 
 <?php if ($this->getOrderId()):?>
+
+<?php 
+
+	$msg1 = "<p>Unfortunately, we were unable to verify the information you provided. As a result your order is under review.</p><p>To expedite the review process, please contact Customer Service at 1-866-410-1611. </p><p>We apologize for the inconvenience and look forward to hearing from you.</p>";
+	
+	$msg3 = "<p>Unfortunately, we were unable to verify the information you provided. As a result your order is declined.</p><p>If you would like to make a new purchase, please visit one of our retail store locations.  Our Representatives will be happy to assist you.</p><p>Please visit <a href='http://www.icuracao.com/store-locator'>www.iCuracao.com/store-locator</a> to find a store near you.</p><p>
+We apologize for the inconvenience and look forward to serving you.</p>";
+if(strtolower($payment) == 'pay'){
+	$score = 1000;
+}else{
+	$score = file_get_contents("http://icuracao.com/signifyd/score.php?ord=".$this->escapeHtml($this->getOrderId()));
+}
+if($score<300){
+	echo $msg3;
+	$orderObj->cancel()->save();
+}elseif($score<500 && $score>300){
+	echo $msg1;
+	$orderObj->addStatusToHistory('fraud', "Please review case in Signifyd. Score : ".$score, false);
+	$orderObj->save();	
+}else{
+	if(strtolower($payment) != 'pay'){
+		$orderObj->addStatusToHistory($orderObj->getStatus(), "Approved From Signifyd. Score : ".$score, false);
+		$orderObj->save();	
+	}
+?>
+
 <?php if ($this->getCanViewOrder()) :?>
     <p><?php echo $this->__('Your order # is: %s.', sprintf('<a href="%s">%s</a>', $this->escapeHtml($this->getViewOrderUrl()), $this->escapeHtml($this->getOrderId()))) ?></p>
 <?php  else :?>
@@ -435,6 +500,7 @@ echo '</pre>';*/
         <?php echo $this->getChildHtml() ?>
     </p>
 <?php endif;?>
+<?php }?>
 <?php endif;?>
 
 <?php if ($this->getAgreementRefId()): ?>
@@ -460,7 +526,15 @@ echo '</pre>';*/
 		$sql = 'update checkouttrack set order_complete = 1, user_track_id = "'.Mage::getSingleton('core/session')->getTrackid().'", auth_track_id = "'.$track.'" where checkouttrackid = "'.Mage::getSingleton('core/session')->getCheckouttrackid().'"';
 		mysql_query($sql);
 	}
-	
+
+	if(Mage::getSingleton('core/session')->getCustomeractiveresponse()){
+		if(strtolower(Mage::getSingleton('core/session')->getCustomeractiveresponse()) == 'soft'){
+				$orderObj->addStatusToHistory('creditreview', Mage::getSingleton('core/session')->getCustresponsedetail(), false);
+				$orderObj->save();
+		}
+		Mage::getSingleton('core/session')->unsCustomeractiveresponse(); 
+		Mage::getSingleton('core/session')->unsCustresponsedetail(); 
+	}	
 
 	  Mage::getSingleton('core/session')->unsCuracacaodp(); 
 	  Mage::getSingleton('core/session')->unsCuracacaonum(); 	
@@ -520,7 +594,7 @@ echo '</pre>';*/
 //End google Track
 
 ?>
-
+<input type="hidden" value="<?php echo $cust_id;?>"  />
 <script type="text/javascript">
 
   var _gaq = _gaq || [];

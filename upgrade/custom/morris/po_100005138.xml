@@ -1,0 +1,2 @@
+<?xml version="1.0"?>
+<Order><pickmsg>Send morris the information to check the order</pickmsg><po>100005138</po><via>213</via><count>1</count><ShipTo><Address><Line1>Dharshani Misir</Line1><Street1>594 Kenwood Place</Street1><Street2/><City>Teaneck</City><State>New Jersey</State><Zip>07666</Zip><Country>US</Country><Phone>2013572090</Phone></Address></ShipTo><LineItems><Line><part>IC18047SM</part><qty>1</qty></Line></LineItems></Order>

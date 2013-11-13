@@ -45,8 +45,12 @@ if(isset($_GET['sid'])){
 		$aff_id = $_GET['aff_id'];
 	}
 	if(!Mage::getSingleton('core/session')->getGwmid()){
-		$gwm_id = Mage::helper('creditapp')->insertGwmtracking($hid, $sub_id, $aff_id, $sid );
-		Mage::getSingleton('core/session')->setGwmid($gwm_id);
+		try{
+			$gwm_id = Mage::helper('creditapp')->insertGwmtracking($hid, $sub_id, $aff_id, $sid );
+			Mage::getSingleton('core/session')->setGwmid($gwm_id);
+		} catch(Exception $e) {
+			Mage::log('Header exception: '.$e);
+		}
 	}
  }
  
@@ -60,9 +64,13 @@ if($page == $base){
 }
 
 if(isset($_GET['utm_campaign'])){
-	Mage::getSingleton('core/session')->setCampaignid($_GET['utm_campaign']);
+	
+	Mage::getSingleton('core/session')->setCampaignid($_GET['utm_campaign']);	
+	$utm_campaign = $_GET['utm_campaign'];
 	Mage::helper('creditapp')->updateEmailCampaign($utm_campaign, $current_page);
+	
 }elseif(trim(Mage::getSingleton('core/session')->getCampaignid())!=''){
+
 	Mage::helper('creditapp')->updateEmailCampaignFromSession($current_page);
 	
 }

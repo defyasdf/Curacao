@@ -160,84 +160,7 @@
     <?php echo $this->getProductListHtml() ?>
 <?php endif; ?>
 
-<?php }
-echo Mage::getSingleton('core/session')->getSignupbronto();
-?>
-
-    
-
-<script type="text/javascript">
-	var dataForm = new VarienForm('signup-form', true);
-	jQuery(document).ready(function() {
-	<?php
-	
-	$session = Mage::getSingleton('customer/session', array('name'=>'frontend')); 
-	if(!$session->isLoggedIn()){
-		if(!Mage::getSingleton('core/session')->getHid()){
-			 	?>	
-					
-					var login_url = '/commonapi/api/signupchek'
-					jQuery.ajax({ 
-							type: 'post',
-							data: {'catId':<?php echo $_category->getId()?>},
-							url:  login_url,                    
-							success: function(data) {
-							   var result = jQuery.parseJSON(data); 
-														
-								if(result.success) {
-									var url = "/lighbox_html/signup_bronto.html?width=620&height=405";
-									tb_show("Sign Up and Get 10% Off", url);
-									jQuery("#TB_overlay").unbind("click",tb_remove);
-								} 
-							}.bind(this)
-					 });
-					
-/*					
-*/			<?php 
-			
-		}
-	}
-	?>
-	
-	})
-	function signupoffer(){
-		var valid = new Validation('signup-form', {onSubmit:false});
-			valid.reset();
-		var result = valid.validate();
-			if(result){
-				//jQuery("#formcontent").hide('slow');
-				//jQuery("#formloadingsignup").show('slow');
-				var login_url = '/commonapi/api/signupemail'
-				jQuery.ajax({ 
-						type: 'post',
-						data: {'email':jQuery("#signupEmail").val()},
-						url:  login_url,                    
-						success: function(data) {
-						   var result = jQuery.parseJSON(data); 
-							if(result.success) {
-								jQuery(".signupForm").hide('slow');
-								jQuery(".signupThankyou").show('slow');
-							} else {
-								jQuery("#regularthnk").hide('slow');
-								jQuery("#alreadyExist").show('slow');
-								jQuery(".signupForm").hide('slow');
-								jQuery(".signupThankyou").show('slow');			
-							}
-						}.bind(this)
-				 });
-			
-			}
-			return false;
-		
-	}
-	
-	function countinueShop(){
-		 tb_remove();
-		 return false;
-	}
-	
-</script>
-
+<?php }?>
 <?php
 	if(isset($_GET['hid'])){
 		if(!$_COOKIE["buy42"]){	
@@ -311,5 +234,10 @@ echo Mage::getSingleton('core/session')->getSignupbronto();
 				mysql_close($link);
 			}
 		 }
+	}
+	if($_category->parent_id == '2'){
+		Mage::getSingleton('core/session')->setprop1("product family");	
+	}else{
+		Mage::getSingleton('core/session')->setprop1("product type");	
 	}
 ?>

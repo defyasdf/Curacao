@@ -1,0 +1,2 @@
+<?xml version="1.0"?>
+<Order><pickmsg>Send morris the information to check the order</pickmsg><po>100005112</po><via>213</via><count>2</count><ShipTo><Address><Line1>Carolina Castillo</Line1><Street1>2796 N Crescent Ave</Street1><Street2/><City>San Bernardino</City><State>California</State><Zip>92405</Zip><Country>US</Country><Phone>9099105826</Phone></Address></ShipTo><LineItems><Line><part>RL6385LG</part><qty>1</qty></Line><Line><part>DG5964</part><qty>1</qty></Line></LineItems></Order>

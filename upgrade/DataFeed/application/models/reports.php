@@ -438,7 +438,7 @@ class Reports extends CI_Model {
 				$from = $dF[2].'-'.$dF[0].'-'.$dF[1];
 				$this->db->where('created_date >= ', $from);
 			}
-			
+			$this->db->not_like('promo', 'XX');
 			
 			$q = $this->db->get();
 			return $q->num_rows(); 
@@ -449,6 +449,7 @@ class Reports extends CI_Model {
 			$this->db->from('preapproved');
 		
 			$this->db->where('step1 = ', '1');
+			$this->db->not_like('promo', 'XX');
 			
 			$dT = explode('/',$_REQUEST['edate']);
 			$dF = explode('/',$_REQUEST['sdate']);
@@ -472,7 +473,7 @@ class Reports extends CI_Model {
 			$this->db->select('promo');
 			$this->db->from('preapproved');
 			$this->db->where('step2 = ', '1');
-			
+			$this->db->not_like('promo', 'XX');
 			$dT = explode('/',$_REQUEST['edate']);
 			$dF = explode('/',$_REQUEST['sdate']);
 			if(trim($_REQUEST['edate'])!=''){
@@ -496,7 +497,7 @@ class Reports extends CI_Model {
 			$this->db->select('promo');
 			$this->db->from('preapproved');
 			$this->db->where('decline = ', '1');
-			
+			$this->db->not_like('promo', 'XX');
 			$dT = explode('/',$_REQUEST['edate']);
 			$dF = explode('/',$_REQUEST['sdate']);
 		if(trim($_REQUEST['edate'])!=''){
@@ -517,7 +518,7 @@ class Reports extends CI_Model {
 			$this->db->select('promo');
 			$this->db->from('preapproved');
 			$this->db->where('pending = ', '1');
-			
+			$this->db->not_like('promo', 'XX');
 			$dT = explode('/',$_REQUEST['edate']);
 			$dF = explode('/',$_REQUEST['sdate']);
 			
@@ -540,6 +541,7 @@ class Reports extends CI_Model {
 			$this->db->select('promo');
 			$this->db->from('preapproved');
 			$this->db->where('approve = ', '1');
+			$this->db->not_like('promo', 'XX');
 			
 			$dT = explode('/',$_REQUEST['edate']);
 			$dF = explode('/',$_REQUEST['sdate']);

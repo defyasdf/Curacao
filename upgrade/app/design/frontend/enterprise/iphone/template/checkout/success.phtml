@@ -190,7 +190,7 @@ ini_set("soap.wsdl_cache_enabled", 0);
 	
 	$orderObj->setCuracaocustomernumber($cc_num);
 	$orderObj->setCuracaocustomerdiscount($cd);
-	$orderObj->addStatusToHistory('pending', "Please Review order for the fraud", false);
+	//$orderObj->addStatusToHistory('pending', "Please Review order for the fraud", false);
 	
 	$orderObj->save();
 	
@@ -221,6 +221,11 @@ ini_set("soap.wsdl_cache_enabled", 0);
 		$orderObj->save();		
 	}
 	
+	if(strtolower($payment) == 'pay'){
+		$score = 1000;
+	}else{
+		$score = file_get_contents("http://icuracao.com/signifyd/score.php?ord=".$this->escapeHtml($this->getOrderId()));
+	}
 	
 	// Change this if condition to payment information
 				
@@ -244,6 +249,7 @@ ini_set("soap.wsdl_cache_enabled", 0);
 		$_tax = $_totalData['base_tax_amount'];
 		$_shipping = $_totalData['shipping_amount'];
 		$rebate = 0;
+		$mc = 0;
 		foreach($orderItems as $item)
 		{
 		  //you can either echo each sku of the order / you can use array variable to pass items skubs
@@ -280,6 +286,9 @@ ini_set("soap.wsdl_cache_enabled", 0);
 			$product = Mage::getModel('catalog/product');
 			$productId = $product->getIdBySku($item->getSku());
 			$product->load($productId);
+			if($product->getVendorid() == '55676'){
+				$mc = 1;
+			}
 			$rebate += ($product->getRebate()*(int)$item->getQtyOrdered());
 			if($product->getSet()=='1'){
 				$set = 'Y';
@@ -303,7 +312,8 @@ ini_set("soap.wsdl_cache_enabled", 0);
 									  'Taxable' => 'Y',
 									  'WebVendor' => $v,
 									  'From' => $loc,
-									  'PickUp' => '0' ) ;
+									  'PickUp' => '0',
+									  'OrdItemID' => $item->getId() ) ;
 		}
 	
 	
@@ -346,48 +356,66 @@ echo '</pre>';*/
 $est ='';
 
 	try {
-			$credit = $proxy->CreateEstimateRev($param,
-										 "http://www.lacuracao.com/LAC-eComm-WebServices", 
-										 "http://www.lacuracao.com/LAC-eComm-WebServices/WebCustomerApplication",
-										 false, null , 'rpc', 'literal');  
-		
-			$re = $credit->CreateEstimateRevResult;
+		if($score>300){
+				$credit = $proxy->CreateEstimateRev($param,
+											 "http://www.lacuracao.com/LAC-eComm-WebServices", 
+											 "http://www.lacuracao.com/LAC-eComm-WebServices/WebCustomerApplication",
+											 false, null , 'rpc', 'literal');  
 			
-			$final = explode(";",$re);
+				$re = $credit->CreateEstimateRevResult;
+				
+				$final = explode(";",$re);
+				if(strtolower($final[0])=='error'){
+					$est = 'Estimate not been created because of '.$final[1];
+					$orderObj->addStatusToHistory('pending', $est, false);
+					$orderObj->save();
+				}elseif(strtolower($final[0])=='ok'){
+					$est = 'Estimate Number: '.$final[1];
+					$orderObj->setEstimatenumber($final[1]);
 			
-			if(strtolower($final[0])=='error'){
-				$est = 'Estimate not been created because of '.$final[1];
-			}elseif(strtolower($final[0])=='ok'){
-				$est = 'Estimate Number: '.$final[1];
-				$orderObj->setEstimatenumber($final[1]);
-		
-				if($Data != ''){
-					if(!Mage::getSingleton('core/session')->getAuthrecord()){
-						$creditDP = $proxy->WebDownPayment(array('CustID'=>$cust_id,"Amount"=>$Data,"InvNo"=>$final[1],"ReferID"=>$this->getOrderId()));
-						$crdp = $creditDP->WebDownPaymentResult;
-						$orderObj->addStatusToHistory($orderObj->getStatus(), 'Posted $'.$Data.' '.$crdp->ErrorInfo, false);
-						
-						$orderObj->save();
+					if($Data != ''){
+						if(!Mage::getSingleton('core/session')->getAuthrecord()){
+							$creditDP = $proxy->WebDownPayment(array('CustID'=>$cust_id,"Amount"=>$Data,"InvNo"=>$final[1],"ReferID"=>$this->getOrderId()));
+							$crdp = $creditDP->WebDownPaymentResult;
+							$orderObj->addStatusToHistory($orderObj->getStatus(), 'Posted $'.$Data.' '.$crdp->ErrorInfo, false);
+							
+							$orderObj->save();
+						}
+					
 					}
+					/*if($orderObj->getStatus()=='processing'){
+						$invgosupply = $proxy->GoSupplyInvoice(array('InvNo'=>$final[1],"FirstName"=>'Sanjay',"LastName"=>'Prajapati',"eMail"=>'sanju.comp@gmail.com'));
+						$invres = $invgosupply->GoSupplyInvoiceResult;
+						$orderObj->addStatusToHistory($orderObj->getStatus(), $invres, false);
+						$orderObj->save();
+					}*/
+										
+				}else{
+					$est = 'Estimate not been created because of '.$re;
 				}
 				
-			}else{
-				$est = 'Estimate not been created because of '.$re;
+				if($final[1] == ''){
+					$orderObj->addStatusToHistory('pending', "Estimate not been created", false);
+					$orderObj->save();		
+				}
 			}
-					
 		}
 		catch (Exception $ex) {
 			$est = $ex->getMessage();
 			$cnt1++;
+			$orderObj->addStatusToHistory('pending', $est, false);
+			$orderObj->save();		
 		}
 	
 	
 	
 	//End Creating Estimate
-
+	$orderObj->setHasmc($mc);
 	$orderObj->addStatusToHistory($orderObj->getStatus(), $est, false);
 	$orderObj->setRebate($rebate);
 	$orderObj->save();	
+	
+	
 	
 	// Get Coupon Code
 	 $coupon = Mage::getModel('salesrule/coupon');	
@@ -427,6 +455,40 @@ $est ='';
 	?>
 </div>
 <?php if ($this->getOrderId()):?>
+
+<?php 
+	
+	if(Mage::getSingleton('core/session')->getCustomeractiveresponse()){
+		if(strtolower(Mage::getSingleton('core/session')->getCustomeractiveresponse()) == 'soft'){
+				$orderObj->addStatusToHistory('creditreview', Mage::getSingleton('core/session')->getCustresponsedetail(), false);
+				$orderObj->save();
+		}
+		Mage::getSingleton('core/session')->unsCustomeractiveresponse(); 
+		Mage::getSingleton('core/session')->unsCustresponsedetail(); 
+	}	
+
+
+	$msg1 = "<p>Unfortunately, we were unable to verify the information you provided. As a result your order is under review.</p><p>To expedite the review process, please contact Customer Service at 1-866-410-1611. </p><p>We apologize for the inconvenience and look forward to hearing from you.</p>";
+	
+	$msg3 = "<p>Unfortunately, we were unable to verify the information you provided. As a result your order is declined.</p><p>If you would like to make a new purchase, please visit one of our retail store locations.  Our Representatives will be happy to assist you.</p><p>Please visit <a href='http://www.icuracao.com/store-locator'>www.iCuracao.com/store-locator</a> to find a store near you.</p><p>
+We apologize for the inconvenience and look forward to serving you.</p>";
+
+if($score<300){
+	echo $msg3;
+	$orderObj->addStatusToHistory('canceled', "Please review case in Signifyd. Score : ".$score, false);
+	$orderObj->cancel();
+	$orderObj->save();
+}elseif($score<500 && $score>300){
+	echo $msg1;
+	$orderObj->addStatusToHistory('fraud', "Please review case in Signifyd. Score : ".$score, false);
+	$orderObj->save();	
+}else{
+	if(strtolower($payment) != 'pay'){
+		$orderObj->addStatusToHistory($orderObj->getStatus(), "Approved From Signifyd. Score : ".$score, false);
+		$orderObj->save();	
+	}
+?>
+
 <?php if ($this->getCanViewOrder()) :?>
     <p><?php echo $this->__('Your order # is: %s.', sprintf('<a href="%s">%s</a>', $this->escapeHtml($this->getViewOrderUrl()), $this->escapeHtml($this->getOrderId()))) ?></p>
 <?php  else :?>
@@ -438,7 +500,7 @@ $est ='';
 	if(Mage::getSingleton('core/session')->getAuthrecord()){
 		echo '<p>&nbsp;</p>';
 	$_storeId = Mage::app()->getStore()->getId();
-	if($_storeId == 1 || $_storeId == 4){
+	if($_storeId == 1){
 		$notactive = '<p><strong>NOTE : </strong>Your order has been received however your account is inactive.  We usually can resolve this matter automatically however we may need to reach out to you for verification purposes. </p><p>We may contact you shortly or to expedite your order, you may contact our customer service team at <strong>1(866) 410-1611</strong>.</p>';
 		$onhold = '<p><strong>NOTE : </strong>Your order has been received however your account is on hold.  We usually can resolve this matter automatically however we may need to reach out to you for verification purposes. </p><p>We may contact you shortly or to expedite your order, you may contact our customer service team at <strong>1(866) 410-1611</strong>.</p>';
 		$dprequired = '<p><strong>NOTE : </strong>Your order has been received and an initial payment may be required of up to $'.$Data.'. </p><p>We may contact you shortly or to expedite your order, you may contact our customer service team at <strong>1(866) 410-1611</strong>.</p>';
@@ -470,6 +532,7 @@ $est ='';
         <?php echo $this->getChildHtml() ?>
     </p>
 <?php endif;?>
+<?php }?>
 <?php endif;?>
 
 <?php if ($this->getAgreementRefId()): ?>
@@ -496,6 +559,7 @@ $est ='';
 		mysql_query($sql);
 	}
 	
+	
 
 	  Mage::getSingleton('core/session')->unsCuracacaodp(); 
 	  Mage::getSingleton('core/session')->unsCuracacaonum(); 	
@@ -521,6 +585,9 @@ $est ='';
 	   if(Mage::getSingleton('core/session')->getCouponjoin299100()){
 	  	Mage::getSingleton('core/session')->unsCouponjoin299100();	
 	  }
+	  if(Mage::getSingleton('core/session')->getPreapproveccv()){
+		 Mage::getSingleton('core/session')->unsPreapproveccv();	
+		}
 ?>
 <?php 
 	// Google Track
@@ -664,10 +731,14 @@ var google_conversion_value = 0;
 <!--Close Body Tag -->
 <!--End Bronto Conversion-->
 <!-- Addroll Conversion Tracking -->
-<script type=?text/javascript?>
-		adroll_conversion_value_in_dollars = <?php echo $grandTotal;?>; 
-		adroll_custom_data = {?ORDER_ID?: ?<?php echo $this->getOrderId()?>?, ?USER_ID?:?<?php echo $cust_detail['firstname'].' '.$cust_detail['lastname']?>?}
-</script>
+
+<?php 
+	$total = $orderObj->getGrandTotal();?>
+	
+	<script type = "text/javascript">
+		adroll_conversion_value_in_dollars = <?php echo $total ?>;
+		adroll_custom_data = {"ORDER_ID": "<?php echo $this->__($this->escapeHtml($this->getOrderId())) ?>"};
+	</script>
 
 <!-- End Addroll Conversion Tracking -->
 

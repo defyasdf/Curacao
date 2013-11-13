@@ -1,0 +1,86 @@
+<div class="steps step-two">
+<!--    <div class="step-header">
+        <h5><span class="numeric">2</span><?php echo($this->__('Data Verification')) ?></h5>
+    </div>
+-->
+
+<?php  //print_r(Mage::getSingleton('core/session')->getRe());
+	//print_r($re);
+	$re = Mage::getSingleton('core/session')->getRe();
+	//print_r($re);
+?>
+    <div class="step-content">
+        <form action="<?php echo Mage::getUrl('creditapp/index/step2Post'); ?>" method="post" id="lexusform">
+            <fieldset>
+                <?php //echo $re->Result;?>
+                <div class="twelve columns">
+
+                    <?php if ($re->Result == 'QUESTIONS') { ?>
+
+
+                        <div class="hidden" style="display:none;">
+                            <input type="hidden" id="step" value="1" name="step"/>
+                            <input type="hidden" id="appId" value="<?php echo $_POST['appid'] ?>" name="appid"/>
+                            <input type="hidden" value="<?php echo $re->QuestionSetId ?>" name="qsetid"/>
+                            <input type="hidden" value="<?php echo $re->QuestionId ?>" name="qid"/>
+                            <input type="hidden" value="<?php echo $re->TransactionNumber ?>" name="tnum"/>
+                            <input type="hidden" value="<?php echo $re->TransactionId ?>" name="tid"/>
+                        </div>
+
+                        <div class="helptext">
+                            <?php echo $re->HelpText ?>
+                        </div>
+
+                        <p class="lexus_question"><?php echo $re->Question ?></p>
+
+                        <div class="lexus_question">
+                            <?php $choice = $re->Choice->aChoice; ?>
+                            <?php for ($i = 0; $i < sizeof($choice); $i++): ?>
+                                <input type="radio" class="nexus_rb &lt;?php if($i==0):?&gt;validate-one-required&lt;?php endif; ?&gt;" value="<?php echo $choice[$i]->ChoiceId ?>" name="choiceid"/><?php echo $choice[$i]->Choice ?><br/>
+                            <?php endfor; ?>
+                        </div>
+
+                        <div class="clearfix"></div>
+
+
+                        <div class="form-footer thirteen columns">
+                            <button class="continue button" id="second_step_submit" type="button" value="continue" onclick="formSubmit();"><span><span>Continue</span></span></button> <span style="display:none; float:left" class="please-wait-2" id="please-wait-2"><img class="v-middle" alt="" src="/skin/frontend/enterprise/curacao-responsive/images/opc-ajax-loader.gif"> Loading next step...</span>
+                        </div>
+
+                    <?php } else { ?>
+
+                        <h2 style="color:#FF0000">Lexus Nexus authentication failed.</h2>
+                        <h2><?php echo $this->__('Thank you for your application') ?></h2><br>
+                        <p><?php echo $this->__('We will send a letter within <strong>10 days </strong>with additional information regarding your application. However, you may use another method of payment to complete your order. ') ?></p><br>
+                        <p><?php echo $this->__('If you have any question please contact us at: 877-287-2226.<br /><strong>Monday - Sunday, 10AM - 7PM Pacific Time.</strong> ') ?></p>
+
+                        <div class="form-footer thirteen columns" id="verification-buttons-container">
+                            <button class="continue button" id="first_step_submit" type="button" value="continue" onclick="creditapp.backtoCustomerInfo();"><span><span>Continue</span></span></button>
+                            <span style="display:none; float:left" class="please-wait" id="verification-please-wait"><img class="v-middle" alt="" src="<?php echo $this->getSkinUrl('images/creditapp/opc-ajax-loader.gif'); ?>"> Loading next step...</span>
+
+                        </div>
+                    <?php } ?>
+                </div>
+            </fieldset>
+        </form>
+        <script type="text/javascript">
+//<![CDATA[     
+//                                var creditForm = new VarienForm('lexusform');
+//                                
+//                                function formSubmit(){
+//                                    var valid = new Validation('lexusform', {onSubmit:false});
+//                                    valid.reset();
+//                                    var result = valid.validate();
+//                                    if(result) {
+//                                        $('second_step_submit').hide(); 
+//                                        $('please-wait-2').show();                              
+//                                        document.forms["lexusform"].submit();
+//                                    }else {
+//                                    //  alert('please check the form for errors');
+//                                    }
+//                                }
+
+                                //]]>
+        </script>
+    </div>
+</div>

@@ -5,12 +5,14 @@ class Curacao_Commonapi_ApiController extends Mage_Core_Controller_Front_Action
     {
 		$jd = json_decode($_REQUEST['json']);
 		
-		/*for($i=0;$i<sizeof($jd->items);$i++){
-				
+			
+		$ship = $jd->shipping_revenue/sizeof($jd->items);
+
+		for($i=0;$i<sizeof($jd->items);$i++){
 					$list['TEstLine'][] = array('Item_ID' => $jd->items[$i]->vendor_sku,
 											  'Item_Name' => $jd->items[$i]->name,
 											  'Qty' => (int)$jd->items[$i]->quantity,
-											  'Price' =>$jd->items[$i]->price,
+											  'Price' =>$jd->items[$i]->price + $ship/(int)$jd->items[$i]->quantity,
 											  'Taxable' => 'Y' ) ;
 				}
 			$dateTime = explode(" ",$jd->created_date);
@@ -25,7 +27,7 @@ class Curacao_Commonapi_ApiController extends Mage_Core_Controller_Front_Action
 						   'Detail'=>$list
 			);
 
-		$proxy = new SoapClient('https://exchangeweb.lacuracao.com:2007/ws1/test/asis/Main.asmx?WSDL');
+		$proxy = new SoapClient('https://exchangeweb.lacuracao.com:2007/ws1/asis/Main.asmx?WSDL');
 		$ns = 'http://lacuracao.com/WebServices/AsIs/';
 		
 		//set the headers values
@@ -61,14 +63,12 @@ class Curacao_Commonapi_ApiController extends Mage_Core_Controller_Front_Action
 			$response['error'] = true;
 			$response['externalOrderNumber'] = '';
 			$response['message'] = $re;
-		}*/
-		$response['success'] = true;
-		$response['error'] = false;
-		$response['message'] = "AR Message with success or failure";
+		}
+		//$response['success'] = true;
+		//$response['error'] = false;
+		//$response['message'] = "AR Message with success or failure";
 		
 		$this->getResponse()->setBody(Zend_Json::encode($response));
-		
-		
 
 		
     }

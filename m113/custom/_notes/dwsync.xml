@@ -34,4 +34,7 @@
 <file name="getcancelreport.php" server="198.101.163.120//var/www/" local="130222754237302095" remote="130222754370000000" Dst="2" />
 <file name="getcancelreport_merchandising.php" server="198.101.163.120//var/www/" local="130222760536292377" remote="130222760670000000" Dst="2" />
 <file name="inventoryTest.php" server="198.101.163.120//var/www/" local="130208929370000000" remote="130208929370000000" Dst="2" />
+<file name="checkshipping.php" server="198.101.163.120//var/www/" local="130288445041188227" remote="130288445220000000" Dst="1" />
+<file name="curltest_recieve.php" server="198.101.163.120//var/www/" local="130208965370000000" remote="130208965370000000" Dst="1" />
+<file name="curltest.php" server="198.101.163.120//var/www/" local="130288450177632015" remote="130288450240000000" Dst="1" />
 </dwsync>

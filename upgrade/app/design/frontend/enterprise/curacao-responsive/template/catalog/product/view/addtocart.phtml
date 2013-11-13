@@ -41,8 +41,9 @@
         <?php if(!$_product->isGrouped()): ?>
         <label for="qty"><?php echo $this->__('Qty:') ?></label>
         <?php endif; ?>
-        
+       
         <button type="button" title="<?php echo $buttonTitle ?>" class="button btn-add-to-cart" onclick="productAddToCartForm.submit(this)"><span><span><?php echo $buttonTitle ?></span></span></button>
+       
 <!--        <input type="text" name="qty" id="qty" maxlength="12" value="<?php echo $this->getProductDefaultQty() * 1 ?>" title="<?php echo $this->__('Qty') ?>" class="input-text qty" />-->
         <select name="qty" class="input-text qty" id="selectqty">
         	<?php for($i = 1;$i<=10;$i++){?>
@@ -59,3 +60,14 @@
             <button type="button" title="<?php echo $buttonTitle ?>" class="button btn-empty" id="inactiveCart"><span><span><?php echo $outStock ?></span></span></button>
 	       </div>
 <?php endif; ?>
+
+<script type="text/javascript">
+	function addtocart(id){
+		var r=confirm("Hey, you’ve found a costume you like! \r\nWith Halloween around the corner, we can’t guarantee your order will make it in time for your festivities.\r\n Please consider 5-7 business days for your shipment.")
+		if (r==true){
+			productAddToCartForm.submit(id);	
+		}else{
+			return false;
+		}
+	}
+</script>

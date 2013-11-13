@@ -53,8 +53,49 @@ class Curacao_Unlockcustomer_Model_ObjectModel_Api extends Mage_Api_Model_Resour
     }
 	
 	public function notifyCustomer($arg){
-		$order = Mage::getModel('sales/order')->load($arg);
+		$args = explode('|',$arg);
+		$order = Mage::getModel('sales/order')->load($args[1]);
 		$_totalData = $order->getData();
+		
+		// multiple recipients
+		$to  = 'sanju.comp@gmail.com'; // note the comma
+
+		// subject
+		$subject = 'Store Pickup reminder';
+		
+		// message
+		$message = '
+		<html>
+		<head>
+		  <title>Store pickup reminder for $order</title>
+		</head>
+		<body>
+		  <p>Your Item is ready to pickup at store</p>
+		  <p>Please bring ID or any documentation to match the record below</p>
+		  <table>
+			<tr>
+			  <th>Name</th><th>'.$_totalData['customer_firstname'].' '.$_totalData['customer_lastname'].'</th>
+			</tr>
+			<tr>
+			  <td>Estimate number</td><td>'.$_totalData['estimatenumber'].'</td>
+			</tr>
+			
+		  </table>
+		</body>
+		</html>
+		';
+		
+		// To send HTML mail, the Content-type header must be set
+		$headers  = 'MIME-Version: 1.0' . "\r\n";
+		$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+		
+		// Additional headers
+		$headers .= 'To: Sanjay <sanju.comp@gmail.com>' . "\r\n";
+		$headers .= 'From: Store Pickup <pickup@icuracao.com>' . "\r\n";
+		
+		// Mail it
+		mail($to, $subject, $message, $headers);
+		
 		/*
 			$_totalData['customer_email']
 			if(mail){
@@ -63,6 +104,16 @@ class Curacao_Unlockcustomer_Model_ObjectModel_Api extends Mage_Api_Model_Resour
 				$msg = 'FAILED | Customer not found';
 			}
 		*/
+		
+		
+		
+		
+		$msg = 'SUCCESS | Customer notified successfully';
+		
+		return $msg;
+	}
+	
+	public function dropItem($arg){
 		
 		$msg = 'SUCCESS | Customer notified successfully';
 		

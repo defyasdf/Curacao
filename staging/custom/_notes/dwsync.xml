@@ -6,4 +6,8 @@
 <file name="_add_position.php" server="198.101.163.120//var/www/" local="130208929370000000" remote="130208929370000000" Dst="2" />
 <file name="get_report.php" server="198.101.163.120//var/www/" local="130246959701239158" remote="130246959760000000" Dst="2" />
 <file name="_add_curacao_price_bysku.php" server="198.101.163.120//var/www/" local="130250424208637647" remote="130250424290000000" Dst="2" />
+<file name="orderprocess.php" server="198.101.163.120//var/www/" local="130282697410000000" remote="130282697540000000" Dst="1" />
+<file name="storeInfo.php" server="198.101.163.120//var/www/" local="130283537412751884" remote="130283537430000000" Dst="1" />
+<file name="checkoutapi.php" server="198.101.163.120//var/www/" local="130208965370000000" remote="130208965370000000" Dst="1" />
+<file name="checksoap.php" server="198.101.163.120//var/www/" local="130286780843663135" remote="130286782130000000" Dst="1" />
 </dwsync>

@@ -165,6 +165,7 @@ $helper = Mage::helper('onestepcheckout/checkout');
 			                    	<span class="number"><?php //echo $step_counter++; ?></span><?php echo $billingaddress; ?>
 			                    </p>-->
 			                        <?php if(isset($this->formErrors['billing_error']) && count($this->formErrors['billing_errors']) > 0): ?>
+                                   
 			                        <div class="onestepcheckout-error">
 			                            <?php echo $this->__('Please check red fields below and try again.'); ?>
 			                        </div>

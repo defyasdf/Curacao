@@ -45,7 +45,14 @@
                      <option <?php if($this->getOrder()->getStatus() == 'replacementneeded'){?> selected="selected"<?php }?> value="replacementneeded">Replacement Needed</option>
                      <option <?php if($this->getOrder()->getStatus() == 'outofstock'){?> selected="selected"<?php }?> value="outofstock">Out of Stock</option>
             </select>
-            <?php }else{?>
+            <?php }elseif($this->getOrder()->getStatus() == 'creditreview' || $this->getOrder()->getStatus() == 'processestimate'){?>
+			<select id="history_status" class="select" name="history[status]">
+            	<option <?php if($this->getOrder()->getStatus() == 'creditreview'){?> selected="selected"<?php }?> value="creditreview">Credit Review</option>
+                <option <?php if($this->getOrder()->getStatus() == 'processestimate'){?> selected="selected"<?php }?> value="processestimate">Process Estimate</option>
+                <option <?php if($this->getOrder()->getStatus() == 'pendingcancellation'){?> selected="selected"<?php }?> value="pendingcancellation">Pending Cancellation</option>
+                 
+            </select>
+			<?php }else{?>
             <select name="history[status]" class="select" id="history_status">
             <?php foreach ($this->getStatuses() as $_code=>$_label): ?>
                 <option value="<?php echo $_code ?>"<?php if($_code==$this->getOrder()->getStatus()): ?> selected="selected"<?php endif; ?>><?php echo $_label ?></option>

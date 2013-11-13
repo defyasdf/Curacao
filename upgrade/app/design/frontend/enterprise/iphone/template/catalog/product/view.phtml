@@ -122,10 +122,10 @@
           <?php endforeach; ?>
           <li>Reviews</li>
           <div> <?php echo $this->getReviewsSummaryHtml($_product, false, true)?> </div>
-          <?php if($this->getChildHtml('upsell_products')) {?>
-          <li>Upsell Products</li>
-          <div> <?php echo $this->getChildHtml('upsell_products') ?> </div>
-          <?php } ?>
+          <?php //if($this->getChildHtml('upsell_products')) {?>
+          <!--<li>Upsell Products</li>
+          <div> <?php //echo $this->getChildHtml('upsell_products') ?> </div>-->
+          <?php //} ?>
           <?php if($this->getChildHtml('productTagList')) {?>
           <li>Tags</li>
           <div> <?php echo $this->getChildHtml('productTagList') ?> </div>

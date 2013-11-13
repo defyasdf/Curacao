@@ -392,6 +392,22 @@ echo '</pre>';*/
 <!--End Custom Code-->
 
 <?php if ($this->getOrderId()):?>
+<?php 
+	$msg1 = "<p>Unfortunately, we were unable to verify the information you provided. As a result your order is under review.</p><p>To expedite the review process, please contact Customer Service at 1-866-410-1611. </p><p>We apologize for the inconvenience and look forward to hearing from you.</p>";
+	
+	$msg3 = "<p>Unfortunately, we were unable to verify the information you provided. As a result your order is declined.</p><p>If you would like to make a new purchase, please visit one of our retail store locations.  Our Representatives will be happy to assist you.</p><p>Please visit <a href='http://www.icuracao.com/store-locator'>www.iCuracao.com/store-locator</a> to find a store near you.</p><p>
+We apologize for the inconvenience and look forward to serving you.</p>";
+
+$score = file_get_contents("http://icuracao.com/signifyd/score.php?ord=100005450");
+if($score<300){
+	echo $msg3;
+	$orderObj->cancel->save();
+}elseif($score<500 && $score>300){
+	echo $msg1;
+}else{
+
+?>
+<?php // Thank you regular msg display?>
 <?php if ($this->getCanViewOrder()) :?>
     <p><?php echo $this->__('Your order # is: %s.', sprintf('<a href="%s">%s</a>', $this->escapeHtml($this->getViewOrderUrl()), $this->escapeHtml($this->getOrderId()))) ?></p>
 <?php  else :?>
@@ -427,6 +443,8 @@ echo '</pre>';*/
 	}
 ?>
  
+ 
+<?php //Regular Order msg display end?> 
     
     
 <?php if ($this->getCanViewOrder() && $this->getCanPrintOrder()) :?>
@@ -435,6 +453,7 @@ echo '</pre>';*/
         <?php echo $this->getChildHtml() ?>
     </p>
 <?php endif;?>
+<?php }?>
 <?php endif;?>
 
 <?php if ($this->getAgreementRefId()): ?>

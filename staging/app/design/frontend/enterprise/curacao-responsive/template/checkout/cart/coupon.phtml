@@ -1,0 +1,310 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+ 
+	$_couponcode = $this->getCouponCode();
+	$ccp = explode('_',$_couponcode);
+	$_showcoupon = true;
+	
+	$_storeId = Mage::app()->getStore()->getId();
+	if($_storeId == 1){
+		$giftlabel = 'Enter your gift card code';
+		$redeem = 'Redeem';
+	}else{
+		$giftlabel = 'Ingrese el c&oacute;digo del Cup&oacute;n o Tarjeta  de Regalo';
+		$redeem = 'Redimir';
+	}
+	
+	if($ccp[0]=='SYS' && $ccp[2]=='CR3D1T') $_showcoupon = false;
+ 	
+ 
+?>
+
+<form id="discount-coupon-form" action="<?php echo $this->getUrl('checkout/cart/couponPost') ?>" method="post">
+    <div class="discount">
+        <h4><?php echo $this->__('Discount Codes') ?></h4>
+        <div class="discount-form">
+            <label for="coupon_code"><?php echo $this->__('Enter your coupon code if you have one.') ?></label>
+            <input type="hidden" name="remove" id="remove-coupone" value="0" />
+            <div class="input-box">
+            	<?php if(Mage::getSingleton('core/session')->getCouponjoin100()){
+					//echo Mage::getSingleton('core/session')->getCouponjoin100();
+					?>
+                		<input type="text" class="input-text" id="coupon_code" name="coupon_code" value="<?php echo trim(Mage::getSingleton('core/session')->getCouponjoin100());?>" />
+                <?php }else{
+					?>
+					<input type="text" class="input-text" id="coupon_code" name="coupon_code" value="<?php if($_showcoupon){echo $this->htmlEscape($this->getCouponCode()); }?>" />
+					<?php 
+				}?>
+            </div>
+            <div class="buttons-set">
+                <button type="button" title="<?php echo $this->__('Apply Coupon') ?>" onmousedown="" class="button" onclick="return discountCoupon(this);" value="<?php echo $this->__('Apply Coupon') ?>"><span><span><?php echo $this->__('Apply Coupon') ?></span></span></button>
+                <?php if(strlen($this->getCouponCode())): ?>
+                    &nbsp; <button type="button" title="<?php echo $this->__('Cancel Coupon') ?>" class="button" <?php if(! $_showcoupon){?> style="display:none;"<?php }?> onclick="discountForm.submit(true)" value="<?php echo $this->__('Cancel Coupon') ?>"><span><span><?php echo $this->__('Cancel Coupon') ?></span></span></button>
+                <?php endif;?>
+            </div>
+        </div>
+    </div>
+</form>
+<!--<div class="discount">
+
+<div id="giftcard-notice" style="display: none;">
+	
+</div>
+
+<div class="checkout section">
+ 		
+        <h4><?php echo $this->__('Gift Cards') ?></h4>
+        
+        <div class="onestepcheckout-giftcards">
+            <p class="onestepcheckout-numbers half">
+            	<?php echo $giftlabel; ?>
+            </p>
+            <div class="cc-holder">
+            	<div id="loading_gift" style="display:none"><center><img src="/images/gray_fade_small.gif" /></center></div>
+	            <div id="gift_content">
+	            <?php
+	            $_hasGiftCards = unserialize($this->getQuote()->getGiftCards());
+	            $_giftcardcode = $this->getQuote()->getgiftcardCode(); 
+
+				?>
+	            <input class="input-text" type="text" name="onestepcheckout-giftcardcode" id="id_giftcardcode" value="<?php echo $_giftcardcode; ?>" />
+	
+	            <button id="onestepcheckout-giftcard-add" class="form-button-alt" type="button" onclick="return addgift_cart();"><span><?php echo $redeem; ?></span></button>
+	            <button id="onestepcheckout-giftcard-remove" class="form-button-alt" type="button" onclick="return removegift_cart()" style="<?php if(empty($_hasGiftCards)) { echo 'display: none;'; } ?>"><span><?php echo $this->__('Cancel giftcard'); ?></span></button>
+                
+                </div>
+	            <script>
+	           
+			   function addgift_cart(){
+					 var giftcard = jQuery('#id_giftcardcode').val();
+					 var giftcardNotice = jQuery('#giftcard-notice');
+					var giftload = jQuery('#loading_gift');
+					var giftcontent = jQuery('#gift_content');
+					giftcardNotice.hide();
+					giftload.show('slow');
+					giftcontent.hide('slow');
+					 if(giftcard == '')    {
+							alert('<?php echo $this->__('Please enter a valid giftcard code.'); ?>');
+							giftload.hide('slow');
+							giftcontent.show('slow');
+							return;
+						}
+					  var url = '/onestepcheckout/ajax/add_giftcard';
+					jQuery.ajax({ 
+						type: 'post',
+						data: {code: giftcard},
+						url:  url,                    
+						success: function(data) {
+							
+							giftload.hide('slow');
+							giftcontent.show('slow');
+						   
+						   var result = jQuery.parseJSON(data); 
+							if(result.success) {
+								//window.location = '/onestepcheckout/';
+								
+								giftcardNotice.html('<ul class="messages"><li class="success-msg"><ul><li><span id="giftcard-notice-span">'+result.message+'</span></li></ul></li></ul>');
+								
+								giftcardNotice.show();
+								location.reload();
+								
+							} else {
+								giftcardNotice.html('<ul class="messages"><li class="error-msg"><ul><li><span id="giftcard-notice-span">'+result.message+'</span></li></ul></li></ul>');
+								
+								giftcardNotice.show();
+								
+							}
+						}.bind(this)
+				 }); 
+					  
+				}
+				
+				
+				 function removegift_cart(){
+					 var giftcard = jQuery('#id_giftcardcode').val();
+					 var giftcardNotice = jQuery('#giftcard-notice');
+					var giftload = jQuery('#loading_gift');
+					var giftcontent = jQuery('#gift_content');
+					giftcardNotice.hide();
+					giftload.show('slow');
+					giftcontent.hide('slow');
+					 if(giftcard == '')    {
+							alert('<?php echo $this->__('Please enter a valid giftcard code.'); ?>');
+							giftload.hide('slow');
+							giftcontent.show('slow');
+							return;
+						}
+					  var url = '/onestepcheckout/ajax/add_giftcard';
+					jQuery.ajax({ 
+						type: 'post',
+						data: {code: giftcard, remove: '1'},
+						url:  url,                    
+						success: function(data) {
+							
+							giftload.hide('slow');
+							giftcontent.show('slow');
+						   
+						   var result = jQuery.parseJSON(data); 
+							if(result.success) {
+								//window.location = '/onestepcheckout/';
+								
+								 jQuery('#id_giftcardcode').val('')
+								 jQuery('#onestepcheckout-giftcard-remove').hide();
+								location.reload();
+								giftcardNotice.html('<ul class="messages"><li class="success-msg"><ul><li><span id="giftcard-notice-span">'+result.message+'</span></li></ul></li></ul>');
+								
+								giftcardNotice.show();
+								
+								
+							} else {
+								giftcardNotice.html('<ul class="messages"><li class="error-msg"><ul><li><span id="giftcard-notice-span">'+result.message+'</span></li></ul></li></ul>');
+								
+								giftcardNotice.show();
+							}
+						}.bind(this)
+				 }); 
+					  
+				}
+				
+				
+			   
+			     /*  document.observe('dom:loaded', function() {
+	             $('onestepcheckout-giftcard-add').observe('click', function(e)    {
+	                    var giftcard = $('id_giftcardcode').getValue();
+	                    var giftcardNotice = $('giftcard-notice');
+						var giftload = $('loading_gift');
+	                    var giftcontent = $('gift_content');
+						giftcardNotice.hide();
+						giftload.show('slow');
+						giftcontent.hide('slow');
+	                    if(giftcard == '')    {
+	                        alert('<?php echo $this->__('Please enter a valid giftcard code.'); ?>');
+	                        return;
+	                    }
+						
+	                    var url = '<?php echo $this->getUrl('onestepcheckout/ajax/add_giftcard', array('_secure'=>true)); ?>';
+	                    var parameters = {code: giftcard};
+	                    
+	                    new Ajax.Request(url+Math.random(1000), {
+	                        method: 'post',
+	                        parameters: parameters,
+	                        onSuccess: function(transport) {
+	                            if(transport.status == 200) {
+									
+									giftload.hide('slow');
+									giftcontent.show('slow');
+									
+									 var response = transport.responseText.evalJSON();
+	                                
+	                                if(response.success) {
+	                                    
+	                                    giftcardNotice.update('<ul class="messages"><li class="success-msg"><ul><li><span id="giftcard-notice-span">'+response.message+'</span></li></ul></li></ul>');
+	                                    giftcardNotice.removeClassName('error-msg');
+	                                    giftcardNotice.addClassName('success-msg');
+	                                    giftcardNotice.show();
+	                                    
+										location.reload();
+	                                    
+	                                }
+	                                else{
+	                                    
+	                                    giftcardNotice.update('<ul class="messages"><li class="error-msg"><ul><li><span id="giftcard-notice-span">'+response.message+'</span></li></ul></li></ul>');
+	                                    giftcardNotice.removeClassName('success-msg');
+	                                    giftcardNotice.addClassName('error-msg');
+	                                    giftcardNotice.show();
+	                                    /* Hide remove button 
+	                                    //$('onestepcheckout-giftcard-remove').hide();
+	                                }
+	                            }
+	                        }
+	                    });
+	                });*/
+	
+	                /*$('onestepcheckout-giftcard-remove').observe('click', function(e) {
+	                    var giftcard = $('id_giftcardcode').getValue();
+	                    var giftcardNotice = $('giftcard-notice');
+	                    var giftload = $('loading_gift');
+	                    var giftcontent = $('gift_content');
+						giftcardNotice.hide();
+						giftload.show('slow');
+						giftcontent.hide('slow');
+	                    var url = '<?php echo $this->getUrl('onestepcheckout/ajax/add_giftcard', array('_secure'=>true)); ?>';
+	                    var parameters = {code: giftcard, remove: '1'};
+	                   
+	
+	                    new Ajax.Request(url, {
+	                        method: 'post',
+	                        parameters: parameters,
+	                        onSuccess: function(transport)  {
+	                            if(transport.status == 200) {
+	                                var response = transport.responseText.evalJSON();
+									
+									giftload.hide('slow');
+									giftcontent.show('slow');
+									
+	                                if(response.success){
+	                                    $('id_giftcardcode').setValue('')
+	                                    $('onestepcheckout-giftcard-remove').hide();
+										location.reload();
+	                                }
+	                               	
+	                                giftcardNotice.hide();
+	                                 giftcardNotice.update('<ul class="messages"><li class="success-msg"><ul><li><span id="giftcard-notice-span">'+response.message+'</span></li></ul></li></ul>');
+	                                giftcardNotice.removeClassName('error-msg');
+	                                giftcardNotice.addClassName('success-msg');
+	                                giftcardNotice.show();
+	                            }
+	                        }
+	                    });
+	                });
+	            });*/
+	            </script>
+			</div>
+        </div>
+
+	</div>-->
+
+<script type="text/javascript">
+//<![CDATA[
+var discountForm = new VarienForm('discount-coupon-form');
+discountForm.submit = function (isRemove) {
+    if (isRemove) {
+        $('coupon_code').removeClassName('required-entry');
+        $('remove-coupone').value = "1";
+    } else {
+        $('coupon_code').addClassName('required-entry');
+        $('remove-coupone').value = "0";
+    }
+    return VarienForm.prototype.submit.bind(discountForm)();
+}
+function discountCoupon(id){
+	s.linkTrackVars='eVar16';s.eVar16=document.getElementById('coupon_code').value;s.tl('id','o','Aply Coupon',null);
+	discountForm.submit(false)
+}
+//]]>
+</script>
+
+<!--</div>-->

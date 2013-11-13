@@ -22,6 +22,7 @@
 	Mage::app()->setCurrentStore(Mage_Core_Model_App::ADMIN_STORE_ID);
 	
 	$sql = "SELECT * FROM `sales_flat_order` WHERE (status = 'processing' or status = 'internalfulfillment' or status = 'senttovendor') and senttomc = 0 and hasmc = 1";	
+//	$sql = "SELECT * FROM `sales_flat_order` WHERE increment_id = 100004944";
 	$result = mysql_query($sql);
 	while($row = mysql_fetch_array($result)){
 	$query = "SELECT * FROM `sales_flat_order_item` WHERE `order_id` = ".$row['entity_id'];
@@ -36,7 +37,7 @@
 			$product->load($productId);
 			if($product->getvendorid() == '55676'){
 				$i++;
-				$products[$itemRow['sku']] = $itemRow['qty_ordered'];
+				$products[$itemRow['sku']] = (int)$itemRow['qty_ordered'];
 			}
 		}
 	}
@@ -44,6 +45,14 @@
 	$addSql = "SELECT * FROM `sales_flat_order_address` WHERE `parent_id` = ".$row['entity_id']." and address_type = 'shipping'";
 	$addresult = mysql_query($addSql);
 	$addrow = mysql_fetch_array($addresult);
+	
+	
+	$reSql = "SELECT * FROM `directory_country_region` WHERE `region_id` = ".$addrow['region_id'];
+	$Reresult = mysql_query($reSql);
+	$Rerow = mysql_fetch_array($Reresult);
+	
+	 
+	
 	// XML creation
 		$order1 = new SimpleXMLElement('<Order/>');
 		//$number = $xml->addChild('Number','2446');
@@ -52,6 +61,8 @@
 			$order1->addChild('pickmsg',"Send morris the information to check the order");
 			$order1->addChild('po',$row['increment_id']);
 			$order1->addChild('via',"213");
+			$order1->addChild('terms',"3992");
+			$order1->addChild('magic',"808");
 			$order1->addChild('count',$i);
 				$shipTo = $order1->addChild("ShipTo");
 					$address = $shipTo->addChild("Address");
@@ -59,7 +70,7 @@
 						$address->addChild("Street1",$addrow['street']);
 						$address->addChild("Street2");
 						$address->addChild("City",$addrow['city']);
-						$address->addChild("State",$addrow['region']);
+						$address->addChild("State",$Rerow['code']);
 						$address->addChild("Zip",$addrow['postcode']);
 						$address->addChild("Country",$addrow['country_id']);
 						$address->addChild("Phone",$addrow['telephone']);
@@ -121,9 +132,30 @@
 				
 				try{
 					$content = file_get_contents("http://morris.morriscostumes.com/cgi-bin/doxml.cgi?userid=curacao&password=reuben&xml_url=http://www.icuracao.com/custom/morris/po_".$row['increment_id'].".xml&message=done");
+					
+					$str = explode("\n",$content);
+					$status = explode("=",$str[3]);
+					$err = explode("=",$str[4]);
+					$msg = explode("=",$str[5]);
+					if(trim(strtolower($status[1])) == 'ok' && (int)trim($err[1])==0){
+						echo 'Success : ';
+						echo $msg[1].'<br>';
+						$update = "UPDATE `sales_flat_order` SET `senttomc` = '1' WHERE `sales_flat_order`.`entity_id` =".$row['entity_id'];
+						mysql_query($update);
+						unlink('po_'.$row['increment_id'].'.xml');
+					}else{
+						$order = Mage::getModel('sales/order')->load($row['entity_id']);
+						$order->addStatusToHistory('processingerror', 'Message From morris : '.$msg[1], false);
+						$order->save();
+					}
+
+					/*
 					echo '<pre>';
 						print_r($content);
-					echo '</pre><br>';
+					echo '</pre><br>';*/
+					
+					
+					
 				}
 				catch (Exception $ex) {
 					echo $ex;	
