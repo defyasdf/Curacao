@@ -59,10 +59,19 @@ class Curacao_Unlockcustomer_Model_ObjectModel_Api extends Mage_Api_Model_Resour
 		
 		// multiple recipients
 		$to  = 'sanju.comp@gmail.com'; // note the comma
-
+		
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, "http://staging.icuracao.com/custom/storeInfo.php?str_id=".$args[2]);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_POST, true);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+		$storeInfo = curl_exec($ch);
+		$info = curl_getinfo($ch);
+		curl_close($ch);
+		
 		// subject
 		$subject = 'Store Pickup reminder';
-		$storeInfo = file_get_contents('http://staging.icuracao.com/custom/storeInfo.php?str_id='.$args[2]);
+	//	$storeInfo = file_get_contents('http://staging.icuracao.com/custom/storeInfo.php?str_id='.$args[2]);
 		// message
 		$message = '
 		<html>

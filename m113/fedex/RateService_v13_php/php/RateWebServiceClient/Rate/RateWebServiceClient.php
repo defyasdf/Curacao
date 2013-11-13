@@ -4,7 +4,7 @@
 // Version 12.0.0
 ini_set("soap.wsdl_cache_enabled", "0");
 
-if($_REQUEST['weight'] > 60 || $_REQUEST['shiptype'] == 'domestic'){
+if($_REQUEST['weight'] > 60 || strtolower($_REQUEST['shiptype']) == 'domestic'){
 	echo 'within 3-5 business days|99.99';
 	exit;
 }
